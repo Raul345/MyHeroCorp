@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/content_todayfollowup"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_dashboard">
+
+    <ImageView
+        android:id="@+id/app_logo"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:src="@drawable/hero_logo" />
+
+    <ImageView
+        android:id="@+id/menu_icon"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:src="@drawable/ic_menu_white" />
+
+    <LinearLayout
+        android:id="@+id/top_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/app_logo"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="0sp"
+            android:layout_height="1dp"
+            android:layout_weight="0.35"
+            android:background="#ffffff" />
+
+        <Button
+            android:id="@+id/buttonHeader"
+            android:layout_width="0sp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.3"
+            android:background="@drawable/pllgm_button_bg"
+            android:gravity="center_vertical"
+            android:text="TODAY'S FOLLOWUP" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="0sp"
+            android:layout_height="1dp"
+            android:layout_weight="0.35"
+            android:background="#ffffff" />
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/top_layout1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/top_layout"
+        android:background="#ffffff"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/todayfollowup_message"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="No Today's Followup !!"
+            android:textColor="#000000"
+            android:textSize="20dp"
+            android:visibility="visible" />
+
+        <com.baoyz.swipemenulistview.SwipeMenuListView
+            android:id="@+id/list_todayfollowup"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:divider="@android:color/darker_gray"
+            android:dividerHeight="0.5dp"
+            android:paddingLeft="3dp"
+            android:paddingRight="3dp" />
+
+        <!--  <android.support.design.widget.FloatingActionButton xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:id="@+id/button_filter"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_alignParentBottom="true"
+              android:layout_alignParentEnd="true"
+              android:layout_alignParentRight="true"
+              android:layout_margin="15dp"
+              android:background="#ffffff"
+              android:focusable="false"
+              android:src="@drawable/edit_icon" />
+  -->
+    </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/imageView_filter"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_gravity="bottom|end"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="10dp"
+        android:background="@android:color/transparent"
+        android:clickable="true"
+        android:src="@drawable/image_filter"
+        android:visibility="gone"/>
+
+</RelativeLayout>

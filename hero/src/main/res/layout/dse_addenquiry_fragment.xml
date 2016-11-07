@@ -1,0 +1,399 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/content_addenquiry"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_dashboard"
+    android:clickable="true"
+    >
+
+    <ImageView
+        android:id="@+id/app_logo"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:src="@drawable/hero_logo" />
+
+
+    <ImageView
+        android:id="@+id/menu_icon"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:src="@drawable/ic_menu_white" />
+
+    <LinearLayout
+        android:id="@+id/top_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/app_logo"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/textVieww"
+            android:layout_width="0sp"
+            android:layout_height="1dp"
+            android:layout_weight="0.35"
+            android:background="#ffffff" />
+
+        <Button
+            android:id="@+id/buttonHeader"
+            android:layout_width="0sp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.3"
+            android:background="@drawable/pllgm_button_bg"
+            android:gravity="center_vertical"
+            android:text="@string/addenquiry" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="0sp"
+            android:layout_height="1dp"
+            android:layout_weight="0.35"
+            android:background="#ffffff" />
+
+    </LinearLayout>
+
+    <ScrollView
+        android:id="@+id/scroll_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/top_layout"
+        android:fillViewport="true">
+
+
+        <LinearLayout
+            android:id="@+id/top_layout1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/top_layout"
+            android:background="#000000"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/darker_gray"
+                android:padding="10dp">
+
+                <TextView
+                    android:layout_width="0sp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.4"
+                    android:padding="10dp"
+                    android:text="Model Interested in"
+                    android:textColor="#000000"
+                    android:textSize="17dp"
+                    android:gravity="center_vertical"/>
+
+                <Spinner
+                    android:id="@+id/model_spinner"
+                    android:layout_width="0sp"
+                    android:layout_height="70dp"
+                    android:layout_weight="0.3"
+                    android:background="@android:color/darker_gray"
+                    android:dropDownSelector="#f30d0d"
+                    android:focusable="true"
+                    android:textSize="10dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/darker_gray"
+                android:paddingBottom="2dp">
+
+                <CheckBox
+                    android:id="@+id/exchange_chkbox"
+                    android:layout_width="0sp"
+                    android:layout_height="match_parent"
+                    android:layout_marginRight="2dp"
+                    android:layout_weight="0.4"
+                    android:background="#ffffff"
+                    android:padding="10dp"
+                    android:text="Exchange Required"
+                    android:textColor="#000000"
+                    android:textSize="17dp" />
+
+                <CheckBox
+                    android:id="@+id/finance_chkbox"
+                    android:layout_width="0sp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.4"
+                    android:background="#ffffff"
+                    android:padding="10dp"
+                    android:text="Finance Required"
+                    android:textColor="#000000"
+                    android:textSize="17dp" />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/darker_gray"
+                android:paddingBottom="2dp">
+
+                <CheckBox
+                    android:id="@+id/testride_chkbox"
+                    android:layout_width="0sp"
+                    android:layout_height="match_parent"
+                    android:layout_marginRight="2dp"
+                    android:layout_weight="0.4"
+                    android:background="#ffffff"
+                    android:padding="10dp"
+                    android:text="Testride Required"
+                    android:textColor="#000000"
+                    android:textSize="17dp" />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/darker_gray"
+                android:paddingBottom="2dp">
+
+                <LinearLayout
+                    android:layout_width="0sp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="2dp"
+                    android:layout_weight="5"
+                    android:background="#ffffff"
+                    android:orientation="vertical"
+                    android:padding="10dp">
+
+                    <TextView
+                        android:id="@+id/textview3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:background="#ffffff"
+                        android:gravity="center_vertical"
+                        android:paddingLeft="10dp"
+                        android:paddingTop="10dp"
+                        android:text="Next Followup Date"
+                        android:textColor="#000000"
+                        android:textSize="17dp"
+                        android:textStyle="bold" />
+
+                    <Button
+                        android:id="@+id/nextfollowupdate_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:background="#ffffff"
+                        android:padding="10dp"
+                        android:text="May 21,2016"
+                        android:textColor="#000000">
+
+                    </Button>
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0sp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="0.5dp"
+                    android:layout_weight="5"
+                    android:background="#ffffff"
+                    android:orientation="vertical"
+                    android:padding="10dp">
+
+                    <TextView
+                        android:id="@+id/textview4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:background="#ffffff"
+                        android:gravity="center_vertical"
+                        android:paddingLeft="10dp"
+                        android:paddingTop="10dp"
+                        android:text="Expected Date of Purchase"
+                        android:textColor="#000000"
+                        android:textSize="17dp"
+                        android:textStyle="bold" />
+
+                    <Button
+                        android:id="@+id/exptpurchasedate_button"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:background="#ffffff"
+                        android:padding="10dp"
+                        android:text="May 21,2016"
+                        android:textColor="#000000">
+
+                    </Button>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:background="@android:color/darker_gray"
+                android:orientation="vertical"
+                android:paddingBottom="2dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="#ffffff"
+                    android:paddingLeft="15dp"
+                    android:paddingTop="10dp"
+                    android:text="Remark"
+                    android:textColor="#000000"
+                    android:textSize="17dp" />
+
+                <EditText
+                    android:id="@+id/edittext_remark"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="1dp"
+                    android:background="#ffffff"
+                    android:hint="Remark"
+                    android:paddingBottom="10dp"
+                    android:paddingLeft="15dp"
+                    android:textColor="#000000"
+                    android:textSize="15dp" />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/darker_gray"
+                android:padding="10dp">
+
+                <TextView
+                    android:layout_width="0sp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.4"
+                    android:padding="8dp"
+                    android:text="Existing Vehicle"
+                    android:textColor="#000000"
+                    android:textSize="17dp"
+                    android:gravity="center_vertical"/>
+
+                <Spinner
+                    android:id="@+id/existvehicle_spinner"
+                    android:layout_width="0sp"
+                    android:layout_height="60dp"
+                    android:layout_weight="0.3"
+                    android:background="@android:color/darker_gray"
+                    android:focusable="true"
+                    android:textSize="10dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/darker_gray"
+                android:padding="10dp">
+
+                <TextView
+                    android:layout_width="0sp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.4"
+                    android:padding="8dp"
+                    android:gravity="center_vertical"
+                    android:text="Make"
+                    android:textColor="#000000"
+                    android:textSize="17dp" />
+
+                <Spinner
+                    android:id="@+id/existmake_spinner"
+                    android:layout_width="0sp"
+                    android:layout_height="60dp"
+                    android:layout_weight="0.3"
+                    android:background="@android:color/darker_gray"
+                    android:dropDownSelector="#f30d0d"
+                    android:focusable="true"
+                    android:textSize="10dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:background="@android:color/darker_gray"
+                android:padding="10dp">
+
+                <TextView
+                    android:layout_width="0sp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.4"
+                    android:padding="8dp"
+                    android:text="Exist Model"
+                    android:textColor="#000000"
+                    android:textSize="17dp"
+                    android:gravity="center_vertical"/>
+
+                <Spinner
+                    android:id="@+id/existmodel_spinner"
+                    android:layout_width="0sp"
+                    android:layout_height="60dp"
+                    android:layout_weight="0.3"
+                    android:background="@android:color/darker_gray"
+                    android:dropDownSelector="#f30d0d"
+                    android:focusable="true"
+                    android:textSize="10dp" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@android:color/darker_gray"
+                android:padding="10dp">
+
+                <TextView
+                    android:layout_width="0sp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="0.4"
+                    android:padding="8dp"
+                    android:text="Campaigns"
+                    android:textColor="#000000"
+                    android:textSize="17dp" />
+
+            </LinearLayout>
+
+
+            <ListView
+                android:id="@+id/list_campaign"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:divider="@android:color/darker_gray"
+                android:dividerHeight="0.5dp"
+                android:focusable="true"></ListView>
+
+            <LinearLayout
+                android:id="@+id/top_layout31"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#000000"
+                android:gravity="end"
+                android:padding="10dp">
+
+                <ImageView
+                    android:id="@+id/imageView_submit_addenquiry"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:layout_gravity="bottom|end"
+                    android:background="@android:color/transparent"
+                    android:clickable="true"
+                    android:layout_margin="10dp"
+                    android:src="@drawable/edit_icon"
+
+                    />
+            </LinearLayout>
+
+
+        </LinearLayout>
+    </ScrollView>
+
+</RelativeLayout>

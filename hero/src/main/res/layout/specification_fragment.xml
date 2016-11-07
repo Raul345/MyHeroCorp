@@ -1,0 +1,327 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/feature_bg"
+    android:id="@+id/content_specification">
+
+    <ImageView
+        android:id="@+id/app_logo"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:src="@drawable/hero_logo" />
+
+    <ImageView
+        android:id="@+id/menu_icon"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:src="@drawable/ic_menu_white" />
+
+    <LinearLayout
+        android:id="@+id/top_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/app_logo"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/buttonHeader"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/pllgm_button_bg"
+            android:gravity="center_vertical"
+            android:text="@string/specification_text" />
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#ffffff" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/specification_container_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/button_layout"
+        android:layout_below="@+id/top_layout"
+        android:background="#70000000"
+        android:gravity="center_horizontal"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/specs_tebs_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:id="@+id/engine_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/square_bg_red"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/engine"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/engine_hover" />
+
+                <TextView
+                    android:id="@+id/engine_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#ffffff"
+                    android:gravity="center"
+                    android:text="@string/engine" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/transmission_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/square_bg_red"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/transmission"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/transmission_normal" />
+
+                <TextView
+                    android:id="@+id/transmission_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textColor="#ffffff"
+                    android:text="@string/transmission_chassis" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/suspension_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/square_bg_red"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/suspension"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/suspension_normal" />
+
+                <TextView
+                    android:id="@+id/suspension_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textColor="#ffffff"
+                    android:text="@string/suspension" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/brakes_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/square_bg_red"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/brakes"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/brakes_normal" />
+
+                <TextView
+                    android:id="@+id/brakes_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textColor="#ffffff"
+                    android:text="@string/brakes" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/wheels_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/square_bg_red"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/wheels"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/wheels_normal" />
+
+                <TextView
+                    android:id="@+id/wheels_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textColor="#ffffff"
+                    android:text="@string/wheels_tyres" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/electric_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/square_bg_red"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/electric"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/electrical_normal" />
+
+                <TextView
+                    android:id="@+id/electric_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textColor="#ffffff"
+                    android:text="@string/electricals" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/dimensions_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/square_bg_red"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/dimensions"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/dimension_normal" />
+
+                <TextView
+                    android:id="@+id/dimensions_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textColor="#ffffff"
+                    android:text="@string/dimensions" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <ScrollView
+            android:id="@+id/scroll_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/square_bg">
+
+            <LinearLayout
+                android:id="@+id/detail_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="vertical"></LinearLayout>
+
+        </ScrollView>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/button_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:gravity="center">
+
+        <Button
+            android:id="@+id/gallery"
+            android:layout_width="150dp"
+            android:layout_height="40dp"
+            android:gravity="center_vertical"
+            android:text="@string/gallery_text"
+            android:textColor="#717171"
+            android:background="@drawable/parllgm_button_unselected" />
+
+        <Button
+            android:id="@+id/features"
+            android:layout_width="150dp"
+            android:layout_height="40dp"
+            android:gravity="center_vertical"
+            android:text="@string/feature_text"
+            android:textColor="#717171"
+            android:background="@drawable/parllgm_button_unselected" />
+
+        <Button
+            android:id="@+id/specs"
+            android:layout_width="150dp"
+            android:layout_height="40dp"
+            android:gravity="center_vertical"
+            android:text="@string/specification_text"
+            android:textColor="#ffffff"
+            android:background="@drawable/pllgm_button_bg" />
+
+        <Button
+            android:id="@+id/compare"
+            android:layout_width="150dp"
+            android:layout_height="40dp"
+            android:gravity="center_vertical"
+            android:text="@string/compare_text"
+            android:textColor="#717171"
+            android:background="@drawable/parllgm_button_unselected"/>
+    </LinearLayout>
+
+    <!--<TextView
+        android:id="@+id/seprator"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_above="@+id/copy_right_layout"
+        android:background="#ffffff" />
+
+    <LinearLayout
+        android:id="@+id/copy_right_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/copy_right_text1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/all_right_reserved"
+            android:textColor="#ffffff" />
+        <TextView
+            android:id="@+id/copy_right_text2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/toll_free"
+            android:textColor="#ffffff" />
+    </LinearLayout>-->
+
+</RelativeLayout>

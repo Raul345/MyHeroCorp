@@ -1,0 +1,460 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/content_followupdetail"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_dashboard"
+    android:clickable="true">
+
+    <ImageView
+        android:id="@+id/app_logo"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:src="@drawable/hero_logo" />
+
+
+    <ImageView
+        android:id="@+id/menu_icon"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:src="@drawable/ic_menu_white" />
+
+    <LinearLayout
+        android:id="@+id/top_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/app_logo"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="0sp"
+            android:layout_height="1dp"
+            android:layout_weight="0.35"
+            android:background="#ffffff" />
+
+        <Button
+            android:id="@+id/buttonHeader"
+            android:layout_width="0sp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.3"
+            android:background="@drawable/pllgm_button_bg"
+            android:gravity="center_vertical"
+            android:text="ENQUIRY DETAIL" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="0sp"
+            android:layout_height="1dp"
+            android:layout_weight="0.35"
+            android:background="#ffffff" />
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/top_layout1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/top_layout">
+
+        <RelativeLayout
+            android:id="@+id/top_layout2"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ScrollView
+                android:id="@+id/scroll_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#90000000">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <LinearLayout
+                            android:layout_width="0sp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="5">
+
+                            <TextView
+                                android:id="@+id/cust_name"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:background="#80000000"
+                                android:paddingLeft="20dp"
+                                android:paddingTop="10dp"
+                                android:text="Username"
+                                android:textColor="#ffffff" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="0sp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="5">
+
+                            <TextView
+                                android:id="@+id/cust_mobile"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:background="#80000000"
+                                android:paddingLeft="20dp"
+                                android:paddingTop="10dp"
+                                android:text="Mobile:"
+                                android:textColor="#ffffff" />
+
+                        </LinearLayout>
+
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="#80000000">
+
+                        <LinearLayout
+                            android:layout_width="0sp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="5">
+
+                            <TextView
+                                android:id="@+id/cust_agesex"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:paddingLeft="20dp"
+                                android:paddingTop="10dp"
+                                android:text="Age/Sex"
+                                android:textColor="#ffffff" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="0sp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="5">
+
+                            <TextView
+                                android:id="@+id/cust_email"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:paddingLeft="20dp"
+                                android:paddingTop="10dp"
+                                android:text="Email:"
+                                android:textColor="#ffffff" />
+
+                        </LinearLayout>
+
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="#80000000">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <Button
+                                android:id="@+id/cust_id"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:background="#00000000"
+                                android:drawableLeft="@drawable/customer_id_icon"
+                                android:gravity="center_vertical"
+                                android:paddingBottom="10dp"
+                                android:paddingLeft="20dp"
+                                android:paddingTop="10dp"
+                                android:text="Customer_id"
+                                android:textSize="15dp" />
+                        </LinearLayout>
+
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="#ffffff">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:gravity="end"
+                                android:paddingLeft="20dp"
+                                android:paddingTop="10dp"
+                                android:text="Interested in:"
+                                android:textColor="#000000" />
+
+                            <TextView
+                                android:id="@+id/int_model"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:gravity="start"
+                                android:paddingLeft="7dp"
+                                android:paddingTop="10dp"
+                                android:text="Model"
+                                android:textColor="#757575" />
+
+                        </LinearLayout>
+
+
+                    </LinearLayout>
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="#ffffff">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:gravity="end"
+                            android:paddingLeft="20dp"
+                            android:paddingTop="5dp"
+                            android:text="Expected Date of Purchase:"
+                            android:textColor="#000000" />
+
+                        <TextView
+                            android:id="@+id/expt_purch_date"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:gravity="start"
+                            android:paddingLeft="7dp"
+                            android:paddingTop="5dp"
+                            android:text="12 Aug 2016"
+                            android:textColor="#757575" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="#ffffff">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:gravity="end"
+                            android:paddingBottom="10dp"
+                            android:paddingLeft="20dp"
+                            android:paddingTop="5dp"
+                            android:text="Exchange Required:"
+                            android:textColor="#000000" />
+
+                        <TextView
+                            android:id="@+id/exch_reqd"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:gravity="start"
+                            android:paddingBottom="10dp"
+                            android:paddingLeft="7dp"
+                            android:paddingTop="5dp"
+                            android:text="Y"
+                            android:textColor="#757575" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:gravity="end"
+                            android:paddingBottom="10dp"
+                            android:paddingLeft="15dp"
+                            android:paddingTop="5dp"
+                            android:text="Finance Required:"
+                            android:textColor="#000000" />
+
+                        <TextView
+                            android:id="@+id/finance_reqd"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:gravity="start"
+                            android:paddingBottom="10dp"
+                            android:paddingLeft="7dp"
+                            android:paddingTop="5dp"
+                            android:text="Y"
+                            android:textColor="#757575" />
+
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="0.5dp"
+                        android:background="#ffffff">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:gravity="end"
+                            android:paddingBottom="10dp"
+                            android:paddingLeft="20dp"
+                            android:paddingTop="10dp"
+                            android:text="Existing Vehicle Type:"
+                            android:textColor="#000000" />
+
+                        <TextView
+                            android:id="@+id/exist_vehicletype"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:gravity="start"
+                            android:paddingBottom="10dp"
+                            android:paddingLeft="7dp"
+                            android:paddingTop="10dp"
+                            android:text="Two Wheeler"
+                            android:textColor="#757575" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="0.5dp"
+                        android:background="#ffffff">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:gravity="end"
+                            android:paddingBottom="10dp"
+                            android:paddingLeft="20dp"
+                            android:paddingTop="10dp"
+                            android:text="Followup Comments:"
+                            android:textColor="#000000" />
+
+                        <TextView
+                            android:id="@+id/followup_comments"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:gravity="start"
+                            android:paddingBottom="10dp"
+                            android:paddingLeft="7dp"
+                            android:paddingTop="10dp"
+                            android:text="No"
+                            android:textColor="#757575" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="0.5dp"
+                        android:background="#ffffff">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:gravity="end"
+                            android:paddingBottom="10dp"
+                            android:paddingLeft="20dp"
+                            android:paddingTop="10dp"
+                            android:text="Next Followup Date:"
+                            android:textColor="#000000" />
+
+                        <TextView
+                            android:id="@+id/nextfollow_date"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:gravity="start"
+                            android:paddingBottom="10dp"
+                            android:paddingLeft="7dp"
+                            android:paddingTop="10dp"
+                            android:text="12 Aug 2016"
+                            android:textColor="#757575" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="0.5dp"
+                        android:background="#ffffff"
+                        android:orientation="vertical"
+                        android:padding="20dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="#ffffff"
+                            android:padding="2dp">
+
+                            <Button
+                                android:id="@+id/button_close"
+                                android:layout_width="0sp"
+                                android:layout_height="match_parent"
+                                android:layout_marginRight="2dp"
+                                android:layout_weight="0.3"
+                                android:background="#cc0000"
+                                android:gravity="center"
+                                android:text="Close"
+                                android:textColor="#ffffff" />
+
+                            <Button
+                                android:id="@+id/button_followup"
+                                android:layout_width="0sp"
+                                android:layout_height="match_parent"
+                                android:layout_marginRight="2dp"
+                                android:layout_weight="0.3"
+                                android:background="#cc0000"
+                                android:gravity="center"
+                                android:text="Followup"
+                                android:textColor="#ffffff" />
+
+
+                            <Button
+                                android:id="@+id/button_edit"
+                                android:layout_width="0sp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="0.3"
+                                android:background="#cc0000"
+                                android:gravity="center"
+                                android:text="Edit"
+                                android:textColor="#ffffff" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_marginTop="20dp"
+                            android:background="#ffffff"
+                            android:padding="2dp">
+
+                            <Button
+                                android:id="@+id/button_testride"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_marginRight="2dp"
+                                android:background="#cc0000"
+                                android:gravity="center"
+                                android:text="TestRide Feedback"
+                                android:textColor="#ffffff" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                </LinearLayout>
+
+
+            </ScrollView>
+
+
+        </RelativeLayout>
+
+    </LinearLayout>
+</RelativeLayout>

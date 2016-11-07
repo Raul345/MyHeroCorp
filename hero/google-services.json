@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "1018415405314",
+    "firebase_url": "https://hero-sales-app-ffecf.firebaseio.com",
+    "project_id": "hero-sales-app-ffecf",
+    "storage_bucket": "hero-sales-app-ffecf.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1018415405314:android:e6f4f6a8dcf49a5c",
+        "android_client_info": {
+          "package_name": "com.herocorp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1018415405314-22f53cm1b68qdgoatcnb3fi1mcr6to48.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.herocorp",
+            "certificate_hash": "272EC429EA8FE06AAF7A606B897DAB3EB694EB61"
+          }
+        },
+        {
+          "client_id": "1018415405314-1lq5fktd7gdlo027i28sn8baacuv6463.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDcg5vU11EjI5wGAZvex62IcS0D_SFBRjY"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1018415405314-1lq5fktd7gdlo027i28sn8baacuv6463.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
