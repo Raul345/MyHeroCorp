@@ -24,6 +24,10 @@ import com.herocorp.core.constants.URLConstants;
 import com.herocorp.ui.activities.BaseDrawerActivity;
 import com.herocorp.ui.activities.DSEapp.ConnectService.NetworkConnect;
 import com.herocorp.ui.activities.DSEapp.Fragment.TodayFollowup.TodayFollowupFragment;
+import com.herocorp.ui.activities.DSEapp.db.DatabaseHelper;
+import com.herocorp.ui.activities.DSEapp.models.Bike_model;
+import com.herocorp.ui.activities.DSEapp.models.Bikemake;
+import com.herocorp.ui.activities.DSEapp.models.Bikemodel;
 import com.herocorp.ui.utility.CustomTypeFace;
 import com.herocorp.ui.utility.CustomViewParams;
 
@@ -38,6 +42,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by rsawh on 14-Sep-16.
@@ -57,6 +62,7 @@ public class SearchfilterFragment extends Fragment implements View.OnClickListen
 
     String encryptdata;
     ArrayList<String> arr_modellist = new ArrayList<String>();
+    DatabaseHelper db;
 
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
@@ -128,14 +134,13 @@ public class SearchfilterFragment extends Fragment implements View.OnClickListen
         });
 
         try {
-            Bundle bundle = this.getArguments();
-            encryptdata = bundle.getString("user_id");
-            String newurlparams = "data=" + URLEncoder.encode(encryptdata, "UTF-8");
+            fetch_records();
+            //  Bundle bundle = this.getArguments();
+            //  encryptdata = bundle.getString("user_id");
+           /* String newurlparams = "data=" + URLEncoder.encode(encryptdata, "UTF-8");
             NetworkConnect networkConnect = new NetworkConnect(URLConstants.BIKE_MAKE_MODEL, newurlparams);
-            jsonparse(networkConnect.execute());
+            jsonparse(networkConnect.execute());*/
 
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -418,7 +423,7 @@ public class SearchfilterFragment extends Fragment implements View.OnClickListen
         bundle.putString("model", model);
         bundle.putString("filter", filter);
         bundle.putInt("check", check);
-        bundle.putString("user_id", encryptdata);
+        //   bundle.putString("user_id", encryptdata);
         bundle.putString("user", "ROBINK11610");
         bundle.putInt("flag", 0);
         FragmentManager fm = getActivity().getSupportFragmentManager();
@@ -427,6 +432,28 @@ public class SearchfilterFragment extends Fragment implements View.OnClickListen
         f.setArguments(bundle);
         ft.replace(R.id.content_searchfilter, f);
         ft.commit();
+    }
+
+    public void fetch_records() {
+        try {
+            String id = "";
+            db = new DatabaseHelper(getContext());
+            List<Bikemake> allrecords = db.getAllBikemakes();
+            for (Bikemake record : allrecords) {
+                if (record.getMakename().equals("HERO MOTOCORP"))
+                    id = record.getId();
+            }
+            List<Bike_model> records = db.getAllBikemodels();
+            for (Bike_model record : records) {
+                if (record.getMakeid().equals(id))
+                    arr_modellist.add(record.getModelname());
+            }
+            ArrayAdapter<String> at1 = new ArrayAdapter<String>(getContext(), R.layout.spinner_textview, arr_modellist);
+            spin_model.setAdapter(at1);
+
+        } catch (Exception e) {
+            Toast.makeText(getContext(), "Check your Connection !!", Toast.LENGTH_SHORT).show();
+        }
     }
 }
 

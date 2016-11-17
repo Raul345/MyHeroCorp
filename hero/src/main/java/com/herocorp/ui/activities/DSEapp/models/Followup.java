@@ -26,6 +26,7 @@ public class Followup {
     String follow_date;
     String enquiry_entry_date;
     String dealer_bu_id;
+    String close_status;
 
     public String getFirst_name() {
         return first_name;
@@ -215,6 +216,14 @@ public class Followup {
         this.dealer_bu_id = dealer_bu_id;
     }
 
+    public String getClose_status() {
+        return close_status;
+    }
+
+    public void setClose_status(String close_status) {
+        this.close_status = close_status;
+    }
+
 
     public Followup(String first_name, String last_name, String cell_ph_no, String age, String gender, String email_addr, String state,
                     String district, String tehsil, String city, String x_con_seq_no, String x_model_interested, String expcted_date_purchase,
@@ -243,8 +252,38 @@ public class Followup {
         this.follow_date = follow_date;
         this.enquiry_entry_date = enquiry_entry_date;
         this.dealer_bu_id = dealer_bu_id;
-
     }
 
+    public Followup(String first_name, String last_name, String cell_ph_no, String age, String gender, String email_addr, String state,
+                    String district, String tehsil, String city, String x_con_seq_no, String x_model_interested, String expcted_date_purchase,
+                    String x_exchange_required, String x_finance_required, String exist_vehicle, String followup_comments, String enquiry_id,
+                    String follow_date, String enquiry_entry_date, String dealer_bu_id, String close_status
+    ) {
 
+        this.first_name = first_name;
+        this.last_name = last_name;
+        this.cell_ph_no = cell_ph_no;
+        this.age = age;
+        this.gender = gender;
+        this.email_addr = email_addr;
+        this.state = state;
+        this.district = district;
+        this.tehsil = tehsil;
+        this.city = city;
+        this.x_con_seq_no = x_con_seq_no;
+        this.x_model_interested = x_model_interested;
+        this.expcted_date_purchase = expcted_date_purchase;
+        this.x_exchange_required = x_exchange_required;
+        this.x_finance_required = x_finance_required;
+        this.exist_vehicle = exist_vehicle;
+        this.followup_comments = followup_comments;
+        this.enquiry_id = enquiry_id;
+        this.follow_date = follow_date;
+        this.enquiry_entry_date = enquiry_entry_date;
+        this.dealer_bu_id = dealer_bu_id;
+        this.close_status = close_status;
+    }
+    public Followup() {
+
+    }
 }

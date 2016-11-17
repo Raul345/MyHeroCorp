@@ -20,7 +20,7 @@ public class Bikemake {
         return makename;
     }
 
-    public void setMakename(String name) {
+    public void setMakename(String makename) {
         this.makename = makename;
     }
 
@@ -34,4 +34,7 @@ public class Bikemake {
         this.makename = makename;
     }
 
+    public Bikemake() {
+
+    }
 }

@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +31,7 @@ import com.herocorp.ui.activities.DSEapp.Fragment.Followup.FollowupDetailFragmen
 import com.herocorp.ui.activities.DSEapp.Fragment.Followup.FollowupFragment;
 import com.herocorp.ui.activities.DSEapp.ConnectService.NetworkConnect;
 import com.herocorp.ui.activities.DSEapp.adapter.Followupadapter;
+import com.herocorp.ui.activities.DSEapp.db.DatabaseHelper;
 import com.herocorp.ui.activities.DSEapp.models.Followup;
 import com.herocorp.ui.utility.CustomTypeFace;
 import com.herocorp.ui.utility.CustomViewParams;
@@ -41,6 +43,7 @@ import org.json.JSONObject;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by rsawh on 21-Sep-16.
@@ -48,6 +51,7 @@ import java.util.ArrayList;
 public class PendingFollowupFragment extends Fragment implements View.OnClickListener {
     private View rootView;
     private CustomViewParams customViewParams;
+    DatabaseHelper db;
 
     private Handler handler = new Handler();
     com.baoyz.swipemenulistview.SwipeMenuListView userList;
@@ -240,7 +244,7 @@ public class PendingFollowupFragment extends Fragment implements View.OnClickLis
 
        /* ImageView img_pendingfollowup_check=(ImageView)rootView.findViewById(R.id.img_pendingfollowup_check);
         img_pendingfollowup_check.setVisibility(View.VISIBLE);*/
-        try {
+       /* try {
             Bundle bundle = this.getArguments();
             encryptuser = bundle.getString("user_id");
             user = bundle.getString("user");
@@ -253,7 +257,8 @@ public class PendingFollowupFragment extends Fragment implements View.OnClickLis
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+*/
+        fetch_records();
         menu.setOnClickListener(this);
 
     }
@@ -263,9 +268,7 @@ public class PendingFollowupFragment extends Fragment implements View.OnClickLis
         int i = view.getId();
         if (i == R.id.menu_icon) {
             ((BaseDrawerActivity) getActivity()).toggleDrawer();
-
         }
-
     }
 
     public void jsonparse(String result) {
@@ -305,6 +308,44 @@ public class PendingFollowupFragment extends Fragment implements View.OnClickLis
             e.printStackTrace();
         } catch (Exception e) {
             System.out.println(Toast.makeText(getContext(), "Check your Connection !!", Toast.LENGTH_SHORT));
+
+        }
+    }
+
+    public void fetch_records() {
+        try {
+            db = new DatabaseHelper(getContext());
+            List<Followup> allrecords = db.getAllFollowups();
+            for (Followup record : allrecords) {
+                first_name = record.getFirst_name();
+                last_name = record.getLast_name();
+                cell_ph_no = record.getCell_ph_no();
+                age = record.getAge();
+                gender = record.getGender();
+                email_addr = record.getEmail_addr();
+                state = record.getState();
+                district = record.getDistrict();
+                tehsil = record.getTehsil();
+                city = record.getCity();
+                x_con_seq_no = record.getX_con_seq_no();
+                x_model_interested = record.getX_model_interested();
+                expected_date_purchase = record.getExpcted_date_purchase();
+                x_exchange_required = record.getX_exchange_required();
+                x_finance_required = record.getX_finance_required();
+                exist_vehicle = record.getExist_vehicle();
+                followup_comments = record.getFollowup_comments();
+                enquiry_id = record.getEnquiry_id();
+                follow_date = record.getFollow_date();
+                enquiry_entry_date = record.getEnquiry_entry_date();
+                dealer_bu_id = record.getDealer_bu_id();
+                userAdapter.add(new Followup(first_name, last_name, cell_ph_no, age, gender, email_addr, state, district, tehsil, city, x_con_seq_no, x_model_interested,
+                        expected_date_purchase, x_exchange_required, x_finance_required, exist_vehicle, followup_comments, enquiry_id, follow_date, enquiry_entry_date, dealer_bu_id));
+                userAdapter.notifyDataSetChanged();
+            }
+            updateList();
+
+        } catch (Exception e) {
+            System.out.println(Toast.makeText(getContext(), "Server Error !!", Toast.LENGTH_SHORT));
 
         }
     }

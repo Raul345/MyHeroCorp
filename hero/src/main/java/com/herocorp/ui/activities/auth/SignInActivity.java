@@ -35,6 +35,11 @@ import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 public class SignInActivity extends Activity implements View.OnClickListener {
 
@@ -42,20 +47,20 @@ public class SignInActivity extends Activity implements View.OnClickListener {
     private EditText dealerCode;
     private SharedPreferences sharedPreferences;
 
-    private String[] imeis = {"356604060544425",
-            "861375036084113",
-            "861375036084105",
-            "356905070792270",
-            "356906070792278",
-            "355004057991484",
-            "865317023674973",
-            "354833052900434",
-            "351971070447146",
-            "351971070473217"
-    };
+    /*   private String[] imeis = {"356604060544425",
+               "861375036084113",
+               "861375036084105",
+               "356905070792270",
+               "356906070792278",
+               "355004057991484",
+               "865317023674973",
+               "354833052900434",
+               "351971070447146",
+               "351971070473217"
+       };*/
     private String respDesc = "", respCode = "", state_id = "", dealer_code = "", version = "", path = "", state_name = "", result = "", failure_msg = "";
     private String appVersion;
-    private String deviceImei="911441757449230";
+    private String deviceImei = "911441757449230";
     private String userCode, uuid = "0";
     private String encryptuser;
 
@@ -167,7 +172,7 @@ public class SignInActivity extends Activity implements View.OnClickListener {
 
                 info = manager.getPackageInfo(getPackageName(), 0);
                 appVersion = info.versionName;
-              //  deviceImei = telephonyManager.getDeviceId();
+                //  deviceImei = telephonyManager.getDeviceId();
                 userCode = dealerCode.getText().toString();
 
                 if (userCode.equals("")) {
@@ -196,55 +201,6 @@ public class SignInActivity extends Activity implements View.OnClickListener {
         startActivity(intent);
         finish();
     }
-
-  /*  public void encryptuser(String data, String url, int flag) {
-        if (NetConnections.isConnected(getApplicationContext())) {
-            try {
-                String urlParameters = "data=" + URLEncoder.encode(data, "UTF-8");
-                networkConnect = new NetworkConnect("http://abym.in/clientProof/hero_motors/encrypt", urlParameters);
-                String result = networkConnect.execute();
-                if (result != null)
-                    encryptuser = result.replace("\\/", "/");
-                String newurlparams = "data=" + URLEncoder.encode(encryptuser, "UTF-8");
-                NetworkConnect networkConnect = new NetworkConnect(url, newurlparams);
-                if (flag == 0) {
-                    jsonparse_result(networkConnect.execute());
-                }
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            }
-
-        } else
-            Toast.makeText(getApplicationContext(), "Check your connection !!", Toast.LENGTH_SHORT).show();
-    }
-*/
-
-
-  /*  public void jsonparse_result(String response) {
-        try {
-            JSONObject jsono = new JSONObject(response);
-            respCode = jsono.getString("respCode");
-            result = jsono.getString("result");
-            if (respCode.equals("1") && result.equals("true")) {
-                respDesc = jsono.getString("respDescription");
-                dealer_code = jsono.getString("dealer_code");
-                //   state_id = jsono.getString("state_id");
-                //   state_name = jsono.getString("state_name");
-                version = jsono.getString("version");
-                path = jsono.getString("path");
-                Toast.makeText(getApplicationContext(), respCode + respDesc + dealer_code + state_id + state_name + version + path, Toast.LENGTH_SHORT).show();
-
-            } else {
-                failure_msg = jsono.getString("failure_msg");
-                Toast.makeText(getApplicationContext(), failure_msg, Toast.LENGTH_SHORT).show();
-
-            }
-            //      progressBar.setVisibility(View.INVISIBLE);
-        } catch (Exception e) {
-            Toast.makeText(getApplicationContext(), "Check your Connection !!", Toast.LENGTH_SHORT).show();
-        }
-    }
-*/
 
     public class Login extends AsyncTask<Void, Void, String> {
         String targetURL;
@@ -316,7 +272,8 @@ public class SignInActivity extends Activity implements View.OnClickListener {
         }
     }
 
-    public void save_data() {
+    public void save_data()  {
+
         sharedPreferences = getSharedPreferences("hero", 0);
         SharedPreferences.Editor edit = sharedPreferences.edit();
         edit.putString("username", userCode);
@@ -325,8 +282,7 @@ public class SignInActivity extends Activity implements View.OnClickListener {
         edit.putString("path", path);
         edit.putString("state_id", state_id);
         edit.putString("state_name", state_name);
+
         edit.commit();
     }
-
-
 }

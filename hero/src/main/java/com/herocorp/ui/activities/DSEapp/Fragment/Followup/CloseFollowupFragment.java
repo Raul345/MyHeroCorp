@@ -21,8 +21,11 @@ import com.herocorp.infra.utils.NetConnections;
 import com.herocorp.ui.activities.BaseDrawerActivity;
 import com.herocorp.ui.activities.DSEapp.ConnectService.NetworkConnect;
 import com.herocorp.ui.activities.DSEapp.ConnectService.NetworkConnect1;
+import com.herocorp.ui.activities.DSEapp.db.DatabaseHelper;
+import com.herocorp.ui.activities.DSEapp.models.Bike_model;
 import com.herocorp.ui.activities.DSEapp.models.Bikemake;
 import com.herocorp.ui.activities.DSEapp.models.Bikemodel;
+import com.herocorp.ui.activities.DSEapp.models.Followup;
 import com.herocorp.ui.utility.CustomTypeFace;
 import com.herocorp.ui.utility.CustomViewParams;
 
@@ -32,7 +35,11 @@ import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by rsawh on 24-Sep-16.
@@ -46,6 +53,7 @@ public class CloseFollowupFragment extends Fragment implements View.OnClickListe
     ImageView button_submit;
 
     String user, encryptuser, enquiryid;
+    DatabaseHelper db;
 
     ArrayList<String> arr_mainreason = new ArrayList<String>();
     ArrayList<String> arr_subreason = new ArrayList<String>();
@@ -121,15 +129,14 @@ public class CloseFollowupFragment extends Fragment implements View.OnClickListe
 
         try {
             Bundle bundle = this.getArguments();
-            encryptuser = bundle.getString("user_id");
+            // encryptuser = bundle.getString("user_id");
             user = bundle.getString("user");
             enquiryid = bundle.getString("enquiry_id");
-            String newurlparams = "data=" + URLEncoder.encode(encryptuser, "UTF-8");
+            fetch_records();
+            /*String newurlparams = "data=" + URLEncoder.encode(encryptuser, "UTF-8");
             NetworkConnect networkConnect = new NetworkConnect(URLConstants.BIKE_MAKE_MODEL, newurlparams);
-            jsonparse(networkConnect.execute());
+            jsonparse(networkConnect.execute());*/
 
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -277,7 +284,7 @@ public class CloseFollowupFragment extends Fragment implements View.OnClickListe
                         String data = "{\"reason\":\"" + main_reason + "\",\"sub_reason\":\"" + sub_reason + "\",\"existMake\":\"" + make + "\",\"existModel\":\"" + model + "\",\n" +
                                 "\", \"user_id\":\"" + user + "\",\"dms_enquiry_id\":\"" + enquiryid + "\"}";
                         newurlparams = "data=" + URLEncoder.encode(data, "UTF-8");
-                     //   Toast.makeText(getContext(), main_reason + sub_reason + make + model+user+enquiryid, Toast.LENGTH_SHORT).show();
+                        //   Toast.makeText(getContext(), main_reason + sub_reason + make + model+user+enquiryid, Toast.LENGTH_SHORT).show();
                         new NetworkConnect1(URLConstants.SYNC_FOLLOW_UP, newurlparams, progress, "Followup has been successfully submitted.", getContext(), 1).execute();
                     } catch (UnsupportedEncodingException e) {
                         e.printStackTrace();
@@ -318,7 +325,25 @@ public class CloseFollowupFragment extends Fragment implements View.OnClickListe
         }
     }
 
+    public void fetch_records() {
+        try {
+            db = new DatabaseHelper(getContext());
+            arr_makelist.add(new Bikemake("", "--select--"));
+            List<Bikemake> allrecords = db.getAllBikemakes();
+            for (Bikemake record : allrecords) {
+                arr_makelist.add(new Bikemake(record.getId(), record.getMakename()));
+            }
+            ArrayAdapter<Bikemake> at1 = new ArrayAdapter<Bikemake>(getContext(), R.layout.spinner_textview1, arr_makelist);
+            spin_make.setAdapter(at1);
 
+            List<Bike_model> records = db.getAllBikemodels();
+            for (Bike_model record : records) {
+                new Bikemodel(record.getMakeid(), record.getModelname());
+            }
+        } catch (Exception e) {
+            Toast.makeText(getContext(), "Check your Connection !!", Toast.LENGTH_SHORT).show();
+        }
+    }
 }
 
 

@@ -32,6 +32,7 @@ import com.herocorp.ui.activities.DSEapp.Fragment.Followup.FollowupFragment;
 import com.herocorp.ui.activities.DSEapp.ConnectService.NetworkConnect;
 import com.herocorp.ui.activities.DSEapp.Fragment.Search.SearchfilterFragment;
 import com.herocorp.ui.activities.DSEapp.adapter.Followupadapter;
+import com.herocorp.ui.activities.DSEapp.db.DatabaseHelper;
 import com.herocorp.ui.activities.DSEapp.models.Followup;
 import com.herocorp.ui.utility.CustomTypeFace;
 import com.herocorp.ui.utility.CustomViewParams;
@@ -46,6 +47,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -54,6 +56,8 @@ import java.util.Locale;
 public class TodayFollowupFragment extends Fragment implements View.OnClickListener {
     private View rootView;
     private CustomViewParams customViewParams;
+    DatabaseHelper db;
+
 
     private Handler handler = new Handler();
     com.baoyz.swipemenulistview.SwipeMenuListView userList;
@@ -251,8 +255,8 @@ public class TodayFollowupFragment extends Fragment implements View.OnClickListe
         userList = (SwipeMenuListView) rootView.findViewById(R.id.list_todayfollowup);
         try {
             Bundle bundle = this.getArguments();
-            encryptuser = bundle.getString("user_id");
-            user = bundle.getString("user");
+           /* encryptuser = bundle.getString("user_id");
+            user = bundle.getString("user");*/
             fromdate = bundle.getString("fromdate");
             todate = bundle.getString("todate");
             followdate = bundle.getString("followdate");
@@ -263,17 +267,16 @@ public class TodayFollowupFragment extends Fragment implements View.OnClickListe
 
             if (check != 0) {
                 buttonHeader.setText("       FOLLOWUP");
-                        //     Toast.makeText(getContext(),""+fromdate+todate,Toast.LENGTH_SHORT).show();
-            }
-            if (flag != 0) {
-                   filterbutton.setVisibility(View.VISIBLE);
                 //     Toast.makeText(getContext(),""+fromdate+todate,Toast.LENGTH_SHORT).show();
             }
-            String newurlparams = "data=" + URLEncoder.encode(encryptuser, "UTF-8");
+            if (flag != 0) {
+                filterbutton.setVisibility(View.VISIBLE);
+                //     Toast.makeText(getContext(),""+fromdate+todate,Toast.LENGTH_SHORT).show();
+            }
+            fetch_records();
+          /*  String newurlparams = "data=" + URLEncoder.encode(encryptuser, "UTF-8");
             networkConnect = new NetworkConnect(URLConstants.PENDING_FOLLOWUP, newurlparams);
-            jsonparse1(networkConnect.execute());
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+            jsonparse1(networkConnect.execute());*/
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -509,6 +512,209 @@ public class TodayFollowupFragment extends Fragment implements View.OnClickListe
             updateList();
         } catch (JSONException e) {
             e.printStackTrace();
+        } catch (Exception e) {
+            Toast.makeText(getContext(), "Check your Connection !!", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void fetch_records() {
+        try {
+            db = new DatabaseHelper(getContext());
+            List<Followup> allrecords = db.getAllFollowups();
+            for (Followup record : allrecords) {
+                first_name = record.getFirst_name();
+                last_name = record.getLast_name();
+                cell_ph_no = record.getCell_ph_no();
+                age = record.getAge();
+                gender = record.getGender();
+                email_addr = record.getEmail_addr();
+                state = record.getState();
+                district = record.getDistrict();
+                tehsil = record.getTehsil();
+                city = record.getCity();
+                x_con_seq_no = record.getX_con_seq_no();
+                x_model_interested = record.getX_model_interested();
+                expected_date_purchase = record.getExpcted_date_purchase();
+                x_exchange_required = record.getX_exchange_required();
+                x_finance_required = record.getX_finance_required();
+                exist_vehicle = record.getExist_vehicle();
+                followup_comments = record.getFollowup_comments();
+                enquiry_id = record.getEnquiry_id();
+                follow_date = record.getFollow_date();
+                enquiry_entry_date = record.getEnquiry_entry_date();
+                dealer_bu_id = record.getDealer_bu_id();
+                Date expt_purc_date = new SimpleDateFormat("dd-MMM-yy", Locale.ENGLISH)
+                        .parse(expected_date_purchase);
+
+                if (check == 0) {
+                         /* String date = new SimpleDateFormat("dd-MMM-yy").format(new Date());
+                if (follow_date.equals(date)) {
+                    userAdapter.add(new hhh(first_name, last_name, cell_ph_no, age, gender, email_addr, state, district, tehsil, city, x_con_seq_no, x_model_interested,
+                            expected_date_purchase, x_exchange_required, x_finance_required, exist_vehicle, followup_comments, enquiry_id, follow_date, enquiry_entry_date, dealer_bu_id));
+                }*/
+                    userAdapter.add(new Followup(first_name, last_name, cell_ph_no, age, gender, email_addr, state, district, tehsil, city, x_con_seq_no, x_model_interested,
+                            expected_date_purchase, x_exchange_required, x_finance_required, exist_vehicle, followup_comments, enquiry_id, follow_date, enquiry_entry_date, dealer_bu_id));
+                } else if (check == 1) {
+                    userAdapter.add(new Followup(first_name, last_name, cell_ph_no, age, gender, email_addr, state, district, tehsil, city, x_con_seq_no, x_model_interested,
+                            expected_date_purchase, x_exchange_required, x_finance_required, exist_vehicle, followup_comments, enquiry_id, follow_date, enquiry_entry_date, dealer_bu_id));
+                } else if (check == 2) {
+                    if (x_finance_required.equalsIgnoreCase("Y")) {
+                        userAdapter.add(new Followup(first_name, last_name, cell_ph_no, age, gender, email_addr, state, district, tehsil, city, x_con_seq_no, x_model_interested,
+                                expected_date_purchase, x_exchange_required, x_finance_required, exist_vehicle, followup_comments, enquiry_id, follow_date, enquiry_entry_date, dealer_bu_id));
+                    }
+                } else if (check == 3) {
+                    if (x_finance_required.equalsIgnoreCase("N")) {
+                        userAdapter.add(new Followup(first_name, last_name, cell_ph_no, age, gender, email_addr, state, district, tehsil, city, x_con_seq_no, x_model_interested,
+                                expected_date_purchase, x_exchange_required, x_finance_required, exist_vehicle, followup_comments, enquiry_id, follow_date, enquiry_entry_date, dealer_bu_id));
+                    }
+                } else if (check == 4) {
+                    convertdate();
+                    if (expt_purc_date.after(start) && expt_purc_date.before(end) && followdate.equalsIgnoreCase(follow_date) && sel_model.equalsIgnoreCase(x_model_interested)) {
+                        userAdapter.add(new Followup(first_name, last_name, cell_ph_no, age, gender, email_addr, state, district, tehsil, city, x_con_seq_no, x_model_interested,
+                                expected_date_purchase, x_exchange_required, x_finance_required, exist_vehicle, followup_comments, enquiry_id, follow_date, enquiry_entry_date, dealer_bu_id));
+                    }
+                } else if (check == 5) {
+                    convertdate();
+                    if (expt_purc_date.after(start) && expt_purc_date.before(end) && followdate.equalsIgnoreCase(follow_date) && sel_model.equalsIgnoreCase(x_model_interested)) {
+                        if (x_finance_required.equals("Y"))
+                            userAdapter.add(new Followup(first_name, last_name, cell_ph_no, age, gender, email_addr, state, district, tehsil, city, x_con_seq_no, x_model_interested,
+                                    expected_date_purchase, x_exchange_required, x_finance_required, exist_vehicle, followup_comments, enquiry_id, follow_date, enquiry_entry_date, dealer_bu_id));
+                    }
+                } else if (check == 6) {
+                    convertdate();
+                    if (expt_purc_date.after(start) && expt_purc_date.before(end) && followdate.equalsIgnoreCase(follow_date) && sel_model.equalsIgnoreCase(x_model_interested)) {
+                        if (x_finance_required.equals("N"))
+                            userAdapter.add(new Followup(first_name, last_name, cell_ph_no, age, gender, email_addr, state, district, tehsil, city, x_con_seq_no, x_model_interested,
+                                    expected_date_purchase, x_exchange_required, x_finance_required, exist_vehicle, followup_comments, enquiry_id, follow_date, enquiry_entry_date, dealer_bu_id));
+                    }
+                } else if (check == 7) {
+                    convertdate();
+                    if (expt_purc_date.after(start) && expt_purc_date.before(end) && followdate.equalsIgnoreCase(follow_date)) {
+                        userAdapter.add(new Followup(first_name, last_name, cell_ph_no, age, gender, email_addr, state, district, tehsil, city, x_con_seq_no, x_model_interested,
+                                expected_date_purchase, x_exchange_required, x_finance_required, exist_vehicle, followup_comments, enquiry_id, follow_date, enquiry_entry_date, dealer_bu_id));
+                    }
+                } else if (check == 8) {
+                    convertdate();
+                    if (expt_purc_date.after(start) && expt_purc_date.before(end) && followdate.equalsIgnoreCase(follow_date)) {
+                        if (x_finance_required.equals("Y"))
+                            userAdapter.add(new Followup(first_name, last_name, cell_ph_no, age, gender, email_addr, state, district, tehsil, city, x_con_seq_no, x_model_interested,
+                                    expected_date_purchase, x_exchange_required, x_finance_required, exist_vehicle, followup_comments, enquiry_id, follow_date, enquiry_entry_date, dealer_bu_id));
+                    }
+                } else if (check == 9) {
+                    convertdate();
+                    if (expt_purc_date.after(start) && expt_purc_date.before(end) && followdate.equalsIgnoreCase(follow_date)) {
+                        if (x_finance_required.equals("N"))
+                            userAdapter.add(new Followup(first_name, last_name, cell_ph_no, age, gender, email_addr, state, district, tehsil, city, x_con_seq_no, x_model_interested,
+                                    expected_date_purchase, x_exchange_required, x_finance_required, exist_vehicle, followup_comments, enquiry_id, follow_date, enquiry_entry_date, dealer_bu_id));
+                    }
+                } else if (check == 10) {
+                    if (followdate.equalsIgnoreCase(follow_date)) {
+                        userAdapter.add(new Followup(first_name, last_name, cell_ph_no, age, gender, email_addr, state, district, tehsil, city, x_con_seq_no, x_model_interested,
+                                expected_date_purchase, x_exchange_required, x_finance_required, exist_vehicle, followup_comments, enquiry_id, follow_date, enquiry_entry_date, dealer_bu_id));
+                    }
+                } else if (check == 11) {
+                    if (followdate.equalsIgnoreCase(follow_date)) {
+                        if (x_finance_required.equals("Y"))
+                            userAdapter.add(new Followup(first_name, last_name, cell_ph_no, age, gender, email_addr, state, district, tehsil, city, x_con_seq_no, x_model_interested,
+                                    expected_date_purchase, x_exchange_required, x_finance_required, exist_vehicle, followup_comments, enquiry_id, follow_date, enquiry_entry_date, dealer_bu_id));
+                    }
+                } else if (check == 12) {
+                    if (followdate.equalsIgnoreCase(follow_date)) {
+                        if (x_finance_required.equals("N"))
+                            userAdapter.add(new Followup(first_name, last_name, cell_ph_no, age, gender, email_addr, state, district, tehsil, city, x_con_seq_no, x_model_interested,
+                                    expected_date_purchase, x_exchange_required, x_finance_required, exist_vehicle, followup_comments, enquiry_id, follow_date, enquiry_entry_date, dealer_bu_id));
+                    }
+
+                } else if (check == 13) {
+                    convertdate();
+                    if (expt_purc_date.after(start) && expt_purc_date.before(end)) {
+                        userAdapter.add(new Followup(first_name, last_name, cell_ph_no, age, gender, email_addr, state, district, tehsil, city, x_con_seq_no, x_model_interested,
+                                expected_date_purchase, x_exchange_required, x_finance_required, exist_vehicle, followup_comments, enquiry_id, follow_date, enquiry_entry_date, dealer_bu_id));
+                    }
+
+                } else if (check == 14) {
+                    convertdate();
+                    if (expt_purc_date.after(start) && expt_purc_date.before(end)) {
+                        if (x_finance_required.equals("Y"))
+                            userAdapter.add(new Followup(first_name, last_name, cell_ph_no, age, gender, email_addr, state, district, tehsil, city, x_con_seq_no, x_model_interested,
+                                    expected_date_purchase, x_exchange_required, x_finance_required, exist_vehicle, followup_comments, enquiry_id, follow_date, enquiry_entry_date, dealer_bu_id));
+                    }
+
+                } else if (check == 15) {
+                    convertdate();
+                    if (expt_purc_date.after(start) && expt_purc_date.before(end)) {
+                        if (x_finance_required.equals("N"))
+                            userAdapter.add(new Followup(first_name, last_name, cell_ph_no, age, gender, email_addr, state, district, tehsil, city, x_con_seq_no, x_model_interested,
+                                    expected_date_purchase, x_exchange_required, x_finance_required, exist_vehicle, followup_comments, enquiry_id, follow_date, enquiry_entry_date, dealer_bu_id));
+                    }
+
+                } else if (check == 16) {
+                    if (sel_model.equalsIgnoreCase(x_model_interested)) {
+                        userAdapter.add(new Followup(first_name, last_name, cell_ph_no, age, gender, email_addr, state, district, tehsil, city, x_con_seq_no, x_model_interested,
+                                expected_date_purchase, x_exchange_required, x_finance_required, exist_vehicle, followup_comments, enquiry_id, follow_date, enquiry_entry_date, dealer_bu_id));
+
+                    }
+
+                } else if (check == 17) {
+                    if (sel_model.equalsIgnoreCase(x_model_interested)) {
+                        if (x_finance_required.equals("Y"))
+                            userAdapter.add(new Followup(first_name, last_name, cell_ph_no, age, gender, email_addr, state, district, tehsil, city, x_con_seq_no, x_model_interested,
+                                    expected_date_purchase, x_exchange_required, x_finance_required, exist_vehicle, followup_comments, enquiry_id, follow_date, enquiry_entry_date, dealer_bu_id));
+
+                    }
+
+                } else if (check == 18) {
+                    if (sel_model.equalsIgnoreCase(x_model_interested)) {
+                        if (x_finance_required.equals("N"))
+                            userAdapter.add(new Followup(first_name, last_name, cell_ph_no, age, gender, email_addr, state, district, tehsil, city, x_con_seq_no, x_model_interested,
+                                    expected_date_purchase, x_exchange_required, x_finance_required, exist_vehicle, followup_comments, enquiry_id, follow_date, enquiry_entry_date, dealer_bu_id));
+
+                    }
+
+                } else if (check == 19) {
+                    convertdate();
+                    if (expt_purc_date.after(start) && expt_purc_date.before(end) && sel_model.equalsIgnoreCase(x_model_interested)) {
+                        userAdapter.add(new Followup(first_name, last_name, cell_ph_no, age, gender, email_addr, state, district, tehsil, city, x_con_seq_no, x_model_interested,
+                                expected_date_purchase, x_exchange_required, x_finance_required, exist_vehicle, followup_comments, enquiry_id, follow_date, enquiry_entry_date, dealer_bu_id));
+                    }
+                } else if (check == 20) {
+                    convertdate();
+                    if (expt_purc_date.after(start) && expt_purc_date.before(end) && sel_model.equalsIgnoreCase(x_model_interested)) {
+                        if (x_finance_required.equals("Y"))
+                            userAdapter.add(new Followup(first_name, last_name, cell_ph_no, age, gender, email_addr, state, district, tehsil, city, x_con_seq_no, x_model_interested,
+                                    expected_date_purchase, x_exchange_required, x_finance_required, exist_vehicle, followup_comments, enquiry_id, follow_date, enquiry_entry_date, dealer_bu_id));
+                    }
+
+                } else if (check == 21) {
+                    convertdate();
+                    if (expt_purc_date.after(start) && expt_purc_date.before(end) && sel_model.equalsIgnoreCase(x_model_interested)) {
+                        if (x_finance_required.equals("N"))
+                            userAdapter.add(new Followup(first_name, last_name, cell_ph_no, age, gender, email_addr, state, district, tehsil, city, x_con_seq_no, x_model_interested,
+                                    expected_date_purchase, x_exchange_required, x_finance_required, exist_vehicle, followup_comments, enquiry_id, follow_date, enquiry_entry_date, dealer_bu_id));
+                    }
+                } else if (check == 22) {
+                    if (sel_model.equalsIgnoreCase(x_model_interested) && followdate.equalsIgnoreCase(follow_date)) {
+                        userAdapter.add(new Followup(first_name, last_name, cell_ph_no, age, gender, email_addr, state, district, tehsil, city, x_con_seq_no, x_model_interested,
+                                expected_date_purchase, x_exchange_required, x_finance_required, exist_vehicle, followup_comments, enquiry_id, follow_date, enquiry_entry_date, dealer_bu_id));
+
+                    }
+                } else if (check == 23) {
+                    if (sel_model.equalsIgnoreCase(x_model_interested) && followdate.equalsIgnoreCase(follow_date)) {
+                        if (x_finance_required.equals("Y"))
+                            userAdapter.add(new Followup(first_name, last_name, cell_ph_no, age, gender, email_addr, state, district, tehsil, city, x_con_seq_no, x_model_interested,
+                                    expected_date_purchase, x_exchange_required, x_finance_required, exist_vehicle, followup_comments, enquiry_id, follow_date, enquiry_entry_date, dealer_bu_id));
+                    }
+                } else if (check == 24) {
+                    if (sel_model.equalsIgnoreCase(x_model_interested) && followdate.equalsIgnoreCase(follow_date)) {
+                        if (x_finance_required.equals("N"))
+                            userAdapter.add(new Followup(first_name, last_name, cell_ph_no, age, gender, email_addr, state, district, tehsil, city, x_con_seq_no, x_model_interested,
+                                    expected_date_purchase, x_exchange_required, x_finance_required, exist_vehicle, followup_comments, enquiry_id, follow_date, enquiry_entry_date, dealer_bu_id));
+
+                    }
+                }
+                userAdapter.notifyDataSetChanged();
+            }
+            updateList();
         } catch (Exception e) {
             Toast.makeText(getContext(), "Check your Connection !!", Toast.LENGTH_SHORT).show();
         }
