@@ -26,7 +26,7 @@ public class Followup {
     String follow_date;
     String enquiry_entry_date;
     String dealer_bu_id;
-    String close_status;
+    String followup_status;
 
     public String getFirst_name() {
         return first_name;
@@ -216,12 +216,12 @@ public class Followup {
         this.dealer_bu_id = dealer_bu_id;
     }
 
-    public String getClose_status() {
-        return close_status;
+    public String getFollowup_status() {
+        return followup_status;
     }
 
-    public void setClose_status(String close_status) {
-        this.close_status = close_status;
+    public void setFollowup_status(String followup_status) {
+        this.followup_status = followup_status;
     }
 
 
@@ -257,7 +257,7 @@ public class Followup {
     public Followup(String first_name, String last_name, String cell_ph_no, String age, String gender, String email_addr, String state,
                     String district, String tehsil, String city, String x_con_seq_no, String x_model_interested, String expcted_date_purchase,
                     String x_exchange_required, String x_finance_required, String exist_vehicle, String followup_comments, String enquiry_id,
-                    String follow_date, String enquiry_entry_date, String dealer_bu_id, String close_status
+                    String follow_date, String enquiry_entry_date, String dealer_bu_id, String followup_status
     ) {
 
         this.first_name = first_name;
@@ -281,7 +281,7 @@ public class Followup {
         this.follow_date = follow_date;
         this.enquiry_entry_date = enquiry_entry_date;
         this.dealer_bu_id = dealer_bu_id;
-        this.close_status = close_status;
+        this.followup_status = followup_status;
     }
     public Followup() {
 

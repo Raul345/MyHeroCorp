@@ -25,6 +25,7 @@ import com.herocorp.ui.activities.DSEapp.db.DatabaseHelper;
 import com.herocorp.ui.activities.DSEapp.models.Bike_model;
 import com.herocorp.ui.activities.DSEapp.models.Bikemake;
 import com.herocorp.ui.activities.DSEapp.models.Bikemodel;
+import com.herocorp.ui.activities.DSEapp.models.Close_followup;
 import com.herocorp.ui.activities.DSEapp.models.Followup;
 import com.herocorp.ui.utility.CustomTypeFace;
 import com.herocorp.ui.utility.CustomViewParams;
@@ -54,6 +55,8 @@ public class CloseFollowupFragment extends Fragment implements View.OnClickListe
 
     String user, encryptuser, enquiryid;
     DatabaseHelper db;
+    String sync_status;
+
 
     ArrayList<String> arr_mainreason = new ArrayList<String>();
     ArrayList<String> arr_subreason = new ArrayList<String>();
@@ -278,7 +281,10 @@ public class CloseFollowupFragment extends Fragment implements View.OnClickListe
             if (main_reason.equals("--select--") || sub_reason.equals("--select--") || make.equals("--select--") || model.equals("--select--"))
                 Toast.makeText(getContext(), "Please fill all the details !!", Toast.LENGTH_SHORT).show();
             else {
+                db = new DatabaseHelper(getContext());
+                db.delete_followup(enquiryid);
                 if (NetConnections.isConnected(getContext())) {
+                    sync_status = "1";
                     String newurlparams = null;
                     try {
                         String data = "{\"reason\":\"" + main_reason + "\",\"sub_reason\":\"" + sub_reason + "\",\"existMake\":\"" + make + "\",\"existModel\":\"" + model + "\",\n" +
@@ -291,7 +297,7 @@ public class CloseFollowupFragment extends Fragment implements View.OnClickListe
                     } catch (Exception e) {
                     }
                 } else
-                    Toast.makeText(getContext(), "Check your connection !!", Toast.LENGTH_SHORT).show();
+                    db.add_close_followup(new Close_followup(main_reason, sub_reason, make, model, user, enquiryid, sync_status));
             }
         }
     }

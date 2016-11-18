@@ -19,6 +19,8 @@ import com.herocorp.core.constants.URLConstants;
 import com.herocorp.infra.utils.NetConnections;
 import com.herocorp.ui.activities.BaseDrawerActivity;
 import com.herocorp.ui.activities.DSEapp.ConnectService.NetworkConnect1;
+import com.herocorp.ui.activities.DSEapp.db.DatabaseHelper;
+import com.herocorp.ui.activities.DSEapp.models.Next_Followup;
 import com.herocorp.ui.utility.CustomTypeFace;
 import com.herocorp.ui.utility.CustomViewParams;
 
@@ -40,7 +42,10 @@ public class FollowupFragment extends Fragment implements View.OnClickListener {
     Button newscheduledate;
     private int mYear, mMonth, mDay;
     String date, follow_date, reason;
-    String encryptuser, user, enquiryid;
+    String encryptuser;
+    String user, enquiryid;
+    DatabaseHelper db;
+    String followup_status;
 
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
@@ -80,13 +85,20 @@ public class FollowupFragment extends Fragment implements View.OnClickListener {
 
         //setting dates
         date = new SimpleDateFormat("dd MMM yyyy").format(new Date());
-        follow_date = new SimpleDateFormat("dd MMM yyyy").format(new Date());
-        newscheduledate.setText(follow_date);
+
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MMM-yy");
+        Calendar c = Calendar.getInstance();
+        c.add(Calendar.DATE, 3);  // number of days to add
+        String dt1 = sdf.format(c.getTime());
+        // follow_date = new SimpleDateFormat("dd MMM yyyy").format(new Date());
+
+
+        newscheduledate.setText(dt1);
 
         //fetching user
         try {
             Bundle bundle = this.getArguments();
-            encryptuser = bundle.getString("user_id");
+           /* encryptuser = bundle.getString("user_id");*/
             user = bundle.getString("user");
             enquiryid = bundle.getString("enquiry_id");
 
@@ -118,26 +130,70 @@ public class FollowupFragment extends Fragment implements View.OnClickListener {
                 Toast.makeText(getContext(), "Please fill all the details !!", Toast.LENGTH_SHORT).show();
 
             } else {
+                followup_status = "1";
+                db = new DatabaseHelper(getContext());
+                db.update_followup(followup_status, follow_date, reason, enquiryid);
                 if (NetConnections.isConnected(getContext())) {
                     String newurlparams = null;
-                    Toast.makeText(getContext(), reason + date + follow_date+enquiryid, Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(getContext(), reason + date + follow_date + enquiryid, Toast.LENGTH_SHORT).show();
                     ProgressDialog progress = new ProgressDialog(getContext());
                     try {
                         String data = "{\"date\":\"" + date + "\",\"remarks\":\"" + reason + "\",\"fol_date\":\"" + follow_date +
                                 "\", \"user_id\":\"" + user + "\",\"dms_enquiry_id\":\"" + enquiryid + "\"}";
                         newurlparams = "data=" + URLEncoder.encode(data, "UTF-8");
-                        new NetworkConnect1(URLConstants.SYNC_FOLLOW_UP, newurlparams, progress, "Followup has been successfully submitted.", getContext(),1).execute();
+                        new NetworkConnect1(URLConstants.SYNC_FOLLOW_UP, newurlparams, progress, "Followup has been successfully submitted.", getContext(), 1).execute();
                     } catch (UnsupportedEncodingException e) {
                         e.printStackTrace();
                     } catch (Exception e) {
                     }
-                } else
-                    Toast.makeText(getContext(), "Check your connection !!", Toast.LENGTH_SHORT).show();
+                } else {
+                    db.add_next_followup(new Next_Followup(date, reason, follow_date, user, enquiryid, "1"));
+                }
+                //Toast.makeText(getContext(), "Check your connection !!", Toast.LENGTH_SHORT).show();
             }
         }
     }
 
     public String showdatepicker(final Button button) {
+        // Get Current Date
+        Date currentdate = new Date();
+        SimpleDateFormat newFormatDate = new SimpleDateFormat(
+                "dd-MMM-yy");
+        try {
+            currentdate = newFormatDate.parse(button.getText().toString());
+        } catch (ParseException e) {
+
+            e.printStackTrace();
+        }
+        final Calendar c = Calendar.getInstance();
+        c.setTime(currentdate);
+        mYear = c.get(Calendar.YEAR);
+        mMonth = c.get(Calendar.MONTH);
+        mDay = c.get(Calendar.DAY_OF_MONTH);
+
+
+        DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(),
+                new DatePickerDialog.OnDateSetListener() {
+
+                    @Override
+                    public void onDateSet(DatePicker view, int year,
+                                          int monthOfYear, int dayOfMonth) {
+
+                        follow_date = dayOfMonth + "-" + (monthOfYear + 1) + "-" + year;
+                        datechange(follow_date);
+                        mYear = year;
+                        mDay = dayOfMonth;
+                        mMonth = monthOfYear;
+                        button.setText(follow_date);
+
+
+                    }
+                }, mYear, mMonth, mDay);
+        datePickerDialog.show();
+        return date;
+
+    }
+   /* public String showdatepicker(final Button button) {
         // Get Current Date
         final Calendar c = Calendar.getInstance();
         mYear = c.get(Calendar.YEAR);
@@ -164,7 +220,7 @@ public class FollowupFragment extends Fragment implements View.OnClickListener {
         datePickerDialog.show();
         return date;
 
-    }
+    }*/
 
     public void datechange(String olddate) {
         SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
@@ -176,8 +232,5 @@ public class FollowupFragment extends Fragment implements View.OnClickListener {
         } catch (ParseException e) {
             e.printStackTrace();
         }
-
     }
-
-
 }

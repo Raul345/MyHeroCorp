@@ -60,6 +60,7 @@ public class SignInActivity extends Activity implements View.OnClickListener {
        };*/
     private String respDesc = "", respCode = "", state_id = "", dealer_code = "", version = "", path = "", state_name = "", result = "", failure_msg = "";
     private String appVersion;
+   // private String deviceImei = "911441757449230";
     private String deviceImei = "911441757449230";
     private String userCode, uuid = "0";
     private String encryptuser;
@@ -172,7 +173,7 @@ public class SignInActivity extends Activity implements View.OnClickListener {
 
                 info = manager.getPackageInfo(getPackageName(), 0);
                 appVersion = info.versionName;
-                //  deviceImei = telephonyManager.getDeviceId();
+                deviceImei = telephonyManager.getDeviceId();
                 userCode = dealerCode.getText().toString();
 
                 if (userCode.equals("")) {

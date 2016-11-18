@@ -84,6 +84,7 @@ public class PendingFollowupFragment extends Fragment implements View.OnClickLis
     String follow_date;
     String enquiry_entry_date;
     String dealer_bu_id;
+    String followup_status;
     Fragment f;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
@@ -123,7 +124,7 @@ public class PendingFollowupFragment extends Fragment implements View.OnClickLis
                 // set item width
                 followupItem.setWidth(160);
                 // set item title
-                followupItem.setTitle("hhh");
+                followupItem.setTitle("Followup");
                 // set item title fontsize
                 followupItem.setTitleSize(18);
                 // set item title font color
@@ -338,8 +339,9 @@ public class PendingFollowupFragment extends Fragment implements View.OnClickLis
                 follow_date = record.getFollow_date();
                 enquiry_entry_date = record.getEnquiry_entry_date();
                 dealer_bu_id = record.getDealer_bu_id();
+                followup_status=record.getFollowup_status();
                 userAdapter.add(new Followup(first_name, last_name, cell_ph_no, age, gender, email_addr, state, district, tehsil, city, x_con_seq_no, x_model_interested,
-                        expected_date_purchase, x_exchange_required, x_finance_required, exist_vehicle, followup_comments, enquiry_id, follow_date, enquiry_entry_date, dealer_bu_id));
+                        expected_date_purchase, x_exchange_required, x_finance_required, exist_vehicle, followup_comments, enquiry_id, follow_date, enquiry_entry_date, dealer_bu_id,followup_status));
                 userAdapter.notifyDataSetChanged();
             }
             updateList();

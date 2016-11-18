@@ -128,6 +128,7 @@ public class NetworkConnect1 extends AsyncTask<Void, Void, String> {
             Log.i("json", s);
         } catch (JSONException e) {
             e.printStackTrace();
-        }
+        }catch(Exception e)
+        {}
     }
 }

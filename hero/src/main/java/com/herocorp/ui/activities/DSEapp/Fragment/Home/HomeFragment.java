@@ -3,6 +3,7 @@ package com.herocorp.ui.activities.DSEapp.Fragment.Home;
 import android.app.ProgressDialog;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -17,6 +18,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -57,6 +59,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     private CustomViewParams customViewParams;
     EditText phoneno_et, registration_et;
     ProgressDialog progressDialog;
+    ProgressBar progressBar;
     NetworkConnect networkConnect;
     String encryptuser;
     Bundle bundle = new Bundle();
@@ -160,6 +163,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         ImageView pendingfollowup = (ImageView) rootView.findViewById(R.id.pendingfollowup);
         ImageView searchenquiry = (ImageView) rootView.findViewById(R.id.searchenquiry);
         ImageView submit = (ImageView) rootView.findViewById(R.id.imageView_submit_home);
+        progressBar = (ProgressBar) rootView.findViewById(R.id.progress);
 
         customViewParams.setImageViewCustomParams(pendingorder, new int[]{7, 7, 7, 7}, new int[]{0, 0, 0, 0}, 180, 180);
         customViewParams.setImageViewCustomParams(todayfollowup, new int[]{7, 7, 7, 12}, new int[]{0, 0, 0, 0}, 180, 180);
@@ -173,7 +177,9 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         registration_et = (EditText) rootView.findViewById(R.id.registration_edittext);
 
         fetch_data();
-        encryptuser();
+        current_date = new SimpleDateFormat("dd-MMM-yy").format(new Date());
+        if (!(sync_date.equalsIgnoreCase(current_date.toString())))
+            encryptuser();
 
         menu.setOnClickListener(this);
         pendingorder.setOnClickListener(this);
@@ -198,11 +204,10 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             // progress();
             if (NetConnections.isConnected(getContext())) {
                 // Toast.makeText(getActivity(), "Please wait for a while !!", Toast.LENGTH_SHORT).show();
+                new Encrypt_data().execute();
                 transaction(new PendingOrdersFragment());
-
             } else
                 Toast.makeText(getActivity(), "Check your Connection !!", Toast.LENGTH_SHORT).show();
-
 
         } else if (i == R.id.followup) {
 
@@ -211,12 +216,10 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             pendingfollowupText.setTextColor(Color.GRAY);
             todayfollowupText.setTextColor(Color.WHITE);
             searchenquiryText.setTextColor(Color.GRAY);
-            if (NetConnections.isConnected(getContext())) {
-                check = 0;
-                flag = 0;
-                transaction(new TodayFollowupFragment());
-            } else
-                Toast.makeText(getActivity(), "Check your Connection !!", Toast.LENGTH_SHORT).show();
+
+            check = 0;
+            flag = 0;
+            transaction(new TodayFollowupFragment());
 
 
         } else if (i == R.id.pendingfollowup) {
@@ -225,10 +228,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             pendingfollowupText.setTextColor(Color.WHITE);
             todayfollowupText.setTextColor(Color.GRAY);
             searchenquiryText.setTextColor(Color.GRAY);
-            if (NetConnections.isConnected(getContext())) {
-                transaction(new PendingFollowupFragment());
-            } else
-                Toast.makeText(getActivity(), "Check your Connection !!", Toast.LENGTH_SHORT).show();
+
+            transaction(new PendingFollowupFragment());
 
         } else if (i == R.id.searchenquiry) {
             // Toast.makeText(getActivity(), "search enquiry", Toast.LENGTH_SHORT).show();
@@ -248,6 +249,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         } else if (i == R.id.imageView_submit_home) {
             if (!(phoneno_et.getText().toString().equals("") && registration_et.getText().toString().equals(""))) {
                 if (NetConnections.isConnected(getContext())) {
+                    new Encrypt_data().execute();
                     transaction(new ContactFragment());
                 } else
                     Toast.makeText(getActivity(), "Check your Connection !!", Toast.LENGTH_SHORT).show();
@@ -258,7 +260,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
     public void transaction(final Fragment f) {
         bundle.putString("user_id", encryptuser);
-        bundle.putString("user", "ROBINK11610");
+        bundle.putString("user", user_id);
         bundle.putInt("check", check);
         bundle.putInt("flag", flag);
         bundle.putString("phone_no", phoneno_et.getText().toString());
@@ -275,30 +277,48 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
     public void encryptuser() {
         if (NetConnections.isConnected(getContext())) {
-            String json = "{\"user_id\":\"ROBINK11610\"}";
-            //   String json = "{\"user_id\":\"" + user_id + "\"}";
-            try {
-                urlParameters = "data=" + URLEncoder.encode(json, "UTF-8");
-                networkConnect = new NetworkConnect("http://abym.in/clientProof/hero_motors/encrypt", urlParameters);
-                String result = networkConnect.execute();
-                if (result != null) {
-                    encryptuser = result.replace("\\/", "/");
-                    urlParameters = "data=" + URLEncoder.encode(encryptuser, "UTF-8");
+            final Handler handler = new Handler();
+            Thread thread = new Thread() {
+                @Override
+                public void run() {
+                    int i = 0;
+                    while (encryptuser == null && i < 5) {
+                        String json = "{\"user_id\":\"ROBINK11610\"}";
+                        //   String json = "{\"user_id\":\"" + user_id + "\"}";
+                        try {
+                            urlParameters = "data=" + URLEncoder.encode(json, "UTF-8");
+                            networkConnect = new NetworkConnect("http://abym.in/clientProof/hero_motors/encrypt", urlParameters);
+                            String result = networkConnect.execute();
+                            if (result != null) {
+                                encryptuser = result.replace("\\/", "/");
+                                urlParameters = "data=" + URLEncoder.encode(encryptuser, "UTF-8");
 
-                    current_date = new SimpleDateFormat("dd-MMM-yy").format(new Date());
-
-                    //sync_start
-                    if (!(sync_date.equalsIgnoreCase(current_date.toString()))) {
-                        Log.e("sync_start", current_date.toString());
-                        networkConnect = new NetworkConnect(URLConstants.PENDING_FOLLOWUP, urlParameters);
-                        jsonparse_followup(networkConnect.execute());
+                                //sync_start
+                                /*if (!(sync_date.equalsIgnoreCase(current_date.toString()))) {*/
+                                Log.e("sync_start", current_date.toString());
+                                networkConnect = new NetworkConnect(URLConstants.PENDING_FOLLOWUP, urlParameters);
+                                jsonparse_followup(networkConnect.execute());
+                                //  }
+                            }
+                            i++;
+                        } catch (UnsupportedEncodingException e) {
+                            e.printStackTrace();
+                        }
+                        handler.post(this);
                     }
                 }
+            };
 
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            }
-        }
+            thread.start();
+        } else
+            Toast.makeText(
+
+                    getContext(),
+
+                    "Check your connection !!", Toast.LENGTH_SHORT).
+
+                    show();
+
     }
 
     public void jsonparse_followup(String result) {
@@ -363,7 +383,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             edit.commit();
 
             Log.e("sync_close", current_date.toString());
-
+            //   progressBar.setVisibility(View.INVISIBLE);
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -381,4 +401,43 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         if (sharedPreferences.contains("sync_date"))
             sync_date = sharedPreferences.getString("sync_date", null);
     }
+
+    public class Encrypt_data extends AsyncTask<Void, Void, String> {
+        NetworkConnect networkConnect;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            //  progressBar.setVisibility(View.VISIBLE);
+        }
+
+        protected String doInBackground(Void... params) {
+            if (NetConnections.isConnected(getContext())) {
+                try {
+                    String json = "{\"user_id\":\"ROBINK11610\"}";
+                    String urlParameters = "data=" + URLEncoder.encode(json, "UTF-8");
+                    networkConnect = new NetworkConnect("http://abym.in/clientProof/hero_motors/encrypt", urlParameters);
+                    String result = networkConnect.execute();
+                    if (result != null)
+                        encryptuser = result.replace("\\/", "/");
+
+                    return result;
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                    return null;
+                }
+
+            } else {
+                Toast.makeText(getContext(), "Check your connection !!", Toast.LENGTH_SHORT).show();
+                return null;
+            }
+        }
+
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            //  progressBar.setVisibility(View.INVISIBLE);
+
+        }
+    }
+
 }

@@ -64,7 +64,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         public static final String FOLLOW_DATE = "follow_date";
         public static final String ENQUIRY_ENTRY_DATE = "enquiry_entry_date";
         public static final String DEALER_BU_ID = "dealer_bu_id";
-        public static final String CLOSE_STATUS = "close_status";
+        public static final String FOLLOWUP_STATUS = "followup_status";
     }
 
     public static class Cols_make {
@@ -109,7 +109,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             + Cols_followup.CELL_PH_NUM + " integer not null, "
             + Cols_followup.AGE + " integer not null, "
             + Cols_followup.GENDER + " text not null, "
-            + Cols_followup.EMAIL_ADDR + " text not null, "
+            + Cols_followup.EMAIL_ADDR + ","
             + Cols_followup.STATE + " text not null, "
             + Cols_followup.DISTRICT + " text not null, "
             + Cols_followup.TEHSIL + ","
@@ -125,7 +125,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             + Cols_followup.FOLLOW_DATE + " text not null, "
             + Cols_followup.ENQUIRY_ENTRY_DATE + " text not null, "
             + Cols_followup.DEALER_BU_ID + " text not null, "
-            + Cols_followup.CLOSE_STATUS
+            + Cols_followup.FOLLOWUP_STATUS
             + ");";
 
     //bikemake table create statement
@@ -144,7 +144,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             + ");";
 
 
-    private static final String CREATE_TABLE_CLOSE_FOLLOWUP = "create table"
+    private static final String CREATE_TABLE_CLOSE_FOLLOWUP = "create table "
             + TABLE_CLOSEFOLLOWUP + "("
             + Cols_closefollowup.REASON + ","
             + Cols_closefollowup.SUB_REASON + ","
@@ -155,7 +155,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             + Cols_closefollowup.SYNC_STATUS
             + ");";
 
-    private static final String CREATE_TABLE_NEXT_FOLLOWUP = "create table"
+    private static final String CREATE_TABLE_NEXT_FOLLOWUP = "create table "
             + TABLE_NEXTFOLLOWUP + "("
             + Cols_nextfollowup.DATE + ","
             + Cols_nextfollowup.REMARKS + ","
@@ -242,7 +242,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(Cols_followup.FOLLOW_DATE, followup.getFollow_date());
         values.put(Cols_followup.ENQUIRY_ENTRY_DATE, followup.getEnquiry_entry_date());
         values.put(Cols_followup.DEALER_BU_ID, followup.getDealer_bu_id());
-        values.put(Cols_followup.CLOSE_STATUS, followup.getClose_status());
+        values.put(Cols_followup.FOLLOWUP_STATUS, followup.getFollowup_status());
         // Inserting Row
         db.insert(TABLE_FOLLOWUP, null, values);
         db.close();
@@ -279,6 +279,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
     }
 
+
     public void closeDB() {
         SQLiteDatabase db = this.getReadableDatabase();
         if (db != null && db.isOpen())
@@ -286,12 +287,21 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
 
-    public void cleartables()
-    {
+    public void cleartables() {
         SQLiteDatabase db = this.getWritableDatabase();
-        db.execSQL("DELETE FROM "+ TABLE_FOLLOWUP);
-        db.execSQL("DELETE FROM "+ TABLE_MAKE);
-        db.execSQL("DELETE FROM "+ TABLE_MODEL);
+        db.execSQL("DELETE FROM " + TABLE_FOLLOWUP);
+        db.execSQL("DELETE FROM " + TABLE_MAKE);
+        db.execSQL("DELETE FROM " + TABLE_MODEL);
+    }
+
+    public void clearnextfollowup_table() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("DELETE FROM " + TABLE_NEXTFOLLOWUP);
+    }
+
+    public void clearclosefollowup_table() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("DELETE FROM " + TABLE_CLOSEFOLLOWUP);
     }
 
     public List<Followup> getAllFollowups() {
@@ -332,7 +342,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 t.setFollow_date(c.getString((c.getColumnIndex(Cols_followup.FOLLOW_DATE))));
                 t.setEnquiry_entry_date(c.getString((c.getColumnIndex(Cols_followup.ENQUIRY_ENTRY_DATE))));
                 t.setDealer_bu_id(c.getString((c.getColumnIndex(Cols_followup.DEALER_BU_ID))));
-                t.setClose_status(c.getString((c.getColumnIndex(Cols_followup.CLOSE_STATUS))));
+                t.setFollowup_status(c.getString((c.getColumnIndex(Cols_followup.FOLLOWUP_STATUS))));
 
                 followups.add(t);
             } while (c.moveToNext());
@@ -382,6 +392,23 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return models;
     }
 
+    public void update_followup(String followup_status,String followupdate,String followupcomment, String enquiryid) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(Cols_followup.FOLLOWUP_STATUS, followup_status);
+        values.put(Cols_followup.FOLLOW_DATE, followupdate);
+        values.put(Cols_followup.FOLLOWUP_COMMENTS, followupcomment);
+        db.update(TABLE_FOLLOWUP, values, Cols_followup.ENQUIRY_ID + " = ?",
+                new String[]{String.valueOf(enquiryid)});
+        // Inserting Row
+        db.close();
+    }
 
+    public void delete_followup(String enquiryid) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(TABLE_FOLLOWUP, Cols_followup.ENQUIRY_ID + " = ?",
+                new String[]{String.valueOf(enquiryid)});
+        db.close();
+    }
 
 }
