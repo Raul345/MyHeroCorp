@@ -17,6 +17,7 @@ import com.herocorp.R;
 import com.herocorp.core.constants.URLConstants;
 import com.herocorp.infra.utils.NetConnections;
 import com.herocorp.ui.activities.DSEapp.ConnectService.NetworkConnect;
+import com.herocorp.ui.activities.DSEapp.db.DatabaseHelper;
 import com.herocorp.ui.activities.DSEapp.models.District;
 import com.herocorp.ui.activities.DSEapp.models.State;
 import com.herocorp.ui.activities.DSEapp.models.Tehsil;
@@ -28,6 +29,7 @@ import org.json.JSONObject;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by rsawh on 05-Oct-16.
@@ -57,6 +59,7 @@ public class EditaddressFragment extends Fragment {
     int flag = 0, editflag = 0;
     String username = "ROBINK11610", version = "1.0", imei = "10", uuid = "0";
 
+    DatabaseHelper db;
 
     public static EditaddressFragment newInstance(int page) {
         Bundle args = new Bundle();
@@ -204,13 +207,15 @@ public class EditaddressFragment extends Fragment {
                     tehsil_spinner.setEnabled(true);
                     village_spinner.setEnabled(true);
                     edit.putString("state", "");
-                    edit.putString("district","");
-                    edit.putString("tehsil","");
-                    edit.putString("village","");
+                    edit.putString("district", "");
+                    edit.putString("tehsil", "");
+                    edit.putString("village", "");
                     edit.commit();
-                  //  data = "{\"username\":\"ROBINK11610\",\"version\":\"1.0\",\"imei\":\"10\",\"uuid\":\"0\"}";
-                    data = "{\"username\":\"" + username + "\",\"version\":\"" + version + "\",\"imei\":\"" + imei + "\",\"uuid\":\"" + uuid + "\"}";
-                    encryptuser(data, URLConstants.LOGIN, 0);
+                    fetch_states();
+                    //  data = "{\"username\":\"ROBINK11610\",\"version\":\"1.0\",\"imei\":\"10\",\"uuid\":\"0\"}";
+                    /*data = "{\"username\":\"" + username + "\",\"version\":\"" + version + "\",\"imei\":\"" + imei + "\",\"uuid\":\"" + uuid + "\"}";
+                    encryptuser(data, URLConstants.LOGIN, 0);*/
+
                     reset(0);
 
                 } else {
@@ -422,5 +427,15 @@ public class EditaddressFragment extends Fragment {
             tehsil = "";
             village = "";
         }
+    }
+
+    public void fetch_states() {
+        db = new DatabaseHelper(getContext());
+        List<State> allrecords = db.getAllStates();
+        for (State record : allrecords) {
+            arr_state.add(new State(record.getId(), record.getState()));
+        }
+        ArrayAdapter<State> at1 = new ArrayAdapter<State>(getContext(), R.layout.spinner_textview, arr_state);
+        state_spinner.setAdapter(at1);
     }
 }

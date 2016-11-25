@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +28,8 @@ import com.herocorp.infra.utils.NetConnections;
 import com.herocorp.ui.activities.DSEapp.ConnectService.NetworkConnect;
 import com.herocorp.ui.activities.DSEapp.ConnectService.NetworkConnect1;
 import com.herocorp.ui.activities.DSEapp.adapter.Campaignadapter;
+import com.herocorp.ui.activities.DSEapp.db.DatabaseHelper;
+import com.herocorp.ui.activities.DSEapp.models.Bike_model;
 import com.herocorp.ui.activities.DSEapp.models.Bikemake;
 import com.herocorp.ui.activities.DSEapp.models.Bikemodel;
 import com.herocorp.ui.activities.DSEapp.models.Campaign;
@@ -43,6 +46,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by rsawh on 05-Oct-16.
@@ -72,7 +76,7 @@ public class EditEnquiryFragment extends Fragment implements View.OnClickListene
     ArrayList<Bikemake> arr_makelist = new ArrayList<Bikemake>();
     ArrayList<String> chk_campaignid = new ArrayList<String>();
 
-    String username = "ROBINK11610", dealercode = "11610", key = "", enquiry_id = "";
+    //String username = "ROBINK11610", dealercode = "11610" ;
     int flag = 0;
 
     private int mYear, mMonth, mDay;
@@ -84,6 +88,11 @@ public class EditEnquiryFragment extends Fragment implements View.OnClickListene
     NetworkConnect networkConnect;
 
     SharedPreferences mypref;
+    private SharedPreferences sharedPreferences;
+    String user_id, dealer_code, key, enquiry_id = "";
+
+
+    DatabaseHelper db;
 
     public static EditEnquiryFragment newInstance(int page) {
         Bundle args = new Bundle();
@@ -170,8 +179,10 @@ public class EditEnquiryFragment extends Fragment implements View.OnClickListene
         spin_existvehicle.setSelection(at.getPosition(existvehicle));
 
 
-        data = "{\"user_id\":\"" + username + "\"}";
-        encryptuser1(URLConstants.BIKE_MAKE_MODEL, data, 2);
+       /* data = "{\"user_id\":\"" + username + "\"}";
+        encryptuser1(URLConstants.BIKE_MAKE_MODEL, data, 2);*/
+        fetch_pref();
+        fetch_make_model();
 
 
         exchange_chkbox.setOnClickListener(new View.OnClickListener() {
@@ -216,12 +227,18 @@ public class EditEnquiryFragment extends Fragment implements View.OnClickListene
         spin_interested_model.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (position != 0) {
+                if (position != 0 && !model.equalsIgnoreCase(parent.getItemAtPosition(position).toString())) {
                     model = parent.getItemAtPosition(position).toString();
-                    data = "{\"user_id\":\"" + username + "\",\"dealer_code\":\"" + dealercode + "\"}";
-                    encryptuser1(URLConstants.GET_CAMPAIGN_DATA, data, 0);
-                    updateList();
-                    chk_campaignid.clear();
+                    JSONObject jsonparams = new JSONObject();
+                    try {
+                        jsonparams.put("user_id", user_id);
+                        jsonparams.put("dealer_code", dealer_code);
+                        encryptuser1(URLConstants.GET_CAMPAIGN_DATA, jsonparams.toString(), 0);
+                        updateList();
+                        chk_campaignid.clear();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
                 }
                /* else
                     userList.setAdapter(null);*/
@@ -342,7 +359,7 @@ public class EditEnquiryFragment extends Fragment implements View.OnClickListene
                 }
                 if (flag == 2) {
                     networkConnect = new NetworkConnect(url, newurlparams);
-                    jsonparse_model(networkConnect.execute());
+                    //  jsonparse_model(networkConnect.execute());
                 }
 
             } catch (UnsupportedEncodingException e) {
@@ -542,25 +559,59 @@ public class EditEnquiryFragment extends Fragment implements View.OnClickListene
             if (model.equals("") || flag == 0 || existvehicle.equals(""))
                 Toast.makeText(getContext(), "Please fill all the details !!" + model + flag + existvehicle, Toast.LENGTH_LONG).show();
             else {
-                String json = "{\"key\":\"" + key + "\",\"mobile\":\"" + mobile + "\",\"email\":\"" + email + "\",\"fname\":\"" + firstname + "\",\"lname\":\"" + lastname +
+               /* String json = "{\"key\":\"" + key + "\",\"mobile\":\"" + mobile + "\",\"email\":\"" + email + "\",\"fname\":\"" + firstname + "\",\"lname\":\"" + lastname +
                         "\",\"age\":\"" + age + "\",\"gender\":\"" + gender + "\",\"address1\":\"" + address1 + "\",\"address2\":\"" + address2 + "\",\"pincode\":\"" + pincode +
-                        "\",\"exist_enq_id\":\"" + enquiry_id + "\",\"user_id\":\"" + username + "\",\"state\":\"" + state + "\",\"district\":\"" + district +
+                        "\",\"exist_enq_id\":\"" + enquiry_id + "\",\"user_id\":\"" + user_id + "\",\"state\":\"" + state + "\",\"district\":\"" + district +
                         "\",\"tehsil\":\"" + tehsil + "\",\"village\":\"" + village + "\",\"exchange_req\":\"" + exchange + "\",\"finance_req\":\"" + finance +
                         "\",\"test_ride\":\"" + test + "\",\"remarks\":\"" + remark + "\",\"existVeh\":\"" + existvehicle +
-                        "\",\"existMake\":\"" + existmake + "\",\"existModel\":\"" + existmodel + "\",\"model_interested\":\"" + model + "\",\"fol_date\":\"" + follow_date + "\",\"exp_purchase_date\":\"" + purch_date + "\",\"dealer_code\":\"" + dealercode +
-                        "\"";
+                        "\",\"existMake\":\"" + existmake + "\",\"existModel\":\"" + existmodel + "\",\"model_interested\":\"" + model + "\",\"fol_date\":\"" + follow_date + "\",\"exp_purchase_date\":\"" + purch_date + "\",\"dealer_code\":\"" + dealer_code +
+                        "\"";*/
 
-                String sel_campaign = "";
+                JSONObject jsonparams = new JSONObject();
+
+                jsonparams.put("key", key);
+                jsonparams.put("mobile", mobile);
+                jsonparams.put("email", email);
+                jsonparams.put("fname", firstname);
+                jsonparams.put("lname", lastname);
+                jsonparams.put("age", age);
+                jsonparams.put("gender", gender);
+                jsonparams.put("address1", address1);
+                jsonparams.put("address2", address2);
+                jsonparams.put("pincode", pincode);
+                jsonparams.put("exist_enq_id", enquiry_id);
+                jsonparams.put("user_id", user_id);
+
+                jsonparams.put("state", state);
+                jsonparams.put("district", district);
+                jsonparams.put("tehsil", tehsil);
+                jsonparams.put("village", village);
+                jsonparams.put("exchange_req", exchange);
+                jsonparams.put("finance_req", finance);
+                jsonparams.put("test_ride", test);
+                jsonparams.put("remarks", remark);
+                jsonparams.put("existVeh", existvehicle);
+                jsonparams.put("existMake", existmake);
+                jsonparams.put("existModel", existmodel);
+                jsonparams.put("model_interested", model);
+                jsonparams.put("fol_date", follow_date);
+                jsonparams.put("exp_purchase_date", purch_date);
+                jsonparams.put("dealer_code", dealer_code);
+
+                //  String sel_campaign = "";
                 for (int i = 0; i < chk_campaignid.size(); i++) {
-                    sel_campaign += ",\"campid" + (i + 1) + ":\"" + chk_campaignid.get(i) + "\"";
+                    jsonparams.put("campid" + (i + 1), chk_campaignid.get(i));
+                    //  sel_campaign += ",\"campid" + (i + 1) + ":\"" + chk_campaignid.get(i) + "\"";
                 }
-                sel_campaign += "}";
 
-                data = json + sel_campaign;
+                // sel_campaign += "}";
+
+                // data = json + sel_campaign;
 
                 //   Toast.makeText(getContext(), data, Toast.LENGTH_LONG).show();
 
-                encryptuser1(URLConstants.ADD_ENQUIRY, data, 1);
+                Log.e("add_enquiry", jsonparams.toString());
+                encryptuser1(URLConstants.ADD_ENQUIRY, jsonparams.toString(), 1);
             }
 
         } catch (Exception e) {
@@ -648,7 +699,44 @@ public class EditEnquiryFragment extends Fragment implements View.OnClickListene
             flag = 1;
 
 
+    }
 
+    public void fetch_pref() {
+        sharedPreferences = getActivity().getSharedPreferences("hero", 0);
+        if (sharedPreferences.contains("username"))
+            user_id = sharedPreferences.getString("username", null);
+        if (sharedPreferences.contains("dealercode"))
+            dealer_code = sharedPreferences.getString("dealercode", null);
+    }
+
+    public void fetch_make_model() {
+        try {
+            String id = "";
+
+            db = new DatabaseHelper(getContext());
+            arr_makelist.clear();
+            arr_makelist.add(new Bikemake("", "--select--"));
+            List<Bikemake> allrecords = db.getAllBikemakes();
+            for (Bikemake record : allrecords) {
+                arr_makelist.add(new Bikemake(record.getId(), record.getMakename()));
+                if (record.getMakename().equalsIgnoreCase("HERO MOTOCORP"))
+                    id = record.getId();
+            }
+
+            new Bikemodel("", "--select--");
+            arr_modellist.add("--select--");
+
+            List<Bike_model> records = db.getAllBikemodels();
+            for (Bike_model record : records) {
+                new Bikemodel(record.getMakeid(), record.getModelname());
+                if (record.getMakeid().equals(id))
+                    arr_modellist.add(record.getModelname());
+            }
+            ArrayAdapter<String> at1 = new ArrayAdapter<String>(getContext(), R.layout.spinner_textview2, arr_modellist);
+            spin_interested_model.setAdapter(at1);
+        } catch (Exception e) {
+            Toast.makeText(getContext(), "Check your Connection !!", Toast.LENGTH_SHORT).show();
+        }
     }
 
 }

@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import com.herocorp.core.constants.URLConstants;
 import com.herocorp.ui.activities.DSEapp.Fragment.AlertDialogFragment;
 
 import org.json.JSONException;
@@ -23,6 +24,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
 
 /**
  * Created by rsawh on 22-Sep-16.
@@ -34,6 +36,7 @@ public class NetworkConnect1 extends AsyncTask<Void, Void, String> {
     String message;
     Context context;
     int flag = 0;
+    NetworkConnect networkConnect;
 
     public NetworkConnect1(String targeturl, String urlParameters, ProgressDialog progress, String message, Context context, int flag) {
         this.targetURL = targeturl;
@@ -42,6 +45,7 @@ public class NetworkConnect1 extends AsyncTask<Void, Void, String> {
         this.message = message;
         this.context = context;
         this.flag = flag;
+
     }
 
     public NetworkConnect1(String targeturl, String urlParameters) {
@@ -64,13 +68,19 @@ public class NetworkConnect1 extends AsyncTask<Void, Void, String> {
         URL url;
         HttpURLConnection connection = null;
         try {
+            String encryptdata= "data=" + URLEncoder.encode(urlParameters, "UTF-8");
+            networkConnect = new NetworkConnect(URLConstants.ENCRYPT, urlParameters);
+            String result = networkConnect.execute();
+            if (result != null)
+                encryptdata = result.replace("\\/", "/");
+
             //Create connection
             url = new URL(targetURL);
             connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("POST");
             connection.setRequestProperty("Content-Type",
                     "application/x-www-form-urlencoded");
-            connection.setRequestProperty("Content-Length", "" + Integer.toString(urlParameters.getBytes().length));
+            connection.setRequestProperty("Content-Length", "" + Integer.toString(encryptdata.getBytes().length));
             connection.setRequestProperty("Content-Language", "en-US");
             connection.setUseCaches(false);
             connection.setDoInput(true);
@@ -79,7 +89,7 @@ public class NetworkConnect1 extends AsyncTask<Void, Void, String> {
             //Send request
             DataOutputStream wr = new DataOutputStream(
                     connection.getOutputStream());
-            wr.writeBytes(urlParameters);
+            wr.writeBytes(encryptdata);
             wr.flush();
             wr.close();
 

@@ -87,7 +87,7 @@ public class FollowupFragment extends Fragment implements View.OnClickListener {
         newscheduledate = (Button) rootView.findViewById(R.id.button_scheduledate);
 
         //setting dates
-        date = new SimpleDateFormat("dd MMM yyyy").format(new Date());
+        date = new SimpleDateFormat("dd-MMM-yyyy").format(new Date());
 
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MMM-yy");
         Calendar c = Calendar.getInstance();
@@ -238,7 +238,7 @@ public class FollowupFragment extends Fragment implements View.OnClickListener {
         Date newDate;
         try {
             newDate = format.parse(olddate);
-            format = new SimpleDateFormat("dd-MM-yyyy");
+            format = new SimpleDateFormat("dd-MMM-yyyy");
             follow_date = format.format(newDate);
         } catch (ParseException e) {
             e.printStackTrace();

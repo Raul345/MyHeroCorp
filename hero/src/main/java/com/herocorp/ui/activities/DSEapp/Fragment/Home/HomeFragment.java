@@ -176,7 +176,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         phoneno_et = (EditText) rootView.findViewById(R.id.phoneno_edittext);
         registration_et = (EditText) rootView.findViewById(R.id.registration_edittext);
 
-        fetch_data();
+        fetch_pref();
         current_date = new SimpleDateFormat("dd-MMM-yy").format(new Date());
         if (!(sync_date.equalsIgnoreCase(current_date.toString())))
             sync_data();
@@ -219,6 +219,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
             check = 0;
             flag = 0;
+
             transaction(new TodayFollowupFragment());
 
 
@@ -276,6 +277,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     }
 
     public void sync_data() {
+        final JSONObject jsonparams = new JSONObject();
+
         if (NetConnections.isConnected(getContext())) {
             final Handler handler = new Handler();
             Thread thread = new Thread() {
@@ -283,10 +286,14 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 public void run() {
                     int i = 0;
                     while (encryptuser == null && i < 5) {
-                        String json = "{\"user_id\":\"ROBINK11610\"}";
-                        //   String json = "{\"user_id\":\"" + user_id + "\"}";
                         try {
-                            urlParameters = "data=" + URLEncoder.encode(json, "UTF-8");
+                            user_id = "ROBINK11610";
+                            jsonparams.put("user_id", user_id);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        try {
+                            urlParameters = "data=" + URLEncoder.encode(jsonparams.toString(), "UTF-8");
                             networkConnect = new NetworkConnect(URLConstants.ENCRYPT, urlParameters);
                             String result = networkConnect.execute();
                             if (result != null) {
@@ -322,6 +329,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     }
 
     public void jsonparse_followup(String result) {
+        Log.e("response_followup:", result);
         db = new DatabaseHelper(getContext());
         db.cleartables();
         JSONObject jsono = null;
@@ -367,6 +375,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             db = new DatabaseHelper(getContext());
             JSONObject jsono = new JSONObject(result);
             JSONArray jarray = jsono.getJSONArray("make");
+            Log.e("response_make_model:", result);
 
             for (int i = 0; i < jarray.length(); i++) {
                 JSONObject object = jarray.getJSONObject(i);
@@ -392,7 +401,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         }
     }
 
-    public void fetch_data() {
+    public void fetch_pref() {
         sharedPreferences = getActivity().getSharedPreferences("hero", 0);
         if (sharedPreferences.contains("username"))
             user_id = sharedPreferences.getString("username", null);
@@ -415,6 +424,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             if (NetConnections.isConnected(getContext())) try {
                 JSONObject json = new JSONObject();
                 try {
+                    user_id="ROBINK11610";
                     json.put("user_id", "ROBINK11610");
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -424,6 +434,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 String result = networkConnect.execute();
                 if (result != null)
                     encryptuser = result.replace("\\/", "/");
+                Log.e("encrypt",encryptuser);
 
                 return result;
             } catch (UnsupportedEncodingException e) {

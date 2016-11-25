@@ -67,7 +67,7 @@ public class ContactFragment extends Fragment implements View.OnClickListener {
             primary_dealer_name, attrib_42, prod_attrib02_CD, desc_text, first_sale_dt, ins_policy_co, x_hmgl_card_points;
     String row_id, camp_name, opty_id;
 
-    String phone_no, reg_no, dealer_code = "11610", user, encryptuser;
+    String phone_no, reg_no, dealer_code = "11610", user;
     String encryptdata;
 
 
@@ -345,7 +345,6 @@ public class ContactFragment extends Fragment implements View.OnClickListener {
         phone_no = bundle.getString("phone_no");
         reg_no = bundle.getString("reg_no");
         user = bundle.getString("user");
-        encryptuser = bundle.getString("user_id");
         String json = "{\"user_id\":\"" + user + "\",\"dealer_code\":\"" + dealer_code + "\",\"phn_no\":\"" + phone_no + "\",\"reg_no\":\"" + reg_no + "\"}";
         encryptuser(json, URLConstants.FETCH_CONTACT);
     }
@@ -564,9 +563,7 @@ public class ContactFragment extends Fragment implements View.OnClickListener {
         listView.requestLayout();
     }
 
-    public void send_id(Bundle bundle)
-    {
-        bundle.putString("user_id", encryptuser);
+    public void send_id(Bundle bundle) {
         bundle.putString("user", user);
     }
 

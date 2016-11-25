@@ -7,6 +7,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
+import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -28,7 +29,9 @@ import com.herocorp.core.constants.URLConstants;
 import com.herocorp.infra.utils.NetConnections;
 import com.herocorp.ui.activities.BaseDrawerActivity;
 import com.herocorp.ui.activities.DSEapp.ConnectService.NetworkConnect;
+import com.herocorp.ui.activities.DSEapp.db.DatabaseHelper;
 import com.herocorp.ui.activities.DSEapp.models.District;
+import com.herocorp.ui.activities.DSEapp.models.Followup;
 import com.herocorp.ui.activities.DSEapp.models.State;
 import com.herocorp.ui.activities.DSEapp.models.Tehsil;
 import com.herocorp.ui.activities.DSEapp.models.Village;
@@ -41,6 +44,7 @@ import org.json.JSONObject;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -64,11 +68,12 @@ public class PersonalinfoFragment extends Fragment implements View.OnClickListen
 
     String gender = "", state = "", district = "", tehsil = "", village = "";
     String firstname = "", lastname = "", mobile = "", age = "", email = "", address1 = "", address2 = "", pincode = "";
-    String username = "ROBINK11610", version = "1.0", imei = "10", uuid = "0";
+    String username = "ROBINK11610";
 
     String encryptuser;
     NetworkConnect networkConnect;
     String data;
+    DatabaseHelper db;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
             savedInstanceState) {
@@ -76,8 +81,9 @@ public class PersonalinfoFragment extends Fragment implements View.OnClickListen
         rootView = inflater.inflate(R.layout.dse_personalinfo_fragment, container, false);
 
         initView(rootView);
-        data = "{\"username\":\"" + username + "\",\"version\":\"" + version + "\",\"imei\":\"" + imei + "\",\"uuid\":\"" + uuid + "\"}";
-        encryptuser(data, URLConstants.LOGIN, 0);
+       // data = "{\"username\":\"" + username + "\",\"version\":\"" + version + "\",\"imei\":\"" + imei + "\",\"uuid\":\"" + uuid + "\"}";
+//        encryptuser(data, URLConstants.LOGIN, 0);
+        fetch_states();
 
         return rootView;
     }
@@ -168,7 +174,9 @@ public class PersonalinfoFragment extends Fragment implements View.OnClickListen
                     reset(1);
                     district = parent.getItemAtPosition(position).toString();
                     District sel_district = (District) parent.getSelectedItem();
+
                     data = "{\"district_id\":\"" + sel_district.getId() + "\"}";
+
                     encryptuser(data, URLConstants.GET_DISTRICT_DATA, 2);
                 } else
                     reset(1);
@@ -254,7 +262,7 @@ public class PersonalinfoFragment extends Fragment implements View.OnClickListen
 
                 Toast.makeText(getContext(), "Please fill all the required details !!", Toast.LENGTH_SHORT).show();
 
-            } else if (emailValidator(email) == false) {
+            } else if (!TextUtils.isEmpty(email) && emailValidator(email) == false) {
 
                 Toast.makeText(getContext(), "Invalid Email !!", Toast.LENGTH_LONG).show();
 
@@ -278,6 +286,7 @@ public class PersonalinfoFragment extends Fragment implements View.OnClickListen
                 bundle.putString("address1", address1);
                 bundle.putString("address2", address2);
                 bundle.putString("pin", pincode);
+                Log.e("personal_info:",bundle.toString());
                 Fragment f = new AddenquiryFragment();
                 FragmentManager fm = getActivity().getSupportFragmentManager();
                 FragmentTransaction ft = fm.beginTransaction();
@@ -306,7 +315,7 @@ public class PersonalinfoFragment extends Fragment implements View.OnClickListen
 
     }
 
-    public void encryptuser1() {
+   /* public void encryptuser1() {
         if (NetConnections.isConnected(getContext())) {
             String json = "{\"username\":\"ROBINK11610\",\"version\":\"1.0\",\"imei\":\"10\",\"uuid\":\"0\"}";
             try {
@@ -325,10 +334,10 @@ public class PersonalinfoFragment extends Fragment implements View.OnClickListen
         } else
             Toast.makeText(getContext(), "Check your connection !!", Toast.LENGTH_SHORT).show();
     }
-
-    public void jsonparse_state(String result) {
+*/
+   /* public void jsonparse_state(String result) {
         try {
-            Log.e("login_response",result);
+            Log.e("login_response", result);
             JSONObject jsono = new JSONObject(result);
             JSONArray jarray = jsono.getJSONArray("state");
 
@@ -344,7 +353,7 @@ public class PersonalinfoFragment extends Fragment implements View.OnClickListen
             Toast.makeText(getContext(), "Check your Connection !!" + e, Toast.LENGTH_SHORT).show();
 
         }
-    }
+    }*/
 
     public void encryptuser(String data, String url, int flag) {
         if (NetConnections.isConnected(getContext())) {
@@ -357,7 +366,7 @@ public class PersonalinfoFragment extends Fragment implements View.OnClickListen
                 String newurlparams = "data=" + URLEncoder.encode(encryptuser, "UTF-8");
                 NetworkConnect networkConnect = new NetworkConnect(url, newurlparams);
                 if (flag == 0) {
-                    jsonparse_state(networkConnect.execute());
+                   // jsonparse_state(networkConnect.execute());
                 }
                 if (flag == 1) {
                     jsonparse_district(networkConnect.execute());
@@ -375,7 +384,7 @@ public class PersonalinfoFragment extends Fragment implements View.OnClickListen
 
     public void jsonparse_district(String result) {
         try {
-            Log.e("district_response",result);
+            Log.e("district_response", result);
             arr_district.clear();
             JSONObject jsono = new JSONObject(result);
             JSONArray jarray = jsono.getJSONArray("district");
@@ -395,7 +404,7 @@ public class PersonalinfoFragment extends Fragment implements View.OnClickListen
 
     public void jsonparse_tehsil_village(String result) {
         try {
-            Log.e("tehsil_response",result);
+            Log.e("tehsil_response", result);
             arr_tehsil.clear();
             JSONObject jsono = new JSONObject(result);
             JSONArray jarray = jsono.getJSONArray("tehsil");
@@ -447,5 +456,16 @@ public class PersonalinfoFragment extends Fragment implements View.OnClickListen
             tehsil = "";
             village = "";
         }
+    }
+
+    public void fetch_states() {
+        db = new DatabaseHelper(getContext());
+        List<State> allrecords = db.getAllStates();
+        arr_state.add(new State("", "--select--"));
+        for (State record : allrecords) {
+            arr_state.add(new State(record.getId(), record.getState()));
+        }
+        ArrayAdapter<State> at1 = new ArrayAdapter<State>(getContext(), R.layout.spinner_textview, arr_state);
+        state_spinner.setAdapter(at1);
     }
 }

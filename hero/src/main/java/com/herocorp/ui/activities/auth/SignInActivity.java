@@ -29,9 +29,12 @@ import com.herocorp.core.constants.URLConstants;
 import com.herocorp.infra.utils.NetConnections;
 import com.herocorp.ui.activities.BaseDrawerActivity;
 import com.herocorp.ui.activities.DSEapp.ConnectService.NetworkConnect;
+import com.herocorp.ui.activities.DSEapp.db.DatabaseHelper;
+import com.herocorp.ui.activities.DSEapp.models.State;
 import com.herocorp.ui.utility.CustomTypeFace;
 import com.herocorp.ui.utility.CustomViewParams;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -48,6 +51,7 @@ public class SignInActivity extends Activity implements View.OnClickListener {
     private static final int REQUEST_PERMISSION_READ_PHONE_STATE = 1;
     private EditText dealerCode;
     private SharedPreferences sharedPreferences;
+    DatabaseHelper db;
 
     /*   private String[] imeis = {"356604060544425",
                "861375036084113",
@@ -174,7 +178,7 @@ public class SignInActivity extends Activity implements View.OnClickListener {
 
                 info = manager.getPackageInfo(getPackageName(), 0);
                 appVersion = info.versionName;
-                deviceImei = telephonyManager.getDeviceId();
+                // deviceImei = telephonyManager.getDeviceId();
                 userCode = dealerCode.getText().toString();
 
                 if (userCode.equals("")) {
@@ -237,7 +241,7 @@ public class SignInActivity extends Activity implements View.OnClickListener {
                     String result = networkConnect.execute();
                     if (result != null)
                         encryptuser = result.replace("\\/", "/");
-                    Log.e("response_encrypt",encryptuser);
+                    Log.e("response_encrypt", encryptuser);
                     String newurlparams = "data=" + URLEncoder.encode(encryptuser, "UTF-8");
                     networkConnect = new NetworkConnect(targetURL, newurlparams);
                     result = networkConnect.execute();
@@ -256,25 +260,35 @@ public class SignInActivity extends Activity implements View.OnClickListener {
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
             progressBar.setVisibility(View.INVISIBLE);
+            db = new DatabaseHelper(getApplicationContext());
+            db.clearstate_table();
             try {
                 JSONObject jsono = new JSONObject(s);
-                Log.e("response_login",s);
+                Log.e("response_login", s);
                 respCode = jsono.getString("respCode");
                 result = jsono.getString("result");
                 if (respCode.equals("1") && result.equals("true")) {
                     respDesc = jsono.getString("respDescription");
                     dealer_code = jsono.getString("dealer_code");
                     state_id = jsono.getString("state_id");
-                   // state_name = jsono.getString("state_name");
+                    if (jsono.has("state_name"))
+                        state_name = jsono.getString("state_name");
                     version = jsono.getString("version");
                     path = jsono.getString("path");
 
+                    JSONArray jarray = jsono.getJSONArray("state");
+                    for (int i = 0; i < jarray.length(); i++) {
+                        JSONObject object = jarray.getJSONObject(i);
+                        db.add_state(new State(object.getString("id"), object.getString("state_name")));
+                    }
                     save_data();
                     openHomeScreen();
                 } else {
                     failure_msg = jsono.getString("failure_msg");
                     Toast.makeText(getApplicationContext(), failure_msg, Toast.LENGTH_SHORT).show();
                 }
+
+
             } catch (Exception e) {
                 Toast.makeText(getApplicationContext(), "Check your Connection !! " + e, Toast.LENGTH_SHORT).show();
             }

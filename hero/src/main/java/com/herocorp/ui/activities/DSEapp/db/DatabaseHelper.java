@@ -14,6 +14,7 @@ import com.herocorp.ui.activities.DSEapp.models.Bikemodel;
 import com.herocorp.ui.activities.DSEapp.models.Close_followup;
 import com.herocorp.ui.activities.DSEapp.models.Followup;
 import com.herocorp.ui.activities.DSEapp.models.Next_Followup;
+import com.herocorp.ui.activities.DSEapp.models.State;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +40,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String TABLE_MODEL = "model";
     private static final String TABLE_CLOSEFOLLOWUP = "close_followup";
     private static final String TABLE_NEXTFOLLOWUP = "next_followup";
+    private static final String TABLE_STATE = "state";
 
 
     public static class Cols_followup {
@@ -81,6 +83,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     }
 
+    public static class Cols_state {
+        public static final String STATE_ID = "state_id";
+        public static final String STATE_NAME = "state_name";
+    }
+
+
     public static class Cols_closefollowup {
         public static final String REASON = "reason";
         public static final String SUB_REASON = "sub_reason";
@@ -106,7 +114,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             + TABLE_FOLLOWUP + "("
             + Cols_followup.FST_NAME + " text not null, "
             + Cols_followup.LAST_NAME + " text not null, "
-            + Cols_followup.CELL_PH_NUM + " integer not null, "
+            + Cols_followup.CELL_PH_NUM + " text not null, "
             + Cols_followup.AGE + " integer not null, "
             + Cols_followup.GENDER + " text not null, "
             + Cols_followup.EMAIL_ADDR + ","
@@ -166,9 +174,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             + ");";
 
 
+    public static final String CREATE_STATE = "create table "
+            + TABLE_STATE + "("
+            + Cols_state.STATE_ID + " integer not null, "
+            + Cols_state.STATE_NAME + " text not null "
+            + ");";
+
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
-
     }
 
     @Override
@@ -177,6 +190,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(CREATE_TABLE_FOLLOWUP);
         db.execSQL(CREATE_TABLE_BIKEMAKE);
         db.execSQL(CREATE_TABLE_BIKEMODEL);
+        db.execSQL(CREATE_STATE);
         db.execSQL(CREATE_TABLE_CLOSE_FOLLOWUP);
         db.execSQL(CREATE_TABLE_NEXT_FOLLOWUP);
     }
@@ -188,6 +202,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_FOLLOWUP);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_MAKE);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_MODEL);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_STATE);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_CLOSEFOLLOWUP);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_NEXTFOLLOWUP);
         // create new tables
@@ -279,6 +294,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
     }
 
+    public void add_state(State state) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(Cols_state.STATE_ID, state.getId());
+        values.put(Cols_state.STATE_NAME, state.getState());
+        db.insert(TABLE_STATE, null, values);
+        db.close();
+    }
+
 
     public void closeDB() {
         SQLiteDatabase db = this.getReadableDatabase();
@@ -292,6 +316,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("DELETE FROM " + TABLE_FOLLOWUP);
         db.execSQL("DELETE FROM " + TABLE_MAKE);
         db.execSQL("DELETE FROM " + TABLE_MODEL);
+    }
+
+    public void clearstate_table() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("DELETE FROM " + TABLE_STATE);
     }
 
     public void clearnextfollowup_table() {
@@ -392,7 +421,29 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return models;
     }
 
-    public void update_followup(String followup_status,String followupdate,String followupcomment, String enquiryid) {
+    public List<State> getAllStates() {
+        List<State> states = new ArrayList<State>();
+        String selectQuery = "SELECT * FROM " + TABLE_STATE;
+
+        Log.e(LOG, selectQuery);
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c = db.rawQuery(selectQuery, null);
+
+        // looping through all rows and adding to list
+        if (c.moveToFirst()) {
+            do {
+                State t = new State();
+                t.setId(c.getString((c.getColumnIndex(Cols_state.STATE_ID))));
+                t.setState(c.getString((c.getColumnIndex(Cols_state.STATE_NAME))));
+                states.add(t);
+            } while (c.moveToNext());
+        }
+        closeDB();
+        return states;
+    }
+
+    public void update_followup(String followup_status, String followupdate, String followupcomment, String enquiryid) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(Cols_followup.FOLLOWUP_STATUS, followup_status);

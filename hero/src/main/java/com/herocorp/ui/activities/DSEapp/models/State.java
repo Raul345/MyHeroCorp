@@ -33,4 +33,6 @@ public class State {
         this.id = id;
         this.state = state;
     }
+
+    public State(){}
 }
