@@ -444,6 +444,7 @@ public class SearchfilterFragment extends Fragment implements View.OnClickListen
                     id = record.getId();
             }
             List<Bike_model> records = db.getAllBikemodels();
+            arr_modellist.add("--select--");
             for (Bike_model record : records) {
                 if (record.getMakeid().equals(id))
                     arr_modellist.add(record.getModelname());

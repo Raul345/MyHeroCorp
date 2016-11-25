@@ -13,7 +13,6 @@
         android:layout_alignParentTop="true"
         android:src="@drawable/hero_logo" />
 
-
     <ImageView
         android:id="@+id/menu_icon"
         android:layout_width="60dp"
@@ -290,7 +289,7 @@
                     android:id="@+id/textview6"
                     android:layout_width="0sp"
                     android:layout_height="match_parent"
-                    android:layout_weight="6"
+                    android:layout_weight="5"
                     android:background="#ffffff"
                     android:gravity="center_vertical"
                     android:paddingLeft="10dp"
@@ -303,20 +302,21 @@
                     android:id="@+id/top_layout12"
                     android:layout_width="0sp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="4"
+                    android:layout_weight="5"
                     android:background="#ffffff"
                     android:orientation="horizontal">
 
                     <Spinner
                         android:id="@+id/model_spinner"
-                        android:layout_width="140dp"
+                        android:layout_width="200dp"
                         android:layout_height="60dp"
                         android:layout_marginBottom="5dp"
                         android:layout_marginTop="10dp"
                         android:dropDownSelector="#f30d0d"
                         android:focusable="true"
                         android:paddingRight="20dp"
-                        android:textSize="10dp" />
+                        android:textSize="10dp"
+                        android:spinnerMode="dialog"/>
                 </LinearLayout>
 
             </LinearLayout>

@@ -34,8 +34,6 @@ public class DealerDashboardFragment extends Fragment implements View.OnClickLis
 
         initView(rootView);
 
-
-
         return rootView;
     }
 

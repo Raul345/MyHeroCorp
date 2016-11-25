@@ -4,6 +4,7 @@ import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +24,8 @@ import com.herocorp.ui.activities.DSEapp.db.DatabaseHelper;
 import com.herocorp.ui.activities.DSEapp.models.Next_Followup;
 import com.herocorp.ui.utility.CustomTypeFace;
 import com.herocorp.ui.utility.CustomViewParams;
+
+import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -138,9 +141,17 @@ public class FollowupFragment extends Fragment implements View.OnClickListener {
                     //Toast.makeText(getContext(), reason + date + follow_date + enquiryid, Toast.LENGTH_SHORT).show();
                     ProgressDialog progress = new ProgressDialog(getContext());
                     try {
-                        String data = "{\"date\":\"" + date + "\",\"remarks\":\"" + reason + "\",\"fol_date\":\"" + follow_date +
-                                "\", \"user_id\":\"" + user + "\",\"dms_enquiry_id\":\"" + enquiryid + "\"}";
-                        newurlparams = "data=" + URLEncoder.encode(data, "UTF-8");
+                       /* String data = "{\"date\":\"" + date + "\",\"remarks\":\"" + reason + "\",\"fol_date\":\"" + follow_date +
+                                "\", \"user_id\":\"" + user + "\",\"dms_enquiry_id\":\"" + enquiryid + "\"}";*/
+                        JSONObject jsonparams = new JSONObject();
+                        jsonparams.put("date", date);
+                        jsonparams.put("remarks", reason);
+                        jsonparams.put("fol_date", follow_date);
+                        jsonparams.put("user_id", user);
+                        jsonparams.put("dms_enquiry_id", enquiryid);
+                        Log.e("followup", jsonparams.toString());
+
+                        newurlparams = "data=" + URLEncoder.encode(jsonparams.toString(), "UTF-8");
                         new NetworkConnect1(URLConstants.SYNC_FOLLOW_UP, newurlparams, progress, "Followup has been successfully submitted.", getContext(), 1).execute();
                     } catch (UnsupportedEncodingException e) {
                         e.printStackTrace();
@@ -193,41 +204,41 @@ public class FollowupFragment extends Fragment implements View.OnClickListener {
         return date;
 
     }
-   /* public String showdatepicker(final Button button) {
-        // Get Current Date
-        final Calendar c = Calendar.getInstance();
-        mYear = c.get(Calendar.YEAR);
-        mMonth = c.get(Calendar.MONTH);
-        mDay = c.get(Calendar.DAY_OF_MONTH);
 
-        DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(),
-                new DatePickerDialog.OnDateSetListener() {
+    /* public String showdatepicker(final Button button) {
+         // Get Current Date
+         final Calendar c = Calendar.getInstance();
+         mYear = c.get(Calendar.YEAR);
+         mMonth = c.get(Calendar.MONTH);
+         mDay = c.get(Calendar.DAY_OF_MONTH);
 
-                    @Override
-                    public void onDateSet(DatePicker view, int year,
-                                          int monthOfYear, int dayOfMonth) {
+         DatePickerDialog datePickerDialog = new DatePickerDialog(getContext(),
+                 new DatePickerDialog.OnDateSetListener() {
 
-                        follow_date = dayOfMonth + "-" + (monthOfYear + 1) + "-" + year;
-                        datechange(follow_date);
-                        mYear = year;
-                        mDay = dayOfMonth;
-                        mMonth = monthOfYear;
-                        button.setText(follow_date);
+                     @Override
+                     public void onDateSet(DatePicker view, int year,
+                                           int monthOfYear, int dayOfMonth) {
+
+                         follow_date = dayOfMonth + "-" + (monthOfYear + 1) + "-" + year;
+                         datechange(follow_date);
+                         mYear = year;
+                         mDay = dayOfMonth;
+                         mMonth = monthOfYear;
+                         button.setText(follow_date);
 
 
-                    }
-                }, mYear, mMonth, mDay);
-        datePickerDialog.show();
-        return date;
+                     }
+                 }, mYear, mMonth, mDay);
+         datePickerDialog.show();
+         return date;
 
-    }*/
-
+     }*/
     public void datechange(String olddate) {
         SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
         Date newDate;
         try {
             newDate = format.parse(olddate);
-            format = new SimpleDateFormat("dd MMM yyyy");
+            format = new SimpleDateFormat("dd-MM-yyyy");
             follow_date = format.format(newDate);
         } catch (ParseException e) {
             e.printStackTrace();

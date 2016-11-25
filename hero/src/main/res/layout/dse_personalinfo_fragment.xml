@@ -339,7 +339,7 @@
                         android:id="@+id/gender_spinner"
                         android:layout_width="0sp"
                         android:layout_height="wrap_content"
-
+                        android:spinnerMode="dialog"
                         android:layout_marginRight="30dp"
                         android:layout_weight="4" />
                 </LinearLayout>
@@ -411,7 +411,8 @@
                         android:layout_marginRight="30dp"
                         android:layout_weight="4"
                         android:focusable="true"
-                        android:textSize="10dp" />
+                        android:textSize="10dp"
+                        android:spinnerMode="dialog"/>
                 </LinearLayout>
 
             </LinearLayout>
@@ -459,7 +460,8 @@
                         android:layout_marginRight="30dp"
                         android:layout_weight="4"
                         android:focusable="true"
-                        android:textSize="10dp" />
+                        android:textSize="10dp"
+                        android:spinnerMode="dialog"/>
                 </LinearLayout>
 
             </LinearLayout>
@@ -507,7 +509,8 @@
                         android:layout_marginRight="30dp"
                         android:layout_weight="4"
                         android:focusable="true"
-                        android:textSize="10dp" />
+                        android:textSize="10dp"
+                        android:spinnerMode="dialog"/>
                 </LinearLayout>
 
             </LinearLayout>
@@ -555,7 +558,8 @@
                         android:layout_marginRight="30dp"
                         android:layout_weight="4"
                         android:focusable="true"
-                        android:textSize="10dp" />
+                        android:textSize="10dp"
+                        android:spinnerMode="dialog"/>
                 </LinearLayout>
 
             </LinearLayout>

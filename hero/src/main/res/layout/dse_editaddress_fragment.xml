@@ -119,7 +119,8 @@
                         android:layout_weight="4"
                         android:background="#ffffff"
                         android:dropDownSelector="#f30d0d"
-                        android:focusable="true" />
+                        android:focusable="true"
+                        android:spinnerMode="dialog"/>
                 </LinearLayout>
 
             </LinearLayout>
@@ -164,7 +165,7 @@
                         android:id="@+id/district_spinner"
                         android:layout_width="0sp"
                         android:layout_height="50dp"
-
+                        android:spinnerMode="dialog"
                         android:layout_marginRight="30dp"
                         android:layout_weight="4"
                         android:background="#ffffff"
@@ -219,7 +220,8 @@
                         android:background="#ffffff"
                         android:dropDownSelector="#f30d0d"
                         android:focusable="true"
-                        android:textSize="10dp" />
+                        android:textSize="10dp"
+                        android:spinnerMode="dialog"/>
                 </LinearLayout>
 
             </LinearLayout>
@@ -265,9 +267,8 @@
                         android:id="@+id/city_spinner"
                         android:layout_width="0sp"
                         android:layout_height="wrap_content"
-
+                        android:spinnerMode="dialog"
                         android:layout_marginRight="30dp"
-
                         android:layout_weight="4"
                         android:background="#ffffff"
                         android:dropDownSelector="#f30d0d"

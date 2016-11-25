@@ -3,6 +3,7 @@ package com.herocorp.ui.activities.DSEapp.Fragment.Followup;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,12 +58,10 @@ public class CloseFollowupFragment extends Fragment implements View.OnClickListe
     DatabaseHelper db;
     String sync_status;
 
-
     ArrayList<String> arr_mainreason = new ArrayList<String>();
     ArrayList<String> arr_subreason = new ArrayList<String>();
     ArrayList<Bikemake> arr_makelist = new ArrayList<Bikemake>();
     ArrayList<String> arr_modellist = new ArrayList<String>();
-
 
     String[] mainreason = {"--select--", "Others",
             "Purchased from Own Dealership",
@@ -283,13 +282,22 @@ public class CloseFollowupFragment extends Fragment implements View.OnClickListe
             else {
                 db = new DatabaseHelper(getContext());
                 db.delete_followup(enquiryid);
+                sync_status = "1";
                 if (NetConnections.isConnected(getContext())) {
-                    sync_status = "1";
                     String newurlparams = null;
                     try {
-                        String data = "{\"reason\":\"" + main_reason + "\",\"sub_reason\":\"" + sub_reason + "\",\"existMake\":\"" + make + "\",\"existModel\":\"" + model + "\",\n" +
+                       /* String data = "{\"reason\":\"" + main_reason + "\",\"sub_reason\":\"" + sub_reason + "\",\"existMake\":\"" + make + "\",\"existModel\":\"" + model + "\",\n" +
                                 "\", \"user_id\":\"" + user + "\",\"dms_enquiry_id\":\"" + enquiryid + "\"}";
-                        newurlparams = "data=" + URLEncoder.encode(data, "UTF-8");
+                       */
+                        JSONObject jsonparams = new JSONObject();
+                        jsonparams.put("reason", main_reason);
+                        jsonparams.put("sub_reason", sub_reason);
+                        jsonparams.put("existMake", make);
+                        jsonparams.put("existModel", model);
+                        jsonparams.put("user_id", user);
+                        jsonparams.put("dms_enquiry_id", enquiryid);
+                        Log.e("close_followup", jsonparams.toString());
+                        newurlparams = "data=" + URLEncoder.encode(jsonparams.toString(), "UTF-8");
                         //   Toast.makeText(getContext(), main_reason + sub_reason + make + model+user+enquiryid, Toast.LENGTH_SHORT).show();
                         new NetworkConnect1(URLConstants.SYNC_FOLLOW_UP, newurlparams, progress, "Followup has been successfully submitted.", getContext(), 1).execute();
                     } catch (UnsupportedEncodingException e) {

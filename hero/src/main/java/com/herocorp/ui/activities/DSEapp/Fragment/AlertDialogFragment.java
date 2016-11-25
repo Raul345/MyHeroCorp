@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.herocorp.R;
 import com.herocorp.ui.activities.DSEapp.Fragment.Enquiry.TestRideFeedbackFragment;
+import com.herocorp.ui.activities.DSEapp.Fragment.TodayFollowup.TodayFollowupFragment;
 
 /**
  * Created by rsawh on 28-Sep-16.
@@ -37,8 +38,24 @@ public class AlertDialogFragment extends DialogFragment {
             button_ok.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    getActivity().onBackPressed();
                     dismiss();
+                    getActivity().onBackPressed();
+
+                   /* Bundle bundle = new Bundle();
+                    bundle.putInt("check", 0);
+                    bundle.putInt("flag", 0);
+                    //  dismiss();
+                    FragmentManager fm = getActivity().getSupportFragmentManager();
+                    FragmentTransaction ft = fm.beginTransaction();
+                    Fragment f = new TodayFollowupFragment();
+                    f.setArguments(bundle);
+                    // ft.addToBackStack(null);
+                    ft.replace(R.id.content_closefollowup, f);
+                    ft.commit();
+                    for (int i = 0; i < fm.getBackStackEntryCount(); ++i)
+                        fm.popBackStack();*/
+
+
                 }
             });
         } else if (flag == 2) {
@@ -48,7 +65,7 @@ public class AlertDialogFragment extends DialogFragment {
                     FragmentManager fm = getActivity().getSupportFragmentManager();
                     FragmentTransaction ft = fm.beginTransaction();
                     Fragment f = new TestRideFeedbackFragment();
-                   // ft.addToBackStack(null);
+                    // ft.addToBackStack(null);
                     ft.replace(R.id.content_addenquiry, f);
                     ft.commit();
                     dismiss();
@@ -75,7 +92,7 @@ public class AlertDialogFragment extends DialogFragment {
             button_ok.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                   // getActivity().onBackPressed();
+                    // getActivity().onBackPressed();
                     dismiss();
 
                 }

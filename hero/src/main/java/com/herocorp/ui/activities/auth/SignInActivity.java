@@ -13,6 +13,7 @@ import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.telephony.TelephonyManager;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -31,6 +32,7 @@ import com.herocorp.ui.activities.DSEapp.ConnectService.NetworkConnect;
 import com.herocorp.ui.utility.CustomTypeFace;
 import com.herocorp.ui.utility.CustomViewParams;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
@@ -60,7 +62,7 @@ public class SignInActivity extends Activity implements View.OnClickListener {
        };*/
     private String respDesc = "", respCode = "", state_id = "", dealer_code = "", version = "", path = "", state_name = "", result = "", failure_msg = "";
     private String appVersion;
-   // private String deviceImei = "911441757449230";
+    // private String deviceImei = "911441757449230";
     private String deviceImei = "911441757449230";
     private String userCode, uuid = "0";
     private String encryptuser;
@@ -159,7 +161,6 @@ public class SignInActivity extends Activity implements View.OnClickListener {
         } else {
 
             TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-
            /* if (Arrays.asList(imeis).contains(dealerCode.getText().toString()) &&
                     telephonyManager.getDeviceId().contentEquals(dealerCode.getText().toString())) {
 
@@ -178,21 +179,27 @@ public class SignInActivity extends Activity implements View.OnClickListener {
 
                 if (userCode.equals("")) {
                     Toast.makeText(getApplicationContext(), "Please enter dealer Code!!", Toast.LENGTH_LONG).show();
-                    //   progressBar.setVisibility(View.INVISIBLE);
-
-
                 } else {
-                    String data = "{\"username\":\"" + userCode + "\",\"version\":\"" + appVersion + "\",\"imei\":\"" + deviceImei + "\",\"uuid\":\"" + uuid + "\"}";
-                    //    encryptuser(data, URLConstants.LOGIN, 0);
-                    new Login(data, URLConstants.LOGIN).execute();
-                }
-            } catch (PackageManager.NameNotFoundException e) {
-                e.printStackTrace();
-            }
+                    try {
+                        JSONObject jsonparams = new JSONObject();
+                        jsonparams.put("username", userCode);
+                        jsonparams.put("version", appVersion);
+                        jsonparams.put("imei", deviceImei);
+                        jsonparams.put("uuid", uuid);
+                        String data = "{\"username\":\"" + userCode + "\",\"version\":\"" + appVersion + "\",\"imei\":\"" + deviceImei + "\",\"uuid\":\"" + uuid + "\"}";
+                        //    encryptuser(data, URLConstants.LOGIN, 0);
+                        new Login(jsonparams.toString(), URLConstants.LOGIN).execute();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
 /*
             else{
                 Toast.makeText(this, "Please enter valid dealer code", Toast.LENGTH_SHORT).show();
             }*/
+                }
+            } catch (PackageManager.NameNotFoundException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -226,10 +233,11 @@ public class SignInActivity extends Activity implements View.OnClickListener {
             if (NetConnections.isConnected(getApplicationContext())) {
                 try {
                     String urlParameters = "data=" + URLEncoder.encode(newurlParameters, "UTF-8");
-                    networkConnect = new NetworkConnect("http://abym.in/clientProof/hero_motors/encrypt", urlParameters);
+                    networkConnect = new NetworkConnect(URLConstants.ENCRYPT, urlParameters);
                     String result = networkConnect.execute();
                     if (result != null)
                         encryptuser = result.replace("\\/", "/");
+                    Log.e("response_encrypt",encryptuser);
                     String newurlparams = "data=" + URLEncoder.encode(encryptuser, "UTF-8");
                     networkConnect = new NetworkConnect(targetURL, newurlparams);
                     result = networkConnect.execute();
@@ -250,13 +258,14 @@ public class SignInActivity extends Activity implements View.OnClickListener {
             progressBar.setVisibility(View.INVISIBLE);
             try {
                 JSONObject jsono = new JSONObject(s);
+                Log.e("response_login",s);
                 respCode = jsono.getString("respCode");
                 result = jsono.getString("result");
                 if (respCode.equals("1") && result.equals("true")) {
                     respDesc = jsono.getString("respDescription");
                     dealer_code = jsono.getString("dealer_code");
                     state_id = jsono.getString("state_id");
-                    state_name = jsono.getString("state_name");
+                   // state_name = jsono.getString("state_name");
                     version = jsono.getString("version");
                     path = jsono.getString("path");
 
@@ -266,15 +275,13 @@ public class SignInActivity extends Activity implements View.OnClickListener {
                     failure_msg = jsono.getString("failure_msg");
                     Toast.makeText(getApplicationContext(), failure_msg, Toast.LENGTH_SHORT).show();
                 }
-
             } catch (Exception e) {
-                Toast.makeText(getApplicationContext(), "Check your Connection !!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Check your Connection !! " + e, Toast.LENGTH_SHORT).show();
             }
         }
     }
 
-    public void save_data()  {
-
+    public void save_data() {
         sharedPreferences = getSharedPreferences("hero", 0);
         SharedPreferences.Editor edit = sharedPreferences.edit();
         edit.putString("username", userCode);
@@ -283,7 +290,6 @@ public class SignInActivity extends Activity implements View.OnClickListener {
         edit.putString("path", path);
         edit.putString("state_id", state_id);
         edit.putString("state_name", state_name);
-
         edit.commit();
     }
 }

@@ -2,9 +2,14 @@ package com.herocorp.ui.activities.DSEapp.Fragment.Enquiry;
 
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.telephony.TelephonyManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -87,6 +92,14 @@ public class AddenquiryFragment extends Fragment implements View.OnClickListener
 
     SharedPreferences mypref;
     SharedPreferences.Editor edit;
+
+    private SharedPreferences sharedPreferences;
+    String user_id, dealer_code;
+
+    private String appVersion;
+    // private String deviceImei = "911441757449230";
+    private String deviceImei = "911441757449230";
+    private String userCode, uuid = "0";
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
             savedInstanceState) {
@@ -297,6 +310,23 @@ public class AddenquiryFragment extends Fragment implements View.OnClickListener
                 }
             }
         });
+
+
+     /*   PackageManager manager = getActivity().getPackageManager();
+        PackageInfo info = null;
+        try {
+
+
+            TelephonyManager telephonyManager = (TelephonyManager) getActivity().getSystemService(Context.TELEPHONY_SERVICE);
+
+
+            info = manager.getPackageInfo(getActivity().getPackageName(), 0);
+            appVersion = info.versionName;
+            deviceImei = telephonyManager.getDeviceId();
+
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }*/
 
 
         button_submit.setOnClickListener(this);
@@ -551,11 +581,43 @@ public class AddenquiryFragment extends Fragment implements View.OnClickListener
                         "\",\"model_interested\":\"" + model + "\",\"exchange_req\":\"" + exchange + "\",\"finance_req\":\"" + finance +
                         "\",\"test_ride\":\"" + test + "\",\"remarks\":\"" + remark + "\",\"existVeh\":\"" + existvehicle +
                         "\",\"user_id\":\"" + username + "\",\"key\":\"" + key + "\",\"state\":\"" + state + "\",\"district\":\"" + district +
-                        "\",\"tehsil\":\"" + tehsil + "\",\"village\":\"" + village + "\",\"existMake\":\"" + existmake +"\",\"existModel\":\"" + existmodel + "\",\"dealer_code\":\"" + dealercode +
+                        "\",\"tehsil\":\"" + tehsil + "\",\"village\":\"" + village + "\",\"existMake\":\"" + existmake + "\",\"existModel\":\"" + existmodel + "\",\"dealer_code\":\"" + dealercode +
                         "\"";
+
+
+                JSONObject jsonparams = new JSONObject();
+                jsonparams.put("mobile", mobile);
+                jsonparams.put("email", email);
+                jsonparams.put("fname", firstname);
+                jsonparams.put("lname", lastname);
+                jsonparams.put("age", age);
+                jsonparams.put("gender", gender);
+                jsonparams.put("address1", address1);
+                jsonparams.put("address2", address2);
+
+                jsonparams.put("pincode", pincode);
+                jsonparams.put("fol_date", follow_date);
+                jsonparams.put("exp_purchase_date", purch_date);
+                jsonparams.put("model_interested", model);
+                jsonparams.put("exchange_req", exchange);
+                jsonparams.put("finance_req", finance);
+                jsonparams.put("test_ride", test);
+                jsonparams.put("remarks", remark);
+
+                jsonparams.put("existVeh", existvehicle);
+                jsonparams.put("user_id", username);
+                jsonparams.put("key", key);
+                jsonparams.put("state", state);
+                jsonparams.put("district", district);
+                jsonparams.put("tehsil", tehsil);
+                jsonparams.put("village", village);
+                jsonparams.put("existMake", existmake);
+                jsonparams.put("existModel", existmodel);
+                jsonparams.put("dealer_code", dealercode);
 
                 String sel_campaign = "";
                 for (int i = 0; i < chk_campaignid.size(); i++) {
+                    jsonparams.put("campid" + (i + 1), chk_campaignid.get(i));
                     sel_campaign += ",\"campid" + (i + 1) + ":\"" + chk_campaignid.get(i) + "\"";
                 }
 
@@ -563,13 +625,11 @@ public class AddenquiryFragment extends Fragment implements View.OnClickListener
 
                 data = json + sel_campaign;
 
-
                 edit.putString("key", key);
                 edit.commit();
-
-                Toast.makeText(getContext(), data, Toast.LENGTH_LONG).show();
-
-                encryptuser1(URLConstants.ADD_ENQUIRY, data, 1);
+                Log.e("add_enquiry", jsonparams.toString());
+                // Toast.makeText(getContext(), data, Toast.LENGTH_LONG).show();
+                encryptuser1(URLConstants.ADD_ENQUIRY, jsonparams.toString(), 1);
             }
 
         } catch (Exception e) {
@@ -601,8 +661,13 @@ public class AddenquiryFragment extends Fragment implements View.OnClickListener
         ArrayAdapter<String> at = new ArrayAdapter<String>(getContext(), R.layout.spinner_textview2, arr_reset);
         spin_existmake.setAdapter(at);
         spin_existmodel.setAdapter(at);
-
     }
 
-
+    public void fetch_pref() {
+        sharedPreferences = getActivity().getSharedPreferences("hero", 0);
+        if (sharedPreferences.contains("username"))
+            user_id = sharedPreferences.getString("username", null);
+        if (sharedPreferences.contains("dealercode"))
+            dealer_code = sharedPreferences.getString("dealercode", null);
+    }
 }

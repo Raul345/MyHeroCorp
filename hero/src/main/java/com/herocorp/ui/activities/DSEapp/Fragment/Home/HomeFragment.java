@@ -163,8 +163,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         ImageView pendingfollowup = (ImageView) rootView.findViewById(R.id.pendingfollowup);
         ImageView searchenquiry = (ImageView) rootView.findViewById(R.id.searchenquiry);
         ImageView submit = (ImageView) rootView.findViewById(R.id.imageView_submit_home);
-        progressBar = (ProgressBar) rootView.findViewById(R.id.progress);
-
+     /*   progressBar = (ProgressBar) rootView.findViewById(R.id.progress);
+*/
         customViewParams.setImageViewCustomParams(pendingorder, new int[]{7, 7, 7, 7}, new int[]{0, 0, 0, 0}, 180, 180);
         customViewParams.setImageViewCustomParams(todayfollowup, new int[]{7, 7, 7, 12}, new int[]{0, 0, 0, 0}, 180, 180);
         customViewParams.setImageViewCustomParams(pendingfollowup, new int[]{7, 7, 7, 12}, new int[]{0, 0, 0, 0}, 180, 180);
@@ -179,7 +179,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         fetch_data();
         current_date = new SimpleDateFormat("dd-MMM-yy").format(new Date());
         if (!(sync_date.equalsIgnoreCase(current_date.toString())))
-            encryptuser();
+            sync_data();
 
         menu.setOnClickListener(this);
         pendingorder.setOnClickListener(this);
@@ -275,7 +275,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
     }
 
-    public void encryptuser() {
+    public void sync_data() {
         if (NetConnections.isConnected(getContext())) {
             final Handler handler = new Handler();
             Thread thread = new Thread() {
@@ -287,7 +287,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                         //   String json = "{\"user_id\":\"" + user_id + "\"}";
                         try {
                             urlParameters = "data=" + URLEncoder.encode(json, "UTF-8");
-                            networkConnect = new NetworkConnect("http://abym.in/clientProof/hero_motors/encrypt", urlParameters);
+                            networkConnect = new NetworkConnect(URLConstants.ENCRYPT, urlParameters);
                             String result = networkConnect.execute();
                             if (result != null) {
                                 encryptuser = result.replace("\\/", "/");
@@ -412,22 +412,25 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         }
 
         protected String doInBackground(Void... params) {
-            if (NetConnections.isConnected(getContext())) {
+            if (NetConnections.isConnected(getContext())) try {
+                JSONObject json = new JSONObject();
                 try {
-                    String json = "{\"user_id\":\"ROBINK11610\"}";
-                    String urlParameters = "data=" + URLEncoder.encode(json, "UTF-8");
-                    networkConnect = new NetworkConnect("http://abym.in/clientProof/hero_motors/encrypt", urlParameters);
-                    String result = networkConnect.execute();
-                    if (result != null)
-                        encryptuser = result.replace("\\/", "/");
-
-                    return result;
-                } catch (UnsupportedEncodingException e) {
+                    json.put("user_id", "ROBINK11610");
+                } catch (JSONException e) {
                     e.printStackTrace();
-                    return null;
                 }
+                String urlParameters = "data=" + URLEncoder.encode(json.toString(), "UTF-8");
+                networkConnect = new NetworkConnect("http://abym.in/clientProof/hero_motors/encrypt", urlParameters);
+                String result = networkConnect.execute();
+                if (result != null)
+                    encryptuser = result.replace("\\/", "/");
 
-            } else {
+                return result;
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+                return null;
+            }
+            else {
                 Toast.makeText(getContext(), "Check your connection !!", Toast.LENGTH_SHORT).show();
                 return null;
             }
@@ -440,4 +443,42 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         }
     }
 
+   /* public class Sync_data extends AsyncTask<Void, Void, String> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progressBar.setVisibility(View.VISIBLE);
+        }
+
+        protected String doInBackground(Void... params) {
+            if (NetConnections.isConnected(getContext())) try {
+                // String json = "{\"user_id\":\"ROBINK11610\"}";
+                JSONObject json = new JSONObject();
+                json.put("user_id", "ROBINK11610");
+                Log.e("jhhkj", json.toString());
+                //   String json = "{\"user_id\":\"" + user_id + "\"}";
+                urlParameters = "data=" + URLEncoder.encode(json.toString(), "UTF-8");
+                networkConnect = new NetworkConnect("http://abym.in/clientProof/hero_motors/encrypt", urlParameters);
+                String result = networkConnect.execute();
+                if (result != null) {
+                    encryptuser = result.replace("\\/", "/");
+                    urlParameters = "data=" + URLEncoder.encode(encryptuser, "UTF-8");
+                    Log.e("sync_start", current_date.toString());
+                    networkConnect = new NetworkConnect(URLConstants.PENDING_FOLLOWUP, urlParameters);
+                }
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            } catch (Exception e) {
+                Log.e("Sync_error", e.toString());
+            }
+            return networkConnect.execute().toString();
+        }
+
+        protected void onPostExecute(String s) {
+            super.onPostExecute(s);
+            jsonparse_followup(networkConnect.execute());
+            //progressBar.setVisibility(View.INVISIBLE);
+        }
+    }*/
 }

@@ -320,7 +320,8 @@
                         android:background="#ffffff"
                         android:dropDownSelector="#f30d0d"
                         android:focusable="true"
-                        android:textSize="10dp" />
+                        android:textSize="10dp"
+                        android:spinnerMode="dialog"/>
                 </LinearLayout>
 
             </LinearLayout>

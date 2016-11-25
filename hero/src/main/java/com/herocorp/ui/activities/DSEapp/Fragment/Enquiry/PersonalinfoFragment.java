@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -327,6 +328,7 @@ public class PersonalinfoFragment extends Fragment implements View.OnClickListen
 
     public void jsonparse_state(String result) {
         try {
+            Log.e("login_response",result);
             JSONObject jsono = new JSONObject(result);
             JSONArray jarray = jsono.getJSONArray("state");
 
@@ -373,6 +375,7 @@ public class PersonalinfoFragment extends Fragment implements View.OnClickListen
 
     public void jsonparse_district(String result) {
         try {
+            Log.e("district_response",result);
             arr_district.clear();
             JSONObject jsono = new JSONObject(result);
             JSONArray jarray = jsono.getJSONArray("district");
@@ -392,6 +395,7 @@ public class PersonalinfoFragment extends Fragment implements View.OnClickListen
 
     public void jsonparse_tehsil_village(String result) {
         try {
+            Log.e("tehsil_response",result);
             arr_tehsil.clear();
             JSONObject jsono = new JSONObject(result);
             JSONArray jarray = jsono.getJSONArray("tehsil");
@@ -414,7 +418,6 @@ public class PersonalinfoFragment extends Fragment implements View.OnClickListen
             Toast.makeText(getContext(), "Check your Connection !!", Toast.LENGTH_SHORT).show();
 
         }
-
     }
 
     public boolean emailValidator(String email) {

@@ -128,7 +128,7 @@ public class BaseDrawerActivity extends FragmentActivity implements View.OnClick
 
 
                 showPhoneStatePermission();
-              //  fetch_data();
+                //  fetch_data();
 
                 new check_version().execute(URLConstants.CHECK_VERSION);
                 //FCM service
@@ -1489,6 +1489,7 @@ public class BaseDrawerActivity extends FragmentActivity implements View.OnClick
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
             try {
+                Log.e("version_response", result);
                 result = result.replace("[", "");
                 result = result.replace("]", "");
                 result = result.replace("\\/", "/");
@@ -1501,8 +1502,6 @@ public class BaseDrawerActivity extends FragmentActivity implements View.OnClick
                     push_notification(newversion, path);
                     update_alert(newversion, path);
                 }
-
-
             } catch (JSONException e) {
                 e.printStackTrace();
             } catch (Exception e) {

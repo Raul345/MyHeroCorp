@@ -112,6 +112,7 @@ public class NetworkConnect1 extends AsyncTask<Void, Void, String> {
         super.onPostExecute(s);
         progress.dismiss();
         try {
+            Log.e(targetURL + "response", s);
             JSONObject jsono = new JSONObject(s);
             if (jsono.getString("success").equals("1") && jsono.getString("records").equals("true")) {
                 Toast.makeText(context, s, Toast.LENGTH_SHORT).show();
@@ -128,7 +129,7 @@ public class NetworkConnect1 extends AsyncTask<Void, Void, String> {
             Log.i("json", s);
         } catch (JSONException e) {
             e.printStackTrace();
-        }catch(Exception e)
-        {}
+        } catch (Exception e) {
+        }
     }
 }

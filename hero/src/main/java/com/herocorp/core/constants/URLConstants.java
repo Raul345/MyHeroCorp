@@ -23,7 +23,8 @@ public class URLConstants {
 
     //DSE APP
     public final static String TOKEN_DATA = "http://abym.in/clientProof/hero_motors/userAuthentication";
-    public final static String ENCRYPT = "http://abym.in/clientProof/hero_motors/encrypt";
+    public final static String ENCRYPT1 = "http://abym.in/clientProof/hero_motors/encrypt";
+    public final static String ENCRYPT = "http://tab.hmcl.biz/heroDealerApp/encrypt";
     public final static String LOGIN = "http://tab.hmcl.biz/dse_app_UAT/login.php";
     public final static String PENDING_ORDER = "http://tab.hmcl.biz/dse_app_UAT/fetch_order_data.php";
     public final static String PENDING_FOLLOWUP = "http://tab.hmcl.biz/dse_app_UAT/get_follow_up.php";
@@ -36,8 +37,6 @@ public class URLConstants {
     public final static String SYNC_TEST_RIDE = "http://tab.hmcl.biz/dse_app_UAT/sync_test_ride.php";
     public final static String CHECK_VERSION = "http://tab.hmcl.biz/dse_app_UAT/check_version.php";
     public final static String FETCH_CONTACT = "http://tab.hmcl.biz/dse_app_UAT/fetch_contact.php";
-
-
 
     /*Static Block*/
     /* Which environment is currently active */

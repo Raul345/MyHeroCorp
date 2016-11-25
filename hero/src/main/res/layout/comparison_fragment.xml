@@ -124,7 +124,8 @@
                 android:layout_height="0sp"
                 android:layout_weight="0.1"
                 android:background="@color/color_red"
-                android:text="@string/feature_compare" />
+                android:text="@string/feature_compare"
+                android:visibility="gone"/>
 
             <LinearLayout
                 android:layout_width="match_parent"

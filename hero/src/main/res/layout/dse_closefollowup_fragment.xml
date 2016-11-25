@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/content_feature"
+    android:id="@+id/content_closefollowup"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/bg_dashboard">
@@ -121,7 +121,8 @@
                                         android:id="@+id/spinner_mainreason"
                                         android:layout_width="250dp"
                                         android:layout_height="70dp"
-                                        android:layout_gravity="center_horizontal">
+                                        android:layout_gravity="center_horizontal"
+                                        android:spinnerMode="dialog">
 
                                     </Spinner>
 
@@ -157,7 +158,8 @@
                                         android:id="@+id/spinner_subreason"
                                         android:layout_width="250dp"
                                         android:layout_height="70dp"
-                                        android:layout_gravity="center_horizontal">
+                                        android:layout_gravity="center_horizontal"
+                                        android:spinnerMode="dialog">
 
                                     </Spinner>
 
@@ -194,7 +196,8 @@
                                         android:id="@+id/spinner_make"
                                         android:layout_width="250dp"
                                         android:layout_height="70dp"
-                                        android:layout_gravity="center_horizontal">
+                                        android:layout_gravity="center_horizontal"
+                                        android:spinnerMode="dialog">
 
                                     </Spinner>
 
@@ -231,7 +234,8 @@
                                         android:id="@+id/spinner_model"
                                         android:layout_width="250dp"
                                         android:layout_height="70dp"
-                                        android:layout_gravity="center_horizontal">
+                                        android:layout_gravity="center_horizontal"
+                                        android:spinnerMode="dialog">
 
                                     </Spinner>
 
