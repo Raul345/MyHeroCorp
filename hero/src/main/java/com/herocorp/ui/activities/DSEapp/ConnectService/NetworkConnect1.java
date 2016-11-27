@@ -1,6 +1,5 @@
 package com.herocorp.ui.activities.DSEapp.ConnectService;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
@@ -9,11 +8,10 @@ import android.os.StrictMode;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
-import android.view.View;
 import android.widget.Toast;
 
 import com.herocorp.core.constants.URLConstants;
-import com.herocorp.ui.activities.DSEapp.Fragment.AlertDialogFragment;
+import com.herocorp.ui.activities.DSEapp.Fragment.Alert.AlertDialogFragment;
 
 import org.json.JSONException;
 import org.json.JSONObject;

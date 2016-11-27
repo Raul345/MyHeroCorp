@@ -15,14 +15,14 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.herocorp.R;
+import com.herocorp.infra.utils.NetConnections;
 import com.herocorp.ui.activities.BaseDrawerActivity;
-import com.herocorp.ui.activities.DSEapp.Fragment.ContactAlertFragment;
+import com.herocorp.ui.activities.DSEapp.Fragment.Alert.ContactAlertFragment;
 import com.herocorp.ui.activities.DSEapp.Fragment.Enquiry.EditFollowupFragment;
 import com.herocorp.ui.activities.DSEapp.Fragment.Enquiry.TestRideFeedbackFragment;
-import com.herocorp.ui.activities.DSEapp.Fragment.Followup.CloseFollowupFragment;
-import com.herocorp.ui.activities.DSEapp.Fragment.Followup.FollowupFragment;
 import com.herocorp.ui.utility.CustomTypeFace;
 import com.herocorp.ui.utility.CustomViewParams;
 
@@ -177,12 +177,15 @@ public class FollowupDetailFragment extends Fragment implements View.OnClickList
             f.setArguments(bundle);
             transaction(f);
         } else if (i == R.id.button_edit) {
-            button_close.setBackgroundColor(Color.RED);
-            button_followup.setBackgroundColor(Color.RED);
-            button_edit.setBackgroundColor(Color.DKGRAY);
-            f = new EditFollowupFragment();
-            f.setArguments(bundle);
-            transaction(f);
+            if (NetConnections.isConnected(getContext())) {
+                button_close.setBackgroundColor(Color.RED);
+                button_followup.setBackgroundColor(Color.RED);
+                button_edit.setBackgroundColor(Color.DKGRAY);
+                f = new EditFollowupFragment();
+                f.setArguments(bundle);
+                transaction(f);
+            } else
+                Toast.makeText(getContext(), "You are offline now !!", Toast.LENGTH_SHORT).show();
 
         } else if (i == R.id.cust_mobile) {
             bundle.putString("header", "Are you Sure?");
@@ -195,9 +198,12 @@ public class FollowupDetailFragment extends Fragment implements View.OnClickList
             dialogFragment.show(fm, "Sample Fragment");
         } else if (i == R.id.button_testride) {
             // edit.putString("enquiryid", enquiry_id);
-            f = new TestRideFeedbackFragment();
-            f.setArguments(bundle);
-            transaction(f);
+            if (NetConnections.isConnected(getContext())) {
+                f = new TestRideFeedbackFragment();
+                f.setArguments(bundle);
+                transaction(f);
+            } else
+                Toast.makeText(getContext(), "You are offline now !!", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -241,8 +247,8 @@ public class FollowupDetailFragment extends Fragment implements View.OnClickList
         edit.putString("email", email_addr);
         edit.putString("gender", gender);
         edit.putString("state", state);
-        edit.putString("district",  district);
-        edit.putString("tehsil",tehsil);
+        edit.putString("district", district);
+        edit.putString("tehsil", tehsil);
         edit.putString("city", city);
         edit.putString("address1", "");
         edit.putString("address2", "");

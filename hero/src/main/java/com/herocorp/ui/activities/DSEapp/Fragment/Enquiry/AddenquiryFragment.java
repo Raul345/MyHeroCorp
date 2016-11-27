@@ -100,6 +100,7 @@ public class AddenquiryFragment extends Fragment implements View.OnClickListener
     String user_id, dealer_code, key;
 
     NetworkConnect networkConnect;
+    LinearLayout layout_existmake, layout_existmodel;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
             savedInstanceState) {
@@ -149,6 +150,9 @@ public class AddenquiryFragment extends Fragment implements View.OnClickListener
 
         nextfollowdate_btn = (Button) rootView.findViewById(R.id.nextfollowupdate_button);
         purchdate_btn = (Button) rootView.findViewById(R.id.exptpurchasedate_button);
+        layout_existmake = (LinearLayout) rootView.findViewById(R.id.layout_existmake);
+        layout_existmodel = (LinearLayout) rootView.findViewById(R.id.layout_existmodel);
+
 
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MMM-yy");
         Calendar c = Calendar.getInstance();
@@ -216,6 +220,8 @@ public class AddenquiryFragment extends Fragment implements View.OnClickListener
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (position == 1) {
+                    layout_existmake.setVisibility(View.VISIBLE);
+                    layout_existmodel.setVisibility(View.VISIBLE);
                     existvehicle = parent.getItemAtPosition(position).toString();
                     ArrayAdapter<Bikemake> at1 = new ArrayAdapter<Bikemake>(getContext(), R.layout.spinner_textview2, arr_makelist);
                     spin_existmake.setAdapter(at1);
@@ -450,6 +456,7 @@ public class AddenquiryFragment extends Fragment implements View.OnClickListener
 
     public void jsonparse_campaign(String result) {
         try {
+            userAdapter.clear();
             // Toast.makeText(getContext(), result, Toast.LENGTH_SHORT).show();
             JSONObject jsono = new JSONObject(result);
             JSONArray jarray = jsono.getJSONArray("campaign_data");
@@ -605,8 +612,6 @@ public class AddenquiryFragment extends Fragment implements View.OnClickListener
                 edit.commit();
                 Log.e("add_enquiry", jsonparams.toString());
                 // Toast.makeText(getContext(), data, Toast.LENGTH_LONG).show();
-
-
                 encryptuser1(URLConstants.ADD_ENQUIRY, jsonparams.toString(), 1);
             }
 
@@ -639,6 +644,8 @@ public class AddenquiryFragment extends Fragment implements View.OnClickListener
         ArrayAdapter<String> at = new ArrayAdapter<String>(getContext(), R.layout.spinner_textview2, arr_reset);
         spin_existmake.setAdapter(at);
         spin_existmodel.setAdapter(at);
+        layout_existmake.setVisibility(View.GONE);
+        layout_existmodel.setVisibility(View.GONE);
     }
 
     public void fetch_pref() {

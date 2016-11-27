@@ -432,6 +432,7 @@ public class EditaddressFragment extends Fragment {
     public void fetch_states() {
         db = new DatabaseHelper(getContext());
         List<State> allrecords = db.getAllStates();
+        arr_state.add(new State("", "--select--"));
         for (State record : allrecords) {
             arr_state.add(new State(record.getId(), record.getState()));
         }

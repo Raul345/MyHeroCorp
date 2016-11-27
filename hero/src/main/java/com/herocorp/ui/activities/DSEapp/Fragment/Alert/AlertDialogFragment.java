@@ -1,4 +1,4 @@
-package com.herocorp.ui.activities.DSEapp.Fragment;
+package com.herocorp.ui.activities.DSEapp.Fragment.Alert;
 
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import com.herocorp.R;
 import com.herocorp.ui.activities.DSEapp.Fragment.Enquiry.TestRideFeedbackFragment;
+import com.herocorp.ui.activities.DSEapp.Fragment.PendingFollowup.PendingFollowupFragment;
 import com.herocorp.ui.activities.DSEapp.Fragment.TodayFollowup.TodayFollowupFragment;
 
 /**
@@ -46,14 +47,14 @@ public class AlertDialogFragment extends DialogFragment {
                     bundle.putInt("flag", 0);
                     //  dismiss();
                     FragmentManager fm = getActivity().getSupportFragmentManager();
+                    for (int i = 0; i < fm.getBackStackEntryCount(); ++i)
+                        fm.popBackStack();
                     FragmentTransaction ft = fm.beginTransaction();
-                    Fragment f = new TodayFollowupFragment();
+                    Fragment f = new PendingFollowupFragment();
                     f.setArguments(bundle);
                     // ft.addToBackStack(null);
                     ft.replace(R.id.content_closefollowup, f);
-                    ft.commit();
-                    for (int i = 0; i < fm.getBackStackEntryCount(); ++i)
-                        fm.popBackStack();*/
+                    ft.commit();*/
 
 
                 }

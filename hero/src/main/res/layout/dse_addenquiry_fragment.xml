@@ -4,8 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/bg_dashboard"
-    android:clickable="true"
-    >
+    android:clickable="true">
 
     <ImageView
         android:id="@+id/app_logo"
@@ -83,11 +82,11 @@
                     android:layout_width="0sp"
                     android:layout_height="match_parent"
                     android:layout_weight="0.4"
+                    android:gravity="center_vertical"
                     android:padding="10dp"
                     android:text="Model Interested in"
                     android:textColor="#000000"
-                    android:textSize="17dp"
-                    android:gravity="center_vertical"/>
+                    android:textSize="17dp" />
 
                 <Spinner
                     android:id="@+id/model_spinner"
@@ -97,8 +96,8 @@
                     android:background="@android:color/darker_gray"
                     android:dropDownSelector="#f30d0d"
                     android:focusable="true"
-                    android:textSize="10dp"
-                    android:spinnerMode="dialog"/>
+                    android:spinnerMode="dialog"
+                    android:textSize="10dp" />
             </LinearLayout>
 
             <LinearLayout
@@ -276,11 +275,11 @@
                     android:layout_width="0sp"
                     android:layout_height="match_parent"
                     android:layout_weight="0.4"
+                    android:gravity="center_vertical"
                     android:padding="8dp"
                     android:text="Existing Vehicle"
                     android:textColor="#000000"
-                    android:textSize="17dp"
-                    android:gravity="center_vertical"/>
+                    android:textSize="17dp" />
 
                 <Spinner
                     android:id="@+id/existvehicle_spinner"
@@ -289,22 +288,23 @@
                     android:layout_weight="0.3"
                     android:background="@android:color/darker_gray"
                     android:focusable="true"
-                    android:textSize="10dp"
-                    android:spinnerMode="dialog"/>
+                    android:spinnerMode="dialog"
+                    android:textSize="10dp" />
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@android:color/darker_gray"
-                android:padding="10dp">
+                android:padding="10dp"
+                android:id="@+id/layout_existmake">
 
                 <TextView
                     android:layout_width="0sp"
                     android:layout_height="match_parent"
                     android:layout_weight="0.4"
-                    android:padding="8dp"
                     android:gravity="center_vertical"
+                    android:padding="8dp"
                     android:text="Make"
                     android:textColor="#000000"
                     android:textSize="17dp" />
@@ -317,26 +317,26 @@
                     android:background="@android:color/darker_gray"
                     android:dropDownSelector="#f30d0d"
                     android:focusable="true"
-                    android:textSize="10dp"
-                    android:spinnerMode="dialog"/>
+                    android:spinnerMode="dialog"
+                    android:textSize="10dp" />
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp"
                 android:background="@android:color/darker_gray"
-                android:padding="10dp">
+                android:padding="10dp"
+                android:id="@+id/layout_existmodel">
 
                 <TextView
                     android:layout_width="0sp"
                     android:layout_height="match_parent"
                     android:layout_weight="0.4"
+                    android:gravity="center_vertical"
                     android:padding="8dp"
                     android:text="Exist Model"
                     android:textColor="#000000"
-                    android:textSize="17dp"
-                    android:gravity="center_vertical"/>
+                    android:textSize="17dp" />
 
                 <Spinner
                     android:id="@+id/existmodel_spinner"
@@ -346,12 +346,14 @@
                     android:background="@android:color/darker_gray"
                     android:dropDownSelector="#f30d0d"
                     android:focusable="true"
-                    android:textSize="10dp"
-                    android:spinnerMode="dialog"/>
+                    android:spinnerMode="dialog"
+                    android:textSize="10dp" />
             </LinearLayout>
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
                 android:background="@android:color/darker_gray"
                 android:padding="10dp">
 
@@ -388,9 +390,9 @@
                     android:layout_width="70dp"
                     android:layout_height="70dp"
                     android:layout_gravity="bottom|end"
+                    android:layout_margin="10dp"
                     android:background="@android:color/transparent"
                     android:clickable="true"
-                    android:layout_margin="10dp"
                     android:src="@drawable/edit_icon"
 
                     />

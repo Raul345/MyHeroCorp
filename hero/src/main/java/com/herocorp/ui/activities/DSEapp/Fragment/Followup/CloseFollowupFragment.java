@@ -310,7 +310,7 @@ public class CloseFollowupFragment extends Fragment implements View.OnClickListe
         }
     }
 
-    public void jsonparse(String result) {
+  /*  public void jsonparse(String result) {
         try {
             JSONObject jsono = new JSONObject(result);
             JSONArray jarray = jsono.getJSONArray("make");
@@ -338,7 +338,7 @@ public class CloseFollowupFragment extends Fragment implements View.OnClickListe
 
         }
     }
-
+*/
     public void fetch_records() {
         try {
             db = new DatabaseHelper(getContext());

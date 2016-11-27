@@ -33,6 +33,7 @@ import com.herocorp.ui.activities.DSEapp.models.Bike_model;
 import com.herocorp.ui.activities.DSEapp.models.Bikemake;
 import com.herocorp.ui.activities.DSEapp.models.Bikemodel;
 import com.herocorp.ui.activities.DSEapp.models.Campaign;
+import com.herocorp.ui.activities.DSEapp.models.Followup;
 import com.herocorp.ui.utility.CustomViewParams;
 
 import org.json.JSONArray;
@@ -80,7 +81,7 @@ public class EditEnquiryFragment extends Fragment implements View.OnClickListene
     int flag = 0;
 
     private int mYear, mMonth, mDay;
-    String date, follow_date = "", next_follow_date = "", purch_date = "", remark = "", exchange = "", finance = "", test = "", model = "", existvehicle = "", existmake = "", existmodel = "";
+    String date, follow_date = "", next_follow_date = "", purch_date = "", remark = "", exchange = "", finance = "", test = "N", model = "", existvehicle = "", existmake = "", existmodel = "";
     String firstname = "", lastname = "", email = "", mobile = "", age = "", gender = "", state = "", district = "", tehsil = "", village = "", address1 = "", address2 = "", pincode = "";
 
     String encryptdata, data;
@@ -89,9 +90,9 @@ public class EditEnquiryFragment extends Fragment implements View.OnClickListene
 
     SharedPreferences mypref;
     private SharedPreferences sharedPreferences;
-    String user_id, dealer_code, key, enquiry_id = "";
+    String user_id, dealer_code, key = "", enquiry_id = "";
 
-
+    LinearLayout layout_existmake, layout_existmodel;
     DatabaseHelper db;
 
     public static EditEnquiryFragment newInstance(int page) {
@@ -112,7 +113,7 @@ public class EditEnquiryFragment extends Fragment implements View.OnClickListene
             savedInstanceState) {
         mypref = getActivity().getSharedPreferences("herocorp", 0);
         rootView = inflater.inflate(R.layout.dse_editenquiry_fragment, container, false);
-        fetch_data();
+        fetch_data1();
         initView(rootView);
 
         return rootView;
@@ -145,6 +146,10 @@ public class EditEnquiryFragment extends Fragment implements View.OnClickListene
         spin_existmake = (Spinner) rootView.findViewById(R.id.existmake_spinner);
         spin_existmodel = (Spinner) rootView.findViewById(R.id.existmodel_spinner);
 
+        layout_existmake = (LinearLayout) rootView.findViewById(R.id.layout_existmake);
+        layout_existmodel = (LinearLayout) rootView.findViewById(R.id.layout_existmodel);
+
+
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MMM-yy");
         Calendar c = Calendar.getInstance();
         if (follow_date.equals("")) {
@@ -172,7 +177,7 @@ public class EditEnquiryFragment extends Fragment implements View.OnClickListene
             finance_chkbox.setChecked(true);
 
         if (test.equals("Y"))
-            test_chkbox.setChecked(true);
+            test_chkbox.setChecked(false);
 
         ArrayAdapter<String> at = new ArrayAdapter<String>(getContext(), R.layout.spinner_textview2, vehicle_list);
         spin_existvehicle.setAdapter(at);
@@ -227,7 +232,8 @@ public class EditEnquiryFragment extends Fragment implements View.OnClickListene
         spin_interested_model.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (position != 0 && !model.equalsIgnoreCase(parent.getItemAtPosition(position).toString())) {
+               /* && !model.equalsIgnoreCase(parent.getItemAtPosition(position).toString())*/
+                if (position != 0) {
                     model = parent.getItemAtPosition(position).toString();
                     JSONObject jsonparams = new JSONObject();
                     try {
@@ -254,11 +260,14 @@ public class EditEnquiryFragment extends Fragment implements View.OnClickListene
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (position == 1) {
+                    layout_existmake.setVisibility(View.VISIBLE);
+                    layout_existmodel.setVisibility(View.VISIBLE);
                     existvehicle = parent.getItemAtPosition(position).toString();
                     ArrayAdapter<Bikemake> at1 = new ArrayAdapter<Bikemake>(getContext(), R.layout.spinner_textview2, arr_makelist);
                     spin_existmake.setAdapter(at1);
-                } else
+                } else {
                     reset();
+                }
 
             }
 
@@ -355,6 +364,10 @@ public class EditEnquiryFragment extends Fragment implements View.OnClickListene
                 }
                 if (flag == 1) {
                     ProgressDialog progress = new ProgressDialog(getContext());
+                    db = new DatabaseHelper(getContext());
+                    db.update_edit_followup(new Followup(firstname, lastname, mobile, age, gender, email, state, district, tehsil, village, model,
+                            purch_date, exchange, finance, existvehicle, remark, enquiry_id, follow_date, "0"));
+
                     new NetworkConnect1(url, newurlparams, progress, "Enquiry has been successfully submitted.", getContext(), 1).execute();
                 }
                 if (flag == 2) {
@@ -535,6 +548,8 @@ public class EditEnquiryFragment extends Fragment implements View.OnClickListene
         ArrayAdapter<String> at = new ArrayAdapter<String>(getContext(), R.layout.spinner_textview2, arr_reset);
         spin_existmake.setAdapter(at);
         spin_existmodel.setAdapter(at);
+        layout_existmake.setVisibility(View.GONE);
+        layout_existmodel.setVisibility(View.GONE);
 
     }
 
@@ -552,6 +567,7 @@ public class EditEnquiryFragment extends Fragment implements View.OnClickListene
 
     public void edit_enquiry() {
         try {
+
             remark = remarks_et.getText().toString();
             follow_date = nextfollowdate_btn.getText().toString();
             purch_date = purchdate_btn.getText().toString();
@@ -566,7 +582,7 @@ public class EditEnquiryFragment extends Fragment implements View.OnClickListene
                         "\",\"test_ride\":\"" + test + "\",\"remarks\":\"" + remark + "\",\"existVeh\":\"" + existvehicle +
                         "\",\"existMake\":\"" + existmake + "\",\"existModel\":\"" + existmodel + "\",\"model_interested\":\"" + model + "\",\"fol_date\":\"" + follow_date + "\",\"exp_purchase_date\":\"" + purch_date + "\",\"dealer_code\":\"" + dealer_code +
                         "\"";*/
-
+                fetch_data2();
                 JSONObject jsonparams = new JSONObject();
 
                 jsonparams.put("key", key);
@@ -610,7 +626,7 @@ public class EditEnquiryFragment extends Fragment implements View.OnClickListene
 
                 //   Toast.makeText(getContext(), data, Toast.LENGTH_LONG).show();
 
-                Log.e("add_enquiry", jsonparams.toString());
+                Log.e("edit_enquiry", jsonparams.toString());
                 encryptuser1(URLConstants.ADD_ENQUIRY, jsonparams.toString(), 1);
             }
 
@@ -620,7 +636,88 @@ public class EditEnquiryFragment extends Fragment implements View.OnClickListene
 
     }
 
-    public void fetch_data() {
+    public void fetch_data1() {
+      /*  final Bundle bundle = getArguments();
+        model = bundle.getString("model");
+        purch_date = bundle.getString("pur_date");
+        next_follow_date = bundle.getString("followdate");
+        exchange = bundle.getString("exchange");
+        finance = bundle.getString("finance");
+        existvehicle = bundle.getString("vtype");
+        remark = bundle.getString("comment");
+        enquiry_id = bundle.getString("enquiryid");*/
+
+       /* if (mypref.contains("firstname")) {
+            firstname = mypref.getString("firstname", "");
+        }
+        if (mypref.contains("lastname")) {
+            lastname = mypref.getString("lastname", "");
+        }
+        if (mypref.contains("mobile")) {
+            mobile = mypref.getString("mobile", "");
+        }
+        if (mypref.contains("age")) {
+            age = mypref.getString("age", "");
+        }
+        if (mypref.contains("email")) {
+            email = mypref.getString("email", "");
+        }
+        if (mypref.contains("gender")) {
+            gender = mypref.getString("gender", "");
+        }
+        if (mypref.contains("state")) {
+            state = mypref.getString("state", "");
+        }
+        if (mypref.contains("district")) {
+            district = mypref.getString("district", "");
+        }
+        if (mypref.contains("tehsil")) {
+            tehsil = mypref.getString("tehsil", "");
+        }
+        if (mypref.contains("city")) {
+            village = mypref.getString("city", "");
+        }
+        if (mypref.contains("address1")) {
+            address1 = mypref.getString("address1", "");
+        }
+        if (mypref.contains("address2")) {
+            address2 = mypref.getString("address2", "");
+        }
+        if (mypref.contains("pincode")) {
+            pincode = mypref.getString("pincode", "");
+        }*/
+
+        if (mypref.contains("model")) {
+            model = mypref.getString("model", "");
+        }
+        if (mypref.contains("purch_date")) {
+            purch_date = mypref.getString("purch_date", "");
+        }
+        if (mypref.contains("follow_date")) {
+            follow_date = mypref.getString("follow_date", "");
+        }
+        if (mypref.contains("comment")) {
+            remark = mypref.getString("comment", "");
+        }
+        if (mypref.contains("exchange")) {
+            exchange = mypref.getString("exchange", "");
+        }
+        if (mypref.contains("finance")) {
+            finance = mypref.getString("finance", "");
+        }
+        if (mypref.contains("existvehicle")) {
+            existvehicle = mypref.getString("existvehicle", "");
+        }
+        if (mypref.contains("enquiry_id")) {
+            enquiry_id = mypref.getString("enquiry_id", "");
+        }
+        if (exchange.equals("Y") || finance.equals("Y"))
+            flag = 1;
+
+
+    }
+
+    public void fetch_data2() {
       /*  final Bundle bundle = getArguments();
         model = bundle.getString("model");
         purch_date = bundle.getString("pur_date");
@@ -671,7 +768,7 @@ public class EditEnquiryFragment extends Fragment implements View.OnClickListene
             pincode = mypref.getString("pincode", "");
         }
 
-        if (mypref.contains("model")) {
+       /* if (mypref.contains("model")) {
             model = mypref.getString("model", "");
         }
         if (mypref.contains("purch_date")) {
@@ -697,7 +794,7 @@ public class EditEnquiryFragment extends Fragment implements View.OnClickListene
         }
         if (exchange.equals("Y") || finance.equals("Y"))
             flag = 1;
-
+*/
 
     }
 
@@ -734,6 +831,8 @@ public class EditEnquiryFragment extends Fragment implements View.OnClickListene
             }
             ArrayAdapter<String> at1 = new ArrayAdapter<String>(getContext(), R.layout.spinner_textview2, arr_modellist);
             spin_interested_model.setAdapter(at1);
+            spin_interested_model.setSelection(((ArrayAdapter<String>) spin_interested_model.getAdapter()).getPosition(model));
+
         } catch (Exception e) {
             Toast.makeText(getContext(), "Check your Connection !!", Toast.LENGTH_SHORT).show();
         }

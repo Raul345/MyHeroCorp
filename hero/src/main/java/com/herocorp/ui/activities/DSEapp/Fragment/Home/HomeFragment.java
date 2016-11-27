@@ -222,7 +222,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
             transaction(new TodayFollowupFragment());
 
-
         } else if (i == R.id.pendingfollowup) {
             //  Toast.makeText(getActivity(), "penidng followup", Toast.LENGTH_SHORT).show();
             pendingorderText.setTextColor(Color.GRAY);

@@ -26,6 +26,8 @@ import com.herocorp.ui.activities.DSEapp.ConnectService.NetworkConnect1;
 import com.herocorp.ui.utility.CustomTypeFace;
 import com.herocorp.ui.utility.CustomViewParams;
 
+import org.json.JSONObject;
+
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
@@ -39,11 +41,13 @@ public class TestRideFeedbackFragment extends Fragment implements View.OnClickLi
     RadioButton radiobutton1, radiobutton2, radiobutton3, radiobutton4, radiobutton5, radiobutton6;
     EditText prefer_et;
     String preference;
-    String username = "ROBINK11610", enquiry_id = "", dealer_id = "", dealercode = "11610", key = "", encryptdata;
+    String username = "ROBINK11610", enquiry_id = "", dealer_code = "", dealercode = "11610", key = "", encryptdata;
     String ans1, ans2, ans3, ans4, ans5, ans6, ans7;
     NetworkConnect networkConnect;
 
     SharedPreferences mypref;
+    private SharedPreferences sharedPreferences;
+    String user_id;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
             savedInstanceState) {
@@ -64,7 +68,7 @@ public class TestRideFeedbackFragment extends Fragment implements View.OnClickLi
             enquiry_id = mypref.getString("enquiry_id", "");
         }
         if (mypref.contains("dealerid")) {
-            dealer_id = mypref.getString("dealerid", "");
+            dealer_code= mypref.getString("dealerid", "");
         }
 
 
@@ -102,6 +106,7 @@ public class TestRideFeedbackFragment extends Fragment implements View.OnClickLi
         prefer_et = (EditText) rootView.findViewById(R.id.prefer_edittext);
 
         menu.setOnClickListener(this);
+        fetch_pref();
         imageView_submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -185,9 +190,9 @@ public class TestRideFeedbackFragment extends Fragment implements View.OnClickLi
                             "\",\"6\":\"" + ans6 +
                             "\",\"7\":\"" + ans7 +
                             "\"}";*/
-                    String json = "{\"user_id\":\"" + username +
+                    /*String json = "{\"user_id\":\"" + username +
                             "\",\"enq_id\":\"" + enquiry_id +
-                            "\",\"dealer_id\":\"" + dealer_id +
+                            "\",\"dealer_id\":\"" + dealer_code +
                             "\",\"key\":\"" + key +
                             "\",\"ans\":\"\"{\"1\":\"" + ans1 +
                             "\",\"2\":\"" + ans2 +
@@ -196,10 +201,27 @@ public class TestRideFeedbackFragment extends Fragment implements View.OnClickLi
                             "\",\"5\":\"" + ans5 +
                             "\",\"6\":\"" + ans6 +
                             "\",\"7\":\"" + ans7 +
-                            "\"}\"\"}";
+                            "\"}\"\"}";*/
 
-                    Toast.makeText(getContext(), json, Toast.LENGTH_LONG).show();
-                    encryptuser(URLConstants.SYNC_TEST_RIDE, json);
+                    JSONObject jsonparams = new JSONObject();
+                    jsonparams.put("user_id", user_id);
+                    jsonparams.put("enq_id", enquiry_id);
+                    jsonparams.put("dealer_id", dealer_code);
+                    jsonparams.put("key", key);
+
+                    JSONObject jsonparams1 = new JSONObject();
+                    jsonparams1.put("1", ans1);
+                    jsonparams1.put("2", ans2);
+                    jsonparams1.put("3", ans3);
+                    jsonparams1.put("4", ans4);
+                    jsonparams1.put("5", ans5);
+                    jsonparams1.put("6", ans6);
+                    jsonparams1.put("7", ans7);
+
+                    jsonparams.put("ans", jsonparams1.toString());
+
+                    Toast.makeText(getContext(), jsonparams.toString(), Toast.LENGTH_LONG).show();
+                    encryptuser(URLConstants.SYNC_TEST_RIDE, jsonparams.toString());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -223,14 +245,14 @@ public class TestRideFeedbackFragment extends Fragment implements View.OnClickLi
         ProgressDialog progress = new ProgressDialog(getContext());
         if (NetConnections.isConnected(getContext())) {
             try {
-                String urlParameters = "data=" + URLEncoder.encode(data, "UTF-8");
+                /*String urlParameters = "data=" + URLEncoder.encode(data, "UTF-8");
 
                 networkConnect = new NetworkConnect("http://abym.in/clientProof/hero_motors/encrypt", urlParameters);
 
                 String result = networkConnect.execute();
                 if (result != null)
                     encryptdata = result.replace("\\/", "/");
-
+*/
                 //clearing key
                 if (mypref.contains("key")) {
                     mypref.edit().remove("key").commit();
@@ -242,7 +264,7 @@ public class TestRideFeedbackFragment extends Fragment implements View.OnClickLi
                     mypref.edit().remove("dealerid").commit();
                 }
               */
-                String newurlparams = "data=" + URLEncoder.encode(encryptdata, "UTF-8");
+                String newurlparams = "data=" + URLEncoder.encode(data, "UTF-8");
                 new NetworkConnect1(url, newurlparams, progress, "Test Ride Feedback has been successfully submitted.", getContext(), 3).execute();
 
             } catch (UnsupportedEncodingException e) {
@@ -255,4 +277,11 @@ public class TestRideFeedbackFragment extends Fragment implements View.OnClickLi
             Toast.makeText(getContext(), "Check your connection !!", Toast.LENGTH_SHORT).show();
     }
 
+    public void fetch_pref() {
+        sharedPreferences = getActivity().getSharedPreferences("hero", 0);
+        if (sharedPreferences.contains("username"))
+            user_id = sharedPreferences.getString("username", null);
+        if (sharedPreferences.contains("dealercode"))
+            dealer_code = sharedPreferences.getString("dealercode", null);
+    }
 }

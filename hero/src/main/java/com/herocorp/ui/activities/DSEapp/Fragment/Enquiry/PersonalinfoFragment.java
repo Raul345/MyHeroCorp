@@ -1,5 +1,6 @@
 package com.herocorp.ui.activities.DSEapp.Fragment.Enquiry;
 
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -74,6 +75,8 @@ public class PersonalinfoFragment extends Fragment implements View.OnClickListen
     NetworkConnect networkConnect;
     String data;
     DatabaseHelper db;
+    private SharedPreferences sharedPreferences;
+    String state_name, state_id;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
             savedInstanceState) {
@@ -81,7 +84,7 @@ public class PersonalinfoFragment extends Fragment implements View.OnClickListen
         rootView = inflater.inflate(R.layout.dse_personalinfo_fragment, container, false);
 
         initView(rootView);
-       // data = "{\"username\":\"" + username + "\",\"version\":\"" + version + "\",\"imei\":\"" + imei + "\",\"uuid\":\"" + uuid + "\"}";
+        // data = "{\"username\":\"" + username + "\",\"version\":\"" + version + "\",\"imei\":\"" + imei + "\",\"uuid\":\"" + uuid + "\"}";
 //        encryptuser(data, URLConstants.LOGIN, 0);
         fetch_states();
 
@@ -149,6 +152,7 @@ public class PersonalinfoFragment extends Fragment implements View.OnClickListen
         Bundle bundle = this.getArguments();
         mobile_et.setText(bundle.getString("phoneno"));
 
+        fetch_pref();
         state_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -286,7 +290,7 @@ public class PersonalinfoFragment extends Fragment implements View.OnClickListen
                 bundle.putString("address1", address1);
                 bundle.putString("address2", address2);
                 bundle.putString("pin", pincode);
-                Log.e("personal_info:",bundle.toString());
+                Log.e("personal_info:", bundle.toString());
                 Fragment f = new AddenquiryFragment();
                 FragmentManager fm = getActivity().getSupportFragmentManager();
                 FragmentTransaction ft = fm.beginTransaction();
@@ -366,7 +370,7 @@ public class PersonalinfoFragment extends Fragment implements View.OnClickListen
                 String newurlparams = "data=" + URLEncoder.encode(encryptuser, "UTF-8");
                 NetworkConnect networkConnect = new NetworkConnect(url, newurlparams);
                 if (flag == 0) {
-                   // jsonparse_state(networkConnect.execute());
+                    // jsonparse_state(networkConnect.execute());
                 }
                 if (flag == 1) {
                     jsonparse_district(networkConnect.execute());
@@ -462,10 +466,27 @@ public class PersonalinfoFragment extends Fragment implements View.OnClickListen
         db = new DatabaseHelper(getContext());
         List<State> allrecords = db.getAllStates();
         arr_state.add(new State("", "--select--"));
+
+        int position = 0;
+        int i = 1;
         for (State record : allrecords) {
+            if (record.getId().equalsIgnoreCase(state_id) || record.getState().equalsIgnoreCase(state_name))
+                position = i;
             arr_state.add(new State(record.getId(), record.getState()));
+            i++;
         }
         ArrayAdapter<State> at1 = new ArrayAdapter<State>(getContext(), R.layout.spinner_textview, arr_state);
         state_spinner.setAdapter(at1);
+        state_spinner.setSelection(position);
     }
+
+    public void fetch_pref() {
+        sharedPreferences = getActivity().getSharedPreferences("hero", 0);
+        if (sharedPreferences.contains("state_name"))
+            state_name = sharedPreferences.getString("state_name", null);
+
+        if (sharedPreferences.contains("state_id"))
+            state_id = sharedPreferences.getString("state_id", null);
+    }
+
 }

@@ -28,6 +28,7 @@ public class Village {
     public static ArrayList getVillage(String id) {
         int i = 0;
         reqvillage.clear();
+        reqvillage.add("--select--");
         for (i = 0; i < tehsil_id.size(); i++) {
           /* if (tehsil_id.get(i).equals(""))
                 reqvillage.add(village.get(i));*/

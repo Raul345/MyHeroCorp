@@ -13,11 +13,8 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.herocorp.R;
-import com.herocorp.ui.activities.DSEapp.Fragment.ContactAlertFragment;
+import com.herocorp.ui.activities.DSEapp.Fragment.Alert.ContactAlertFragment;
 import com.herocorp.ui.activities.DSEapp.models.Contact;
-import com.herocorp.ui.activities.DSEapp.models.EnquiryContact;
-import com.herocorp.ui.activities.DSEapp.models.VehicleDetail;
-import com.herocorp.ui.activities.DSEapp.models.VinContact;
 
 import java.util.ArrayList;
 

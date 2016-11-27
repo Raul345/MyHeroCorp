@@ -1,4 +1,4 @@
-package com.herocorp.ui.activities.DSEapp.Fragment;
+package com.herocorp.ui.activities.DSEapp.Fragment.Alert;
 
 import android.content.Intent;
 import android.net.Uri;

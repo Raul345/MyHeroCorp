@@ -462,4 +462,33 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
     }
 
+
+    public void update_edit_followup(Followup followup) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(Cols_followup.FST_NAME, followup.getFirst_name());
+        values.put(Cols_followup.LAST_NAME, followup.getLast_name());
+        values.put(Cols_followup.CELL_PH_NUM, followup.getCell_ph_no());
+        values.put(Cols_followup.AGE, followup.getAge());
+        values.put(Cols_followup.GENDER, followup.getGender());
+        values.put(Cols_followup.EMAIL_ADDR, followup.getEmail_addr());
+        values.put(Cols_followup.STATE, followup.getState());
+        values.put(Cols_followup.DISTRICT, followup.getDistrict());
+        values.put(Cols_followup.TEHSIL, followup.getTehsil());
+        values.put(Cols_followup.CITY, followup.getCity());
+        values.put(Cols_followup.X_MODEL_INTERESTED, followup.getX_model_interested());
+        values.put(Cols_followup.EXPCTD_DT_PURCHASE, followup.getExpcted_date_purchase());
+        values.put(Cols_followup.X_EXCHANGE_REQUIRED, followup.getX_exchange_required());
+        values.put(Cols_followup.X_FINANCE_REQUIRED, followup.getX_finance_required());
+        values.put(Cols_followup.EXISTING_VEHICLE, followup.getExist_vehicle());
+        values.put(Cols_followup.ENQUIRY_ID, followup.getEnquiry_id());
+        values.put(Cols_followup.FOLLOW_DATE, followup.getFollow_date());
+        values.put(Cols_followup.FOLLOWUP_COMMENTS, followup.getFollowup_comments());
+        values.put(Cols_followup.FOLLOWUP_STATUS, followup.getFollowup_status());
+
+        db.update(TABLE_FOLLOWUP, values, Cols_followup.ENQUIRY_ID + " = ?",
+                new String[]{String.valueOf(followup.getEnquiry_id())});
+        // Inserting Row
+        db.close();
+    }
 }

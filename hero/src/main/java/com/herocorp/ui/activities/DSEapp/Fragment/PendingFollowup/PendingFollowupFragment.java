@@ -240,6 +240,7 @@ public class PendingFollowupFragment extends Fragment implements View.OnClickLis
 
         userAdapter = new Followupadapter(getContext(), R.layout.dse_pendingfollowup_row, userArray);
         userList = (SwipeMenuListView) rootView.findViewById(R.id.list_pendingfollowup);
+
         //progressbar = (ProgressBar) rootView.findViewById(R.id.progressBar_pendingfollowup);
         //progressbar.setVisibility(View.VISIBLE);
 
@@ -263,6 +264,12 @@ public class PendingFollowupFragment extends Fragment implements View.OnClickLis
         menu.setOnClickListener(this);
 
     }
+
+   /*    @Override
+        public void onResume() {
+            super.onStart();
+        fetch_records();
+    }*/
 
     @Override
     public void onClick(View view) {
@@ -317,6 +324,7 @@ public class PendingFollowupFragment extends Fragment implements View.OnClickLis
         try {
             db = new DatabaseHelper(getContext());
             List<Followup> allrecords = db.getAllFollowups();
+            userAdapter.clear();
             for (Followup record : allrecords) {
                 first_name = record.getFirst_name();
                 last_name = record.getLast_name();
@@ -339,9 +347,9 @@ public class PendingFollowupFragment extends Fragment implements View.OnClickLis
                 follow_date = record.getFollow_date();
                 enquiry_entry_date = record.getEnquiry_entry_date();
                 dealer_bu_id = record.getDealer_bu_id();
-                followup_status=record.getFollowup_status();
+                followup_status = record.getFollowup_status();
                 userAdapter.add(new Followup(first_name, last_name, cell_ph_no, age, gender, email_addr, state, district, tehsil, city, x_con_seq_no, x_model_interested,
-                        expected_date_purchase, x_exchange_required, x_finance_required, exist_vehicle, followup_comments, enquiry_id, follow_date, enquiry_entry_date, dealer_bu_id,followup_status));
+                        expected_date_purchase, x_exchange_required, x_finance_required, exist_vehicle, followup_comments, enquiry_id, follow_date, enquiry_entry_date, dealer_bu_id, followup_status));
                 userAdapter.notifyDataSetChanged();
             }
             updateList();

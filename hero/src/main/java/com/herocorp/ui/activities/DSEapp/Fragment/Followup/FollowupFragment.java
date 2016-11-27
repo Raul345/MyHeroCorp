@@ -189,6 +189,8 @@ public class FollowupFragment extends Fragment implements View.OnClickListener {
                     @Override
                     public void onDateSet(DatePicker view, int year,
                                           int monthOfYear, int dayOfMonth) {
+                        /*view.setMinDate(c.getTimeInMillis() - 1000);*/
+                        /*datePickerDialog.getDatePicker().setMinDate(c.getTimeInMillis() - 1000);*/
 
                         follow_date = dayOfMonth + "-" + (monthOfYear + 1) + "-" + year;
                         datechange(follow_date);

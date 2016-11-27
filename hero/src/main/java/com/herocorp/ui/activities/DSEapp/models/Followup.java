@@ -283,7 +283,35 @@ public class Followup {
         this.dealer_bu_id = dealer_bu_id;
         this.followup_status = followup_status;
     }
+
     public Followup() {
 
+    }
+
+    public Followup(String first_name, String last_name, String cell_ph_no, String age, String gender, String email_addr, String state,
+                    String district, String tehsil, String city, String x_model_interested, String expcted_date_purchase,
+                    String x_exchange_required, String x_finance_required, String exist_vehicle, String followup_comments, String enquiry_id,
+                    String follow_date, String followup_status
+    ) {
+
+        this.first_name = first_name;
+        this.last_name = last_name;
+        this.cell_ph_no = cell_ph_no;
+        this.age = age;
+        this.gender = gender;
+        this.email_addr = email_addr;
+        this.state = state;
+        this.district = district;
+        this.tehsil = tehsil;
+        this.city = city;
+        this.x_model_interested = x_model_interested;
+        this.expcted_date_purchase = expcted_date_purchase;
+        this.x_exchange_required = x_exchange_required;
+        this.x_finance_required = x_finance_required;
+        this.exist_vehicle = exist_vehicle;
+        this.followup_comments = followup_comments;
+        this.enquiry_id = enquiry_id;
+        this.follow_date = follow_date;
+        this.followup_status = followup_status;
     }
 }
