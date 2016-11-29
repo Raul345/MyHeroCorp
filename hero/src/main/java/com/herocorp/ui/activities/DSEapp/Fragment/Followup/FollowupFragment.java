@@ -87,12 +87,13 @@ public class FollowupFragment extends Fragment implements View.OnClickListener {
         newscheduledate = (Button) rootView.findViewById(R.id.button_scheduledate);
 
         //setting dates
-        date = new SimpleDateFormat("dd-MMM-yyyy").format(new Date());
+        date = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
 
-        SimpleDateFormat sdf = new SimpleDateFormat("dd-MMM-yy");
+        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
         Calendar c = Calendar.getInstance();
         c.add(Calendar.DATE, 3);  // number of days to add
         String dt1 = sdf.format(c.getTime());
+        follow_date = dt1;
         // follow_date = new SimpleDateFormat("dd MMM yyyy").format(new Date());
 
 
@@ -127,9 +128,8 @@ public class FollowupFragment extends Fragment implements View.OnClickListener {
         } else if (i == R.id.button_scheduledate) {
             showdatepicker(newscheduledate);
         } else if (i == R.id.imageView_submitfollowup) {
-
             reason = followupreason.getText().toString();
-            if (reason.equals("") || date.equals("")) {
+            if (reason.equals("")) {
                 Toast.makeText(getContext(), "Please fill all the details !!", Toast.LENGTH_SHORT).show();
 
             } else {
@@ -149,12 +149,11 @@ public class FollowupFragment extends Fragment implements View.OnClickListener {
                         jsonparams.put("fol_date", follow_date);
                         jsonparams.put("user_id", user);
                         jsonparams.put("dms_enquiry_id", enquiryid);
-                        Log.e("followup", jsonparams.toString());
+                        String json=jsonparams.toString().replace("\\/", "/");
+                        Log.e("followup", json);
+                        newurlparams = "data=" + URLEncoder.encode(json, "UTF-8");
 
-                        newurlparams = "data=" + URLEncoder.encode(jsonparams.toString(), "UTF-8");
                         new NetworkConnect1(URLConstants.SYNC_FOLLOW_UP, newurlparams, progress, "Followup has been successfully submitted.", getContext(), 1).execute();
-                    } catch (UnsupportedEncodingException e) {
-                        e.printStackTrace();
                     } catch (Exception e) {
                     }
                 } else {
@@ -169,7 +168,7 @@ public class FollowupFragment extends Fragment implements View.OnClickListener {
         // Get Current Date
         Date currentdate = new Date();
         SimpleDateFormat newFormatDate = new SimpleDateFormat(
-                "dd-MMM-yy");
+                "MM/dd/yyyy");
         try {
             currentdate = newFormatDate.parse(button.getText().toString());
         } catch (ParseException e) {
@@ -192,7 +191,7 @@ public class FollowupFragment extends Fragment implements View.OnClickListener {
                         /*view.setMinDate(c.getTimeInMillis() - 1000);*/
                         /*datePickerDialog.getDatePicker().setMinDate(c.getTimeInMillis() - 1000);*/
 
-                        follow_date = dayOfMonth + "-" + (monthOfYear + 1) + "-" + year;
+                        follow_date = (monthOfYear + 1) + "/" + (dayOfMonth) + "/" + year;
                         datechange(follow_date);
                         mYear = year;
                         mDay = dayOfMonth;
@@ -236,11 +235,11 @@ public class FollowupFragment extends Fragment implements View.OnClickListener {
 
      }*/
     public void datechange(String olddate) {
-        SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
+        SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");
         Date newDate;
         try {
             newDate = format.parse(olddate);
-            format = new SimpleDateFormat("dd-MMM-yyyy");
+            format = new SimpleDateFormat("MM/dd/yyyy");
             follow_date = format.format(newDate);
         } catch (ParseException e) {
             e.printStackTrace();

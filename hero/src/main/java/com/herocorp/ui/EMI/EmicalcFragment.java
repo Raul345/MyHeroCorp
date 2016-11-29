@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 
@@ -22,6 +23,7 @@ public class EmicalcFragment extends Activity implements View.OnClickListener {
     private CustomViewParams customViewParams;
     WebView emiWebView;
     ImageView back;
+    ProgressBar progressBar;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,6 +38,7 @@ public class EmicalcFragment extends Activity implements View.OnClickListener {
 
         customViewParams.setImageViewCustomParams(heroLogo, new int[]{30, 30, 0, 0}, new int[]{0, 0, 0, 0}, 120, 120);
         customViewParams.setImageViewCustomParams(back, new int[]{0, 30, 30, 0}, new int[]{0, 0, 0, 0}, 100, 100);
+        progressBar = (ProgressBar) findViewById(R.id.progress);
 
        /* ScrollView scrollView = (ScrollView) findViewById(R.id.scroll_view);
         customViewParams.setMarginAndPadding(scrollView, new int[]{50, 50, 50, 50}, new int[]{0, 0, 0, 0}, scrollView.getParent());
@@ -77,6 +80,7 @@ public class EmicalcFragment extends Activity implements View.OnClickListener {
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
             return super.shouldOverrideUrlLoading(view, url);
         }
+
         public void onPageFinished(WebView view, String url) {
             super.onPageFinished(view, url);
             back.setVisibility(View.VISIBLE);

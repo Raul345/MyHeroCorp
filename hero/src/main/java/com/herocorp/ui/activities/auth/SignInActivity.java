@@ -46,11 +46,13 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
+import static android.webkit.ConsoleMessage.MessageLevel.LOG;
+
 public class SignInActivity extends Activity implements View.OnClickListener {
 
     private static final int REQUEST_PERMISSION_READ_PHONE_STATE = 1;
     private EditText dealerCode;
-    private SharedPreferences sharedPreferences;
+    private SharedPreferences sharedPreferences, sharedPref;
     DatabaseHelper db;
 
     /*   private String[] imeis = {"356604060544425",
@@ -66,8 +68,8 @@ public class SignInActivity extends Activity implements View.OnClickListener {
        };*/
     private String respDesc = "", respCode = "", state_id = "", dealer_code = "", version = "", path = "", state_name = "", result = "", failure_msg = "";
     private String appVersion;
-     private String deviceImei = "911441757449230";
-   // private String deviceImei;
+    // private String deviceImei = "911441757449230";
+    private String deviceImei;
     private String userCode, uuid = "0";
     private String encryptuser;
 
@@ -76,9 +78,15 @@ public class SignInActivity extends Activity implements View.OnClickListener {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in);
 
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        // sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
-        if (sharedPreferences.getBoolean(AppConstants.IS_USER_LOGGED_IN, false)) {
+        /*if (sharedPreferences.getBoolean(AppConstants.IS_USER_LOGGED_IN, false)) {
+            openHomeScreen();
+        }
+*/
+
+        sharedPref = getSharedPreferences("hero", 0);
+        if (sharedPref.contains("username")) {
             openHomeScreen();
         }
 
@@ -116,11 +124,12 @@ public class SignInActivity extends Activity implements View.OnClickListener {
 
     @Override
     public void onClick(View view) {
-
         if (view.getId() == R.id.sign_in_button) {
-            showPhoneStatePermission();
+            if (NetConnections.isConnected(getApplicationContext()))
+                showPhoneStatePermission();
+            else
+                Toast.makeText(getApplicationContext(), "No Network Connection !!", Toast.LENGTH_LONG).show();
         }
-
     }
 
     //@Override
@@ -167,7 +176,6 @@ public class SignInActivity extends Activity implements View.OnClickListener {
             TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
            /* if (Arrays.asList(imeis).contains(dealerCode.getText().toString()) &&
                     telephonyManager.getDeviceId().contentEquals(dealerCode.getText().toString())) {
-
                 sharedPreferences.edit().putBoolean(AppConstants.IS_USER_LOGGED_IN, true).commit();
                 openHomeScreen();
 
@@ -175,10 +183,9 @@ public class SignInActivity extends Activity implements View.OnClickListener {
             PackageManager manager = getPackageManager();
             PackageInfo info = null;
             try {
-
                 info = manager.getPackageInfo(getPackageName(), 0);
                 appVersion = info.versionName;
-               // deviceImei = telephonyManager.getDeviceId();
+                deviceImei = telephonyManager.getDeviceId();
                 userCode = dealerCode.getText().toString();
 
                 if (userCode.equals("")) {
@@ -190,6 +197,8 @@ public class SignInActivity extends Activity implements View.OnClickListener {
                         jsonparams.put("version", appVersion);
                         jsonparams.put("imei", deviceImei);
                         jsonparams.put("uuid", uuid);
+
+                        Log.e("sigin:", jsonparams.toString());
                         String data = "{\"username\":\"" + userCode + "\",\"version\":\"" + appVersion + "\",\"imei\":\"" + deviceImei + "\",\"uuid\":\"" + uuid + "\"}";
                         //    encryptuser(data, URLConstants.LOGIN, 0);
                         new Login(jsonparams.toString(), URLConstants.LOGIN).execute();
@@ -200,6 +209,7 @@ public class SignInActivity extends Activity implements View.OnClickListener {
             else{
                 Toast.makeText(this, "Please enter valid dealer code", Toast.LENGTH_SHORT).show();
             }*/
+
                 }
             } catch (PackageManager.NameNotFoundException e) {
                 e.printStackTrace();
@@ -299,8 +309,7 @@ public class SignInActivity extends Activity implements View.OnClickListener {
     }
 
     public void save_data() {
-        sharedPreferences = getSharedPreferences("hero", 0);
-        SharedPreferences.Editor edit = sharedPreferences.edit();
+        SharedPreferences.Editor edit = sharedPref.edit();
         edit.putString("username", userCode);
         edit.putString("dealercode", dealer_code);
         edit.putString("version", version);

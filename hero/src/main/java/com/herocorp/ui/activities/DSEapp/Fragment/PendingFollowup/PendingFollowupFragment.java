@@ -202,7 +202,6 @@ public class PendingFollowupFragment extends Fragment implements View.OnClickLis
         return rootView;
     }
 
-
     private void updateList() {
         userList.setAdapter(userAdapter);
         if (userAdapter.getCount() > 0)
@@ -218,7 +217,13 @@ public class PendingFollowupFragment extends Fragment implements View.OnClickLis
         super.onDestroy();
     }
 
+   /* public void onResume() {
+        fetch_records();
+        super.onResume();
+    }
+*/
     private void initView(View rootView) {
+
         customViewParams = new CustomViewParams(getActivity());
         CustomTypeFace customTypeFace = new CustomTypeFace(getActivity());
 
@@ -240,6 +245,9 @@ public class PendingFollowupFragment extends Fragment implements View.OnClickLis
 
         userAdapter = new Followupadapter(getContext(), R.layout.dse_pendingfollowup_row, userArray);
         userList = (SwipeMenuListView) rootView.findViewById(R.id.list_pendingfollowup);
+
+
+
 
         //progressbar = (ProgressBar) rootView.findViewById(R.id.progressBar_pendingfollowup);
         //progressbar.setVisibility(View.VISIBLE);
@@ -265,7 +273,7 @@ public class PendingFollowupFragment extends Fragment implements View.OnClickLis
 
     }
 
-   /*    @Override
+     /*  @Override
         public void onResume() {
             super.onStart();
         fetch_records();

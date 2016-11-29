@@ -13,30 +13,32 @@
         android:layout_alignParentTop="true"
         android:src="@drawable/hero_logo" />
 
-   <!-- <ScrollView
-        android:id="@+id/scroll_view"
+
+    <RelativeLayout
+        android:id="@+id/layout_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/app_logo"
-        android:layout_marginTop="10dp"
-        android:fillViewport="true"
-       >
--->
-        <RelativeLayout
-            android:id="@+id/layout_view"
-            android:layout_below="@id/app_logo"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+        >
 
-            <WebView
-                android:id="@+id/webView1"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true" />
-        </RelativeLayout>
-   <!-- </ScrollView>
--->
+        <com.github.ybq.android.spinkit.SpinKitView xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/progress"
+            style="@style/SpinKitView.Wave"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:visibility="visible"
+            app:SpinKit_Color="#cc0000" />
+
+        <WebView
+            android:id="@+id/webView1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true" />
+    </RelativeLayout>
+
     <ImageView
         android:id="@+id/menu_icon"
         android:layout_width="50dp"
@@ -45,6 +47,6 @@
         android:layout_alignParentRight="true"
         android:layout_below="@+id/app_logo"
         android:src="@drawable/cross_icon"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 </RelativeLayout>
 

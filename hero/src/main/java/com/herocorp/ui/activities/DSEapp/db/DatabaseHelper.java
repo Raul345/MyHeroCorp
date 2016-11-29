@@ -13,6 +13,7 @@ import com.herocorp.ui.activities.DSEapp.models.Bikemake;
 import com.herocorp.ui.activities.DSEapp.models.Bikemodel;
 import com.herocorp.ui.activities.DSEapp.models.Close_followup;
 import com.herocorp.ui.activities.DSEapp.models.Followup;
+import com.herocorp.ui.activities.DSEapp.models.LocalEnquiry;
 import com.herocorp.ui.activities.DSEapp.models.Next_Followup;
 import com.herocorp.ui.activities.DSEapp.models.State;
 
@@ -41,6 +42,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String TABLE_CLOSEFOLLOWUP = "close_followup";
     private static final String TABLE_NEXTFOLLOWUP = "next_followup";
     private static final String TABLE_STATE = "state";
+    private static final String TABLE_ENQUIRY = "enquiry";
 
 
     public static class Cols_followup {
@@ -108,6 +110,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         public static final String SYNC_STATUS = "sync_status";
     }
 
+    public static class Cols_newenquiry {
+        public static final String CONTACT_NO = "contact_no";
+        public static final String REG_NO = "registration_no";
+    }
 
     // Todo table create statement
     private static final String CREATE_TABLE_FOLLOWUP = "create table if not exists "
@@ -180,6 +186,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             + Cols_state.STATE_NAME + " text not null "
             + ");";
 
+    public static final String CREATE_ENQUIRY = "create table "
+            + TABLE_ENQUIRY + "("
+            + Cols_newenquiry.CONTACT_NO + " text not null, "
+            + Cols_newenquiry.REG_NO + " text not null "
+            + ");";
+
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
@@ -193,6 +205,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(CREATE_STATE);
         db.execSQL(CREATE_TABLE_CLOSE_FOLLOWUP);
         db.execSQL(CREATE_TABLE_NEXT_FOLLOWUP);
+        db.execSQL(CREATE_ENQUIRY);
     }
 
     @Override
@@ -205,6 +218,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_STATE);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_CLOSEFOLLOWUP);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_NEXTFOLLOWUP);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_ENQUIRY);
         // create new tables
         onCreate(db);
     }
@@ -303,6 +317,38 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
     }
 
+    public void add_enquiry(LocalEnquiry enquiry) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(Cols_newenquiry.CONTACT_NO, enquiry.getContact_no());
+        values.put(Cols_newenquiry.REG_NO, enquiry.getReg_no());
+        db.insert(TABLE_ENQUIRY, null, values);
+        db.close();
+
+    }
+
+    public List<LocalEnquiry> getAllEnquiries() {
+        List<LocalEnquiry> enquiry = new ArrayList<LocalEnquiry>();
+        String selectQuery = "SELECT * FROM " + TABLE_ENQUIRY;
+
+        Log.e(LOG, selectQuery);
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c = db.rawQuery(selectQuery, null);
+
+        // looping through all rows and adding to list
+        if (c.moveToFirst()) {
+            do {
+                LocalEnquiry t = new LocalEnquiry();
+                t.setContact_no(c.getString((c.getColumnIndex(Cols_newenquiry.CONTACT_NO))));
+                t.setReg_no(c.getString((c.getColumnIndex(Cols_newenquiry.REG_NO))));
+                enquiry.add(t);
+            } while (c.moveToNext());
+        }
+        closeDB();
+        return enquiry;
+    }
+
 
     public void closeDB() {
         SQLiteDatabase db = this.getReadableDatabase();
@@ -316,6 +362,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("DELETE FROM " + TABLE_FOLLOWUP);
         db.execSQL("DELETE FROM " + TABLE_MAKE);
         db.execSQL("DELETE FROM " + TABLE_MODEL);
+        closeDB();
     }
 
     public void clearstate_table() {
@@ -444,15 +491,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     public void update_followup(String followup_status, String followupdate, String followupcomment, String enquiryid) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put(Cols_followup.FOLLOWUP_STATUS, followup_status);
-        values.put(Cols_followup.FOLLOW_DATE, followupdate);
-        values.put(Cols_followup.FOLLOWUP_COMMENTS, followupcomment);
-        db.update(TABLE_FOLLOWUP, values, Cols_followup.ENQUIRY_ID + " = ?",
-                new String[]{String.valueOf(enquiryid)});
-        // Inserting Row
-        db.close();
+        try {
+            SQLiteDatabase db = this.getWritableDatabase();
+            ContentValues values = new ContentValues();
+            values.put(Cols_followup.FOLLOWUP_STATUS, followup_status);
+            values.put(Cols_followup.FOLLOW_DATE, followupdate);
+            values.put(Cols_followup.FOLLOWUP_COMMENTS, followupcomment);
+            db.update(TABLE_FOLLOWUP, values, Cols_followup.ENQUIRY_ID + " = ?",
+                    new String[]{String.valueOf(enquiryid)});
+            // Inserting Row
+            db.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void delete_followup(String enquiryid) {
@@ -461,7 +512,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 new String[]{String.valueOf(enquiryid)});
         db.close();
     }
-
 
     public void update_edit_followup(Followup followup) {
         SQLiteDatabase db = this.getWritableDatabase();

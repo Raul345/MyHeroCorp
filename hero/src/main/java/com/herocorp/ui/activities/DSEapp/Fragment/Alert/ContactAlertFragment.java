@@ -1,6 +1,7 @@
 package com.herocorp.ui.activities.DSEapp.Fragment.Alert;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -15,6 +16,8 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.herocorp.R;
+import com.herocorp.ui.activities.DSEapp.Fragment.Enquiry.TestRideFeedbackFragment;
+import com.herocorp.ui.activities.auth.SignInActivity;
 
 /**
  * Created by rsawh on 07-Oct-16.
@@ -26,7 +29,7 @@ public class ContactAlertFragment extends DialogFragment {
     String msg = "";
     String phone = "";
     String path = "";
-    String button_name1="";
+    String button_name1 = "";
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -43,8 +46,8 @@ public class ContactAlertFragment extends DialogFragment {
         msg = bundle.getString("msg");
         phone = bundle.getString("mobile");
         path = bundle.getString("path");
-        button_name1= bundle.getString("name1");
-        int flag = bundle.getInt("flag");
+        button_name1 = bundle.getString("name1");
+        final int flag = bundle.getInt("flag");
         textview_header.setText(header);
         textview_message.setText(msg);
 
@@ -81,9 +84,47 @@ public class ContactAlertFragment extends DialogFragment {
                     dismiss();
                 }
             });
+        } else if (flag == 2) {
+            button_ok.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    FragmentManager fm = getActivity().getSupportFragmentManager();
+                    FragmentTransaction ft = fm.beginTransaction();
+                    Fragment f = new TestRideFeedbackFragment();
+                    // ft.addToBackStack(null);
+                    ft.replace(R.id.content_addenquiry, f);
+                    ft.commit();
+                    dismiss();
+                }
+            });
+            button_cancel.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dismiss();
+                    getActivity().onBackPressed();
+                }
+            });
+        } else if (flag == 3) {
+            button_ok.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    SharedPreferences sharedPreferences = getActivity().getSharedPreferences("hero", 0);
+                    SharedPreferences.Editor edit = sharedPreferences.edit();
+                    edit.clear().commit();
+                    startActivity(new Intent(getActivity(), SignInActivity.class));
+                    getActivity().finish();
+
+                }
+            });
+            button_cancel.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dismiss();
+
+                }
+            });
+
         }
-
-
         return view;
     }
 }

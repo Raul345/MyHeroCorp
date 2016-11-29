@@ -12,6 +12,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.database.SQLException;
 import android.graphics.BitmapFactory;
+import android.media.Image;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -58,6 +59,7 @@ import com.herocorp.ui.VAS.VasWarrantyfragment;
 import com.herocorp.ui.activities.DSEapp.Fragment.Alert.ContactAlertFragment;
 import com.herocorp.ui.activities.DSEapp.Fragment.Home.HomeFragment;
 import com.herocorp.ui.activities.DSEapp.ConnectService.NetworkConnect;
+import com.herocorp.ui.activities.auth.SignInActivity;
 import com.herocorp.ui.activities.contact_us.ContactUsFragmrnt;
 import com.herocorp.ui.activities.home.DealerDashboardFragment;
 import com.herocorp.ui.activities.products.ProductDetailFragment;
@@ -240,6 +242,7 @@ public class BaseDrawerActivity extends FragmentActivity implements View.OnClick
         ImageView navIssueImage = (ImageView) findViewById(R.id.nav_issue_image);
         ImageView navSyncImage = (ImageView) findViewById(R.id.nav_sync_image);
         ImageView navEmiImage = (ImageView) findViewById(R.id.nav_emi_image);
+        ImageView navlogoutimage = (ImageView) findViewById(R.id.nav_logout_image);
 
 
         customViewParams.setImageViewCustomParams(navHomeImage, new int[]{30, 0, 20, 0}, new int[]{0, 0, 0, 0}, 40, 40);
@@ -252,6 +255,7 @@ public class BaseDrawerActivity extends FragmentActivity implements View.OnClick
         customViewParams.setImageViewCustomParams(navIssueImage, new int[]{30, 0, 20, 0}, new int[]{0, 0, 0, 0}, 40, 40);
         customViewParams.setImageViewCustomParams(navSyncImage, new int[]{30, 0, 20, 0}, new int[]{0, 0, 0, 0}, 40, 40);
         customViewParams.setImageViewCustomParams(navEmiImage, new int[]{30, 0, 20, 0}, new int[]{0, 0, 0, 0}, 40, 40);
+        customViewParams.setImageViewCustomParams(navlogoutimage, new int[]{30, 0, 20, 0}, new int[]{0, 0, 0, 0}, 40, 40);
 
 
         TextView navHomeText = (TextView) findViewById(R.id.nav_home_text);
@@ -264,6 +268,7 @@ public class BaseDrawerActivity extends FragmentActivity implements View.OnClick
         TextView navIssueText = (TextView) findViewById(R.id.nav_issue_text);
         TextView navSyncText = (TextView) findViewById(R.id.nav_sync_text);
         TextView navEmiText = (TextView) findViewById(R.id.nav_emi_text);
+        TextView navLogoutText = (TextView) findViewById(R.id.nav_logout_text);
 
         customViewParams.setTextViewCustomParams(navHomeText, new int[]{0, 30, 0, 30}, new int[]{0, 0, 0, 0}, 35, customTypeFace.gillSans, 0);
         customViewParams.setTextViewCustomParams(navProductText, new int[]{0, 30, 0, 30}, new int[]{0, 0, 0, 0}, 35, customTypeFace.gillSans, 0);
@@ -275,6 +280,7 @@ public class BaseDrawerActivity extends FragmentActivity implements View.OnClick
         customViewParams.setTextViewCustomParams(navIssueText, new int[]{0, 30, 0, 30}, new int[]{0, 0, 0, 0}, 35, customTypeFace.gillSans, 0);
         customViewParams.setTextViewCustomParams(navSyncText, new int[]{0, 30, 0, 30}, new int[]{0, 0, 0, 0}, 35, customTypeFace.gillSans, 0);
         customViewParams.setTextViewCustomParams(navEmiText, new int[]{0, 30, 0, 30}, new int[]{0, 0, 0, 0}, 35, customTypeFace.gillSans, 0);
+        customViewParams.setTextViewCustomParams(navLogoutText, new int[]{0, 30, 0, 30}, new int[]{0, 0, 0, 0}, 35, customTypeFace.gillSans, 0);
 
         navMenuLayout.setOnClickListener(this);
         closeDrawer.setOnClickListener(this);
@@ -288,6 +294,7 @@ public class BaseDrawerActivity extends FragmentActivity implements View.OnClick
         findViewById(R.id.nav_news_layout).setOnClickListener(this);
         findViewById(R.id.nav_emi_layout).setOnClickListener(this);
         findViewById(R.id.nav_sync_layout).setOnClickListener(this);
+        findViewById(R.id.nav_logout_layout).setOnClickListener(this);
 
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.frame_container, new DealerDashboardFragment()).commit();
@@ -391,7 +398,6 @@ public class BaseDrawerActivity extends FragmentActivity implements View.OnClick
         } else if (i == R.id.nav_dse_layout) {
 
             toggleDrawer();
-
             try {
                 toggleDrawer();
                 fragment = new HomeFragment();
@@ -438,6 +444,7 @@ public class BaseDrawerActivity extends FragmentActivity implements View.OnClick
 
             try {
                 toggleDrawer();
+                //Toast.makeText(this, "VAS App not installed!", Toast.LENGTH_SHORT).show();
                 fragment = new VasWarrantyfragment();
                 openFragment(fragment, false);
 //                Intent intent = getPackageManager().getLaunchIntentForPackage("com.herocorp.ui.activities.DSEapp.Fragment.Home.HomeFragment;");
@@ -470,6 +477,13 @@ public class BaseDrawerActivity extends FragmentActivity implements View.OnClick
             } catch (Exception e) {
                 Toast.makeText(this, "personal info not installed!" + e, Toast.LENGTH_SHORT).show();
             }
+        } else if (i == R.id.nav_logout_layout) {
+            try {
+                toggleDrawer();
+                logoutalert();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -480,7 +494,6 @@ public class BaseDrawerActivity extends FragmentActivity implements View.OnClick
 
             FragmentTransaction transaction = fragmentManager.beginTransaction();
             transaction.replace(R.id.frame_container, fragment);
-
 
             if (doBackStack)
                 transaction.addToBackStack("yo");
@@ -1538,6 +1551,19 @@ public class BaseDrawerActivity extends FragmentActivity implements View.OnClick
             push_notification(newversion, path);
             update_alert(newversion, path);
         }
+    }
+
+
+    public void logoutalert() {
+        Bundle bundle = new Bundle();
+        bundle.putString("header", "");
+        bundle.putString("msg", "Are you Sure to Logout ?");
+        bundle.putInt("flag", 3);
+        FragmentManager fm = getSupportFragmentManager();
+        ContactAlertFragment dialogFragment = new ContactAlertFragment();
+        dialogFragment.setArguments(bundle);
+        dialogFragment.setCancelable(false);
+        dialogFragment.show(fm, "Sample Fragment");
     }
 }
 

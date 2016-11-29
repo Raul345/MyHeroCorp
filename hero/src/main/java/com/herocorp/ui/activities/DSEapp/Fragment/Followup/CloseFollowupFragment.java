@@ -294,11 +294,12 @@ public class CloseFollowupFragment extends Fragment implements View.OnClickListe
                         jsonparams.put("sub_reason", sub_reason);
                         jsonparams.put("existMake", make);
                         jsonparams.put("existModel", model);
+                        jsonparams.put("remarks",remarks);
                         jsonparams.put("user_id", user);
                         jsonparams.put("dms_enquiry_id", enquiryid);
                         Log.e("close_followup", jsonparams.toString());
                         newurlparams = "data=" + URLEncoder.encode(jsonparams.toString(), "UTF-8");
-                        //   Toast.makeText(getContext(), main_reason + sub_reason + make + model+user+enquiryid, Toast.LENGTH_SHORT).show();
+
                         new NetworkConnect1(URLConstants.SYNC_FOLLOW_UP, newurlparams, progress, "Followup has been successfully submitted.", getContext(), 1).execute();
                     } catch (UnsupportedEncodingException e) {
                         e.printStackTrace();
@@ -310,35 +311,35 @@ public class CloseFollowupFragment extends Fragment implements View.OnClickListe
         }
     }
 
-  /*  public void jsonparse(String result) {
-        try {
-            JSONObject jsono = new JSONObject(result);
-            JSONArray jarray = jsono.getJSONArray("make");
-            arr_makelist.add(new Bikemake("", "--select--"));
+    /*  public void jsonparse(String result) {
+          try {
+              JSONObject jsono = new JSONObject(result);
+              JSONArray jarray = jsono.getJSONArray("make");
+              arr_makelist.add(new Bikemake("", "--select--"));
 
-            for (int i = 0; i < jarray.length(); i++) {
-                JSONObject object = jarray.getJSONObject(i);
-                arr_makelist.add(new Bikemake(object.getString("id"), object.getString("make_name")));
-            }
+              for (int i = 0; i < jarray.length(); i++) {
+                  JSONObject object = jarray.getJSONObject(i);
+                  arr_makelist.add(new Bikemake(object.getString("id"), object.getString("make_name")));
+              }
 
-            ArrayAdapter<Bikemake> at1 = new ArrayAdapter<Bikemake>(getContext(), R.layout.spinner_textview1, arr_makelist);
-            spin_make.setAdapter(at1);
+              ArrayAdapter<Bikemake> at1 = new ArrayAdapter<Bikemake>(getContext(), R.layout.spinner_textview1, arr_makelist);
+              spin_make.setAdapter(at1);
 
-            new Bikemodel("", "--select--");
+              new Bikemodel("", "--select--");
 
-            JSONArray jarray1 = jsono.getJSONArray("model");
-            for (int i = 0; i < jarray1.length(); i++) {
-                JSONObject object = jarray1.getJSONObject(i);
-                new Bikemodel(object.getString("make_id"), object.getString("model_name"));
-            }
-        } catch (JSONException e) {
-            e.printStackTrace();
-        } catch (Exception e) {
-            System.out.println(Toast.makeText(getContext(), "Check your Connection !!", Toast.LENGTH_SHORT));
+              JSONArray jarray1 = jsono.getJSONArray("model");
+              for (int i = 0; i < jarray1.length(); i++) {
+                  JSONObject object = jarray1.getJSONObject(i);
+                  new Bikemodel(object.getString("make_id"), object.getString("model_name"));
+              }
+          } catch (JSONException e) {
+              e.printStackTrace();
+          } catch (Exception e) {
+              System.out.println(Toast.makeText(getContext(), "Check your Connection !!", Toast.LENGTH_SHORT));
 
-        }
-    }
-*/
+          }
+      }
+  */
     public void fetch_records() {
         try {
             db = new DatabaseHelper(getContext());

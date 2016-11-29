@@ -163,8 +163,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         ImageView pendingfollowup = (ImageView) rootView.findViewById(R.id.pendingfollowup);
         ImageView searchenquiry = (ImageView) rootView.findViewById(R.id.searchenquiry);
         ImageView submit = (ImageView) rootView.findViewById(R.id.imageView_submit_home);
-     /*   progressBar = (ProgressBar) rootView.findViewById(R.id.progress);
-*/
+        progressBar = (ProgressBar) rootView.findViewById(R.id.progress);
+
         customViewParams.setImageViewCustomParams(pendingorder, new int[]{7, 7, 7, 7}, new int[]{0, 0, 0, 0}, 180, 180);
         customViewParams.setImageViewCustomParams(todayfollowup, new int[]{7, 7, 7, 12}, new int[]{0, 0, 0, 0}, 180, 180);
         customViewParams.setImageViewCustomParams(pendingfollowup, new int[]{7, 7, 7, 12}, new int[]{0, 0, 0, 0}, 180, 180);
@@ -196,7 +196,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             ((BaseDrawerActivity) getActivity()).toggleDrawer();
 
         } else if (i == R.id.pendingorders) {
-
             pendingorderText.setTextColor(Color.WHITE);
             pendingfollowupText.setTextColor(Color.GRAY);
             todayfollowupText.setTextColor(Color.GRAY);
@@ -204,7 +203,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             // progress();
             if (NetConnections.isConnected(getContext())) {
                 // Toast.makeText(getActivity(), "Please wait for a while !!", Toast.LENGTH_SHORT).show();
-                new Encrypt_data().execute();
+              //  new Encrypt_data().execute();
                 transaction(new PendingOrdersFragment());
             } else
                 Toast.makeText(getActivity(), "Check your Connection !!", Toast.LENGTH_SHORT).show();
@@ -249,7 +248,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         } else if (i == R.id.imageView_submit_home) {
             if (!(phoneno_et.getText().toString().equals("") && registration_et.getText().toString().equals(""))) {
                 if (NetConnections.isConnected(getContext())) {
-                    new Encrypt_data().execute();
+                    //new Encrypt_data().execute();
                     transaction(new ContactFragment());
                 } else
                     Toast.makeText(getActivity(), "Check your Connection !!", Toast.LENGTH_SHORT).show();
@@ -272,7 +271,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         ft.addToBackStack(null);
         ft.replace(R.id.content_dsehome, f);
         ft.commit();
-
     }
 
     public void sync_data() {
@@ -416,15 +414,15 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            //  progressBar.setVisibility(View.VISIBLE);
+           // progressBar.setVisibility(View.VISIBLE);
         }
 
         protected String doInBackground(Void... params) {
             if (NetConnections.isConnected(getContext())) try {
                 JSONObject json = new JSONObject();
                 try {
-                    user_id="ROBINK11610";
-                    json.put("user_id", "ROBINK11610");
+                    user_id = "ROBINK11610";
+                    json.put("user_id", user_id);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -433,7 +431,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 String result = networkConnect.execute();
                 if (result != null)
                     encryptuser = result.replace("\\/", "/");
-                Log.e("encrypt",encryptuser);
+                Log.e("encrypt", encryptuser);
 
                 return result;
             } catch (UnsupportedEncodingException e) {
@@ -448,8 +446,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-            //  progressBar.setVisibility(View.INVISIBLE);
-
+          //  progressBar.setVisibility(View.INVISIBLE);
         }
     }
 

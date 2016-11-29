@@ -3,6 +3,7 @@ package com.herocorp.ui.activities.DSEapp.Fragment.PendingOrders;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,6 +57,7 @@ public class PendingOrdersFragment extends Fragment implements View.OnClickListe
     String financer_name;
 
     NetworkConnect networkConnect;
+    String user_id="ROBINK11610", code="11610";
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
             savedInstanceState) {
@@ -71,11 +73,11 @@ public class PendingOrdersFragment extends Fragment implements View.OnClickListe
 
     private void updateList() {
         userList.setAdapter(userAdapter);
-        if(userAdapter.getCount()>0)
+        if (userAdapter.getCount() > 0)
             pendingorders_msg.setVisibility(View.GONE);
         else
             pendingorders_msg.setVisibility(View.VISIBLE);
-     //   progressbar.setVisibility(View.GONE);
+        //   progressbar.setVisibility(View.GONE);
     }
 
     public void onDestroy() {
@@ -107,14 +109,30 @@ public class PendingOrdersFragment extends Fragment implements View.OnClickListe
         userList = (ListView) rootView.findViewById(R.id.list_pendingorders);
         pendingorders_msg = (TextView) rootView.findViewById(R.id.pendingorders_message);
 
-        try {
-            Bundle bundle = this.getArguments();
-            String encryptdata = bundle.getString("user_id");
-            String newurlparams = "data=" + URLEncoder.encode(encryptdata, "UTF-8");
-            networkConnect = new NetworkConnect(URLConstants.PENDING_ORDER, newurlparams);
-            String data=networkConnect.execute();
 
-            jsonparse(data);
+        try {
+
+            Bundle bundle = this.getArguments();
+            //  String encryptdata = bundle.getString("user_id");
+            JSONObject jsonparms = new JSONObject();
+            // jsonparms.put("user_id", bundle.getString("user"));
+            //  user_id = bundle.getString("user");
+
+
+            jsonparms.put("user_id", user_id);
+            jsonparms.put("dealer_code", code);
+
+            // jsonparms.put("dealer_code",code);
+
+            Log.e("pendingorder:", jsonparms.toString());
+            String newurlparams = "data=" + URLEncoder.encode(jsonparms.toString(), "UTF-8");
+            networkConnect = new NetworkConnect(URLConstants.ENCRYPT, newurlparams);
+            String data = networkConnect.execute();
+
+            String urldata = "data=" + URLEncoder.encode(data, "UTF-8");
+            networkConnect = new NetworkConnect(URLConstants.PENDING_ORDER, urldata);
+
+            jsonparse(networkConnect.execute());
 
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
@@ -122,7 +140,7 @@ public class PendingOrdersFragment extends Fragment implements View.OnClickListe
             e.printStackTrace();
         }
         //progressbar = (ProgressBar) rootView.findViewById(R.id.progressBar_pendingorders);
-     //   progressbar.setVisibility(View.VISIBLE);
+        //   progressbar.setVisibility(View.VISIBLE);
         menu.setOnClickListener(this);
     }
 
@@ -165,7 +183,6 @@ public class PendingOrdersFragment extends Fragment implements View.OnClickListe
 
         }
     }
-
 
 
 }

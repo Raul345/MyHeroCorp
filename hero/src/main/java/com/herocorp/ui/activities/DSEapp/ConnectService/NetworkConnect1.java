@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import com.herocorp.core.constants.URLConstants;
 import com.herocorp.ui.activities.DSEapp.Fragment.Alert.AlertDialogFragment;
+import com.herocorp.ui.activities.DSEapp.db.DatabaseHelper;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -58,7 +59,6 @@ public class NetworkConnect1 extends AsyncTask<Void, Void, String> {
         progress = ProgressDialog.show(context, "Sending Request", " Please wait....", false, false);
     }
 
-
     protected String doInBackground(Void... params) {
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
                 .permitAll().build();
@@ -66,11 +66,15 @@ public class NetworkConnect1 extends AsyncTask<Void, Void, String> {
         URL url;
         HttpURLConnection connection = null;
         try {
-            String encryptdata= "data=" + URLEncoder.encode(urlParameters, "UTF-8");
+            //  String encryptdata = "data=" + URLEncoder.encode(urlParameters, "UTF-8");
+            String encryptdata = null;
             networkConnect = new NetworkConnect(URLConstants.ENCRYPT, urlParameters);
             String result = networkConnect.execute();
             if (result != null)
                 encryptdata = result.replace("\\/", "/");
+            Log.e("encrypt_submit_data:", encryptdata);
+            String data = "data=" + URLEncoder.encode(encryptdata, "UTF-8");
+
 
             //Create connection
             url = new URL(targetURL);
@@ -78,7 +82,7 @@ public class NetworkConnect1 extends AsyncTask<Void, Void, String> {
             connection.setRequestMethod("POST");
             connection.setRequestProperty("Content-Type",
                     "application/x-www-form-urlencoded");
-            connection.setRequestProperty("Content-Length", "" + Integer.toString(encryptdata.getBytes().length));
+            connection.setRequestProperty("Content-Length", "" + Integer.toString(data.getBytes().length));
             connection.setRequestProperty("Content-Language", "en-US");
             connection.setUseCaches(false);
             connection.setDoInput(true);
@@ -87,7 +91,7 @@ public class NetworkConnect1 extends AsyncTask<Void, Void, String> {
             //Send request
             DataOutputStream wr = new DataOutputStream(
                     connection.getOutputStream());
-            wr.writeBytes(encryptdata);
+            wr.writeBytes(data);
             wr.flush();
             wr.close();
 
@@ -123,10 +127,13 @@ public class NetworkConnect1 extends AsyncTask<Void, Void, String> {
             Log.e(targetURL + "response", s);
             JSONObject jsono = new JSONObject(s);
             if (jsono.getString("success").equals("1") && jsono.getString("records").equals("true")) {
-                Toast.makeText(context, s, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(context, s, Toast.LENGTH_SHORT).show();
+                Log.e("submit_response", s);
                 Bundle bundle = new Bundle();
                 bundle.putString("msg", message);
                 bundle.putInt("flag", flag);
+
+
                 FragmentManager fm = ((FragmentActivity) context).getSupportFragmentManager();
                 AlertDialogFragment dialogFragment = new AlertDialogFragment();
                 dialogFragment.setArguments(bundle);

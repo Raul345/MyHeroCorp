@@ -88,7 +88,7 @@ public class AddenquiryFragment extends Fragment implements View.OnClickListener
     ListView userList;
 
     String[] vehicle_list = {"--select--", "Two Wheeler",
-            "Four Wheeler",
+            "Four wheeler",
             "First Time Buyer"};
 
     String data;
@@ -154,7 +154,7 @@ public class AddenquiryFragment extends Fragment implements View.OnClickListener
         layout_existmodel = (LinearLayout) rootView.findViewById(R.id.layout_existmodel);
 
 
-        SimpleDateFormat sdf = new SimpleDateFormat("dd-MMM-yy");
+        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
         Calendar c = Calendar.getInstance();
         c.add(Calendar.DATE, 3);  // number of days to add
         String dt1 = sdf.format(c.getTime());
@@ -219,10 +219,10 @@ public class AddenquiryFragment extends Fragment implements View.OnClickListener
         exist_vehicle_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                existvehicle = parent.getItemAtPosition(position).toString();
                 if (position == 1) {
                     layout_existmake.setVisibility(View.VISIBLE);
                     layout_existmodel.setVisibility(View.VISIBLE);
-                    existvehicle = parent.getItemAtPosition(position).toString();
                     ArrayAdapter<Bikemake> at1 = new ArrayAdapter<Bikemake>(getContext(), R.layout.spinner_textview2, arr_makelist);
                     spin_existmake.setAdapter(at1);
                 } else
@@ -324,7 +324,7 @@ public class AddenquiryFragment extends Fragment implements View.OnClickListener
                 } else {
                     box.setChecked(true);
                     chk_campaignid.add(data.getCamp_id());
-                    Toast.makeText(getContext(), chk_campaignid.get(0), Toast.LENGTH_SHORT).show();
+                   // Toast.makeText(getContext(), chk_campaignid.get(0), Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -373,7 +373,7 @@ public class AddenquiryFragment extends Fragment implements View.OnClickListener
         // Get Current Date
         Date currentdate = new Date();
         SimpleDateFormat newFormatDate = new SimpleDateFormat(
-                "dd-MMM-yy");
+                "MM/dd/yyyy");
         try {
             currentdate = newFormatDate.parse(button.getText().toString());
         } catch (ParseException e) {
@@ -394,7 +394,7 @@ public class AddenquiryFragment extends Fragment implements View.OnClickListener
                     public void onDateSet(DatePicker view, int year,
                                           int monthOfYear, int dayOfMonth) {
 
-                        date = dayOfMonth + "-" + (monthOfYear + 1) + "-" + year;
+                        date =  (monthOfYear + 1)+ "/" + (dayOfMonth) + "/" + year;
                         datechange(date);
                         mYear = year;
                         mDay = dayOfMonth;
@@ -410,11 +410,11 @@ public class AddenquiryFragment extends Fragment implements View.OnClickListener
     }
 
     public void datechange(String olddate) {
-        SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
+        SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");
         Date newDate;
         try {
             newDate = format.parse(olddate);
-            format = new SimpleDateFormat("dd-MMM-yyyy");
+            format = new SimpleDateFormat("MM/dd/yyyy");
             follow_date = format.format(newDate);
         } catch (ParseException e) {
             e.printStackTrace();
@@ -436,7 +436,7 @@ public class AddenquiryFragment extends Fragment implements View.OnClickListener
                 }
                 if (flag == 1) {
                     ProgressDialog progress = new ProgressDialog(getContext());
-                    new NetworkConnect1(url, newurlparams, progress, "Enquiry has been successfully submitted.", getContext(), 2).execute();
+                    new NetworkConnect1(url, urlParameters, progress, "Enquiry has been successfully submitted.", getContext(), 2).execute();
                 }
                 if (flag == 2) {
                     networkConnect = new NetworkConnect(url, newurlparams);
@@ -555,7 +555,7 @@ public class AddenquiryFragment extends Fragment implements View.OnClickListener
             purch_date = purchdate_btn.getText().toString();
             key = random_key(7);
 
-            if (model.equals("") || flag == 0 || existvehicle.equals(""))
+            if (model.equals("") || flag == 0 || existvehicle.equals("--select--"))
                 Toast.makeText(getContext(), "Please fill all the details !!", Toast.LENGTH_LONG).show();
             else {
               /*  String json = "{\"mobile\":\"" + mobile + "\",\"email\":\"" + email + "\",\"fname\":\"" + firstname + "\",\"lname\":\"" + lastname +

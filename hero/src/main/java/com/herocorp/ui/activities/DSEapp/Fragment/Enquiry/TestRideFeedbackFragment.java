@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -68,7 +69,7 @@ public class TestRideFeedbackFragment extends Fragment implements View.OnClickLi
             enquiry_id = mypref.getString("enquiry_id", "");
         }
         if (mypref.contains("dealerid")) {
-            dealer_code= mypref.getString("dealerid", "");
+            dealer_code = mypref.getString("dealerid", "");
         }
 
 
@@ -219,8 +220,8 @@ public class TestRideFeedbackFragment extends Fragment implements View.OnClickLi
                     jsonparams1.put("7", ans7);
 
                     jsonparams.put("ans", jsonparams1.toString());
+                    Log.e("testride_data", jsonparams.toString());
 
-                    Toast.makeText(getContext(), jsonparams.toString(), Toast.LENGTH_LONG).show();
                     encryptuser(URLConstants.SYNC_TEST_RIDE, jsonparams.toString());
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -267,8 +268,6 @@ public class TestRideFeedbackFragment extends Fragment implements View.OnClickLi
                 String newurlparams = "data=" + URLEncoder.encode(data, "UTF-8");
                 new NetworkConnect1(url, newurlparams, progress, "Test Ride Feedback has been successfully submitted.", getContext(), 3).execute();
 
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
             } catch (Exception e) {
                 e.printStackTrace();
             }

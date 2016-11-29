@@ -1,8 +1,10 @@
 package com.herocorp.ui.activities.DSEapp.Fragment.Alert;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
@@ -14,8 +16,11 @@ import android.widget.TextView;
 
 import com.herocorp.R;
 import com.herocorp.ui.activities.DSEapp.Fragment.Enquiry.TestRideFeedbackFragment;
+import com.herocorp.ui.activities.DSEapp.Fragment.Home.HomeFragment;
 import com.herocorp.ui.activities.DSEapp.Fragment.PendingFollowup.PendingFollowupFragment;
 import com.herocorp.ui.activities.DSEapp.Fragment.TodayFollowup.TodayFollowupFragment;
+import com.herocorp.ui.activities.DSEapp.db.DatabaseHelper;
+import com.herocorp.ui.activities.DSEapp.models.LocalEnquiry;
 
 /**
  * Created by rsawh on 28-Sep-16.
@@ -23,6 +28,7 @@ import com.herocorp.ui.activities.DSEapp.Fragment.TodayFollowup.TodayFollowupFra
 public class AlertDialogFragment extends DialogFragment {
     Button button_ok;
     TextView textview_alert;
+    String contact_no, reg_no;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -40,6 +46,14 @@ public class AlertDialogFragment extends DialogFragment {
                 @Override
                 public void onClick(View v) {
                     dismiss();
+                   /* FragmentManager fm = getActivity().getSupportFragmentManager();
+                    for (int i = 0; i < fm.getBackStackEntryCount(); ++i)
+                        fm.popBackStack();
+                    FragmentTransaction ft = fm.beginTransaction();
+                    Fragment f = new HomeFragment();
+                    // ft.addToBackStack(null);
+                    ft.replace(R.id.content_pendingfollowup, f);
+                    ft.commit();*/
                     getActivity().onBackPressed();
 
                    /* Bundle bundle = new Bundle();
@@ -63,13 +77,24 @@ public class AlertDialogFragment extends DialogFragment {
             button_ok.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    FragmentManager fm = getActivity().getSupportFragmentManager();
-                    FragmentTransaction ft = fm.beginTransaction();
-                    Fragment f = new TestRideFeedbackFragment();
-                    // ft.addToBackStack(null);
-                    ft.replace(R.id.content_addenquiry, f);
-                    ft.commit();
+                    fetch_pref();
+
+                    DatabaseHelper db = new DatabaseHelper(getContext());
+                    db.add_enquiry(new LocalEnquiry(contact_no, reg_no));
+                    clear_pref();
+
+                    String message = "Do you want to give TestRide Feedback?";
+                    Bundle bundle = new Bundle();
+                    bundle.putString("header", "");
+                    bundle.putString("msg", message);
+                    bundle.putInt("flag", 2);
+                    FragmentManager fm = ((FragmentActivity) getContext()).getSupportFragmentManager();
+                    ContactAlertFragment dialogFragment = new ContactAlertFragment();
+                    dialogFragment.setArguments(bundle);
+                    dialogFragment.setCancelable(false);
+                    dialogFragment.show(fm, "Sample Fragment");
                     dismiss();
+
 
                 }
             });
@@ -86,6 +111,12 @@ public class AlertDialogFragment extends DialogFragment {
                     dismiss();
                     getActivity().onBackPressed();
 
+                }
+            });
+        } else if (flag == 4) {
+            button_ok.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
 
                 }
             });
@@ -95,12 +126,29 @@ public class AlertDialogFragment extends DialogFragment {
                 public void onClick(View v) {
                     // getActivity().onBackPressed();
                     dismiss();
-
                 }
             });
 //            getActivity().onBackPressed();
         }
 
         return view;
+    }
+
+    public void fetch_pref() {
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("hero", 0);
+        if (sharedPreferences.contains("contact_no"))
+            contact_no = sharedPreferences.getString("contact_no", null);
+        if (sharedPreferences.contains("reg_no"))
+            reg_no = sharedPreferences.getString("reg_no", null);
+
+    }
+
+    public void clear_pref() {
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("hero", 0);
+        SharedPreferences.Editor edit = sharedPreferences.edit();
+        if (sharedPreferences.contains("contact_no"))
+            edit.remove("contact_no").commit();
+        if (sharedPreferences.contains("reg_no"))
+            edit.remove("reg_no").commit();
     }
 }

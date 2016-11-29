@@ -1,9 +1,11 @@
 package com.herocorp.ui.activities.DSEapp.Fragment.Contact;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,9 +28,12 @@ import com.herocorp.ui.activities.DSEapp.ConnectService.NetworkConnect;
 import com.herocorp.ui.activities.DSEapp.Fragment.Enquiry.PersonalinfoFragment;
 import com.herocorp.ui.activities.DSEapp.adapter.EnquiryContactadapter;
 import com.herocorp.ui.activities.DSEapp.adapter.VinContactadapter;
+import com.herocorp.ui.activities.DSEapp.db.DatabaseHelper;
 import com.herocorp.ui.activities.DSEapp.models.CampaignContact;
 import com.herocorp.ui.activities.DSEapp.models.Contact;
 import com.herocorp.ui.activities.DSEapp.models.EnquiryContact;
+import com.herocorp.ui.activities.DSEapp.models.Followup;
+import com.herocorp.ui.activities.DSEapp.models.LocalEnquiry;
 import com.herocorp.ui.activities.DSEapp.models.VinnContact;
 import com.herocorp.ui.utility.CustomTypeFace;
 import com.herocorp.ui.utility.CustomViewParams;
@@ -40,6 +45,7 @@ import org.json.JSONObject;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by rsawh on 12-Sep-16.
@@ -58,6 +64,7 @@ public class ContactFragment extends Fragment implements View.OnClickListener {
     ArrayList<Contact> vincontactarray = new ArrayList<Contact>();
 
     Fragment f;
+    DatabaseHelper db;
 
     String fst_name1, last_name1, cell_ph_num1, age1, gender1, email_addr1, state1, district1, tehsil1, city1, x_con_seq_no_1, x_model_interested,
             expctd_dt_purchase, x_exchange_required, x_finance_required, existing_vehicle, followup_comments, enquiry_id,
@@ -67,7 +74,7 @@ public class ContactFragment extends Fragment implements View.OnClickListener {
             primary_dealer_name, attrib_42, prod_attrib02_CD, desc_text, first_sale_dt, ins_policy_co, x_hmgl_card_points;
     String row_id, camp_name, opty_id;
 
-    String phone_no, reg_no, dealer_code = "11610", user;
+    String phone_no, reg_no, dealer_code, user_id;
     String encryptdata;
 
 
@@ -117,6 +124,7 @@ public class ContactFragment extends Fragment implements View.OnClickListener {
 
         addenquiry_button = (Button) rootView.findViewById(R.id.addenquiry_button);
 
+        fetch_pref();
         fetch_data();
 
         enquirycontacts.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -328,6 +336,7 @@ public class ContactFragment extends Fragment implements View.OnClickListener {
             ((BaseDrawerActivity) getActivity()).toggleDrawer();
 
         } else if (i == R.id.addenquiry_button) {
+            save_data();
             Bundle bundle = new Bundle();
             bundle.putString("phoneno", phone_no);
             FragmentManager fm = getActivity().getSupportFragmentManager();
@@ -344,14 +353,27 @@ public class ContactFragment extends Fragment implements View.OnClickListener {
         Bundle bundle = this.getArguments();
         phone_no = bundle.getString("phone_no");
         reg_no = bundle.getString("reg_no");
-        user = bundle.getString("user");
-        String json = "{\"user_id\":\"" + user + "\",\"dealer_code\":\"" + dealer_code + "\",\"phn_no\":\"" + phone_no + "\",\"reg_no\":\"" + reg_no + "\"}";
-        encryptuser(json, URLConstants.FETCH_CONTACT);
+        user_id = bundle.getString("user");
+        try {
+            //  String json = "{\"user_id\":\"" + user_id + "\",\"dealer_code\":\"" + dealer_code + "\",\"phn_no\":\"" + phone_no + "\",\"reg_no\":\"" + reg_no + "\"}";
+            JSONObject jsonparams = new JSONObject();
+            jsonparams.put("user_id", user_id);
+            jsonparams.put("dealer_code", dealer_code);
+            jsonparams.put("phn_no", phone_no);
+            jsonparams.put("reg_no", reg_no);
+            encryptuser(jsonparams.toString(), URLConstants.FETCH_CONTACT);
+
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
     }
 
     public void encryptuser(String data, String url) {
         if (NetConnections.isConnected(getContext())) {
             try {
+                Log.e("submit_contact", data);
                 String urlParameters = "data=" + URLEncoder.encode(data, "UTF-8");
                 networkConnect = new NetworkConnect(URLConstants.ENCRYPT, urlParameters);
                 String result = networkConnect.execute();
@@ -524,11 +546,25 @@ public class ContactFragment extends Fragment implements View.OnClickListener {
 
         }
         if (enquirycontacts.getCount() == 0 && vincontacts.getCount() == 0) {
-            addlayout.setVisibility(View.VISIBLE);
-            enquirytitle.setVisibility(View.GONE);
-            vintitle.setVisibility(View.GONE);
-            enquirycontacts.setVisibility(View.GONE);
-            vincontacts.setVisibility(View.GONE);
+           /* DatabaseHelper db = new DatabaseHelper(getContext());
+            List<LocalEnquiry> allrecords = db.getAllEnquiries();
+            int flag = 0;*/
+            /*for (LocalEnquiry record : allrecords) {
+                Log.e("db_ph_no:",record.getContact_no());
+                if (phone_no.equalsIgnoreCase(record.getContact_no()) || reg_no.equalsIgnoreCase(record.getReg_no())) {
+                    flag = 1;
+                }
+            }
+            if (flag == 0) {*/
+                addlayout.setVisibility(View.VISIBLE);
+                enquirytitle.setVisibility(View.GONE);
+                vintitle.setVisibility(View.GONE);
+                enquirycontacts.setVisibility(View.GONE);
+                vincontacts.setVisibility(View.GONE);
+           /* } else {
+                Toast.makeText(getContext(),
+                        "No contact found. You already created a new enquiry for this contact. Check after some time !!", Toast.LENGTH_LONG).show();
+            }*/
             //   progressbar.setVisibility(View.GONE);
 
         }
@@ -564,7 +600,24 @@ public class ContactFragment extends Fragment implements View.OnClickListener {
     }
 
     public void send_id(Bundle bundle) {
-        bundle.putString("user", user);
+        bundle.putString("user", user_id);
     }
+
+    public void fetch_pref() {
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("hero", 0);
+        if (sharedPreferences.contains("username"))
+            user_id = sharedPreferences.getString("username", null);
+        if (sharedPreferences.contains("dealercode"))
+            dealer_code = sharedPreferences.getString("dealercode", null);
+    }
+
+    public void save_data() {
+        SharedPreferences sharedPreferences = getActivity().getSharedPreferences("hero", 0);
+        SharedPreferences.Editor edit = sharedPreferences.edit();
+        edit.putString("contact_no", phone_no);
+        edit.putString("reg_no", reg_no);
+        edit.commit();
+    }
+
 
 }

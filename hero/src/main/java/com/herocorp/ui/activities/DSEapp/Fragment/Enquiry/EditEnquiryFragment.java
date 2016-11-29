@@ -66,7 +66,7 @@ public class EditEnquiryFragment extends Fragment implements View.OnClickListene
     ListView userList;
 
     String[] vehicle_list = {"--select--", "Two Wheeler",
-            "Four Wheeler",
+            "Four wheeler",
             "First Time Buyer"};
 
 
@@ -368,7 +368,7 @@ public class EditEnquiryFragment extends Fragment implements View.OnClickListene
                     db.update_edit_followup(new Followup(firstname, lastname, mobile, age, gender, email, state, district, tehsil, village, model,
                             purch_date, exchange, finance, existvehicle, remark, enquiry_id, follow_date, "0"));
 
-                    new NetworkConnect1(url, newurlparams, progress, "Enquiry has been successfully submitted.", getContext(), 1).execute();
+                    new NetworkConnect1(url, urlParameters, progress, "Enquiry has been successfully submitted.", getContext(), 1).execute();
                 }
                 if (flag == 2) {
                     networkConnect = new NetworkConnect(url, newurlparams);
@@ -567,7 +567,6 @@ public class EditEnquiryFragment extends Fragment implements View.OnClickListene
 
     public void edit_enquiry() {
         try {
-
             remark = remarks_et.getText().toString();
             follow_date = nextfollowdate_btn.getText().toString();
             purch_date = purchdate_btn.getText().toString();
