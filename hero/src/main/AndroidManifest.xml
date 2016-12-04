@@ -10,35 +10,44 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.CALL_PHONE" />/>
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <application
         android:name=".ui.app.App"
         android:allowBackup="true"
         android:icon="@drawable/hero_logo"
         android:label="@string/app_name"
+        android:largeHeap="true"
         android:supportsRtl="true"
         android:theme="@android:style/Theme.Holo.NoActionBar.Fullscreen">
+        <!--android:screenOrientation="landscape"-->
+
         <activity
             android:name=".ui.activities.auth.SignInActivity"
-            android:screenOrientation="landscape"
-            android:windowSoftInputMode="adjustResize">
+           android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+    <!--    android:screenOrientation="landscape"-->
         <activity
             android:name=".ui.activities.BaseDrawerActivity"
-            android:screenOrientation="landscape">
+            >
             <!-- <intent-filter>
                  <action android:name="android.intent.action.MAIN" />
                  <category android:name="android.intent.category.LAUNCHER" />
              </intent-filter>-->
         </activity>
         <activity
-            android:name=".ui.EMI.EmicalcFragment"
-            android:screenOrientation="landscape"></activity>
+            android:name="com.herocorp.ui.activities.DSEapp.Fragment.MainHome"
+            android:windowSoftInputMode="adjustResize">
 
+        </activity>
+        <activity
+            android:name=".ui.EMI.EmicalcFragment"
+            ></activity>
+        <!--android:screenOrientation="landscape"-->
         <provider
             android:name=".infra.db.AppContentProvider"
             android:authorities="com.herocorp.provider"
@@ -49,10 +58,10 @@
             android:enabled="true"
             android:exported="false" />
 
-       <!-- <service
-            android:name="com.herocorp.ui.activities.DSEapp.dbSyncservice"
-            android:enabled="true"
-            android:exported="false" />-->
+        <!-- <service
+             android:name="com.herocorp.ui.activities.DSEapp.dbSyncservice"
+             android:enabled="true"
+             android:exported="false" />-->
         <!--  <service android:name=".ui.FCMservice.FCMmessageservice">
                <intent-filter>
                    <action android:name="com.google.firebase.MESSAGING_EVENT" />

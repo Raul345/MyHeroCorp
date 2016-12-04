@@ -32,6 +32,7 @@ import com.herocorp.ui.activities.DSEapp.Fragment.Followup.FollowupFragment;
 import com.herocorp.ui.activities.DSEapp.ConnectService.NetworkConnect;
 import com.herocorp.ui.activities.DSEapp.adapter.Followupadapter;
 import com.herocorp.ui.activities.DSEapp.db.DatabaseHelper;
+import com.herocorp.ui.activities.DSEapp.interfaces.PageRefreshListener;
 import com.herocorp.ui.activities.DSEapp.models.Followup;
 import com.herocorp.ui.utility.CustomTypeFace;
 import com.herocorp.ui.utility.CustomViewParams;
@@ -86,6 +87,7 @@ public class PendingFollowupFragment extends Fragment implements View.OnClickLis
     String dealer_bu_id;
     String followup_status;
     Fragment f;
+    PageRefreshListener refresh;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
             savedInstanceState) {
@@ -217,11 +219,11 @@ public class PendingFollowupFragment extends Fragment implements View.OnClickLis
         super.onDestroy();
     }
 
-   /* public void onResume() {
-        fetch_records();
+    @Override
+    public void onResume() {
         super.onResume();
     }
-*/
+
     private void initView(View rootView) {
 
         customViewParams = new CustomViewParams(getActivity());
@@ -245,10 +247,6 @@ public class PendingFollowupFragment extends Fragment implements View.OnClickLis
 
         userAdapter = new Followupadapter(getContext(), R.layout.dse_pendingfollowup_row, userArray);
         userList = (SwipeMenuListView) rootView.findViewById(R.id.list_pendingfollowup);
-
-
-
-
         //progressbar = (ProgressBar) rootView.findViewById(R.id.progressBar_pendingfollowup);
         //progressbar.setVisibility(View.VISIBLE);
 
@@ -269,15 +267,12 @@ public class PendingFollowupFragment extends Fragment implements View.OnClickLis
         }
 */
         fetch_records();
+
+
         menu.setOnClickListener(this);
 
     }
 
-     /*  @Override
-        public void onResume() {
-            super.onStart();
-        fetch_records();
-    }*/
 
     @Override
     public void onClick(View view) {
@@ -375,4 +370,5 @@ public class PendingFollowupFragment extends Fragment implements View.OnClickLis
         ft.replace(R.id.content_pendingfollowup, f);
         ft.commit();
     }
-}
+
+ }

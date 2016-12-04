@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.database.SQLException;
@@ -19,6 +20,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.PowerManager;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityCompat;
@@ -33,6 +35,7 @@ import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -59,6 +62,7 @@ import com.herocorp.ui.VAS.VasWarrantyfragment;
 import com.herocorp.ui.activities.DSEapp.Fragment.Alert.ContactAlertFragment;
 import com.herocorp.ui.activities.DSEapp.Fragment.Home.HomeFragment;
 import com.herocorp.ui.activities.DSEapp.ConnectService.NetworkConnect;
+import com.herocorp.ui.activities.DSEapp.Fragment.MainHome;
 import com.herocorp.ui.activities.auth.SignInActivity;
 import com.herocorp.ui.activities.contact_us.ContactUsFragmrnt;
 import com.herocorp.ui.activities.home.DealerDashboardFragment;
@@ -82,34 +86,29 @@ import java.nio.channels.FileChannel;
 import java.util.ArrayList;
 
 public class BaseDrawerActivity extends FragmentActivity implements View.OnClickListener {
-
-    private final int drawerGravity = Gravity.LEFT;
+    private static final int drawerGravity = Gravity.LEFT;
     private static final int REQUEST_PERMISSION_READ_PHONE_STATE = 1;
     private static final int REQUEST_PERMISSION_WRITE_EXTERNAL_STORAGE = 2;
     private final String TAG = BaseDrawerActivity.class.getSimpleName();
-    private DrawerLayout drawerLayout;
+    private static DrawerLayout drawerLayout;
 
     public int productId = -1;
     public int otherProductId = -1;
-
     Fragment fragment = null;
-
     private TelephonyManager telephonyManager;
-
     private SharedPreferences sharedPreferences;
 
     private String deviceImei;
-    private String userId = "ROBINK11610";
     private String appVersion;
     private String deviceVersion;
     private String refreshedToken;
     NetworkConnect networkConnect;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_base_drawer);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
@@ -117,18 +116,15 @@ public class BaseDrawerActivity extends FragmentActivity implements View.OnClick
 
         try {
             if (NetConnections.isConnected(this)) {
-
                 telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-
                 PackageManager manager = getPackageManager();
                 PackageInfo info = manager.getPackageInfo(getPackageName(), 0);
-
                 appVersion = info.versionName;
                 deviceVersion = Build.VERSION.CODENAME;
                 deviceImei = telephonyManager.getDeviceId();
 
-
-                showPhoneStatePermission();
+                //  showPhoneStatePermission();
+                showExternalStoragePermission();
                 //  fetch_data();
 
                 new check_version().execute(URLConstants.CHECK_VERSION);
@@ -171,9 +167,7 @@ public class BaseDrawerActivity extends FragmentActivity implements View.OnClick
                 new iNetworkResponseCallback<AuthenticateUserModel>() {
                     @Override
                     public void onSuccess(ArrayList<AuthenticateUserModel> data) {
-
                         try {
-
                             sharedPreferences.edit().putBoolean(AppConstants.IS_USER_LOGGED_IN, true).commit();
                             sharedPreferences.edit().putString(AppConstants.VALIDITY_DATE, data.get(0).getAppValiditiDate()).commit();
 
@@ -299,6 +293,7 @@ public class BaseDrawerActivity extends FragmentActivity implements View.OnClick
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.frame_container, new DealerDashboardFragment()).commit();
 
+
     }
 
     @Override
@@ -310,8 +305,10 @@ public class BaseDrawerActivity extends FragmentActivity implements View.OnClick
 
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
 
-                    if (!sharedPreferences.getBoolean(AppConstants.IS_SYNC_COMPLETED, false))
+                    if (!sharedPreferences.getBoolean(AppConstants.IS_SYNC_COMPLETED, false)) {
+                        // wakeLock.acquire();
                         startSync();
+                    }
 
                     Toast.makeText(this, "Permission Granted!", Toast.LENGTH_SHORT).show();
 
@@ -400,9 +397,10 @@ public class BaseDrawerActivity extends FragmentActivity implements View.OnClick
             toggleDrawer();
             try {
                 toggleDrawer();
+              /*  startActivity(new Intent(getApplicationContext(), MainHome.class));*/
                 fragment = new HomeFragment();
-
                 openFragment(fragment, false);
+
 //                Intent intent = getPackageManager().getLaunchIntentForPackage("com.herocorp.ui.activities.DSEapp.Fragment.Home.HomeFragment;");
 //                startActivity(intent);
 
@@ -424,7 +422,7 @@ public class BaseDrawerActivity extends FragmentActivity implements View.OnClick
 
                             fragment = new DealerDashboardFragment();
                             openFragment(fragment, false);
-
+                            //     wakeLock.acquire();
                             startSync();
                         }
                     })
@@ -464,7 +462,7 @@ public class BaseDrawerActivity extends FragmentActivity implements View.OnClick
                 //   startActivity(new Intent(getApplicationContext(),EmicalcFragment.class));
 
             } catch (Exception e) {
-                Toast.makeText(this, "personal info not installed!" + e, Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "faq not installed!" + e, Toast.LENGTH_SHORT).show();
             }
         } else if (i == R.id.nav_emi_layout) {
             try {
@@ -475,7 +473,7 @@ public class BaseDrawerActivity extends FragmentActivity implements View.OnClick
                 startActivity(new Intent(getApplicationContext(), EmicalcFragment.class));
 
             } catch (Exception e) {
-                Toast.makeText(this, "personal info not installed!" + e, Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "emi calculator not installed!" + e, Toast.LENGTH_SHORT).show();
             }
         } else if (i == R.id.nav_logout_layout) {
             try {
@@ -502,7 +500,7 @@ public class BaseDrawerActivity extends FragmentActivity implements View.OnClick
         }
     }
 
-    public void toggleDrawer() {
+    public static void toggleDrawer() {
 
         if (drawerLayout != null && drawerLayout.isDrawerOpen(drawerGravity)) {
 
@@ -524,20 +522,19 @@ public class BaseDrawerActivity extends FragmentActivity implements View.OnClick
     }
 
     public void openDrawer() {
-
         if (drawerLayout != null && !(drawerLayout.isDrawerOpen(drawerGravity))) {
-
             drawerLayout.openDrawer(drawerGravity);
         }
     }
 
     private void startSync() {
-
         App.getInstance().startSync(new SyncServiceCallBack() {
             @Override
             public void completed() {
+                // wakeLock.release();
                 Toast.makeText(BaseDrawerActivity.this, "Sync Completed", Toast.LENGTH_LONG).show();
                 Log.e("Sync", "Completed");
+
 
                 sharedPreferences.edit().putBoolean(AppConstants.IS_SYNC_COMPLETED, true).commit();
                 App.setProgress(100);
@@ -1564,6 +1561,34 @@ public class BaseDrawerActivity extends FragmentActivity implements View.OnClick
         dialogFragment.setArguments(bundle);
         dialogFragment.setCancelable(false);
         dialogFragment.show(fm, "Sample Fragment");
+    }
+
+    @Override
+    public void onBackPressed() {
+        FragmentManager manager = getSupportFragmentManager();
+        if (manager.getBackStackEntryCount() > 0) {
+            manager.popBackStack();
+        } else {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage("Are you sure to exit?")
+                    .setCancelable(false)
+                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            Intent intent = new Intent(Intent.ACTION_MAIN);
+                            intent.addCategory(Intent.CATEGORY_HOME);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(intent);
+                            finish();
+                        }
+                    })
+                    .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            dialog.cancel();
+                        }
+                    });
+            AlertDialog alert = builder.create();
+            alert.show();
+        }
     }
 }
 

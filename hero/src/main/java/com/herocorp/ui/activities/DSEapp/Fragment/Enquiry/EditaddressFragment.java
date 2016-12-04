@@ -386,7 +386,7 @@ public class EditaddressFragment extends Fragment {
         if (NetConnections.isConnected(getContext())) {
             try {
                 String urlParameters = "data=" + URLEncoder.encode(data, "UTF-8");
-                networkConnect = new NetworkConnect("http://abym.in/clientProof/hero_motors/encrypt", urlParameters);
+                networkConnect = new NetworkConnect(URLConstants.ENCRYPT, urlParameters);
                 String result = networkConnect.execute();
                 if (result != null)
                     encryptuser = result.replace("\\/", "/");

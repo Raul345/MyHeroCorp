@@ -5,5 +5,5 @@ package com.herocorp.ui.activities.DSEapp.interfaces;
  */
 
 public interface PageRefreshListener {
-
+    void on_visible();
 }

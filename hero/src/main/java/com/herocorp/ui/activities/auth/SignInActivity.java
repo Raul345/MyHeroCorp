@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
@@ -33,6 +34,7 @@ import com.herocorp.ui.activities.DSEapp.db.DatabaseHelper;
 import com.herocorp.ui.activities.DSEapp.models.State;
 import com.herocorp.ui.utility.CustomTypeFace;
 import com.herocorp.ui.utility.CustomViewParams;
+import com.herocorp.ui.utility.PreferenceUtil;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -68,8 +70,9 @@ public class SignInActivity extends Activity implements View.OnClickListener {
        };*/
     private String respDesc = "", respCode = "", state_id = "", dealer_code = "", version = "", path = "", state_name = "", result = "", failure_msg = "";
     private String appVersion;
-    // private String deviceImei = "911441757449230";
-    private String deviceImei;
+   // private String deviceImei = "911441757449230";
+   // private String deviceImei = "351971070473217";
+  private String deviceImei;
     private String userCode, uuid = "0";
     private String encryptuser;
 
@@ -77,6 +80,11 @@ public class SignInActivity extends Activity implements View.OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sign_in);
+        setRequestedOrientation(
+                ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+
+       /* if (PreferenceUtil.get_IsUserLogin(getApplicationContext()))
+            openHomeScreen();*/
 
         // sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
@@ -85,11 +93,12 @@ public class SignInActivity extends Activity implements View.OnClickListener {
         }
 */
 
-        sharedPref = getSharedPreferences("hero", 0);
-        if (sharedPref.contains("username")) {
+        //  sharedPref = getSharedPreferences("hero", 0);
+       /* if (sharedPref.contains("username")) {
             openHomeScreen();
-        }
-
+        }*/
+        if (PreferenceUtil.get_IsUserLogin(getApplicationContext()))
+            openHomeScreen();
         initView();
     }
 
@@ -218,7 +227,6 @@ public class SignInActivity extends Activity implements View.OnClickListener {
     }
 
     private void openHomeScreen() {
-
         Intent intent = new Intent(this, BaseDrawerActivity.class);
         startActivity(intent);
         finish();
@@ -309,13 +317,10 @@ public class SignInActivity extends Activity implements View.OnClickListener {
     }
 
     public void save_data() {
-        SharedPreferences.Editor edit = sharedPref.edit();
-        edit.putString("username", userCode);
-        edit.putString("dealercode", dealer_code);
-        edit.putString("version", version);
-        edit.putString("path", path);
-        edit.putString("state_id", state_id);
-        edit.putString("state_name", state_name);
-        edit.commit();
+        if (!userCode.equalsIgnoreCase(PreferenceUtil.get_UserId(getApplicationContext())))
+            PreferenceUtil.clear_SyncDate(getApplicationContext());
+
+        PreferenceUtil.set_Userdata(getApplicationContext(), userCode, dealer_code, true, version, path, state_id, state_name);
     }
+
 }

@@ -38,6 +38,7 @@ import com.herocorp.ui.activities.DSEapp.models.Tehsil;
 import com.herocorp.ui.activities.DSEapp.models.Village;
 import com.herocorp.ui.utility.CustomTypeFace;
 import com.herocorp.ui.utility.CustomViewParams;
+import com.herocorp.ui.utility.PreferenceUtil;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -275,7 +276,7 @@ public class PersonalinfoFragment extends Fragment implements View.OnClickListen
                 Toast.makeText(getContext(), "Invalid Contact !!", Toast.LENGTH_LONG).show();
 
             else {
-                Toast.makeText(getContext(), firstname + lastname + mobile + age + gender + state + district + tehsil + village + address1 + address2 + pincode, Toast.LENGTH_SHORT).show();
+                // Toast.makeText(getContext(), firstname + lastname + mobile + age + gender + state + district + tehsil + village + address1 + address2 + pincode, Toast.LENGTH_SHORT).show();
                 Bundle bundle = new Bundle();
                 bundle.putString("firstname", firstname);
                 bundle.putString("lastname", lastname);
@@ -481,12 +482,8 @@ public class PersonalinfoFragment extends Fragment implements View.OnClickListen
     }
 
     public void fetch_pref() {
-        sharedPreferences = getActivity().getSharedPreferences("hero", 0);
-        if (sharedPreferences.contains("state_name"))
-            state_name = sharedPreferences.getString("state_name", null);
-
-        if (sharedPreferences.contains("state_id"))
-            state_id = sharedPreferences.getString("state_id", null);
-    }
+        state_name = PreferenceUtil.get_StateName(getContext());
+        state_id = PreferenceUtil.get_StateId(getContext());
+     }
 
 }

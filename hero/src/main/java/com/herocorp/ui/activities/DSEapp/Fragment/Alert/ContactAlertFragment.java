@@ -18,6 +18,7 @@ import android.widget.TextView;
 import com.herocorp.R;
 import com.herocorp.ui.activities.DSEapp.Fragment.Enquiry.TestRideFeedbackFragment;
 import com.herocorp.ui.activities.auth.SignInActivity;
+import com.herocorp.ui.utility.PreferenceUtil;
 
 /**
  * Created by rsawh on 07-Oct-16.
@@ -108,9 +109,7 @@ public class ContactAlertFragment extends DialogFragment {
             button_ok.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    SharedPreferences sharedPreferences = getActivity().getSharedPreferences("hero", 0);
-                    SharedPreferences.Editor edit = sharedPreferences.edit();
-                    edit.clear().commit();
+                    PreferenceUtil.clearPref(getActivity());
                     startActivity(new Intent(getActivity(), SignInActivity.class));
                     getActivity().finish();
 

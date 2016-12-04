@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,12 +23,15 @@ import com.herocorp.ui.activities.DSEapp.Fragment.Followup.CloseFollowupFragment
 import com.herocorp.ui.activities.DSEapp.Fragment.Enquiry.EditFollowupFragment;
 import com.herocorp.ui.activities.DSEapp.Fragment.Followup.FollowupFragment;
 import com.herocorp.ui.activities.DSEapp.adapter.VehicleDetailadapter;
+import com.herocorp.ui.activities.DSEapp.db.DatabaseHelper;
+import com.herocorp.ui.activities.DSEapp.models.Followup;
 import com.herocorp.ui.activities.DSEapp.models.VehicleDetail;
 import com.herocorp.ui.utility.CustomTypeFace;
 import com.herocorp.ui.utility.CustomViewParams;
 
 import java.security.SecureRandom;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by rsawh on 05-Oct-16.
@@ -36,20 +40,22 @@ public class ContactDetailFragment extends Fragment implements View.OnClickListe
     private View rootView;
     private CustomViewParams customViewParams;
 
-    String fst_name1, last_name1, cell_ph_num1, age1, gender1, email_addr1, state1, district1, tehsil1, city1, x_con_seq_no1, x_model_interested,
-            expctd_dt_purchase, x_exchange_required, x_finance_required, existing_vehicle, followup_comments, enquiry_id,
-            x_test_ride_req, enquiry_entry_date, addr, addr_line_2, make_cd, model_cd1, dealer_bu_id, follow_date;
+    String fst_name1, last_name1, cell_ph_num1, age1, gender1, email_addr1, state1, district1, tehsil1, city1, x_con_seq_no1, x_model_interested = "",
+            expctd_dt_purchase = "", x_exchange_required, x_finance_required, existing_vehicle, followup_comments, enquiry_id = "",
+            x_test_ride_req, enquiry_entry_date = "", addr, addr_line_2, make_cd, model_cd1, dealer_bu_id, follow_date = "";
 
     String fst_name2, last_name2, cell_ph_num2, age2, gender2, email_addr2, state2, district2, tehsil2, city2, x_con_seq_no2, x_hmgl_card_num, last_srvc_dt, next_srvc_due_dt, ins_policy_num, x_ins_exp_dt, model_cd2, serial_num,
             primary_dealer_name, attrib_42, prod_attrib02_CD, desc_text, first_sale_dt, ins_policy_co, x_hmgl_card_points;
 
     TextView name, ages, mobile, email, states, tehsils, districts, citys, enquirydate, interestedmodel, expecteddate, followdate;
     Button customer_id, closeenquiry, followupenquiry;
+    ImageView followup_check;
+    String pendingfollowup_check = "0";
+    String enq_id = "";
 
     String firstname = "", lastname = "", age = "", state = "", district = "",
             tehsil = "", city = "", contact = "", sex = "", email_addr = "", cust_id = "";
     String encryptuser, user;
-
 
     ArrayList vinarray = new ArrayList(), variantarray = new ArrayList(), dealerarray = new ArrayList(), colourarray = new ArrayList(), modelarray = new ArrayList(), datearray = new ArrayList(), descarray = new ArrayList();
 
@@ -126,6 +132,8 @@ public class ContactDetailFragment extends Fragment implements View.OnClickListe
         expecteddate = (TextView) rootView.findViewById(R.id.textview_expctd_dt_purchase);
         followdate = (TextView) rootView.findViewById(R.id.textview_follow_date);
 
+        followup_check = (ImageView) rootView.findViewById(R.id.img_pendingfollowup_check);
+
         fetch_data();
         fetch_data1();
         fetch_data2();
@@ -176,6 +184,7 @@ public class ContactDetailFragment extends Fragment implements View.OnClickListe
         bundle.putString("user_id", encryptuser);
         bundle.putString("user", user);
         bundle.putString("enquiry_id", enquiry_id);
+        bundle.putInt("enq_flag", 1);
         int i = view.getId();
         if (i == R.id.menu_icon) {
             ((BaseDrawerActivity) getActivity()).toggleDrawer();
@@ -190,11 +199,21 @@ public class ContactDetailFragment extends Fragment implements View.OnClickListe
         } else if (i == R.id.button_close) {
             f = new CloseFollowupFragment();
             f.setArguments(bundle);
-            transaction(f);
+            FragmentManager fm = getActivity().getSupportFragmentManager();
+            FragmentTransaction ft = fm.beginTransaction();
+            //  ft.addToBackStack(null);
+            ft.replace(R.id.content_contactdetail, f);
+            ft.commit();
+           //transaction(f);
         } else if (i == R.id.button_followup) {
             f = new FollowupFragment();
             f.setArguments(bundle);
-            transaction(f);
+            FragmentManager fm = getActivity().getSupportFragmentManager();
+            FragmentTransaction ft = fm.beginTransaction();
+            //  ft.addToBackStack(null);
+            ft.replace(R.id.content_contactdetail, f);
+            ft.commit();
+            //   transaction(f);
         }
 
     }
@@ -255,19 +274,22 @@ public class ContactDetailFragment extends Fragment implements View.OnClickListe
         email.setText(email_addr);
         customer_id.setText("  Customer id: " + cust_id);
 
-        if (enquiry_id.equals("")) {
+        if (x_model_interested.equals("")) {
             addenquiry.setVisibility(View.VISIBLE);
             viewenquiry.setVisibility(View.INVISIBLE);
         } else {
             viewenquiry.setVisibility(View.VISIBLE);
             addenquiry.setVisibility(View.INVISIBLE);
+            interestedmodel.setText(x_model_interested);
+            enquirydate.setText(enquiry_entry_date);
+            expecteddate.setText(expctd_dt_purchase);
+            followdate.setText(follow_date);
+
+            if (pendingfollowup_check.equalsIgnoreCase("0"))
+                followup_check.setImageResource(R.drawable.error_icon);
+            else
+                followup_check.setImageResource(R.drawable.tick_image);
         }
-
-        interestedmodel.setText(x_model_interested);
-        enquirydate.setText(enquiry_entry_date);
-        expecteddate.setText(expctd_dt_purchase);
-        followdate.setText(follow_date);
-
     }
 
     public void fetch_data() {
@@ -283,21 +305,22 @@ public class ContactDetailFragment extends Fragment implements View.OnClickListe
         tehsil1 = bundle.getString("tehsil1");
         city1 = bundle.getString("city1");
         x_con_seq_no1 = bundle.getString("x_con_seq_no_1");
-        x_model_interested = bundle.getString("x_model_interested");
-        expctd_dt_purchase = bundle.getString("expctd_dt_purchase");
+        // x_model_interested = bundle.getString("x_model_interested");
+        // expctd_dt_purchase = bundle.getString("expctd_dt_purchase");
+        // follow_date = bundle.getString("follow_date");
+        //enquiry_entry_date = bundle.getString("enquiry_entry_date");
         x_exchange_required = bundle.getString("x_exchange_required");
         x_finance_required = bundle.getString("x_finance_required");
         existing_vehicle = bundle.getString("existing_vehicle");
         followup_comments = bundle.getString("followup_comments");
         enquiry_id = bundle.getString("enquiry_id");
         x_test_ride_req = bundle.getString("x_test_ride_req");
-        enquiry_entry_date = bundle.getString("enquiry_entry_date");
         addr = bundle.getString("addr1");
         addr_line_2 = bundle.getString("addr_line_2_1");
         make_cd = bundle.getString("make_cd");
         model_cd1 = bundle.getString("model_cd1");
         dealer_bu_id = bundle.getString("dealer_bu_id");
-        follow_date = bundle.getString("follow_date");
+
         user = bundle.getString("user");
         encryptuser = bundle.getString("user_id");
     }
@@ -331,16 +354,26 @@ public class ContactDetailFragment extends Fragment implements View.OnClickListe
         first_sale_dt = bundle.getString("first_sale_dt");
         ins_policy_co = bundle.getString("ins_policy_co");
         x_hmgl_card_points = bundle.getString("x_hmgl_card_points");
-
-        follow_date = bundle.getString("follow_date");
+      /*  follow_date = bundle.getString("follow_date");
         enquiry_entry_date = bundle.getString("enquiry_entry_date");
         model_cd1 = bundle.getString("x_model_interested");
-        expctd_dt_purchase = bundle.getString("expctd_dt_purchase");
+        expctd_dt_purchase = bundle.getString("expctd_dt_purchase");*/
         enquiry_id = bundle.getString("enquiry_id");
+
+        DatabaseHelper db = new DatabaseHelper(getContext());
+        List<Followup> allrecords = db.getContactFollowup(enquiry_id);
+        for (Followup record : allrecords) {
+            x_model_interested = record.getX_model_interested();
+            expctd_dt_purchase = record.getExpcted_date_purchase();
+            enquiry_id = record.getEnquiry_id();
+            follow_date = record.getFollow_date();
+            enquiry_entry_date = record.getEnquiry_entry_date();
+            pendingfollowup_check = record.getFollowup_status();
+            Log.e("get:", enquiry_id + follow_date);
+        }
 
         user = bundle.getString("user");
         encryptuser = bundle.getString("user_id");
-
     }
 
     public void fetch_data2() {

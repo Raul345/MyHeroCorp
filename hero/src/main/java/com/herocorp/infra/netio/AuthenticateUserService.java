@@ -12,6 +12,7 @@ import com.herocorp.core.interfaces.iNetworkResponseCallback;
 import com.herocorp.core.models.AuthenticateUserModel;
 import com.herocorp.infra.parsers.AppJsonParser;
 import com.herocorp.ui.app.App;
+import com.herocorp.ui.utility.PreferenceUtil;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -32,6 +33,8 @@ public class AuthenticateUserService extends BaseNetIO {
         jsonObject.put("appVersion", String.valueOf(appVersion));
         jsonObject.put("androidVersion", String.valueOf(deviceVersion));
         jsonObject.put("deviceInfo", String.valueOf(deviceVersion));
+        jsonObject.put("userId", PreferenceUtil.USER_ID);
+        jsonObject.put("deviceToken", "");
 
         JsonObjectRequest jsonObjReq =
                 new JsonObjectRequest(
@@ -39,16 +42,13 @@ public class AuthenticateUserService extends BaseNetIO {
                         URLConstants.BASE_URL + URLConstants.AUTHENTICATE_USER,
                         jsonObject,
                         new Response.Listener<JSONObject>() {
-
                             @Override
                             public void onResponse(JSONObject response) {
-
                                 try {
                                     if (response != null) {
-
+                                        Log.e("response:", response.toString());
                                         if (response.getBoolean("Success")) {
                                             ArrayList<AuthenticateUserModel> modelArrayList = new ArrayList<>(0);
-
                                             //Parse the JSON
                                             JSONArray responseDataString = response.getJSONArray("Result");
                                             for (int i = 0; i < responseDataString.length(); i++) {
@@ -57,7 +57,6 @@ public class AuthenticateUserService extends BaseNetIO {
                                                                 AuthenticateUserModel.class));
                                             }
                                             callback.onSuccess(modelArrayList);
-
                                             return;
                                         }
 
@@ -68,11 +67,9 @@ public class AuthenticateUserService extends BaseNetIO {
                                     Log.e(tag, "Failed ", e);
                                     callback.onFailure("Failed", true);
                                 }
-
                             }
                         },
                         new Response.ErrorListener() {
-
                             @Override
                             public void onErrorResponse(VolleyError error) {
                                 callback.onFailure(errorMessage(error), true);
@@ -88,6 +85,5 @@ public class AuthenticateUserService extends BaseNetIO {
         setTimeOut(jsonObjReq);
         // Adding request to request queue
         App.getInstance().addToRequestQueue(jsonObjReq, tag);
-
     }
 }

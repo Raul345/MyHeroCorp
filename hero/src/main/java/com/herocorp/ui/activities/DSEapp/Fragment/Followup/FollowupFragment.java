@@ -49,6 +49,7 @@ public class FollowupFragment extends Fragment implements View.OnClickListener {
     String user, enquiryid;
     DatabaseHelper db;
     String followup_status;
+    int enq_flag = 0;
 
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
@@ -105,6 +106,8 @@ public class FollowupFragment extends Fragment implements View.OnClickListener {
            /* encryptuser = bundle.getString("user_id");*/
             user = bundle.getString("user");
             enquiryid = bundle.getString("enquiry_id");
+            if (bundle.containsKey("enq_flag"))
+                enq_flag = bundle.getInt("enq_flag");
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -135,7 +138,11 @@ public class FollowupFragment extends Fragment implements View.OnClickListener {
             } else {
                 followup_status = "1";
                 db = new DatabaseHelper(getContext());
-                db.update_followup(followup_status, follow_date, reason, enquiryid);
+                if (enq_flag == 0) {
+                    db.update_followup(followup_status, follow_date, reason, enquiryid);
+                } else
+                    db.update_contactfollowup(followup_status, follow_date, reason, enquiryid);
+
                 if (NetConnections.isConnected(getContext())) {
                     String newurlparams = null;
                     //Toast.makeText(getContext(), reason + date + follow_date + enquiryid, Toast.LENGTH_SHORT).show();
@@ -149,7 +156,7 @@ public class FollowupFragment extends Fragment implements View.OnClickListener {
                         jsonparams.put("fol_date", follow_date);
                         jsonparams.put("user_id", user);
                         jsonparams.put("dms_enquiry_id", enquiryid);
-                        String json=jsonparams.toString().replace("\\/", "/");
+                        String json = jsonparams.toString().replace("\\/", "/");
                         Log.e("followup", json);
                         newurlparams = "data=" + URLEncoder.encode(json, "UTF-8");
 

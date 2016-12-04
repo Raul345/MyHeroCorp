@@ -204,7 +204,7 @@ public class Followup {
     }
 
     public void setEnquiry_entry_date(String enquiry_entry_date) {
-        this.enquiry_entry_date = getEnquiry_entry_date();
+        this.enquiry_entry_date = enquiry_entry_date;
     }
 
 
@@ -313,5 +313,17 @@ public class Followup {
         this.enquiry_id = enquiry_id;
         this.follow_date = follow_date;
         this.followup_status = followup_status;
+    }
+
+    public Followup(String x_model_interested, String enquiry_entry_date, String expcted_date_purchase,
+                    String follow_date, String enquiry_id,String followup_comments,String followup_status
+    ) {
+        this.x_model_interested = x_model_interested;
+        this.expcted_date_purchase = expcted_date_purchase;
+        this.enquiry_id = enquiry_id;
+        this.follow_date = follow_date;
+        this.enquiry_entry_date = enquiry_entry_date;
+        this.followup_comments=followup_comments;
+        this.followup_status=followup_status;
     }
 }

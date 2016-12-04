@@ -26,6 +26,7 @@ import com.herocorp.ui.activities.DSEapp.ConnectService.NetworkConnect;
 import com.herocorp.ui.activities.DSEapp.ConnectService.NetworkConnect1;
 import com.herocorp.ui.utility.CustomTypeFace;
 import com.herocorp.ui.utility.CustomViewParams;
+import com.herocorp.ui.utility.PreferenceUtil;
 
 import org.json.JSONObject;
 
@@ -277,10 +278,12 @@ public class TestRideFeedbackFragment extends Fragment implements View.OnClickLi
     }
 
     public void fetch_pref() {
-        sharedPreferences = getActivity().getSharedPreferences("hero", 0);
+        user_id= PreferenceUtil.get_UserId(getContext());
+        dealer_code=PreferenceUtil.get_DealerCode(getContext());
+        /*sharedPreferences = getActivity().getSharedPreferences("hero", 0);
         if (sharedPreferences.contains("username"))
             user_id = sharedPreferences.getString("username", null);
         if (sharedPreferences.contains("dealercode"))
-            dealer_code = sharedPreferences.getString("dealercode", null);
+            dealer_code = sharedPreferences.getString("dealercode", null);*/
     }
 }

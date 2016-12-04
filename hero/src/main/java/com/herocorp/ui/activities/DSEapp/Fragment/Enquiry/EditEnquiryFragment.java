@@ -35,6 +35,7 @@ import com.herocorp.ui.activities.DSEapp.models.Bikemodel;
 import com.herocorp.ui.activities.DSEapp.models.Campaign;
 import com.herocorp.ui.activities.DSEapp.models.Followup;
 import com.herocorp.ui.utility.CustomViewParams;
+import com.herocorp.ui.utility.PreferenceUtil;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -70,7 +71,7 @@ public class EditEnquiryFragment extends Fragment implements View.OnClickListene
             "First Time Buyer"};
 
 
-    Campaignadapter userAdapter;
+    Campaignadapter userAdapter, userAdapter1;
     ArrayList<Campaign> userArray = new ArrayList<Campaign>();
     ArrayList<String> arr_modellist = new ArrayList<String>();
     ArrayList<String> arr_modellist1 = new ArrayList<String>();
@@ -139,6 +140,7 @@ public class EditEnquiryFragment extends Fragment implements View.OnClickListene
 
 
         userAdapter = new Campaignadapter(getContext(), R.layout.dse_campaign_row, userArray);
+        userAdapter1 = new Campaignadapter(getContext(), R.layout.dse_campaign_row, userArray);
         userList = (ListView) rootView.findViewById(R.id.list_campaign);
 
         spin_interested_model = (Spinner) rootView.findViewById(R.id.model_spinner);
@@ -148,7 +150,6 @@ public class EditEnquiryFragment extends Fragment implements View.OnClickListene
 
         layout_existmake = (LinearLayout) rootView.findViewById(R.id.layout_existmake);
         layout_existmodel = (LinearLayout) rootView.findViewById(R.id.layout_existmodel);
-
 
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MMM-yy");
         Calendar c = Calendar.getInstance();
@@ -184,7 +185,7 @@ public class EditEnquiryFragment extends Fragment implements View.OnClickListene
         spin_existvehicle.setSelection(at.getPosition(existvehicle));
 
 
-       /* data = "{\"user_id\":\"" + username + "\"}";
+      /* data = "{\"user_id\":\"" + username + "\"}";
         encryptuser1(URLConstants.BIKE_MAKE_MODEL, data, 2);*/
         fetch_pref();
         fetch_make_model();
@@ -195,10 +196,10 @@ public class EditEnquiryFragment extends Fragment implements View.OnClickListene
             public void onClick(View v) {
                 if (exchange_chkbox.isChecked()) {
                     exchange = "Y";
-                    flag = 1;
+                    flag++;
                 } else {
                     exchange = "N";
-                    flag = 0;
+                    flag--;
                 }
 
             }
@@ -208,10 +209,10 @@ public class EditEnquiryFragment extends Fragment implements View.OnClickListene
             public void onClick(View v) {
                 if (finance_chkbox.isChecked()) {
                     finance = "Y";
-                    flag = 1;
+                    flag++;
                 } else {
                     finance = "N";
-                    flag = 0;
+                    flag--;
                 }
             }
         });
@@ -259,10 +260,10 @@ public class EditEnquiryFragment extends Fragment implements View.OnClickListene
         spin_existvehicle.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                existvehicle = parent.getItemAtPosition(position).toString();
                 if (position == 1) {
                     layout_existmake.setVisibility(View.VISIBLE);
                     layout_existmodel.setVisibility(View.VISIBLE);
-                    existvehicle = parent.getItemAtPosition(position).toString();
                     ArrayAdapter<Bikemake> at1 = new ArrayAdapter<Bikemake>(getContext(), R.layout.spinner_textview2, arr_makelist);
                     spin_existmake.setAdapter(at1);
                 } else {
@@ -338,7 +339,11 @@ public class EditEnquiryFragment extends Fragment implements View.OnClickListene
     }
 
     private void updateList() {
-        userList.setAdapter(userAdapter);
+        if (userAdapter1.getCount() == 0)
+            userList.setAdapter(userAdapter);
+        else
+            userList.setAdapter(userAdapter1);
+
         setListViewHeightBasedOnChildren(userList);
 
     }
@@ -404,22 +409,39 @@ public class EditEnquiryFragment extends Fragment implements View.OnClickListene
                 String sub_category = object.getString("sub_category");
                 String camp_type = object.getString("camp_type");
                 String camp_source = object.getString("camp_source");
-                String model = object.getString("model");
+                String model1 = object.getString("model");
 
-                userAdapter.add(new Campaign(dealer_code,
-                        dealer_name,
-                        camp_id,
-                        campaign_name,
-                        start_date,
-                        end_date,
-                        category,
-                        status,
-                        sub_category,
-                        camp_type,
-                        camp_source,
-                        model
-                ));
-                userAdapter.notifyDataSetChanged();
+                if (model1.equalsIgnoreCase(model)) {
+                    userAdapter1.add(new Campaign(dealer_code,
+                            dealer_name,
+                            camp_id,
+                            campaign_name,
+                            start_date,
+                            end_date,
+                            category,
+                            status,
+                            sub_category,
+                            camp_type,
+                            camp_source,
+                            model1
+                    ));
+                    userAdapter1.notifyDataSetChanged();
+                }
+                if (model1.equalsIgnoreCase("")) {
+                    userAdapter.add(new Campaign(dealer_code,
+                            dealer_name,
+                            camp_id,
+                            campaign_name,
+                            start_date,
+                            end_date,
+                            category,
+                            status,
+                            sub_category,
+                            camp_type,
+                            camp_source,
+                            model1));
+                    userAdapter.notifyDataSetChanged();
+                }
             }
 
 
@@ -711,7 +733,7 @@ public class EditEnquiryFragment extends Fragment implements View.OnClickListene
             enquiry_id = mypref.getString("enquiry_id", "");
         }
         if (exchange.equals("Y") || finance.equals("Y"))
-            flag = 1;
+            flag++;
 
 
     }
@@ -798,11 +820,13 @@ public class EditEnquiryFragment extends Fragment implements View.OnClickListene
     }
 
     public void fetch_pref() {
-        sharedPreferences = getActivity().getSharedPreferences("hero", 0);
+        user_id= PreferenceUtil.get_UserId(getContext());
+        dealer_code=PreferenceUtil.get_DealerCode(getContext());
+       /* sharedPreferences = getActivity().getSharedPreferences("hero", 0);
         if (sharedPreferences.contains("username"))
             user_id = sharedPreferences.getString("username", null);
         if (sharedPreferences.contains("dealercode"))
-            dealer_code = sharedPreferences.getString("dealercode", null);
+            dealer_code = sharedPreferences.getString("dealercode", null);*/
     }
 
     public void fetch_make_model() {

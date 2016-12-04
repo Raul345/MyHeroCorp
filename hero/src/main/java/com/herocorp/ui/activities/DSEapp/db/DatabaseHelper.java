@@ -43,6 +43,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String TABLE_NEXTFOLLOWUP = "next_followup";
     private static final String TABLE_STATE = "state";
     private static final String TABLE_ENQUIRY = "enquiry";
+    private static final String TABLE_CONTACTFOLLOWUP = "contact_followup";
 
 
     public static class Cols_followup {
@@ -113,6 +114,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static class Cols_newenquiry {
         public static final String CONTACT_NO = "contact_no";
         public static final String REG_NO = "registration_no";
+    }
+
+
+    public static class Cols_contactfollowup {
+        public static final String X_MODEL_INTERESTED = "x_model_interested";
+        public static final String EXPCTD_DT_PURCHASE = "expctd_dt_purchase";
+        public static final String ENQUIRY_ID = "enquiry_id";
+        public static final String FOLLOW_DATE = "follow_date";
+        public static final String ENQUIRY_ENTRY_DATE = "enquiry_entry_date";
+        public static final String REMARKS = "remarks";
+        public static final String FOLLOWUP_STATUS = "followup_status";
     }
 
     // Todo table create statement
@@ -192,6 +204,18 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             + Cols_newenquiry.REG_NO + " text not null "
             + ");";
 
+
+    public static final String CREATE_CONTACT_FOLLOWUP = "create table "
+            + TABLE_CONTACTFOLLOWUP + "("
+            + Cols_contactfollowup.X_MODEL_INTERESTED + " text not null, "
+            + Cols_contactfollowup.EXPCTD_DT_PURCHASE + " text not null, "
+            + Cols_contactfollowup.ENQUIRY_ID + " text not null, "
+            + Cols_contactfollowup.FOLLOW_DATE + " text not null, "
+            + Cols_contactfollowup.ENQUIRY_ENTRY_DATE + " text not null, "
+            + Cols_contactfollowup.REMARKS + " text not null, "
+            + Cols_contactfollowup.FOLLOWUP_STATUS + " text not null "
+            + ");";
+
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
@@ -206,6 +230,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(CREATE_TABLE_CLOSE_FOLLOWUP);
         db.execSQL(CREATE_TABLE_NEXT_FOLLOWUP);
         db.execSQL(CREATE_ENQUIRY);
+        db.execSQL(CREATE_CONTACT_FOLLOWUP);
     }
 
     @Override
@@ -219,6 +244,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_CLOSEFOLLOWUP);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_NEXTFOLLOWUP);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_ENQUIRY);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_CONTACTFOLLOWUP);
         // create new tables
         onCreate(db);
     }
@@ -325,6 +351,81 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.insert(TABLE_ENQUIRY, null, values);
         db.close();
 
+    }
+
+    public void addcontactfollowup(Followup followup) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        values.put(Cols_contactfollowup.X_MODEL_INTERESTED, followup.getX_model_interested());
+        values.put(Cols_contactfollowup.EXPCTD_DT_PURCHASE, followup.getExpcted_date_purchase());
+        values.put(Cols_contactfollowup.ENQUIRY_ID, followup.getEnquiry_id());
+        values.put(Cols_contactfollowup.FOLLOW_DATE, followup.getFollow_date());
+        values.put(Cols_contactfollowup.ENQUIRY_ENTRY_DATE, followup.getEnquiry_entry_date());
+        values.put(Cols_contactfollowup.REMARKS, followup.getFollowup_comments());
+        values.put(Cols_contactfollowup.FOLLOWUP_STATUS, followup.getFollowup_status());
+
+        // Inserting Row
+        db.insert(TABLE_CONTACTFOLLOWUP, null, values);
+        db.close();
+    }
+
+    public void update_contactfollowup(String followup_status, String followupdate, String followupcomment, String enquiryid) {
+        try {
+            SQLiteDatabase db = this.getWritableDatabase();
+            ContentValues values = new ContentValues();
+            values.put(Cols_contactfollowup.FOLLOWUP_STATUS, followup_status);
+            values.put(Cols_contactfollowup.FOLLOW_DATE, followupdate);
+            values.put(Cols_contactfollowup.REMARKS, followupcomment);
+            db.update(TABLE_CONTACTFOLLOWUP, values, Cols_contactfollowup.ENQUIRY_ID + " = ?",
+                    new String[]{String.valueOf(enquiryid)});
+            // Inserting Row
+            db.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public List<Followup> getContactFollowup(String id) {
+        if (id.equalsIgnoreCase(""))
+            id = "0";
+
+        List<Followup> followups = new ArrayList<Followup>();
+        String selectQuery = "SELECT * FROM " + TABLE_CONTACTFOLLOWUP + " where " + Cols_contactfollowup.ENQUIRY_ID + " = '" + id + "'";
+
+        Log.e(LOG, selectQuery);
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c = db.rawQuery(selectQuery, null);
+
+        // looping through all rows and adding to list
+        if (c.moveToFirst()) {
+            do {
+                Followup t = new Followup();
+
+                t.setX_model_interested(c.getString((c.getColumnIndex(Cols_contactfollowup.X_MODEL_INTERESTED))));
+                t.setExpcted_date_purchase(c.getString((c.getColumnIndex(Cols_contactfollowup.EXPCTD_DT_PURCHASE))));
+                t.setEnquiry_id(c.getString((c.getColumnIndex(Cols_contactfollowup.ENQUIRY_ID))));
+                t.setFollow_date(c.getString((c.getColumnIndex(Cols_contactfollowup.FOLLOW_DATE))));
+                t.setEnquiry_entry_date(c.getString((c.getColumnIndex(Cols_contactfollowup.ENQUIRY_ENTRY_DATE))));
+                t.setFollowup_status(c.getString((c.getColumnIndex(Cols_contactfollowup.FOLLOWUP_STATUS))));
+                followups.add(t);
+            } while (c.moveToNext());
+        }
+        return followups;
+    }
+
+    public void clearcontactfollowup_table() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("DELETE FROM " + TABLE_CONTACTFOLLOWUP);
+        closeDB();
+    }
+
+    public void delete_contactfollowup(String enquiryid) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(TABLE_CONTACTFOLLOWUP, Cols_contactfollowup.ENQUIRY_ID + " = ?",
+                new String[]{String.valueOf(enquiryid)});
+        db.close();
     }
 
     public List<LocalEnquiry> getAllEnquiries() {

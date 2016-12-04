@@ -90,6 +90,7 @@ public class CloseFollowupFragment extends Fragment implements View.OnClickListe
             "Better exchange value"};
 
     String main_reason = mainreason[0], sub_reason = others[0], model, make;
+    int enq_flag = 0;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
             savedInstanceState) {
@@ -134,6 +135,9 @@ public class CloseFollowupFragment extends Fragment implements View.OnClickListe
             // encryptuser = bundle.getString("user_id");
             user = bundle.getString("user");
             enquiryid = bundle.getString("enquiry_id");
+            if (bundle.containsKey("enq_flag"))
+                enq_flag = bundle.getInt("enq_flag");
+
             fetch_records();
             /*String newurlparams = "data=" + URLEncoder.encode(encryptuser, "UTF-8");
             NetworkConnect networkConnect = new NetworkConnect(URLConstants.BIKE_MAKE_MODEL, newurlparams);
@@ -280,9 +284,14 @@ public class CloseFollowupFragment extends Fragment implements View.OnClickListe
             if (main_reason.equals("--select--") || sub_reason.equals("--select--") || make.equals("--select--") || model.equals("--select--"))
                 Toast.makeText(getContext(), "Please fill all the details !!", Toast.LENGTH_SHORT).show();
             else {
-                db = new DatabaseHelper(getContext());
-                db.delete_followup(enquiryid);
                 sync_status = "1";
+                db = new DatabaseHelper(getContext());
+
+                if (enq_flag == 0) {
+                    db.delete_followup(enquiryid);
+                } else
+                    db.delete_contactfollowup(enquiryid);
+
                 if (NetConnections.isConnected(getContext())) {
                     String newurlparams = null;
                     try {
@@ -294,7 +303,7 @@ public class CloseFollowupFragment extends Fragment implements View.OnClickListe
                         jsonparams.put("sub_reason", sub_reason);
                         jsonparams.put("existMake", make);
                         jsonparams.put("existModel", model);
-                        jsonparams.put("remarks",remarks);
+                        jsonparams.put("remarks", remarks);
                         jsonparams.put("user_id", user);
                         jsonparams.put("dms_enquiry_id", enquiryid);
                         Log.e("close_followup", jsonparams.toString());

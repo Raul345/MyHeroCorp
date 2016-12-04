@@ -41,6 +41,7 @@ import com.herocorp.ui.activities.DSEapp.models.Bikemodel;
 import com.herocorp.ui.activities.DSEapp.models.Campaign;
 import com.herocorp.ui.utility.CustomTypeFace;
 import com.herocorp.ui.utility.CustomViewParams;
+import com.herocorp.ui.utility.PreferenceUtil;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -71,14 +72,14 @@ public class AddenquiryFragment extends Fragment implements View.OnClickListener
     int flag = 0;
     private int mYear, mMonth, mDay;
 
-    String date, follow_date, purch_date, remark = "", exchange = "N", finance = "N", test = "", model = "", existvehicle = "", existmake = "", existmodel = "";
+    String date, follow_date, purch_date, remark = "", exchange = "N", finance = "N", test = "N", model = "", existvehicle = "", existmake = "", existmodel = "";
 
     String firstname, lastname, mobile, email, age, gender, state, district, tehsil, village, address1, address2, pincode;
 
     // String username = "ROBINK11610", dealercode = "11610";
     DatabaseHelper db;
 
-    Campaignadapter userAdapter;
+    Campaignadapter userAdapter, userAdapter1;
     ArrayList<Campaign> userArray = new ArrayList<Campaign>();
     ArrayList<String> arr_modellist = new ArrayList<String>();
     ArrayList<Bikemake> arr_makelist = new ArrayList<Bikemake>();
@@ -168,6 +169,8 @@ public class AddenquiryFragment extends Fragment implements View.OnClickListener
         ImageView button_submit = (ImageView) rootView.findViewById(R.id.imageView_submit_addenquiry);
 
         userAdapter = new Campaignadapter(getContext(), R.layout.dse_campaign_row, userArray);
+        userAdapter1 = new Campaignadapter(getContext(), R.layout.dse_campaign_row, userArray);
+
         userList = (ListView) rootView.findViewById(R.id.list_campaign);
 
 
@@ -227,7 +230,6 @@ public class AddenquiryFragment extends Fragment implements View.OnClickListener
                     spin_existmake.setAdapter(at1);
                 } else
                     reset();
-
             }
 
             @Override
@@ -280,10 +282,10 @@ public class AddenquiryFragment extends Fragment implements View.OnClickListener
             public void onClick(View v) {
                 if (exchange_chkbox.isChecked()) {
                     exchange = "Y";
-                    flag = 1;
+                    flag++;
                 } else {
                     exchange = "N";
-                    flag = 0;
+                    flag--;
                 }
             }
         });
@@ -292,10 +294,10 @@ public class AddenquiryFragment extends Fragment implements View.OnClickListener
             public void onClick(View v) {
                 if (finance_chkbox.isChecked()) {
                     finance = "Y";
-                    flag = 1;
+                    flag++;
                 } else {
                     finance = "N";
-                    flag = 0;
+                    flag--;
                 }
             }
         });
@@ -324,7 +326,7 @@ public class AddenquiryFragment extends Fragment implements View.OnClickListener
                 } else {
                     box.setChecked(true);
                     chk_campaignid.add(data.getCamp_id());
-                   // Toast.makeText(getContext(), chk_campaignid.get(0), Toast.LENGTH_SHORT).show();
+                    // Toast.makeText(getContext(), chk_campaignid.get(0), Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -364,7 +366,6 @@ public class AddenquiryFragment extends Fragment implements View.OnClickListener
         } else if (i == R.id.exptpurchasedate_button) {
             showdatepicker(purchdate_btn);
         } else if (i == R.id.imageView_submit_addenquiry) {
-           /* Toast.makeText(getContext(), "Enquiry Under testing" + chk_campaignid.size(), Toast.LENGTH_SHORT).show();*/
             addenquiry();
         }
     }
@@ -394,7 +395,7 @@ public class AddenquiryFragment extends Fragment implements View.OnClickListener
                     public void onDateSet(DatePicker view, int year,
                                           int monthOfYear, int dayOfMonth) {
 
-                        date =  (monthOfYear + 1)+ "/" + (dayOfMonth) + "/" + year;
+                        date = (monthOfYear + 1) + "/" + (dayOfMonth) + "/" + year;
                         datechange(date);
                         mYear = year;
                         mDay = dayOfMonth;
@@ -457,6 +458,7 @@ public class AddenquiryFragment extends Fragment implements View.OnClickListener
     public void jsonparse_campaign(String result) {
         try {
             userAdapter.clear();
+            userAdapter1.clear();
             // Toast.makeText(getContext(), result, Toast.LENGTH_SHORT).show();
             JSONObject jsono = new JSONObject(result);
             JSONArray jarray = jsono.getJSONArray("campaign_data");
@@ -473,23 +475,39 @@ public class AddenquiryFragment extends Fragment implements View.OnClickListener
                 String sub_category = object.getString("sub_category");
                 String camp_type = object.getString("camp_type");
                 String camp_source = object.getString("camp_source");
-                String model = object.getString("model");
+                String model1 = object.getString("model");
 
-
-                userAdapter.add(new Campaign(dealer_code,
-                        dealer_name,
-                        camp_id,
-                        campaign_name,
-                        start_date,
-                        end_date,
-                        category,
-                        status,
-                        sub_category,
-                        camp_type,
-                        camp_source,
-                        model
-                ));
-                userAdapter.notifyDataSetChanged();
+                if (model1.equalsIgnoreCase(model)) {
+                    userAdapter1.add(new Campaign(dealer_code,
+                            dealer_name,
+                            camp_id,
+                            campaign_name,
+                            start_date,
+                            end_date,
+                            category,
+                            status,
+                            sub_category,
+                            camp_type,
+                            camp_source,
+                            model1
+                    ));
+                    userAdapter1.notifyDataSetChanged();
+                }
+                if (model1.equalsIgnoreCase("")) {
+                    userAdapter.add(new Campaign(dealer_code,
+                            dealer_name,
+                            camp_id,
+                            campaign_name,
+                            start_date,
+                            end_date,
+                            category,
+                            status,
+                            sub_category,
+                            camp_type,
+                            camp_source,
+                            model1));
+                    userAdapter.notifyDataSetChanged();
+                }
             }
 
 
@@ -497,12 +515,15 @@ public class AddenquiryFragment extends Fragment implements View.OnClickListener
             e.printStackTrace();
         } catch (Exception e) {
             System.out.println(Toast.makeText(getContext(), "Check your Connection !!", Toast.LENGTH_SHORT));
-
         }
     }
 
     private void updateList() {
-        userList.setAdapter(userAdapter);
+        if (userAdapter1.getCount() == 0)
+            userList.setAdapter(userAdapter);
+        else
+            userList.setAdapter(userAdapter1);
+
         setListViewHeightBasedOnChildren(userList);
     }
 
@@ -556,7 +577,7 @@ public class AddenquiryFragment extends Fragment implements View.OnClickListener
             key = random_key(7);
 
             if (model.equals("") || flag == 0 || existvehicle.equals("--select--"))
-                Toast.makeText(getContext(), "Please fill all the details !!", Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(), "Please fill all the details !!" + model + flag + existvehicle, Toast.LENGTH_LONG).show();
             else {
               /*  String json = "{\"mobile\":\"" + mobile + "\",\"email\":\"" + email + "\",\"fname\":\"" + firstname + "\",\"lname\":\"" + lastname +
                         "\",\"age\":\"" + age + "\",\"gender\":\"" + gender + "\",\"address1\":\"" + address1 + "\",\"address2\":\"" + address2 +
@@ -649,11 +670,13 @@ public class AddenquiryFragment extends Fragment implements View.OnClickListener
     }
 
     public void fetch_pref() {
-        sharedPreferences = getActivity().getSharedPreferences("hero", 0);
+        user_id= PreferenceUtil.get_UserId(getContext());
+        dealer_code=PreferenceUtil.get_DealerCode(getContext());
+       /* sharedPreferences = getActivity().getSharedPreferences("hero", 0);
         if (sharedPreferences.contains("username"))
             user_id = sharedPreferences.getString("username", null);
         if (sharedPreferences.contains("dealercode"))
-            dealer_code = sharedPreferences.getString("dealercode", null);
+            dealer_code = sharedPreferences.getString("dealercode", null);*/
     }
 
     public void fetch_make_model() {

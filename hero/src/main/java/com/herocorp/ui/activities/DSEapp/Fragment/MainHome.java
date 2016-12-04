@@ -1,22 +1,16 @@
-package com.herocorp.ui.activities.DSEapp.Fragment.Home;
+package com.herocorp.ui.activities.DSEapp.Fragment;
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.SharedPreferences;
-import android.content.pm.ActivityInfo;
 import android.graphics.Color;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -29,15 +23,14 @@ import com.herocorp.R;
 import com.herocorp.core.constants.URLConstants;
 import com.herocorp.infra.utils.NetConnections;
 import com.herocorp.ui.activities.BaseDrawerActivity;
-import com.herocorp.ui.activities.DSEapp.Fragment.Contact.ContactFragment;
 import com.herocorp.ui.activities.DSEapp.ConnectService.NetworkConnect;
+import com.herocorp.ui.activities.DSEapp.Fragment.Contact.ContactFragment;
 import com.herocorp.ui.activities.DSEapp.Fragment.PendingFollowup.PendingFollowupFragment;
 import com.herocorp.ui.activities.DSEapp.Fragment.PendingOrders.PendingOrdersFragment;
 import com.herocorp.ui.activities.DSEapp.Fragment.TodayFollowup.TodayFollowupFragment;
 import com.herocorp.ui.activities.DSEapp.db.DatabaseHelper;
 import com.herocorp.ui.activities.DSEapp.models.Bike_model;
 import com.herocorp.ui.activities.DSEapp.models.Bikemake;
-import com.herocorp.ui.activities.DSEapp.models.Bikemodel;
 import com.herocorp.ui.activities.DSEapp.models.Followup;
 import com.herocorp.ui.utility.CustomTypeFace;
 import com.herocorp.ui.utility.CustomViewParams;
@@ -51,15 +44,14 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.Locale;
 
 /**
- * Created by rsawh on 10-Sep-16.
+ * Created by rsawh on 03-Dec-16.
  */
-public class HomeFragment extends Fragment implements View.OnClickListener {
-    private View rootView;
+
+public class MainHome extends FragmentActivity implements View.OnClickListener {
+
     private CustomViewParams customViewParams;
     EditText phoneno_et, registration_et;
     ProgressDialog progressDialog;
@@ -100,48 +92,46 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     String user_id, dealer_code, sync_date = "";
     String current_date;
 
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
-            savedInstanceState) {
-
-        rootView = inflater.inflate(R.layout.dse_home_fragment, container, false);
-        getActivity().overridePendingTransition(R.anim.trans_left_in, R.anim.trans_left_out);
-
+    @Override
+    protected void onCreate(final Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.dse_home_fragment);
+        overridePendingTransition(R.anim.trans_left_in, R.anim.trans_left_out);
 
         try {
-            initView(rootView);
+            initView();
         } catch (ParseException e) {
             e.printStackTrace();
         }
 
-        return rootView;
     }
 
-    private void initView(View rootView) throws ParseException {
-        customViewParams = new CustomViewParams(getActivity());
-        CustomTypeFace customTypeFace = new CustomTypeFace(getActivity());
+    private void initView() throws ParseException {
+        customViewParams = new CustomViewParams(this);
+        CustomTypeFace customTypeFace = new CustomTypeFace(this);
 
-        ImageView heroLogo = (ImageView) rootView.findViewById(R.id.app_logo);
-        ImageView menu = (ImageView) rootView.findViewById(R.id.menu_icon);
+        ImageView heroLogo = (ImageView) findViewById(R.id.app_logo);
+        ImageView menu = (ImageView) findViewById(R.id.menu_icon);
 
         customViewParams.setImageViewCustomParams(heroLogo, new int[]{30, 30, 0, 0}, new int[]{0, 0, 0, 0}, 120, 120);
         customViewParams.setImageViewCustomParams(menu, new int[]{0, 30, 30, 0}, new int[]{0, 0, 0, 0}, 100, 100);
 
-        LinearLayout topLayout = (LinearLayout) rootView.findViewById(R.id.top_layout);
+        LinearLayout topLayout = (LinearLayout) findViewById(R.id.top_layout);
         customViewParams.setMarginAndPadding(topLayout, new int[]{100, 20, 100, 0}, new int[]{0, 0, 0, 0}, topLayout.getParent());
 
-        Button buttonHeader = (Button) rootView.findViewById(R.id.buttonHeader);
+        Button buttonHeader = (Button) findViewById(R.id.buttonHeader);
         customViewParams.setButtonCustomParams(buttonHeader, new int[]{0, 10, 0, 10}, new int[]{190, 0, 0, 0}, 90, 180, 40, customTypeFace.gillSansItalic, 0);
 
-        LinearLayout topLayout1 = (LinearLayout) rootView.findViewById(R.id.top_layout1);
+        LinearLayout topLayout1 = (LinearLayout) findViewById(R.id.top_layout1);
         customViewParams.setMarginAndPadding(topLayout1, new int[]{0, 20, 0, 0}, new int[]{0, 0, 0, 0}, topLayout1.getParent());
 
-        LinearLayout topLayout2 = (LinearLayout) rootView.findViewById(R.id.top_layout1);
+        LinearLayout topLayout2 = (LinearLayout) findViewById(R.id.top_layout1);
         customViewParams.setMarginAndPadding(topLayout2, new int[]{0, 20, 0, 0}, new int[]{0, 0, 0, 0}, topLayout2.getParent());
 
-        LinearLayout pendingorderLayout = (LinearLayout) rootView.findViewById(R.id.pendingorders_layout);
-        LinearLayout todayfollowupLayout = (LinearLayout) rootView.findViewById(R.id.followup_layout);
-        LinearLayout pendingfollowupLayout = (LinearLayout) rootView.findViewById(R.id.pendingfollowup_layout);
-        LinearLayout searchenquiryLayout = (LinearLayout) rootView.findViewById(R.id.searchenquiry_layout);
+        LinearLayout pendingorderLayout = (LinearLayout) findViewById(R.id.pendingorders_layout);
+        LinearLayout todayfollowupLayout = (LinearLayout) findViewById(R.id.followup_layout);
+        LinearLayout pendingfollowupLayout = (LinearLayout) findViewById(R.id.pendingfollowup_layout);
+        LinearLayout searchenquiryLayout = (LinearLayout) findViewById(R.id.searchenquiry_layout);
 
         customViewParams.setMarginAndPadding(pendingorderLayout, new int[]{20, 15, 20, 15}, new int[]{35, 0, 35, 0}, pendingorderLayout.getParent());
         customViewParams.setMarginAndPadding(todayfollowupLayout, new int[]{20, 15, 20, 15}, new int[]{35, 0, 35, 0}, todayfollowupLayout.getParent());
@@ -153,33 +143,33 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         customViewParams.setHeightAndWidth(pendingfollowupLayout, 320, 320);
         customViewParams.setHeightAndWidth(searchenquiryLayout, 320, 320);
 
-        pendingorderText = (TextView) rootView.findViewById(R.id.pendingorders_text);
-        todayfollowupText = (TextView) rootView.findViewById(R.id.followup_text);
-        pendingfollowupText = (TextView) rootView.findViewById(R.id.pendingfollowup_text);
-        searchenquiryText = (TextView) rootView.findViewById(R.id.searchenquiry_text);
+        pendingorderText = (TextView) findViewById(R.id.pendingorders_text);
+        todayfollowupText = (TextView) findViewById(R.id.followup_text);
+        pendingfollowupText = (TextView) findViewById(R.id.pendingfollowup_text);
+        searchenquiryText = (TextView) findViewById(R.id.searchenquiry_text);
 
         customViewParams.setTextViewCustomParams(pendingorderText, new int[]{0, 0, 0, 0}, new int[]{0, 0, 0, 0}, 50, customTypeFace.gillSans, 0);
         customViewParams.setTextViewCustomParams(todayfollowupText, new int[]{0, 0, 0, 0}, new int[]{0, 0, 0, 0}, 50, customTypeFace.gillSans, 0);
         customViewParams.setTextViewCustomParams(pendingfollowupText, new int[]{0, 0, 0, 0}, new int[]{0, 0, 0, 0}, 50, customTypeFace.gillSans, 0);
         customViewParams.setTextViewCustomParams(searchenquiryText, new int[]{0, 0, 0, 0}, new int[]{0, 0, 0, 0}, 50, customTypeFace.gillSans, 0);
 
-        ImageView pendingorder = (ImageView) rootView.findViewById(R.id.pendingorders);
-        ImageView todayfollowup = (ImageView) rootView.findViewById(R.id.followup);
-        ImageView pendingfollowup = (ImageView) rootView.findViewById(R.id.pendingfollowup);
-        ImageView searchenquiry = (ImageView) rootView.findViewById(R.id.searchenquiry);
-        ImageView submit = (ImageView) rootView.findViewById(R.id.imageView_submit_home);
-        progressBar = (ProgressBar) rootView.findViewById(R.id.progress);
+        ImageView pendingorder = (ImageView) findViewById(R.id.pendingorders);
+        ImageView todayfollowup = (ImageView) findViewById(R.id.followup);
+        ImageView pendingfollowup = (ImageView) findViewById(R.id.pendingfollowup);
+        ImageView searchenquiry = (ImageView) findViewById(R.id.searchenquiry);
+        ImageView submit = (ImageView) findViewById(R.id.imageView_submit_home);
+        progressBar = (ProgressBar) findViewById(R.id.progress);
 
         customViewParams.setImageViewCustomParams(pendingorder, new int[]{7, 7, 7, 7}, new int[]{0, 0, 0, 0}, 180, 180);
         customViewParams.setImageViewCustomParams(todayfollowup, new int[]{7, 7, 7, 12}, new int[]{0, 0, 0, 0}, 180, 180);
         customViewParams.setImageViewCustomParams(pendingfollowup, new int[]{7, 7, 7, 12}, new int[]{0, 0, 0, 0}, 180, 180);
         customViewParams.setImageViewCustomParams(searchenquiry, new int[]{7, 7, 7, 12}, new int[]{0, 0, 0, 0}, 180, 180);
 
-        LinearLayout textview_container = (LinearLayout) rootView.findViewById(R.id.textview_container);
+        LinearLayout textview_container = (LinearLayout) findViewById(R.id.textview_container);
         customViewParams.setMarginAndPadding(textview_container, new int[]{120, 30, 110, 0}, new int[]{0, 0, 0, 0}, textview_container.getParent());
 
-        phoneno_et = (EditText) rootView.findViewById(R.id.phoneno_edittext);
-        registration_et = (EditText) rootView.findViewById(R.id.registration_edittext);
+        phoneno_et = (EditText) findViewById(R.id.phoneno_edittext);
+        registration_et = (EditText) findViewById(R.id.registration_edittext);
 
         fetch_pref();
         current_date = new SimpleDateFormat("dd-MMM-yy").format(new Date());
@@ -198,30 +188,26 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     public void onClick(View view) {
         int i = view.getId();
         if (i == R.id.menu_icon) {
-            ((BaseDrawerActivity) getActivity()).toggleDrawer();
-
+            BaseDrawerActivity.toggleDrawer();
         } else if (i == R.id.pendingorders) {
             pendingorderText.setTextColor(Color.WHITE);
             pendingfollowupText.setTextColor(Color.GRAY);
             todayfollowupText.setTextColor(Color.GRAY);
             searchenquiryText.setTextColor(Color.GRAY);
             // progress();
-            if (NetConnections.isConnected(getContext())) {
+            if (NetConnections.isConnected(this)) {
                 transaction(new PendingOrdersFragment());
-            } else
-                Toast.makeText(getActivity(), "Check your Connection !!", Toast.LENGTH_SHORT).show();
+            }else
+                Toast.makeText(this, "Check your Connection !!", Toast.LENGTH_SHORT).show();
 
-        } else if (i == R.id.followup) {
-
+        }else if (i == R.id.followup) {
             // Toast.makeText(getActivity(), "today followup", Toast.LENGTH_SHORT).show();
             pendingorderText.setTextColor(Color.GRAY);
             pendingfollowupText.setTextColor(Color.GRAY);
             todayfollowupText.setTextColor(Color.WHITE);
             searchenquiryText.setTextColor(Color.GRAY);
-
             check = 0;
             flag = 0;
-
             transaction(new TodayFollowupFragment());
 
         } else if (i == R.id.pendingfollowup) {
@@ -244,13 +230,13 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             transaction(new TodayFollowupFragment());
         } else if (i == R.id.imageView_submit_home) {
             if (!(phoneno_et.getText().toString().equals("") && registration_et.getText().toString().equals(""))) {
-                if (NetConnections.isConnected(getContext())) {
+                if (NetConnections.isConnected(this)) {
                     //new Encrypt_data().execute();
                     transaction(new ContactFragment());
                 } else
-                    Toast.makeText(getActivity(), "Check your Connection !!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Check your Connection !!", Toast.LENGTH_SHORT).show();
             } else
-                Toast.makeText(getActivity(), "Phone/RegNo missing!!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Phone/RegNo missing!!", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -262,7 +248,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         bundle.putInt("flag", flag);
         bundle.putString("phone_no", phoneno_et.getText().toString());
         bundle.putString("reg_no", registration_et.getText().toString());
-        FragmentManager fm = getActivity().getSupportFragmentManager();
+        FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
         f.setArguments(bundle);
         ft.addToBackStack(null);
@@ -270,10 +256,11 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         ft.commit();
     }
 
+
     public void sync_data() {
         final JSONObject jsonparams = new JSONObject();
 
-        if (NetConnections.isConnected(getContext())) {
+        if (NetConnections.isConnected(getApplicationContext())) {
             final Handler handler = new Handler();
             Thread thread = new Thread() {
                 @Override
@@ -314,7 +301,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         } else
             Toast.makeText(
 
-                    getContext(),
+                    getApplicationContext(),
 
                     "Check your connection !!", Toast.LENGTH_SHORT).
 
@@ -324,7 +311,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
     public void jsonparse_followup(String result) {
         Log.e("response_followup:", result);
-        db = new DatabaseHelper(getContext());
+        db = new DatabaseHelper(getApplicationContext());
         db.cleartables();
         JSONObject jsono = null;
         JSONArray jarray = null;
@@ -365,7 +352,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
     public void jsonparse_makemodel(String result) {
         try {
-            db = new DatabaseHelper(getContext());
+            db = new DatabaseHelper(getApplicationContext());
             JSONObject jsono = new JSONObject(result);
             JSONArray jarray = jsono.getJSONArray("make");
             Log.e("response_make_model:", result);
@@ -381,7 +368,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 db.addbikemodel(new Bike_model(object.getString("make_id"), object.getString("model_name")));
             }
 
-            PreferenceUtil.set_Syncdate(getContext(), current_date.toString());
+            PreferenceUtil.set_Syncdate(getApplicationContext(), current_date.toString());
 
             Log.e("sync_close", current_date.toString());
             //   progressBar.setVisibility(View.INVISIBLE);
@@ -389,57 +376,14 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         } catch (JSONException e) {
             e.printStackTrace();
         } catch (Exception e) {
-            System.out.println(Toast.makeText(getContext(), "Check your Connection !!", Toast.LENGTH_SHORT));
+            Toast.makeText(getApplicationContext(), "Check your Connection !!", Toast.LENGTH_SHORT);
         }
     }
 
     public void fetch_pref() {
-        user_id = PreferenceUtil.get_UserId(getContext());
-        dealer_code = PreferenceUtil.get_DealerCode(getContext());
-        sync_date = PreferenceUtil.get_Syncdate(getContext());
+        user_id = PreferenceUtil.get_UserId(this);
+        dealer_code = PreferenceUtil.get_DealerCode(this);
+        sync_date = PreferenceUtil.get_Syncdate(this);
 
     }
-
-  /*  public class Encrypt_data extends AsyncTask<Void, Void, String> {
-        NetworkConnect networkConnect;
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            // progressBar.setVisibility(View.VISIBLE);
-        }
-
-        protected String doInBackground(Void... params) {
-            if (NetConnections.isConnected(getContext())) try {
-                JSONObject json = new JSONObject();
-                try {
-                    user_id = "ROBINK11610";
-                    json.put("user_id", user_id);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                String urlParameters = "data=" + URLEncoder.encode(json.toString(), "UTF-8");
-                networkConnect = new NetworkConnect("http://abym.in/clientProof/hero_motors/encrypt", urlParameters);
-                String result = networkConnect.execute();
-                if (result != null)
-                    encryptuser = result.replace("\\/", "/");
-                Log.e("encrypt", encryptuser);
-
-                return result;
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-                return null;
-            }
-            else {
-                Toast.makeText(getContext(), "Check your connection !!", Toast.LENGTH_SHORT).show();
-                return null;
-            }
-        }
-
-        protected void onPostExecute(String s) {
-            super.onPostExecute(s);
-            //  progressBar.setVisibility(View.INVISIBLE);
-        }
-    }
-*/
 }

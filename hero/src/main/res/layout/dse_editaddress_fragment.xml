@@ -89,7 +89,7 @@
                     android:gravity="center"
                     android:text="State"
                     android:textColor="#000000"
-                    android:textSize="20dp"
+                    android:textSize="16dp"
                     android:textStyle="bold" />
 
                 <LinearLayout
@@ -141,7 +141,7 @@
                     android:gravity="center"
                     android:text="District"
                     android:textColor="#000000"
-                    android:textSize="20dp"
+                    android:textSize="16dp"
                     android:textStyle="bold" />
 
                 <LinearLayout
@@ -164,7 +164,7 @@
                     <Spinner
                         android:id="@+id/district_spinner"
                         android:layout_width="0sp"
-                        android:layout_height="50dp"
+                        android:layout_height="wrap_content"
                         android:spinnerMode="dialog"
                         android:layout_marginRight="30dp"
                         android:layout_weight="4"
@@ -192,7 +192,7 @@
                     android:gravity="center"
                     android:text="Tehsil"
                     android:textColor="#000000"
-                    android:textSize="20dp"
+                    android:textSize="16dp"
                     android:textStyle="bold" />
 
                 <LinearLayout
@@ -214,7 +214,7 @@
                     <Spinner
                         android:id="@+id/tehsil_spinner"
                         android:layout_width="0sp"
-                        android:layout_height="50dp"
+                        android:layout_height="wrap_content"
                         android:layout_marginRight="30dp"
                         android:layout_weight="4"
                         android:background="#ffffff"
@@ -243,7 +243,7 @@
                     android:gravity="center"
                     android:text="City/Village/Tc"
                     android:textColor="#000000"
-                    android:textSize="20dp"
+                    android:textSize="16dp"
                     android:textStyle="bold" />
 
                 <LinearLayout
@@ -293,8 +293,9 @@
                     android:gravity="center"
                     android:text="Address1"
                     android:textColor="#000000"
-                    android:textSize="20dp"
-                    android:textStyle="bold" />
+                    android:textSize="16dp"
+                    android:textStyle="bold"
+                    android:id="@+id/textView4" />
 
                 <LinearLayout
                     android:id="@+id/top_layout26"
@@ -321,7 +322,7 @@
                     android:padding="8dp"
                     android:singleLine="true"
                     android:textColor="#000000"
-                    android:textSize="20dp" />
+                    android:textSize="16dp" />
             </LinearLayout>
 
             <LinearLayout
@@ -339,8 +340,9 @@
                     android:gravity="center"
                     android:text="Address2"
                     android:textColor="#000000"
-                    android:textSize="15dp"
-                    android:textStyle="bold" />
+                    android:textSize="16dp"
+                    android:textStyle="bold"
+                    android:id="@+id/textView3" />
 
                 <LinearLayout
                     android:id="@+id/top_layout28"
@@ -367,7 +369,7 @@
                     android:padding="8dp"
                     android:singleLine="true"
                     android:textColor="#000000"
-                    android:textSize="20dp" />
+                    android:textSize="16dp" />
             </LinearLayout>
 
             <LinearLayout
@@ -386,7 +388,7 @@
                     android:paddingTop="5dp"
                     android:text="Pin Code"
                     android:textColor="#000000"
-                    android:textSize="20dp"
+                    android:textSize="16dp"
                     android:textStyle="bold" />
 
                 <LinearLayout
@@ -415,7 +417,7 @@
                     android:maxLength="6"
                     android:padding="8dp"
                     android:textColor="#000000"
-                    android:textSize="20dp" />
+                    android:textSize="16dp" />
             </LinearLayout>
 
         </LinearLayout>

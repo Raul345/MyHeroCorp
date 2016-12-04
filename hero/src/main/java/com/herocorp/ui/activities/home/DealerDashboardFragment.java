@@ -1,6 +1,7 @@
 package com.herocorp.ui.activities.home;
 
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
@@ -25,12 +26,15 @@ public class DealerDashboardFragment extends Fragment implements View.OnClickLis
 
     private String TAG = "HeroCorp";
     private SharedPreferences sharedPreferences;
-      @Override
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.dealer_dashboard_fragment, container, false);
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        getActivity().setRequestedOrientation(
+                ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
         initView(rootView);
 

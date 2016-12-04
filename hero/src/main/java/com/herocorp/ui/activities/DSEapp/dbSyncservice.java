@@ -24,7 +24,7 @@ public class dbSyncservice extends Service {
     @Override
     public void onCreate() {
         // To avoid cpu-blocking, we create a background handler to run our service
-        HandlerThread thread = new HandlerThread("TutorialService",
+        HandlerThread thread = new HandlerThread("SyncService",
                 Process.THREAD_PRIORITY_BACKGROUND);
         // start the new handler thread
         thread.start();
@@ -46,7 +46,7 @@ public class dbSyncservice extends Service {
         return START_STICKY;
     }
 
-    protected void showToast(final String msg){
+    protected void showToast(final String msg) {
         //gets the main thread
         Handler handler = new Handler(Looper.getMainLooper());
         handler.post(new Runnable() {
@@ -57,6 +57,7 @@ public class dbSyncservice extends Service {
             }
         });
     }
+
     @Override
     public IBinder onBind(Intent intent) {
         return null;

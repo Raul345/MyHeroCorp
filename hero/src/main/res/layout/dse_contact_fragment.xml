@@ -84,16 +84,16 @@
                     android:text="Enquiry Based Contacts"
                     android:textColor="#ffffff"
                     android:textSize="17dp"
-                    android:visibility="visible" />
+                    android:visibility="gone" />
 
                 <ListView
                     android:id="@+id/list_enquirycontacts"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_below="@+id/enquirytitle"
                     android:divider="@android:color/darker_gray"
                     android:dividerHeight="0.5dp"
                     android:focusable="true"
-                    android:layout_below="@+id/enquirytitle"
                     android:visibility="visible"></ListView>
 
                 <TextView
@@ -106,7 +106,7 @@
                     android:text="Vin Based Contacts"
                     android:textColor="#ffffff"
                     android:textSize="17dp"
-                    android:visibility="visible" />
+                    android:visibility="gone" />
 
                 <ListView
                     android:id="@+id/list_vincontacts"
@@ -128,7 +128,7 @@
                 android:background="#ffffff"
                 android:gravity="center_vertical"
                 android:orientation="vertical"
-                android:visibility="visible">
+                android:visibility="gone">
 
                 <TextView
                     android:id="@+id/contact_textview"
@@ -155,9 +155,18 @@
                     android:paddingRight="40dp"
                     android:text="@string/addenquiry" />
             </RelativeLayout>
+
+            <com.github.ybq.android.spinkit.SpinKitView xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:id="@+id/progress"
+                style="@style/SpinKitView.Wave"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:layout_gravity="center"
+                android:visibility="gone"
+                app:SpinKit_Color="#cc0000" />
         </RelativeLayout>
-
     </ScrollView>
-
 </RelativeLayout>
 

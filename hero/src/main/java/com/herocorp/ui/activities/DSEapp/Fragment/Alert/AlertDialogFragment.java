@@ -18,6 +18,7 @@ import com.herocorp.R;
 import com.herocorp.ui.activities.DSEapp.Fragment.Enquiry.TestRideFeedbackFragment;
 import com.herocorp.ui.activities.DSEapp.Fragment.Home.HomeFragment;
 import com.herocorp.ui.activities.DSEapp.Fragment.PendingFollowup.PendingFollowupFragment;
+import com.herocorp.ui.activities.DSEapp.Fragment.PendingOrders.PendingOrdersFragment;
 import com.herocorp.ui.activities.DSEapp.Fragment.TodayFollowup.TodayFollowupFragment;
 import com.herocorp.ui.activities.DSEapp.db.DatabaseHelper;
 import com.herocorp.ui.activities.DSEapp.models.LocalEnquiry;
@@ -46,31 +47,7 @@ public class AlertDialogFragment extends DialogFragment {
                 @Override
                 public void onClick(View v) {
                     dismiss();
-                   /* FragmentManager fm = getActivity().getSupportFragmentManager();
-                    for (int i = 0; i < fm.getBackStackEntryCount(); ++i)
-                        fm.popBackStack();
-                    FragmentTransaction ft = fm.beginTransaction();
-                    Fragment f = new HomeFragment();
-                    // ft.addToBackStack(null);
-                    ft.replace(R.id.content_pendingfollowup, f);
-                    ft.commit();*/
                     getActivity().onBackPressed();
-
-                   /* Bundle bundle = new Bundle();
-                    bundle.putInt("check", 0);
-                    bundle.putInt("flag", 0);
-                    //  dismiss();
-                    FragmentManager fm = getActivity().getSupportFragmentManager();
-                    for (int i = 0; i < fm.getBackStackEntryCount(); ++i)
-                        fm.popBackStack();
-                    FragmentTransaction ft = fm.beginTransaction();
-                    Fragment f = new PendingFollowupFragment();
-                    f.setArguments(bundle);
-                    // ft.addToBackStack(null);
-                    ft.replace(R.id.content_closefollowup, f);
-                    ft.commit();*/
-
-
                 }
             });
         } else if (flag == 2) {

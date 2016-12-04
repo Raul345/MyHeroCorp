@@ -76,6 +76,5 @@
         android:layout_gravity="center"
         android:visibility="gone"
         app:SpinKit_Color="#cc0000"
-
         />
 </RelativeLayout>
