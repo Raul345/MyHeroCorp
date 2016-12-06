@@ -139,7 +139,7 @@
                                 android:paddingLeft="20dp"
                                 android:paddingTop="10dp"
                                 android:text="9798657664"
-                                android:textColor="#757575" />
+                                android:textColor="#ffffff" />
                         </LinearLayout>
 
                         <LinearLayout
@@ -152,8 +152,43 @@
                                 android:layout_height="match_parent"
                                 android:paddingLeft="20dp"
                                 android:paddingTop="10dp"
-                                android:text="Email       :"
+                                android:text="District      :"
+                                android:textColor="#ffffff"
+                                android:id="@+id/textView5" />
+
+                            <TextView
+                                android:id="@+id/district_textview"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:paddingLeft="20dp"
+                                android:paddingTop="10dp"
+                                android:text="Jammu"
                                 android:textColor="#ffffff" />
+
+                        </LinearLayout>
+
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="#80000000">
+
+                        <LinearLayout
+                            android:layout_width="0sp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="5"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:paddingLeft="20dp"
+                                android:paddingTop="10dp"
+                                android:text="Email           :"
+                                android:textColor="#ffffff"
+                                android:id="@+id/textView6" />
 
                             <TextView
                                 android:id="@+id/email_textview"
@@ -162,7 +197,30 @@
                                 android:paddingLeft="20dp"
                                 android:paddingTop="10dp"
                                 android:text="abc@gmail.com"
-                                android:textColor="#757575" />
+                                android:textColor="#ffffff" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="0sp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="5">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:paddingLeft="20dp"
+                                android:paddingTop="10dp"
+                                android:text="Tehsil        :"
+                                android:textColor="#ffffff" />
+
+                            <TextView
+                                android:id="@+id/tehsil_textview"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:paddingLeft="20dp"
+                                android:paddingTop="10dp"
+                                android:text="Jammu"
+                                android:textColor="#ffffff" />
 
                         </LinearLayout>
 
@@ -195,63 +253,7 @@
                                 android:paddingLeft="20dp"
                                 android:paddingTop="10dp"
                                 android:text="Jammu"
-                                android:textColor="#757575" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="0sp"
-                            android:layout_height="match_parent"
-                            android:layout_weight="5">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="match_parent"
-                                android:paddingLeft="20dp"
-                                android:paddingTop="10dp"
-                                android:text="Tehsil       :"
                                 android:textColor="#ffffff" />
-
-                            <TextView
-                                android:id="@+id/tehsil_textview"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:paddingLeft="20dp"
-                                android:paddingTop="10dp"
-                                android:text="Jammu"
-                                android:textColor="#757575" />
-
-                        </LinearLayout>
-
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:background="#80000000">
-
-                        <LinearLayout
-                            android:layout_width="0sp"
-                            android:layout_height="match_parent"
-                            android:layout_weight="5"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="match_parent"
-                                android:paddingLeft="20dp"
-                                android:paddingTop="10dp"
-                                android:text="District        :"
-                                android:textColor="#ffffff" />
-
-                            <TextView
-                                android:id="@+id/district_textview"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:paddingLeft="20dp"
-                                android:paddingTop="10dp"
-                                android:text="Jammu"
-                                android:textColor="#757575" />
                         </LinearLayout>
 
                         <LinearLayout
@@ -274,7 +276,7 @@
                                 android:paddingLeft="20dp"
                                 android:paddingTop="10dp"
                                 android:text="Jammu"
-                                android:textColor="#757575" />
+                                android:textColor="#ffffff" />
 
                         </LinearLayout>
 

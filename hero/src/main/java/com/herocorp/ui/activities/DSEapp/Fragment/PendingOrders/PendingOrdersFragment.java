@@ -1,5 +1,6 @@
 package com.herocorp.ui.activities.DSEapp.Fragment.PendingOrders;
 
+import android.content.pm.ActivityInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -64,12 +65,21 @@ public class PendingOrdersFragment extends Fragment implements View.OnClickListe
 
     ProgressBar progressBar;
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // retain this fragment
+        setRetainInstance(true);
+    }
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
             savedInstanceState) {
 
         rootView = inflater.inflate(R.layout.dse_pendingorders_fragment, container, false);
         getActivity().overridePendingTransition(R.anim.slide_in_up, R.anim.slide_out_up);
+
+       /* getActivity().setRequestedOrientation(
+                ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);*/
 
         initView(rootView);
 
@@ -221,9 +231,10 @@ public class PendingOrdersFragment extends Fragment implements View.OnClickListe
         }
 
         protected void onPostExecute(String s) {
-            super.onPostExecute(s);
-            progressBar.setVisibility(View.INVISIBLE);
             try {
+                super.onPostExecute(s);
+                progressBar.setVisibility(View.INVISIBLE);
+
                 Log.e("followup_data:", result);
                 JSONObject jsono = new JSONObject(result);
                 if (jsono.has("order_data")) {

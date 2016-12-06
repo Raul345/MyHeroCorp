@@ -27,6 +27,7 @@ import com.herocorp.core.constants.URLConstants;
 import com.herocorp.infra.utils.NetConnections;
 import com.herocorp.ui.activities.DSEapp.ConnectService.NetworkConnect;
 import com.herocorp.ui.activities.DSEapp.ConnectService.NetworkConnect1;
+import com.herocorp.ui.activities.DSEapp.Utilities.Dateformatter;
 import com.herocorp.ui.activities.DSEapp.adapter.Campaignadapter;
 import com.herocorp.ui.activities.DSEapp.db.DatabaseHelper;
 import com.herocorp.ui.activities.DSEapp.models.Bike_model;
@@ -49,6 +50,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by rsawh on 05-Oct-16.
@@ -70,7 +72,6 @@ public class EditEnquiryFragment extends Fragment implements View.OnClickListene
             "Four wheeler",
             "First Time Buyer"};
 
-
     Campaignadapter userAdapter, userAdapter1;
     ArrayList<Campaign> userArray = new ArrayList<Campaign>();
     ArrayList<String> arr_modellist = new ArrayList<String>();
@@ -86,11 +87,10 @@ public class EditEnquiryFragment extends Fragment implements View.OnClickListene
     String firstname = "", lastname = "", email = "", mobile = "", age = "", gender = "", state = "", district = "", tehsil = "", village = "", address1 = "", address2 = "", pincode = "";
 
     String encryptdata, data;
-
+    int page_flag;
     NetworkConnect networkConnect;
 
     SharedPreferences mypref;
-    private SharedPreferences sharedPreferences;
     String user_id, dealer_code, key = "", enquiry_id = "";
 
     LinearLayout layout_existmake, layout_existmodel;
@@ -138,7 +138,6 @@ public class EditEnquiryFragment extends Fragment implements View.OnClickListene
         nextfollowdate_btn = (Button) rootView.findViewById(R.id.nextfollowupdate_button);
         purchdate_btn = (Button) rootView.findViewById(R.id.exptpurchasedate_button);
 
-
         userAdapter = new Campaignadapter(getContext(), R.layout.dse_campaign_row, userArray);
         userAdapter1 = new Campaignadapter(getContext(), R.layout.dse_campaign_row, userArray);
         userList = (ListView) rootView.findViewById(R.id.list_campaign);
@@ -151,14 +150,14 @@ public class EditEnquiryFragment extends Fragment implements View.OnClickListene
         layout_existmake = (LinearLayout) rootView.findViewById(R.id.layout_existmake);
         layout_existmodel = (LinearLayout) rootView.findViewById(R.id.layout_existmodel);
 
-        SimpleDateFormat sdf = new SimpleDateFormat("dd-MMM-yy");
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MMM-yyyy");
         Calendar c = Calendar.getInstance();
         if (follow_date.equals("")) {
             c.add(Calendar.DATE, 3);  // number of days to add
             String dt1 = sdf.format(c.getTime());
             nextfollowdate_btn.setText(dt1);
         } else
-            nextfollowdate_btn.setText(follow_date);
+            nextfollowdate_btn.setText(Dateformatter.dateformat3(follow_date));
 
 
         if (purch_date.equals("")) {
@@ -166,7 +165,7 @@ public class EditEnquiryFragment extends Fragment implements View.OnClickListene
             String dt1 = sdf.format(c.getTime());
             purchdate_btn.setText(dt1);
         } else
-            purchdate_btn.setText(purch_date);
+            purchdate_btn.setText(Dateformatter.dateformat3(purch_date));
 
 
         remarks_et.setText(remark);
@@ -358,25 +357,31 @@ public class EditEnquiryFragment extends Fragment implements View.OnClickListene
         if (NetConnections.isConnected(getContext())) {
             try {
                 String urlParameters = "data=" + URLEncoder.encode(data, "UTF-8");
-                networkConnect = new NetworkConnect(URLConstants.ENCRYPT, urlParameters);
-                String result = networkConnect.execute();
-                if (result != null)
-                    encryptdata = result.replace("\\/", "/");
-                String newurlparams = "data=" + URLEncoder.encode(encryptdata, "UTF-8");
+
                 if (flag == 0) {
+                    networkConnect = new NetworkConnect(URLConstants.ENCRYPT, urlParameters);
+                    String result = networkConnect.execute();
+                    if (result != null)
+                        encryptdata = result.replace("\\/", "/");
+                    String newurlparams = "data=" + URLEncoder.encode(encryptdata, "UTF-8");
                     networkConnect = new NetworkConnect(url, newurlparams);
                     jsonparse_campaign(networkConnect.execute());
                 }
                 if (flag == 1) {
                     ProgressDialog progress = new ProgressDialog(getContext());
-                    db = new DatabaseHelper(getContext());
-                    db.update_edit_followup(new Followup(firstname, lastname, mobile, age, gender, email, state, district, tehsil, village, model,
-                            purch_date, exchange, finance, existvehicle, remark, enquiry_id, follow_date, "0"));
+                    if (page_flag == 0) {
+                        db = new DatabaseHelper(getContext());
+                        db.update_edit_followup(new Followup(firstname, lastname, mobile, age, gender, email, state, district, tehsil, village, model,
+                                purch_date, exchange, finance, existvehicle, remark, enquiry_id, follow_date, "0"));
 
-                    new NetworkConnect1(url, urlParameters, progress, "Enquiry has been successfully submitted.", getContext(), 1).execute();
+                        new NetworkConnect1(url, urlParameters, progress, "Enquiry has been successfully submitted.", getContext(), 1).execute();
+                    } else {
+                        new NetworkConnect1(url, urlParameters, progress, "Enquiry has been successfully submitted.", getContext(), 5).execute();
+
+                    }
                 }
                 if (flag == 2) {
-                    networkConnect = new NetworkConnect(url, newurlparams);
+                   // networkConnect = new NetworkConnect(url, newurlparams);
                     //  jsonparse_model(networkConnect.execute());
                 }
 
@@ -476,7 +481,7 @@ public class EditEnquiryFragment extends Fragment implements View.OnClickListene
         listView.requestLayout();
     }
 
-    public void jsonparse_model(String result) {
+   /* public void jsonparse_model(String result) {
         try {
             String id = "";
             JSONObject jsono = new JSONObject(result);
@@ -510,7 +515,7 @@ public class EditEnquiryFragment extends Fragment implements View.OnClickListene
             System.out.println(Toast.makeText(getContext(), "Check your Connection !!", Toast.LENGTH_SHORT));
 
         }
-    }
+    }*/
 
     //datepicker
     public String showdatepicker(final Button button, final String key) {
@@ -537,13 +542,11 @@ public class EditEnquiryFragment extends Fragment implements View.OnClickListene
                                           int monthOfYear, int dayOfMonth) {
 
                         date = dayOfMonth + "-" + (monthOfYear + 1) + "-" + year;
-                        datechange(date);
+                        follow_date = Dateformatter.dateformat2(date);
                         mYear = year;
                         mDay = dayOfMonth;
                         mMonth = monthOfYear;
                         button.setText(follow_date);
-
-
                     }
                 }, mYear, mMonth, mDay);
         datePickerDialog.show();
@@ -551,18 +554,18 @@ public class EditEnquiryFragment extends Fragment implements View.OnClickListene
 
     }
 
-    public void datechange(String olddate) {
-        SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
-        Date newDate;
-        try {
-            newDate = format.parse(olddate);
-            format = new SimpleDateFormat("dd-MMM-yyyy");
-            follow_date = format.format(newDate);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-    }
-
+    /*  public void datechange(String olddate) {
+          SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
+          Date newDate;
+          try {
+              newDate = format.parse(olddate);
+              format = new SimpleDateFormat("dd-MMM-yyyy");
+              follow_date = format.format(newDate);
+          } catch (ParseException e) {
+              e.printStackTrace();
+          }
+      }
+  */
     public void reset() {
         ArrayList<String> arr_reset = new ArrayList<String>();
         arr_reset.clear();
@@ -590,20 +593,29 @@ public class EditEnquiryFragment extends Fragment implements View.OnClickListene
     public void edit_enquiry() {
         try {
             remark = remarks_et.getText().toString();
-            follow_date = nextfollowdate_btn.getText().toString();
-            purch_date = purchdate_btn.getText().toString();
+            Date expt_purc_date = new SimpleDateFormat("dd-MMM-yyyy", Locale.ENGLISH)
+                    .parse(purchdate_btn.getText().toString());
+            Log.e("e:", expt_purc_date.toString());
+            Date followup_date = new SimpleDateFormat("dd-MMM-yyyy", Locale.ENGLISH)
+                    .parse(nextfollowdate_btn.getText().toString());
+            Log.e("f:", followup_date.toString());
 
-            if (model.equals("") || flag == 0 || existvehicle.equals(""))
-                Toast.makeText(getContext(), "Please fill all the details !!" + model + flag + existvehicle, Toast.LENGTH_LONG).show();
+            String date = new SimpleDateFormat("dd-MMM-yyyy").format(new Date());
+            Date current_date = new SimpleDateFormat("dd-MMM-yyyy", Locale.ENGLISH)
+                    .parse(date);
+            Log.e("c:", current_date.toString());
+
+            follow_date = Dateformatter.dateformat1(nextfollowdate_btn.getText().toString());
+            purch_date = Dateformatter.dateformat1(purchdate_btn.getText().toString());
+
+            fetch_data2();
+            if (model.equals("") || flag == 0 || existvehicle.equals("--select--"))
+                Toast.makeText(getContext(), "Please fill all the details !!", Toast.LENGTH_LONG).show();
+            else if (followup_date.before(current_date) && page_flag != 0)
+                Toast.makeText(getContext(), "Please check the followup date!!", Toast.LENGTH_LONG).show();
+            else if (expt_purc_date.before(followup_date))
+                Toast.makeText(getContext(), "Please check the purchase date!!", Toast.LENGTH_LONG).show();
             else {
-               /* String json = "{\"key\":\"" + key + "\",\"mobile\":\"" + mobile + "\",\"email\":\"" + email + "\",\"fname\":\"" + firstname + "\",\"lname\":\"" + lastname +
-                        "\",\"age\":\"" + age + "\",\"gender\":\"" + gender + "\",\"address1\":\"" + address1 + "\",\"address2\":\"" + address2 + "\",\"pincode\":\"" + pincode +
-                        "\",\"exist_enq_id\":\"" + enquiry_id + "\",\"user_id\":\"" + user_id + "\",\"state\":\"" + state + "\",\"district\":\"" + district +
-                        "\",\"tehsil\":\"" + tehsil + "\",\"village\":\"" + village + "\",\"exchange_req\":\"" + exchange + "\",\"finance_req\":\"" + finance +
-                        "\",\"test_ride\":\"" + test + "\",\"remarks\":\"" + remark + "\",\"existVeh\":\"" + existvehicle +
-                        "\",\"existMake\":\"" + existmake + "\",\"existModel\":\"" + existmodel + "\",\"model_interested\":\"" + model + "\",\"fol_date\":\"" + follow_date + "\",\"exp_purchase_date\":\"" + purch_date + "\",\"dealer_code\":\"" + dealer_code +
-                        "\"";*/
-                fetch_data2();
                 JSONObject jsonparams = new JSONObject();
 
                 jsonparams.put("key", key);
@@ -638,17 +650,11 @@ public class EditEnquiryFragment extends Fragment implements View.OnClickListene
                 //  String sel_campaign = "";
                 for (int i = 0; i < chk_campaignid.size(); i++) {
                     jsonparams.put("campid" + (i + 1), chk_campaignid.get(i));
-                    //  sel_campaign += ",\"campid" + (i + 1) + ":\"" + chk_campaignid.get(i) + "\"";
                 }
+                String json = jsonparams.toString().replace("\\/", "/");
 
-                // sel_campaign += "}";
-
-                // data = json + sel_campaign;
-
-                //   Toast.makeText(getContext(), data, Toast.LENGTH_LONG).show();
-
-                Log.e("edit_enquiry", jsonparams.toString());
-                encryptuser1(URLConstants.ADD_ENQUIRY, jsonparams.toString(), 1);
+                Log.e("edit_enquiry", json);
+                encryptuser1(URLConstants.ADD_ENQUIRY, json, 1);
             }
 
         } catch (Exception e) {
@@ -734,7 +740,12 @@ public class EditEnquiryFragment extends Fragment implements View.OnClickListene
         }
         if (exchange.equals("Y") || finance.equals("Y"))
             flag++;
-
+        if (purch_date.equalsIgnoreCase("null"))
+            purch_date = "";
+        if (remark.equalsIgnoreCase("null"))
+            remark = "";
+        if (follow_date.equalsIgnoreCase("null"))
+            follow_date = "";
 
     }
 
@@ -788,6 +799,14 @@ public class EditEnquiryFragment extends Fragment implements View.OnClickListene
         if (mypref.contains("pincode")) {
             pincode = mypref.getString("pincode", "");
         }
+        if (mypref.contains("key")) {
+            key = mypref.getString("key", "");
+        }
+        if (mypref.contains("page_flag")) {
+            page_flag = mypref.getInt("page_flag", 0);
+        }
+        if (email.equalsIgnoreCase("null"))
+            email = "";
 
        /* if (mypref.contains("model")) {
             model = mypref.getString("model", "");
@@ -816,23 +835,16 @@ public class EditEnquiryFragment extends Fragment implements View.OnClickListene
         if (exchange.equals("Y") || finance.equals("Y"))
             flag = 1;
 */
-
     }
 
     public void fetch_pref() {
-        user_id= PreferenceUtil.get_UserId(getContext());
-        dealer_code=PreferenceUtil.get_DealerCode(getContext());
-       /* sharedPreferences = getActivity().getSharedPreferences("hero", 0);
-        if (sharedPreferences.contains("username"))
-            user_id = sharedPreferences.getString("username", null);
-        if (sharedPreferences.contains("dealercode"))
-            dealer_code = sharedPreferences.getString("dealercode", null);*/
+        user_id = PreferenceUtil.get_UserId(getContext());
+        dealer_code = PreferenceUtil.get_DealerCode(getContext());
     }
 
     public void fetch_make_model() {
         try {
             String id = "";
-
             db = new DatabaseHelper(getContext());
             arr_makelist.clear();
             arr_makelist.add(new Bikemake("", "--select--"));

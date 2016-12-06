@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -33,6 +34,7 @@ import com.herocorp.infra.utils.NetConnections;
 import com.herocorp.ui.activities.BaseDrawerActivity;
 import com.herocorp.ui.activities.DSEapp.ConnectService.NetworkConnect;
 import com.herocorp.ui.activities.DSEapp.ConnectService.NetworkConnect1;
+import com.herocorp.ui.activities.DSEapp.Utilities.Dateformatter;
 import com.herocorp.ui.activities.DSEapp.adapter.Campaignadapter;
 import com.herocorp.ui.activities.DSEapp.db.DatabaseHelper;
 import com.herocorp.ui.activities.DSEapp.models.Bike_model;
@@ -56,6 +58,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
+
+import static android.content.Context.INPUT_METHOD_SERVICE;
 
 /**
  * Created by rsawh on 14-Sep-16.
@@ -155,7 +160,7 @@ public class AddenquiryFragment extends Fragment implements View.OnClickListener
         layout_existmodel = (LinearLayout) rootView.findViewById(R.id.layout_existmodel);
 
 
-        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MMM-yyyy");
         Calendar c = Calendar.getInstance();
         c.add(Calendar.DATE, 3);  // number of days to add
         String dt1 = sdf.format(c.getTime());
@@ -366,6 +371,8 @@ public class AddenquiryFragment extends Fragment implements View.OnClickListener
         } else if (i == R.id.exptpurchasedate_button) {
             showdatepicker(purchdate_btn);
         } else if (i == R.id.imageView_submit_addenquiry) {
+            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
             addenquiry();
         }
     }
@@ -374,7 +381,7 @@ public class AddenquiryFragment extends Fragment implements View.OnClickListener
         // Get Current Date
         Date currentdate = new Date();
         SimpleDateFormat newFormatDate = new SimpleDateFormat(
-                "MM/dd/yyyy");
+                "dd-MMM-yyyy");
         try {
             currentdate = newFormatDate.parse(button.getText().toString());
         } catch (ParseException e) {
@@ -395,14 +402,12 @@ public class AddenquiryFragment extends Fragment implements View.OnClickListener
                     public void onDateSet(DatePicker view, int year,
                                           int monthOfYear, int dayOfMonth) {
 
-                        date = (monthOfYear + 1) + "/" + (dayOfMonth) + "/" + year;
-                        datechange(date);
+                        date = (dayOfMonth) + "-" + (monthOfYear + 1) + "-" + year;
+                        follow_date = Dateformatter.dateformat2(date);
                         mYear = year;
                         mDay = dayOfMonth;
                         mMonth = monthOfYear;
                         button.setText(follow_date);
-
-
                     }
                 }, mYear, mMonth, mDay);
         datePickerDialog.show();
@@ -410,28 +415,28 @@ public class AddenquiryFragment extends Fragment implements View.OnClickListener
 
     }
 
-    public void datechange(String olddate) {
-        SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");
-        Date newDate;
-        try {
-            newDate = format.parse(olddate);
-            format = new SimpleDateFormat("MM/dd/yyyy");
-            follow_date = format.format(newDate);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-    }
-
+    /*  public void datechange(String olddate) {
+          SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");
+          Date newDate;
+          try {
+              newDate = format.parse(olddate);
+              format = new SimpleDateFormat("MM/dd/yyyy");
+              follow_date = format.format(newDate);
+          } catch (ParseException e) {
+              e.printStackTrace();
+          }
+      }
+  */
     public void encryptuser1(String url, String data, int flag) {
         if (NetConnections.isConnected(getContext())) {
             try {
                 String urlParameters = "data=" + URLEncoder.encode(data, "UTF-8");
-                networkConnect = new NetworkConnect(URLConstants.ENCRYPT, urlParameters);
-                String result = networkConnect.execute();
-                if (result != null)
-                    encryptdata = result.replace("\\/", "/");
-                String newurlparams = "data=" + URLEncoder.encode(encryptdata, "UTF-8");
                 if (flag == 0) {
+                    networkConnect = new NetworkConnect(URLConstants.ENCRYPT, urlParameters);
+                    String result = networkConnect.execute();
+                    if (result != null)
+                        encryptdata = result.replace("\\/", "/");
+                    String newurlparams = "data=" + URLEncoder.encode(encryptdata, "UTF-8");
                     networkConnect = new NetworkConnect(url, newurlparams);
                     jsonparse_campaign(networkConnect.execute());
                 }
@@ -439,11 +444,6 @@ public class AddenquiryFragment extends Fragment implements View.OnClickListener
                     ProgressDialog progress = new ProgressDialog(getContext());
                     new NetworkConnect1(url, urlParameters, progress, "Enquiry has been successfully submitted.", getContext(), 2).execute();
                 }
-                if (flag == 2) {
-                    networkConnect = new NetworkConnect(url, newurlparams);
-                    //jsonparse_model(networkConnect.execute());
-                }
-
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             } catch (Exception e) {
@@ -572,23 +572,30 @@ public class AddenquiryFragment extends Fragment implements View.OnClickListener
     public void addenquiry() {
         try {
             remark = remarks_et.getText().toString();
-            follow_date = nextfollowdate_btn.getText().toString();
-            purch_date = purchdate_btn.getText().toString();
+            Date expt_purc_date = new SimpleDateFormat("dd-MMM-yyyy", Locale.ENGLISH)
+                    .parse(purchdate_btn.getText().toString());
+            Log.e("e:", expt_purc_date.toString());
+            Date followup_date = new SimpleDateFormat("dd-MMM-yyyy", Locale.ENGLISH)
+                    .parse(nextfollowdate_btn.getText().toString());
+            Log.e("f:", followup_date.toString());
+
+            String date = new SimpleDateFormat("dd-MMM-yyyy").format(new Date());
+            Date current_date = new SimpleDateFormat("dd-MMM-yyyy", Locale.ENGLISH)
+                    .parse(date);
+            Log.e("c:", current_date.toString());
+
+
+            follow_date = Dateformatter.dateformat1(nextfollowdate_btn.getText().toString());
+            purch_date = Dateformatter.dateformat1(purchdate_btn.getText().toString());
             key = random_key(7);
 
             if (model.equals("") || flag == 0 || existvehicle.equals("--select--"))
-                Toast.makeText(getContext(), "Please fill all the details !!" + model + flag + existvehicle, Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(), "Please fill all the details !!", Toast.LENGTH_LONG).show();
+            else if (followup_date.before(current_date))
+                Toast.makeText(getContext(), "Please check the followup date!!", Toast.LENGTH_LONG).show();
+            else if (expt_purc_date.before(followup_date))
+                Toast.makeText(getContext(), "Please check the purchase date!!", Toast.LENGTH_LONG).show();
             else {
-              /*  String json = "{\"mobile\":\"" + mobile + "\",\"email\":\"" + email + "\",\"fname\":\"" + firstname + "\",\"lname\":\"" + lastname +
-                        "\",\"age\":\"" + age + "\",\"gender\":\"" + gender + "\",\"address1\":\"" + address1 + "\",\"address2\":\"" + address2 +
-                        "\",\"pincode\":\"" + pincode + "\",\"fol_date\":\"" + follow_date + "\",\"exp_purchase_date\":\"" + purch_date +
-                        "\",\"model_interested\":\"" + model + "\",\"exchange_req\":\"" + exchange + "\",\"finance_req\":\"" + finance +
-                        "\",\"test_ride\":\"" + test + "\",\"remarks\":\"" + remark + "\",\"existVeh\":\"" + existvehicle +
-                        "\",\"user_id\":\"" + username + "\",\"key\":\"" + key + "\",\"state\":\"" + state + "\",\"district\":\"" + district +
-                        "\",\"tehsil\":\"" + tehsil + "\",\"village\":\"" + village + "\",\"existMake\":\"" + existmake + "\",\"existModel\":\"" + existmodel + "\",\"dealer_code\":\"" + dealercode +
-                        "\"";
-
-*/
                 JSONObject jsonparams = new JSONObject();
                 jsonparams.put("mobile", mobile);
                 jsonparams.put("email", email);
@@ -619,24 +626,22 @@ public class AddenquiryFragment extends Fragment implements View.OnClickListener
                 jsonparams.put("existModel", existmodel);
                 jsonparams.put("dealer_code", dealer_code);
 
-                //  String sel_campaign = "";
                 for (int i = 0; i < chk_campaignid.size(); i++) {
                     jsonparams.put("campid" + (i + 1), chk_campaignid.get(i));
-                    //  sel_campaign += ",\"campid" + (i + 1) + ":\"" + chk_campaignid.get(i) + "\"";
                 }
-
-                //  sel_campaign += "}";
-
-                //  data = json + sel_campaign;
 
                 edit.putString("key", key);
                 edit.commit();
-                Log.e("add_enquiry", jsonparams.toString());
-                // Toast.makeText(getContext(), data, Toast.LENGTH_LONG).show();
-                encryptuser1(URLConstants.ADD_ENQUIRY, jsonparams.toString(), 1);
+                String json = jsonparams.toString().replace("\\/", "/");
+                Log.e("add_enquiry", json);
+                encryptuser1(URLConstants.ADD_ENQUIRY, json, 1);
             }
 
-        } catch (Exception e) {
+        } catch (
+                Exception e
+                )
+
+        {
             e.printStackTrace();
         }
 
@@ -670,8 +675,8 @@ public class AddenquiryFragment extends Fragment implements View.OnClickListener
     }
 
     public void fetch_pref() {
-        user_id= PreferenceUtil.get_UserId(getContext());
-        dealer_code=PreferenceUtil.get_DealerCode(getContext());
+        user_id = PreferenceUtil.get_UserId(getContext());
+        dealer_code = PreferenceUtil.get_DealerCode(getContext());
        /* sharedPreferences = getActivity().getSharedPreferences("hero", 0);
         if (sharedPreferences.contains("username"))
             user_id = sharedPreferences.getString("username", null);

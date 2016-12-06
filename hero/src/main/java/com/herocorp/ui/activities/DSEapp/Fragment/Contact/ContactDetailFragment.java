@@ -21,6 +21,7 @@ import com.herocorp.R;
 import com.herocorp.ui.activities.BaseDrawerActivity;
 import com.herocorp.ui.activities.DSEapp.Fragment.Followup.CloseFollowupFragment;
 import com.herocorp.ui.activities.DSEapp.Fragment.Enquiry.EditFollowupFragment;
+import com.herocorp.ui.activities.DSEapp.Fragment.Followup.FollowupDetailFragment;
 import com.herocorp.ui.activities.DSEapp.Fragment.Followup.FollowupFragment;
 import com.herocorp.ui.activities.DSEapp.adapter.VehicleDetailadapter;
 import com.herocorp.ui.activities.DSEapp.db.DatabaseHelper;
@@ -112,6 +113,8 @@ public class ContactDetailFragment extends Fragment implements View.OnClickListe
         addenquiry = (LinearLayout) rootView.findViewById(R.id.addenquiry_layout);
         viewenquiry = (LinearLayout) rootView.findViewById(R.id.viewenquiry_layout);
 
+        LinearLayout layout_enquiry = (LinearLayout) rootView.findViewById(R.id.layout_enquiry);
+
 
         name = (TextView) rootView.findViewById(R.id.cust_name_textview);
         ages = (TextView) rootView.findViewById(R.id.agesex_textview);
@@ -170,6 +173,39 @@ public class ContactDetailFragment extends Fragment implements View.OnClickListe
 
         );
 
+        layout_enquiry.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                bundle.putString("fname", firstname);
+                bundle.putString("lname", lastname);
+                bundle.putString("mobile", contact);
+                bundle.putString("age", age);
+                bundle.putString("sex", sex);
+                bundle.putString("email", email_addr);
+                bundle.putString("state", state);
+                bundle.putString("district", district);
+                bundle.putString("tehsil", tehsil);
+                bundle.putString("city", city);
+                bundle.putString("model", x_model_interested);
+                bundle.putString("id", cust_id);
+                bundle.putString("pur_date", expctd_dt_purchase);
+                bundle.putString("exchange", x_exchange_required);
+                bundle.putString("finance", x_finance_required);
+                bundle.putString("vtype", existing_vehicle);
+                bundle.putString("comment", followup_comments);
+                bundle.putString("followdate", follow_date);
+                bundle.putString("enquiryid", enquiry_id);
+                //  bundle.putString("user_id", encryptuser);
+                bundle.putString("user", user);
+
+                f = new FollowupDetailFragment();
+                f.setArguments(bundle);
+                transaction(f);
+            }
+        });
+
+
         addenquiry.setOnClickListener(this);
         closeenquiry.setOnClickListener(this);
         followupenquiry.setOnClickListener(this);
@@ -204,7 +240,7 @@ public class ContactDetailFragment extends Fragment implements View.OnClickListe
             //  ft.addToBackStack(null);
             ft.replace(R.id.content_contactdetail, f);
             ft.commit();
-           //transaction(f);
+            //transaction(f);
         } else if (i == R.id.button_followup) {
             f = new FollowupFragment();
             f.setArguments(bundle);
@@ -265,7 +301,7 @@ public class ContactDetailFragment extends Fragment implements View.OnClickListe
         if (!(x_con_seq_no2 == null))
             cust_id = x_con_seq_no2;
         name.setText(firstname + " " + lastname);
-        ages.setText(age + " / " + sex);
+        ages.setText(age + " yrs. / " + sex);
         states.setText(state);
         districts.setText(district);
         tehsils.setText(tehsil);
@@ -320,7 +356,6 @@ public class ContactDetailFragment extends Fragment implements View.OnClickListe
         make_cd = bundle.getString("make_cd");
         model_cd1 = bundle.getString("model_cd1");
         dealer_bu_id = bundle.getString("dealer_bu_id");
-
         user = bundle.getString("user");
         encryptuser = bundle.getString("user_id");
     }
@@ -369,7 +404,7 @@ public class ContactDetailFragment extends Fragment implements View.OnClickListe
             follow_date = record.getFollow_date();
             enquiry_entry_date = record.getEnquiry_entry_date();
             pendingfollowup_check = record.getFollowup_status();
-            Log.e("get:", enquiry_id + follow_date);
+            Log.e("get:", x_model_interested + expctd_dt_purchase + enquiry_id + follow_date + enquiry_entry_date);
         }
 
         user = bundle.getString("user");
@@ -449,6 +484,7 @@ public class ContactDetailFragment extends Fragment implements View.OnClickListe
     }
 
     public void save_preference() {
+        edit.clear().commit();
         edit.putString("firstname", firstname);
         edit.putString("lastname", lastname);
         edit.putString("mobile", contact);
@@ -464,6 +500,7 @@ public class ContactDetailFragment extends Fragment implements View.OnClickListe
         edit.putString("pincode", "");
         edit.putString("con_seq_no", enquiry_id);
         edit.putString("key", random_key(7));
+        edit.putInt("page_flag", 1);
         edit.commit();
     }
 

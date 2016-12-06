@@ -32,6 +32,7 @@ import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 
 /**
  * Created by rsawh on 03-Oct-16.
@@ -42,14 +43,14 @@ public class TestRideFeedbackFragment extends Fragment implements View.OnClickLi
     RadioGroup radiogroup1, radiogroup2, radiogroup3, radiogroup4, radiogroup5, radiogroup6;
     RadioButton radiobutton1, radiobutton2, radiobutton3, radiobutton4, radiobutton5, radiobutton6;
     EditText prefer_et;
-    String preference;
-    String username = "ROBINK11610", enquiry_id = "", dealer_code = "", dealercode = "11610", key = "", encryptdata;
+    String enquiry_id = "", dealer_code = "", key = "";
     String ans1, ans2, ans3, ans4, ans5, ans6, ans7;
     NetworkConnect networkConnect;
 
     SharedPreferences mypref;
     private SharedPreferences sharedPreferences;
     String user_id;
+    LinearLayout layout_vehiclerating, layout_ridingperform, layout_vehiclefeatures, layout_buyplan, layout_vehiclerefer, layout_comments, layout_overallrating;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
             savedInstanceState) {
@@ -69,10 +70,9 @@ public class TestRideFeedbackFragment extends Fragment implements View.OnClickLi
         if (mypref.contains("enquiry_id")) {
             enquiry_id = mypref.getString("enquiry_id", "");
         }
-        if (mypref.contains("dealerid")) {
+       /* if (mypref.contains("dealerid")) {
             dealer_code = mypref.getString("dealerid", "");
-        }
-
+        }*/
 
         customViewParams = new CustomViewParams(getActivity());
         CustomTypeFace customTypeFace = new CustomTypeFace(getActivity());
@@ -95,6 +95,13 @@ public class TestRideFeedbackFragment extends Fragment implements View.OnClickLi
         LinearLayout topLayout1 = (LinearLayout) rootView.findViewById(R.id.top_layout1);
         customViewParams.setMarginAndPadding(topLayout1, new int[]{100, 50, 100, 60}, new int[]{0, 0, 0, 0}, topLayout1.getParent());
 
+        layout_vehiclerating = (LinearLayout) rootView.findViewById(R.id.layout_vehiclerating);
+        layout_ridingperform = (LinearLayout) rootView.findViewById(R.id.layout_ridingperform);
+        layout_vehiclefeatures = (LinearLayout) rootView.findViewById(R.id.layout_vehiclefeatures);
+        layout_buyplan = (LinearLayout) rootView.findViewById(R.id.layout_buyplan);
+        layout_vehiclerefer = (LinearLayout) rootView.findViewById(R.id.layout_vehiclerefer);
+        layout_comments = (LinearLayout) rootView.findViewById(R.id.layout_comments);
+        layout_overallrating = (LinearLayout) rootView.findViewById(R.id.layout_overallrating);
 
         ImageView imageView_submit = (ImageView) rootView.findViewById(R.id.imageview_submit_feedback);
 
@@ -107,7 +114,9 @@ public class TestRideFeedbackFragment extends Fragment implements View.OnClickLi
 
         prefer_et = (EditText) rootView.findViewById(R.id.prefer_edittext);
 
+
         menu.setOnClickListener(this);
+        setlayout();
         fetch_pref();
         imageView_submit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -165,45 +174,11 @@ public class TestRideFeedbackFragment extends Fragment implements View.OnClickLi
                         selectedindex6 = radiogroup6.getCheckedRadioButtonId();
                         radiobutton6 = (RadioButton) rootView.findViewById(selectedindex6);
                         ans7 = radiobutton6.getText().toString();
-
                     }
 
-                    ans6 = prefer_et.getText().toString();
+                    if (layout_comments.getVisibility() == View.VISIBLE)
+                        ans6 = prefer_et.getText().toString();
 
-                  /*  String json = "{\"user_id\":\"" + username +
-                            "\",\"enq_id\":\"" + enquiry_id +
-                            "\",\"dealer_id\":\"" + dealer_id +
-                            "\",\"key\":\"" + key +
-                            "\",\"ans\":\"{\"1\":\"" + ans1 +
-                            "\",\"2\":\"" + ans2 +
-                            "\",\"3\":\"" + ans3 +
-                            "\",\"4\":\"" + ans4 +
-                            "\",\"5\":\"" + ans5 +
-                            "\",\"6\":\"" + ans6 +
-                            "\",\"7\":\"" + ans7 +
-                            "\"}\"}";
-*/
-
-                   /* String answers = "{\"1\":\"" + ans1 +
-                            "\",\"2\":\"" + ans2 +
-                            "\",\"3\":\"" + ans3 +
-                            "\",\"4\":\"" + ans4 +
-                            "\",\"5\":\"" + ans5 +
-                            "\",\"6\":\"" + ans6 +
-                            "\",\"7\":\"" + ans7 +
-                            "\"}";*/
-                    /*String json = "{\"user_id\":\"" + username +
-                            "\",\"enq_id\":\"" + enquiry_id +
-                            "\",\"dealer_id\":\"" + dealer_code +
-                            "\",\"key\":\"" + key +
-                            "\",\"ans\":\"\"{\"1\":\"" + ans1 +
-                            "\",\"2\":\"" + ans2 +
-                            "\",\"3\":\"" + ans3 +
-                            "\",\"4\":\"" + ans4 +
-                            "\",\"5\":\"" + ans5 +
-                            "\",\"6\":\"" + ans6 +
-                            "\",\"7\":\"" + ans7 +
-                            "\"}\"\"}";*/
 
                     JSONObject jsonparams = new JSONObject();
                     jsonparams.put("user_id", user_id);
@@ -217,8 +192,11 @@ public class TestRideFeedbackFragment extends Fragment implements View.OnClickLi
                     jsonparams1.put("3", ans3);
                     jsonparams1.put("4", ans4);
                     jsonparams1.put("5", ans5);
-                    jsonparams1.put("6", ans6);
-                    jsonparams1.put("7", ans7);
+                    if (layout_comments.getVisibility() == View.VISIBLE) {
+                        jsonparams1.put("6", ans6);
+                        jsonparams1.put("7", ans7);
+                    } else
+                        jsonparams1.put("6", ans7);
 
                     jsonparams.put("ans", jsonparams1.toString());
                     Log.e("testride_data", jsonparams.toString());
@@ -256,9 +234,9 @@ public class TestRideFeedbackFragment extends Fragment implements View.OnClickLi
                     encryptdata = result.replace("\\/", "/");
 */
                 //clearing key
-                if (mypref.contains("key")) {
+               /* if (mypref.contains("key")) {
                     mypref.edit().remove("key").commit();
-                }
+                }*/
               /*  if (mypref.contains("enquiry_id")) {
                     mypref.edit().remove("enquiry_id").commit();
                 }
@@ -278,12 +256,44 @@ public class TestRideFeedbackFragment extends Fragment implements View.OnClickLi
     }
 
     public void fetch_pref() {
-        user_id= PreferenceUtil.get_UserId(getContext());
-        dealer_code=PreferenceUtil.get_DealerCode(getContext());
-        /*sharedPreferences = getActivity().getSharedPreferences("hero", 0);
-        if (sharedPreferences.contains("username"))
-            user_id = sharedPreferences.getString("username", null);
-        if (sharedPreferences.contains("dealercode"))
-            dealer_code = sharedPreferences.getString("dealercode", null);*/
+        user_id = PreferenceUtil.get_UserId(getContext());
+        dealer_code = PreferenceUtil.get_DealerCode(getContext());
+
+    }
+
+    public void setlayout() {
+        Bundle bundle = this.getArguments();
+        if (bundle.containsKey("quesid")) {
+            ArrayList<String> quesid = bundle.getStringArrayList("quesid");
+
+            if (quesid.contains("How would you rate the vehicle in terms of styling?"))
+                layout_vehiclerating.setVisibility(View.VISIBLE);
+            else
+                layout_vehiclerating.setVisibility(View.GONE);
+            if (quesid.contains("What do you think about the riding performance of the Vehicle?"))
+                layout_ridingperform.setVisibility(View.VISIBLE);
+            else
+                layout_ridingperform.setVisibility(View.GONE);
+            if (quesid.contains("Are you happy with the features provided in the Vehicle?"))
+                layout_vehiclefeatures.setVisibility(View.VISIBLE);
+            else
+                layout_vehiclefeatures.setVisibility(View.GONE);
+            if (quesid.contains("When are you planning to buy the Vehicle?"))
+                layout_buyplan.setVisibility(View.VISIBLE);
+            else
+                layout_buyplan.setVisibility(View.GONE);
+            if (quesid.contains("Will you refer this Vehicle to your relatives and friends?"))
+                layout_vehiclerefer.setVisibility(View.VISIBLE);
+            else
+                layout_vehiclerefer.setVisibility(View.GONE);
+            if (quesid.contains("Do you have any other comments that you would like to share with us?"))
+                layout_comments.setVisibility(View.VISIBLE);
+            else
+                layout_comments.setVisibility(View.GONE);
+            if (quesid.contains("OVERALL RATING"))
+                layout_overallrating.setVisibility(View.VISIBLE);
+            else
+                layout_overallrating.setVisibility(View.GONE);
+        }
     }
 }

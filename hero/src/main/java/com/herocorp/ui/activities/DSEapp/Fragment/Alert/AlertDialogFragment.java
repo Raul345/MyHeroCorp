@@ -28,7 +28,7 @@ import com.herocorp.ui.activities.DSEapp.models.LocalEnquiry;
  */
 public class AlertDialogFragment extends DialogFragment {
     Button button_ok;
-    TextView textview_alert;
+    TextView textview_alert, textview_header;
     String contact_no, reg_no;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -36,6 +36,7 @@ public class AlertDialogFragment extends DialogFragment {
         View view = inflater.inflate(R.layout.dse_alert_fragment, container, false);
         button_ok = (Button) view.findViewById(R.id.button_ok);
         textview_alert = (TextView) view.findViewById(R.id.textview_alert);
+        textview_header = (TextView) view.findViewById(R.id.textview_header);
         getDialog().getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         Bundle bundle = this.getArguments();
         String msg = bundle.getString("msg");
@@ -55,9 +56,8 @@ public class AlertDialogFragment extends DialogFragment {
                 @Override
                 public void onClick(View v) {
                     fetch_pref();
-
-                    DatabaseHelper db = new DatabaseHelper(getContext());
-                    db.add_enquiry(new LocalEnquiry(contact_no, reg_no));
+                    /*DatabaseHelper db = new DatabaseHelper(getContext());
+                    db.add_enquiry(new LocalEnquiry(contact_no, reg_no));*/
                     clear_pref();
 
                     String message = "Do you want to give TestRide Feedback?";
@@ -97,10 +97,36 @@ public class AlertDialogFragment extends DialogFragment {
 
                 }
             });
+        } else if (flag == 5) {
+            button_ok.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    fetch_pref();
+
+                    /*DatabaseHelper db = new DatabaseHelper(getContext());
+                    db.add_enquiry(new LocalEnquiry(contact_no, reg_no));*/
+                    clear_pref();
+
+                    String message = "Do you want to give TestRide Feedback?";
+                    Bundle bundle = new Bundle();
+                    bundle.putString("header", "");
+                    bundle.putString("msg", message);
+                    bundle.putInt("flag", 4);
+                    FragmentManager fm = ((FragmentActivity) getContext()).getSupportFragmentManager();
+                    ContactAlertFragment dialogFragment = new ContactAlertFragment();
+                    dialogFragment.setArguments(bundle);
+                    dialogFragment.setCancelable(false);
+                    dialogFragment.show(fm, "Sample Fragment");
+                    dismiss();
+
+
+                }
+            });
         } else {
             button_ok.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    textview_header.setVisibility(View.GONE);
                     // getActivity().onBackPressed();
                     dismiss();
                 }

@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -42,6 +43,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+
+import static android.content.Context.INPUT_METHOD_SERVICE;
 
 /**
  * Created by rsawh on 24-Sep-16.
@@ -278,6 +281,9 @@ public class CloseFollowupFragment extends Fragment implements View.OnClickListe
         } else if (i == R.id.imageView_closefollowup) {
             getActivity().onBackPressed();
         } else if (i == R.id.imageView_submit_closefollowup) {
+            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
+
             String remarks = remark.getText().toString();
             ProgressDialog progress = new ProgressDialog(getContext());
 

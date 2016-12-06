@@ -55,6 +55,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
+import static android.content.Context.INPUT_METHOD_SERVICE;
+
 /**
  * Created by rsawh on 10-Sep-16.
  */
@@ -104,8 +106,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             savedInstanceState) {
 
         rootView = inflater.inflate(R.layout.dse_home_fragment, container, false);
-        getActivity().overridePendingTransition(R.anim.trans_left_in, R.anim.trans_left_out);
-
+        getActivity().setRequestedOrientation(
+                ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
 
         try {
             initView(rootView);
@@ -243,14 +245,20 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             check = 1;
             transaction(new TodayFollowupFragment());
         } else if (i == R.id.imageView_submit_home) {
-            if (!(phoneno_et.getText().toString().equals("") && registration_et.getText().toString().equals(""))) {
-                if (NetConnections.isConnected(getContext())) {
-                    //new Encrypt_data().execute();
-                    transaction(new ContactFragment());
+            try {
+                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
+                if (!(phoneno_et.getText().toString().equals("") && registration_et.getText().toString().equals(""))) {
+                    if (NetConnections.isConnected(getContext())) {
+
+                        //new Encrypt_data().execute();
+                        transaction(new ContactFragment());
+                    } else
+                        Toast.makeText(getActivity(), "Check your Connection !!", Toast.LENGTH_SHORT).show();
                 } else
-                    Toast.makeText(getActivity(), "Check your Connection !!", Toast.LENGTH_SHORT).show();
-            } else
-                Toast.makeText(getActivity(), "Phone/RegNo missing!!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "Phone/RegNo missing!!", Toast.LENGTH_SHORT).show();
+            } catch (Exception e) {
+            }
         }
     }
 
@@ -330,32 +338,34 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         JSONArray jarray = null;
         try {
             jsono = new JSONObject(result);
-            jarray = jsono.getJSONArray("follow_up");
-            for (int i = 0; i < jarray.length(); i++) {
-                JSONObject object = jarray.getJSONObject(i);
-                first_name = object.getString("FST_NAME");
-                last_name = object.getString("LAST_NAME");
-                cell_ph_no = object.getString("CELL_PH_NUM");
-                age = object.getString("AGE");
-                gender = object.getString("GENDER");
-                email_addr = object.getString("EMAIL_ADDR");
-                state = object.getString("STATE");
-                district = object.getString("DISTRICT");
-                tehsil = object.getString("TEHSIL");
-                city = object.getString("CITY");
-                x_con_seq_no = object.getString("X_CON_SEQ_NUM");
-                x_model_interested = object.getString("X_MODEL_INTERESTED");
-                expected_date_purchase = object.getString("EXPCTD_DT_PURCHASE");
-                x_exchange_required = object.getString("X_EXCHANGE_REQUIRED");
-                x_finance_required = object.getString("X_FINANCE_REQUIRED");
-                exist_vehicle = object.getString("EXISTING_VEHICLE");
-                followup_comments = object.getString("FOLLOWUP_COMMENTS");
-                enquiry_id = object.getString("ENQUIRY_ID");
-                follow_date = object.getString("FOLLOW_DATE");
-                enquiry_entry_date = object.getString("ENQUIRY_ENTRY_DATE");
-                dealer_bu_id = object.getString("DEALER_BU_ID");
-                db.addfollowup(new Followup(first_name, last_name, cell_ph_no, age, gender, email_addr, state, district, tehsil, city, x_con_seq_no, x_model_interested,
-                        expected_date_purchase, x_exchange_required, x_finance_required, exist_vehicle, followup_comments, enquiry_id, follow_date, enquiry_entry_date, dealer_bu_id, "0"));
+            if(jsono.has("follow_up")) {
+                jarray = jsono.getJSONArray("follow_up");
+                for (int i = 0; i < jarray.length(); i++) {
+                    JSONObject object = jarray.getJSONObject(i);
+                    first_name = object.getString("FST_NAME");
+                    last_name = object.getString("LAST_NAME");
+                    cell_ph_no = object.getString("CELL_PH_NUM");
+                    age = object.getString("AGE");
+                    gender = object.getString("GENDER");
+                    email_addr = object.getString("EMAIL_ADDR");
+                    state = object.getString("STATE");
+                    district = object.getString("DISTRICT");
+                    tehsil = object.getString("TEHSIL");
+                    city = object.getString("CITY");
+                    x_con_seq_no = object.getString("X_CON_SEQ_NUM");
+                    x_model_interested = object.getString("X_MODEL_INTERESTED");
+                    expected_date_purchase = object.getString("EXPCTD_DT_PURCHASE");
+                    x_exchange_required = object.getString("X_EXCHANGE_REQUIRED");
+                    x_finance_required = object.getString("X_FINANCE_REQUIRED");
+                    exist_vehicle = object.getString("EXISTING_VEHICLE");
+                    followup_comments = object.getString("FOLLOWUP_COMMENTS");
+                    enquiry_id = object.getString("ENQUIRY_ID");
+                    follow_date = object.getString("FOLLOW_DATE");
+                    enquiry_entry_date = object.getString("ENQUIRY_ENTRY_DATE");
+                    dealer_bu_id = object.getString("DEALER_BU_ID");
+                    db.addfollowup(new Followup(first_name, last_name, cell_ph_no, age, gender, email_addr, state, district, tehsil, city, x_con_seq_no, x_model_interested,
+                            expected_date_purchase, x_exchange_required, x_finance_required, exist_vehicle, followup_comments, enquiry_id, follow_date, enquiry_entry_date, dealer_bu_id, "0"));
+                }
             }
 
         } catch (JSONException e) {

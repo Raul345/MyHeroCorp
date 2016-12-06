@@ -193,7 +193,7 @@ public class PendingFollowupFragment extends Fragment implements View.OnClickLis
                 bundle.putString("comment", data.getFollowup_comments());
                 bundle.putString("followdate", data.getFollow_date());
                 bundle.putString("enquiryid", data.getEnquiry_id());
-                bundle.putString("user_id", encryptuser);
+              //  bundle.putString("user_id", encryptuser);
                 bundle.putString("user", user);
 
                 f = new FollowupDetailFragment();

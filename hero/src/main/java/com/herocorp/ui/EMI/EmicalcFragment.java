@@ -29,9 +29,9 @@ public class EmicalcFragment extends Activity implements View.OnClickListener {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.emicalculator_fragment);
-        setRequestedOrientation(
+       /* setRequestedOrientation(
                 ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-        initView();
+       */ initView();
     }
 
     private void initView() {

@@ -14,7 +14,6 @@
         android:layout_alignParentTop="true"
         android:src="@drawable/hero_logo" />
 
-
     <ImageView
         android:id="@+id/menu_icon"
         android:layout_width="60dp"
@@ -80,7 +79,7 @@
 
                 <TextView
                     android:layout_width="0sp"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_weight="0.4"
                     android:gravity="center_vertical"
                     android:padding="10dp"
@@ -91,7 +90,7 @@
                 <Spinner
                     android:id="@+id/model_spinner"
                     android:layout_width="0sp"
-                    android:layout_height="70dp"
+                    android:layout_height="wrap_content"
                     android:layout_weight="0.3"
                     android:background="@android:color/darker_gray"
                     android:dropDownSelector="#f30d0d"
@@ -273,7 +272,7 @@
 
                 <TextView
                     android:layout_width="0sp"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_weight="0.4"
                     android:gravity="center_vertical"
                     android:padding="8dp"
@@ -284,7 +283,7 @@
                 <Spinner
                     android:id="@+id/existvehicle_spinner"
                     android:layout_width="0sp"
-                    android:layout_height="60dp"
+                    android:layout_height="wrap_content"
                     android:layout_weight="0.3"
                     android:background="@android:color/darker_gray"
                     android:focusable="true"
@@ -293,15 +292,18 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/layout_existmake"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="0.5dp"
+                android:layout_marginTop="0.5dp"
                 android:background="@android:color/darker_gray"
-                android:padding="10dp"
-                android:id="@+id/layout_existmake">
+                android:padding="10dp">
 
                 <TextView
+                    android:id="@+id/textView7"
                     android:layout_width="0sp"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_weight="0.4"
                     android:gravity="center_vertical"
                     android:padding="8dp"
@@ -312,7 +314,7 @@
                 <Spinner
                     android:id="@+id/existmake_spinner"
                     android:layout_width="0sp"
-                    android:layout_height="60dp"
+                    android:layout_height="wrap_content"
                     android:layout_weight="0.3"
                     android:background="@android:color/darker_gray"
                     android:dropDownSelector="#f30d0d"
@@ -322,15 +324,16 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/layout_existmodel"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@android:color/darker_gray"
-                android:padding="10dp"
-                android:id="@+id/layout_existmodel">
+                android:padding="10dp">
 
                 <TextView
+                    android:id="@+id/textView8"
                     android:layout_width="0sp"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_weight="0.4"
                     android:gravity="center_vertical"
                     android:padding="8dp"
@@ -341,7 +344,7 @@
                 <Spinner
                     android:id="@+id/existmodel_spinner"
                     android:layout_width="0sp"
-                    android:layout_height="60dp"
+                    android:layout_height="wrap_content"
                     android:layout_weight="0.3"
                     android:background="@android:color/darker_gray"
                     android:dropDownSelector="#f30d0d"
@@ -387,15 +390,13 @@
 
                 <ImageView
                     android:id="@+id/imageView_submit_addenquiry"
-                    android:layout_width="70dp"
-                    android:layout_height="70dp"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
                     android:layout_gravity="bottom|end"
                     android:layout_margin="10dp"
                     android:background="@android:color/transparent"
                     android:clickable="true"
-                    android:src="@drawable/edit_icon"
-
-                    />
+                    android:src="@drawable/edit_icon" />
             </LinearLayout>
 
 

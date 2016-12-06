@@ -34,6 +34,7 @@ public class URLConstants {
     public final static String GET_DISTRICT_DATA = "http://tab.hmcl.biz/dse_app_UAT/get_district_data.php";
     public final static String GET_CAMPAIGN_DATA = "http://tab.hmcl.biz/dse_app_UAT/fetch_campaign_data.php";
     public final static String ADD_ENQUIRY = "http://tab.hmcl.biz/dse_app_UAT/syncRecords.php";
+    public final static String FETCH_TEST_RIDE = "http://tab.hmcl.biz/dse_app_UAT/fetch_test_ride.php";
     public final static String SYNC_TEST_RIDE = "http://tab.hmcl.biz/dse_app_UAT/sync_test_ride.php";
     public final static String CHECK_VERSION = "http://tab.hmcl.biz/dse_app_UAT/check_version.php";
     public final static String FETCH_CONTACT = "http://tab.hmcl.biz/dse_app_UAT/fetch_contact.php";

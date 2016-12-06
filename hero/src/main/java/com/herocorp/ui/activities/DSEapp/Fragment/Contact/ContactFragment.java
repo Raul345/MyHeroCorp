@@ -546,7 +546,6 @@ public class ContactFragment extends Fragment implements View.OnClickListener {
         if (enquirycontacts.getCount() > 0) {
             addlayout.setVisibility(View.GONE);
             enquirytitle.setVisibility(View.VISIBLE);
-            vintitle.setVisibility(View.VISIBLE);
             enquirycontacts.setVisibility(View.VISIBLE);
             setListViewHeightBasedOnChildren(enquirycontacts);
 
@@ -554,6 +553,7 @@ public class ContactFragment extends Fragment implements View.OnClickListener {
         }
         if (vincontacts.getCount() > 0) {
             addlayout.setVisibility(View.GONE);
+            vintitle.setVisibility(View.VISIBLE);
             vincontacts.setVisibility(View.VISIBLE);
             setListViewHeightBasedOnChildren(vincontacts);
         }
@@ -806,8 +806,6 @@ public class ContactFragment extends Fragment implements View.OnClickListener {
                 progressBar.setVisibility(View.INVISIBLE);
                 addlayout.setVisibility(View.VISIBLE);
                 e.printStackTrace();
-              /*  Toast.makeText(getContext(), "Check your Connection !!", Toast.LENGTH_SHORT);
-*/
             }
         }
     }

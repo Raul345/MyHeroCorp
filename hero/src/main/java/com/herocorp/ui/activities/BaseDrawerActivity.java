@@ -112,7 +112,7 @@ public class BaseDrawerActivity extends FragmentActivity implements View.OnClick
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
-        initView();
+        initView(savedInstanceState);
 
         try {
             if (NetConnections.isConnected(this)) {
@@ -126,7 +126,6 @@ public class BaseDrawerActivity extends FragmentActivity implements View.OnClick
                 //  showPhoneStatePermission();
                 showExternalStoragePermission();
                 //  fetch_data();
-
                 new check_version().execute(URLConstants.CHECK_VERSION);
                 //FCM service
                 /*FirebaseMessaging.getInstance().subscribeToTopic("news");
@@ -200,7 +199,7 @@ public class BaseDrawerActivity extends FragmentActivity implements View.OnClick
         return false;
     }
 
-    private void initView() {
+    private void initView(Bundle savedInstanceState) {
 
         CustomViewParams customViewParams = new CustomViewParams(this);
         CustomTypeFace customTypeFace = new CustomTypeFace(this);
@@ -290,8 +289,12 @@ public class BaseDrawerActivity extends FragmentActivity implements View.OnClick
         findViewById(R.id.nav_sync_layout).setOnClickListener(this);
         findViewById(R.id.nav_logout_layout).setOnClickListener(this);
 
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.frame_container, new DealerDashboardFragment()).commit();
+        if(null == savedInstanceState){
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.beginTransaction().replace(R.id.frame_container, new DealerDashboardFragment()).commit();
+            //set you initial fragment object
+        }
+
 
 
     }

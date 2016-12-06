@@ -70,7 +70,6 @@ public class PersonalinfoFragment extends Fragment implements View.OnClickListen
 
     String gender = "", state = "", district = "", tehsil = "", village = "";
     String firstname = "", lastname = "", mobile = "", age = "", email = "", address1 = "", address2 = "", pincode = "";
-    String username = "ROBINK11610";
 
     String encryptuser;
     NetworkConnect networkConnect;

@@ -73,6 +73,7 @@
             android:orientation="vertical">
 
             <LinearLayout
+                android:id="@+id/layout_vehiclerating"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@android:color/darker_gray"
@@ -105,8 +106,7 @@
                         android:padding="3dp"
                         android:text="Excellent"
                         android:textColor="#000000"
-                        android:textSize="17dp"
-                        />
+                        android:textSize="17dp" />
 
                     <RadioButton
                         android:id="@+id/radioButton02"
@@ -161,6 +161,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/layout_ridingperform"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@android:color/darker_gray"
@@ -248,6 +249,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/layout_vehiclefeatures"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@android:color/darker_gray"
@@ -299,6 +301,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/layout_buyplan"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@android:color/darker_gray"
@@ -385,6 +388,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/layout_vehiclerefer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@android:color/darker_gray"
@@ -437,6 +441,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/layout_comments"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@android:color/darker_gray"
@@ -464,6 +469,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/layout_overallrating"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@android:color/darker_gray"

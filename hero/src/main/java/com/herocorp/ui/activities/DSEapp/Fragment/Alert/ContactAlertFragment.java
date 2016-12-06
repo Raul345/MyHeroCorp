@@ -20,6 +20,8 @@ import com.herocorp.ui.activities.DSEapp.Fragment.Enquiry.TestRideFeedbackFragme
 import com.herocorp.ui.activities.auth.SignInActivity;
 import com.herocorp.ui.utility.PreferenceUtil;
 
+import java.util.ArrayList;
+
 /**
  * Created by rsawh on 07-Oct-16.
  */
@@ -89,10 +91,13 @@ public class ContactAlertFragment extends DialogFragment {
             button_ok.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    Bundle bundle = new Bundle();
+                    question_add(bundle);
                     FragmentManager fm = getActivity().getSupportFragmentManager();
                     FragmentTransaction ft = fm.beginTransaction();
                     Fragment f = new TestRideFeedbackFragment();
                     // ft.addToBackStack(null);
+                    f.setArguments(bundle);
                     ft.replace(R.id.content_addenquiry, f);
                     ft.commit();
                     dismiss();
@@ -123,7 +128,44 @@ public class ContactAlertFragment extends DialogFragment {
                 }
             });
 
+        } else if (flag == 4) {
+            button_ok.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Bundle bundle = new Bundle();
+                    question_add(bundle);
+                    FragmentManager fm = getActivity().getSupportFragmentManager();
+                    FragmentTransaction ft = fm.beginTransaction();
+                    Fragment f = new TestRideFeedbackFragment();
+                    f.setArguments(bundle);
+                    ft.replace(R.id.content_editfollowup, f);
+                    ft.commit();
+                    dismiss();
+                }
+            });
+            button_cancel.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dismiss();
+                    getActivity().onBackPressed();
+                }
+            });
         }
         return view;
+    }
+
+
+    public void question_add(Bundle bundle) {
+        ArrayList<String> quesid = new ArrayList<String>();
+        quesid.add("How would you rate the vehicle in terms of styling?");
+        quesid.add("What do you think about the riding performance of the Vehicle?");
+        quesid.add("Are you happy with the features provided in the Vehicle?");
+        quesid.add("When are you planning to buy the Vehicle?");
+        quesid.add("Will you refer this Vehicle to your relatives and friends?");
+        quesid.add("OVERALL RATING");
+
+        bundle.putStringArrayList("quesid", quesid);
+
+
     }
 }

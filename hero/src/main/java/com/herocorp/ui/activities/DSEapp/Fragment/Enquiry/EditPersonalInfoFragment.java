@@ -97,31 +97,37 @@ public class EditPersonalInfoFragment extends Fragment implements View.OnClickLi
         email_et.setText(email);
         gender_spinner.setSelection(((ArrayAdapter<String>) gender_spinner.getAdapter()).getPosition(gender));
 
-        firstname_et.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        firstname_et.setEnabled(false);
+        /*firstname_et.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (!hasFocus)
                     edit.putString("firstname", firstname_et.getText().toString());
                 edit.commit();
             }
-        });
+        })*/
+        ;
 
-        lastname_et.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+
+        lastname_et.setEnabled(false);
+        /*lastname_et.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (!hasFocus)
                     edit.putString("lastname", lastname_et.getText().toString());
                 edit.commit();
             }
-        });
-        mobile_et.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        });*/
+
+        mobile_et.setEnabled(false);
+       /* mobile_et.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (!hasFocus)
                     edit.putString("mobile", mobile_et.getText().toString());
                 edit.commit();
             }
-        });
+        });*/
 
         age_et.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
@@ -218,6 +224,9 @@ public class EditPersonalInfoFragment extends Fragment implements View.OnClickLi
         if (mypref.contains("gender")) {
             gender = mypref.getString("gender", "");
         }
-
+        if (email.equalsIgnoreCase("null"))
+            email = "";
+        if (age.equalsIgnoreCase("null"))
+            age = "";
     }
 }

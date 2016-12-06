@@ -1,5 +1,6 @@
 package com.herocorp.ui.activities.home;
 
+import android.app.Activity;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
@@ -142,12 +143,17 @@ public class DealerDashboardFragment extends Fragment implements View.OnClickLis
                 ft.add(R.id.content_dealerdashboard, f);
                 ft.commit();*/
                 ((BaseDrawerActivity) getActivity()).openFragment(new VasWarrantyfragment(), true);
-
             } catch (Exception e) {
                 Toast.makeText(getActivity(), "VAS  not installed!", Toast.LENGTH_SHORT).show();
             }
         }
-
     }
-
+   /* @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if(isVisibleToUser) {
+            Activity a = getActivity();
+            if(a != null) a.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        }
+    }*/
 }

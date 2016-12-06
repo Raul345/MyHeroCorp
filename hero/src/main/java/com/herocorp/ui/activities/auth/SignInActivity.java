@@ -15,6 +15,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.telephony.TelephonyManager;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -70,9 +71,9 @@ public class SignInActivity extends Activity implements View.OnClickListener {
        };*/
     private String respDesc = "", respCode = "", state_id = "", dealer_code = "", version = "", path = "", state_name = "", result = "", failure_msg = "";
     private String appVersion;
-   // private String deviceImei = "911441757449230";
+    private String deviceImei = "911441757449230";
    // private String deviceImei = "351971070473217";
-  private String deviceImei;
+  //private String deviceImei;
     private String userCode, uuid = "0";
     private String encryptuser;
 
@@ -118,7 +119,7 @@ public class SignInActivity extends Activity implements View.OnClickListener {
         customViewParams.setImageViewCustomParams(logoImageView, new int[]{0, 40, 0, 20}, new int[]{0, 0, 0, 0}, 180, 160);
         customViewParams.setImageViewCustomParams(dealerImageView, new int[]{0, 7, 0, 7}, new int[]{0, 0, 0, 0}, 120, 100);
 
-        TextView dealerCodeText = (TextView) findViewById(R.id.dealer_text);
+        final TextView dealerCodeText = (TextView) findViewById(R.id.dealer_text);
         customViewParams.setTextViewCustomParams(dealerCodeText, new int[]{7, 0, 7, 20}, new int[]{0, 0, 0, 0}, 35, new CustomTypeFace(this).gillSansBold, 0);
 
         dealerCode = (EditText) findViewById(R.id.dealer_code_field);
@@ -128,6 +129,13 @@ public class SignInActivity extends Activity implements View.OnClickListener {
         Button signInButton = (Button) findViewById(R.id.sign_in_button);
         customViewParams.setButtonCustomParams(signInButton, new int[]{7, 7, 7, 7}, new int[]{0, 0, 0, 0}, 70, 210, 35, new CustomTypeFace(this).gillSans, 0);
 
+        dealerCode.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(hasFocus)
+                    dealerCode.setText(dealerCode.getText().toString().toUpperCase());
+            }
+        });
         signInButton.setOnClickListener(this);
     }
 
@@ -194,8 +202,8 @@ public class SignInActivity extends Activity implements View.OnClickListener {
             try {
                 info = manager.getPackageInfo(getPackageName(), 0);
                 appVersion = info.versionName;
-                deviceImei = telephonyManager.getDeviceId();
-                userCode = dealerCode.getText().toString();
+               // deviceImei = telephonyManager.getDeviceId();
+                userCode = dealerCode.getText().toString().toUpperCase();
 
                 if (userCode.equals("")) {
                     Toast.makeText(getApplicationContext(), "Please enter dealer Code!!", Toast.LENGTH_LONG).show();
@@ -311,7 +319,7 @@ public class SignInActivity extends Activity implements View.OnClickListener {
 
 
             } catch (Exception e) {
-                Toast.makeText(getApplicationContext(), "Check your Connection !! " + e, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Check your Connection !! ", Toast.LENGTH_SHORT).show();
             }
         }
     }

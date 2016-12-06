@@ -20,20 +20,18 @@
         android:largeHeap="true"
         android:supportsRtl="true"
         android:theme="@android:style/Theme.Holo.NoActionBar.Fullscreen">
-        <!--android:screenOrientation="landscape"-->
 
         <activity
             android:name=".ui.activities.auth.SignInActivity"
-           android:windowSoftInputMode="adjustResize">
+            android:windowSoftInputMode="adjustResize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-    <!--    android:screenOrientation="landscape"-->
         <activity
             android:name=".ui.activities.BaseDrawerActivity"
-            >
+            android:configChanges="keyboardHidden">
             <!-- <intent-filter>
                  <action android:name="android.intent.action.MAIN" />
                  <category android:name="android.intent.category.LAUNCHER" />
@@ -46,8 +44,8 @@
         </activity>
         <activity
             android:name=".ui.EMI.EmicalcFragment"
-            ></activity>
-        <!--android:screenOrientation="landscape"-->
+            android:screenOrientation="landscape"></activity>
+
         <provider
             android:name=".infra.db.AppContentProvider"
             android:authorities="com.herocorp.provider"

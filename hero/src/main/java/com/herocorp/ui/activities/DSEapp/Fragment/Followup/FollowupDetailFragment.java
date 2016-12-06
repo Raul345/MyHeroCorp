@@ -3,28 +3,43 @@ package com.herocorp.ui.activities.DSEapp.Fragment.Followup;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.herocorp.R;
+import com.herocorp.core.constants.URLConstants;
 import com.herocorp.infra.utils.NetConnections;
 import com.herocorp.ui.activities.BaseDrawerActivity;
+import com.herocorp.ui.activities.DSEapp.ConnectService.NetworkConnect;
+import com.herocorp.ui.activities.DSEapp.Fragment.Alert.AlertDialogFragment;
 import com.herocorp.ui.activities.DSEapp.Fragment.Alert.ContactAlertFragment;
 import com.herocorp.ui.activities.DSEapp.Fragment.Enquiry.EditFollowupFragment;
 import com.herocorp.ui.activities.DSEapp.Fragment.Enquiry.TestRideFeedbackFragment;
+import com.herocorp.ui.activities.DSEapp.models.Pendingorder;
 import com.herocorp.ui.utility.CustomTypeFace;
 import com.herocorp.ui.utility.CustomViewParams;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.ArrayList;
 
 /**
  * Created by rsawh on 26-Sep-16.
@@ -58,6 +73,9 @@ public class FollowupDetailFragment extends Fragment implements View.OnClickList
     String dealerid;
     SharedPreferences mypref;
     SharedPreferences.Editor edit;
+    Fragment f;
+    ProgressBar progressBar;
+
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
             savedInstanceState) {
@@ -92,6 +110,8 @@ public class FollowupDetailFragment extends Fragment implements View.OnClickList
         LinearLayout topLayout1 = (LinearLayout) rootView.findViewById(R.id.top_layout1);
         customViewParams.setMarginAndPadding(topLayout1, new int[]{100, 10, 100, 40}, new int[]{0, 0, 0, 0}, topLayout1.getParent());
 
+        progressBar = (ProgressBar) rootView.findViewById(R.id.progress);
+
         name = (TextView) rootView.findViewById(R.id.cust_name);
         mobile = (TextView) rootView.findViewById(R.id.cust_mobile);
         agesex = (TextView) rootView.findViewById(R.id.cust_agesex);
@@ -115,7 +135,8 @@ public class FollowupDetailFragment extends Fragment implements View.OnClickList
 
         name.setText(first_name + " " + last_name);
         mobile.setText(cell_ph_no);
-        agesex.setText(age + " / " + gender);
+        agesex.setText(age + "yrs. / " + gender);
+
         email.setText(email_addr);
         cust_id.setText(" " + x_con_seq_no);
         model.setText(x_model_interested);
@@ -158,7 +179,6 @@ public class FollowupDetailFragment extends Fragment implements View.OnClickList
         bundle.putString("comment", followup_comments);
         bundle.putString("followdate", follow_date);
         bundle.putString("enquiryid", enquiry_id);
-        Fragment f;
         int i = view.getId();
         if (i == R.id.menu_icon) {
             ((BaseDrawerActivity) getActivity()).toggleDrawer();
@@ -199,9 +219,17 @@ public class FollowupDetailFragment extends Fragment implements View.OnClickList
         } else if (i == R.id.button_testride) {
             // edit.putString("enquiryid", enquiry_id);
             if (NetConnections.isConnected(getContext())) {
-                f = new TestRideFeedbackFragment();
-                f.setArguments(bundle);
-                transaction(f);
+                try {
+                    JSONObject jsonparams = new JSONObject();
+                    jsonparams.put("user_id", user);
+                    jsonparams.put("enq_id", enquiry_id);
+                    new testride_feedback(jsonparams.toString()).execute();
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                } catch (Exception e) {
+                    Toast.makeText(getContext(), "Check your Connection !!", Toast.LENGTH_SHORT);
+                }
             } else
                 Toast.makeText(getContext(), "You are offline now !!", Toast.LENGTH_SHORT).show();
         }
@@ -240,6 +268,16 @@ public class FollowupDetailFragment extends Fragment implements View.OnClickList
         enquiryid = bundle.getString("enquiryid");
         dealerid = bundle.getString("dealerid");
 
+        if (email_addr.equalsIgnoreCase("null"))
+            email_addr = "";
+        if (follow_date.equalsIgnoreCase("null"))
+            follow_date = "";
+        if (followup_comments.equalsIgnoreCase("null"))
+            followup_comments = "";
+        if (expected_date_purchase.equalsIgnoreCase("null"))
+            expected_date_purchase = "";
+
+        edit.clear().commit();
         edit.putString("firstname", first_name);
         edit.putString("lastname", last_name);
         edit.putString("mobile", cell_ph_no);
@@ -265,5 +303,83 @@ public class FollowupDetailFragment extends Fragment implements View.OnClickList
         edit.putString("dealerid", dealerid);
         edit.commit();
 
+    }
+
+    public class testride_feedback extends AsyncTask<Void, Void, String> {
+        String newurlParameters;
+        NetworkConnect networkConnect;
+        String result;
+
+        public testride_feedback(String urlParameters) {
+            this.newurlParameters = urlParameters;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progressBar.setVisibility(View.VISIBLE);
+        }
+
+        protected String doInBackground(Void... params) {
+            if (NetConnections.isConnected(getContext())) {
+                try {
+                    String newurlparams = "data=" + URLEncoder.encode(newurlParameters, "UTF-8");
+                    networkConnect = new NetworkConnect(URLConstants.ENCRYPT, newurlparams);
+                    String data = networkConnect.execute();
+                    String urldata = "data=" + URLEncoder.encode(data, "UTF-8");
+                    networkConnect = new NetworkConnect(URLConstants.FETCH_TEST_RIDE, urldata);
+                    // jsonparse(networkConnect.execute());
+                    result = networkConnect.execute();
+                    return result;
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                    return null;
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    return null;
+                }
+
+            } else {
+                Toast.makeText(getContext(), "Check your connection !!", Toast.LENGTH_SHORT).show();
+                return null;
+            }
+        }
+
+        protected void onPostExecute(String s) {
+            try {
+                super.onPostExecute(s);
+                Bundle bundle = new Bundle();
+                progressBar.setVisibility(View.INVISIBLE);
+                Log.e("testride_response:", result);
+                JSONObject jsonObject = new JSONObject(s);
+                if (jsonObject.getString("success").equals("0")) {
+                    String resDesp = jsonObject.getString("respDescription");
+                    bundle.putString("msg", resDesp);
+                    bundle.putInt("flag", 0);
+                    FragmentManager fm = getActivity().getSupportFragmentManager();
+                    AlertDialogFragment dialogFragment = new AlertDialogFragment();
+                    dialogFragment.setArguments(bundle);
+                    dialogFragment.setCancelable(false);
+                    dialogFragment.show(fm, "Sample Fragment");
+                } else {
+                    ArrayList<String> quesid = new ArrayList<String>();
+                    JSONArray jArray = jsonObject.getJSONArray("test_ride_ques");
+                    for (int i = 0; i < jArray.length(); i++) {
+                        JSONObject object = jArray.getJSONObject(i);
+                        quesid.add(object.getString("question"));
+                        Log.e("id", object.getString("id"));
+                        Log.e("ques", object.getString("question"));
+                    }
+                    bundle.putStringArrayList("quesid", quesid);
+                    f = new TestRideFeedbackFragment();
+                    f.setArguments(bundle);
+                    transaction(f);
+                }
+
+            } catch (Exception e) {
+                progressBar.setVisibility(View.INVISIBLE);
+                Toast.makeText(getContext(), "Check your Connection !!", Toast.LENGTH_SHORT);
+            }
+        }
     }
 }

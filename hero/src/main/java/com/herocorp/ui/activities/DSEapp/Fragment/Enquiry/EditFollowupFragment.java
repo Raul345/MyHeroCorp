@@ -54,7 +54,6 @@ public class EditFollowupFragment extends Fragment implements View.OnClickListen
 
         rootView = inflater.inflate(R.layout.dse_editfollowup_fragment, container, false);
 
-
         initView(rootView);
 
         return rootView;
