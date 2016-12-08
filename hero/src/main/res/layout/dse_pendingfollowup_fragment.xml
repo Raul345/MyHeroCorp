@@ -13,7 +13,6 @@
         android:layout_alignParentTop="true"
         android:src="@drawable/hero_logo" />
 
-
     <ImageView
         android:id="@+id/menu_icon"
         android:layout_width="60dp"
@@ -55,34 +54,42 @@
 
     </LinearLayout>
 
-    <RelativeLayout
-        android:id="@+id/top_layout1"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/top_layout"
-        android:background="#ffffff"
-        android:orientation="vertical">
+    <android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/swipe_refresh_followup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/top_layout">
 
-        <TextView
-            android:id="@+id/pendingfollowup_message"
+
+        <RelativeLayout
+            android:id="@+id/top_layout1"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="center"
-            android:text="No Pending Followup !!"
-            android:textColor="#000000"
-            android:textSize="20dp"
-            android:visibility="visible" />
+            android:background="#ffffff"
+            android:orientation="vertical">
 
-        <com.baoyz.swipemenulistview.SwipeMenuListView
-            android:id="@+id/list_pendingfollowup"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:divider="@android:color/darker_gray"
-            android:dividerHeight="0.5dp"
-            android:paddingLeft="3dp"
-            android:paddingRight="3dp"></com.baoyz.swipemenulistview.SwipeMenuListView>
+            <TextView
+                android:id="@+id/pendingfollowup_message"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="No Pending Followup !!"
+                android:textColor="#000000"
+                android:textSize="20dp"
+                android:visibility="visible" />
 
-    </RelativeLayout>
+            <com.baoyz.swipemenulistview.SwipeMenuListView
+                android:id="@+id/list_pendingfollowup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:divider="@android:color/darker_gray"
+                android:dividerHeight="0.5dp"
+                android:paddingLeft="3dp"
+                android:paddingRight="3dp"></com.baoyz.swipemenulistview.SwipeMenuListView>
+
+        </RelativeLayout>
+
+    </android.support.v4.widget.SwipeRefreshLayout>
 
 </RelativeLayout>

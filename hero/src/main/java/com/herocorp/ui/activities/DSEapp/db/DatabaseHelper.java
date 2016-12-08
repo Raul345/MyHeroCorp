@@ -458,9 +458,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
 
-    public void cleartables() {
+    public void clearfollowup_table() {
         SQLiteDatabase db = this.getWritableDatabase();
         db.execSQL("DELETE FROM " + TABLE_FOLLOWUP);
+        closeDB();
+    }
+
+    public void clearmakemodel_table() {
+        SQLiteDatabase db = this.getWritableDatabase();
         db.execSQL("DELETE FROM " + TABLE_MAKE);
         db.execSQL("DELETE FROM " + TABLE_MODEL);
         closeDB();

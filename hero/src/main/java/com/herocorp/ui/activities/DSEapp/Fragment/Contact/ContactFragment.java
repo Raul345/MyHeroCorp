@@ -1,5 +1,6 @@
 package com.herocorp.ui.activities.DSEapp.Fragment.Contact;
 
+import android.app.ProgressDialog;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -80,7 +81,7 @@ public class ContactFragment extends Fragment implements View.OnClickListener {
 
     String phone_no, reg_no, dealer_code, user_id;
     String encryptdata;
-    ProgressBar progressBar;
+
 
     NetworkConnect networkConnect;
 
@@ -129,7 +130,7 @@ public class ContactFragment extends Fragment implements View.OnClickListener {
         vincontacts = (ListView) rootView.findViewById(R.id.list_vincontacts);
 
         addenquiry_button = (Button) rootView.findViewById(R.id.addenquiry_button);
-        progressBar = (ProgressBar) rootView.findViewById(R.id.progress);
+
 
 
         fetch_pref();
@@ -630,7 +631,7 @@ public class ContactFragment extends Fragment implements View.OnClickListener {
     public class Contactlist extends AsyncTask<Void, Void, String> {
         String newurlParameters;
         NetworkConnect networkConnect;
-
+        private ProgressDialog progressDialog;
         public Contactlist(String urlParameters) {
             this.newurlParameters = urlParameters;
         }
@@ -638,7 +639,8 @@ public class ContactFragment extends Fragment implements View.OnClickListener {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            progressBar.setVisibility(View.VISIBLE);
+            progressDialog = ProgressDialog.show(getActivity(), null, null);
+            progressDialog.setContentView(R.layout.progresslayout);
             //      pendingorders_msg.setVisibility(View.INVISIBLE);
         }
 
@@ -669,7 +671,6 @@ public class ContactFragment extends Fragment implements View.OnClickListener {
 
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
-            progressBar.setVisibility(View.INVISIBLE);
             try {
                 DatabaseHelper db = new DatabaseHelper(getContext());
                 db.clearcontactfollowup_table();
@@ -796,13 +797,14 @@ public class ContactFragment extends Fragment implements View.OnClickListener {
                         new CampaignContact(row_id, camp_name, opty_id);
                     }
                 }
+                progressDialog.dismiss();
                 updateList();
             } catch (JSONException e) {
                 e.printStackTrace();
-                progressBar.setVisibility(View.INVISIBLE);
+                progressDialog.dismiss();
                 addlayout.setVisibility(View.VISIBLE);
             } catch (Exception e) {
-                progressBar.setVisibility(View.INVISIBLE);
+                progressDialog.dismiss();
                 addlayout.setVisibility(View.VISIBLE);
                 e.printStackTrace();
             }

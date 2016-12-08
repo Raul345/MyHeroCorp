@@ -54,47 +54,56 @@
 
     </LinearLayout>
 
-    <RelativeLayout
-        android:id="@+id/top_layout1"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/top_layout"
-        android:background="#ffffff"
-        android:orientation="vertical">
+    <android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/swipe_refresh_followup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/top_layout">
 
-        <TextView
-            android:id="@+id/todayfollowup_message"
+
+        <RelativeLayout
+            android:id="@+id/top_layout1"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="center"
-            android:text="No Today's Followup !!"
-            android:textColor="#000000"
-            android:textSize="20dp"
-            android:visibility="visible" />
+            android:layout_below="@id/top_layout"
+            android:background="#ffffff"
+            android:orientation="vertical">
 
-        <com.baoyz.swipemenulistview.SwipeMenuListView
-            android:id="@+id/list_todayfollowup"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:divider="@android:color/darker_gray"
-            android:dividerHeight="0.5dp"
-            android:paddingLeft="3dp"
-            android:paddingRight="3dp" />
+            <TextView
+                android:id="@+id/todayfollowup_message"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="No Today's Followup !!"
+                android:textColor="#000000"
+                android:textSize="20dp"
+                android:visibility="visible" />
 
-        <!--  <android.support.design.widget.FloatingActionButton xmlns:app="http://schemas.android.com/apk/res-auto"
-              android:id="@+id/button_filter"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:layout_alignParentBottom="true"
-              android:layout_alignParentEnd="true"
-              android:layout_alignParentRight="true"
-              android:layout_margin="15dp"
-              android:background="#ffffff"
-              android:focusable="false"
-              android:src="@drawable/edit_icon" />
-  -->
-    </RelativeLayout>
+            <com.baoyz.swipemenulistview.SwipeMenuListView
+                android:id="@+id/list_todayfollowup"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:divider="@android:color/darker_gray"
+                android:dividerHeight="0.5dp"
+                android:paddingLeft="3dp"
+                android:paddingRight="3dp" />
+
+            <!--  <android.support.design.widget.FloatingActionButton xmlns:app="http://schemas.android.com/apk/res-auto"
+                  android:id="@+id/button_filter"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:layout_alignParentBottom="true"
+                  android:layout_alignParentEnd="true"
+                  android:layout_alignParentRight="true"
+                  android:layout_margin="15dp"
+                  android:background="#ffffff"
+                  android:focusable="false"
+                  android:src="@drawable/edit_icon" />
+      -->
+        </RelativeLayout>
+
+    </android.support.v4.widget.SwipeRefreshLayout>
 
     <ImageView
         android:id="@+id/imageView_filter"
@@ -104,11 +113,11 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_gravity="bottom|end"
-        android:layout_marginRight="10dp"
         android:layout_marginBottom="10dp"
+        android:layout_marginRight="15dp"
         android:background="@android:color/transparent"
         android:clickable="true"
         android:src="@drawable/image_filter"
-        android:visibility="gone"/>
+        android:visibility="visible" />
 
 </RelativeLayout>

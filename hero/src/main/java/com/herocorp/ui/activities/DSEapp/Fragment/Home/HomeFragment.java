@@ -34,6 +34,7 @@ import com.herocorp.ui.activities.DSEapp.ConnectService.NetworkConnect;
 import com.herocorp.ui.activities.DSEapp.Fragment.PendingFollowup.PendingFollowupFragment;
 import com.herocorp.ui.activities.DSEapp.Fragment.PendingOrders.PendingOrdersFragment;
 import com.herocorp.ui.activities.DSEapp.Fragment.TodayFollowup.TodayFollowupFragment;
+import com.herocorp.ui.activities.DSEapp.SyncFollowup;
 import com.herocorp.ui.activities.DSEapp.db.DatabaseHelper;
 import com.herocorp.ui.activities.DSEapp.models.Bike_model;
 import com.herocorp.ui.activities.DSEapp.models.Bikemake;
@@ -301,10 +302,10 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                             if (result != null) {
                                 encryptuser = result.replace("\\/", "/");
                                 urlParameters = "data=" + URLEncoder.encode(encryptuser, "UTF-8");
-                                Log.e("sync_start", current_date.toString());
-
-                                networkConnect = new NetworkConnect(URLConstants.PENDING_FOLLOWUP, urlParameters);
-                                jsonparse_followup(networkConnect.execute());
+                               Log.e("make_sync_start", current_date.toString());
+                                //new SyncFollowup(getContext()).execute();
+                                /*networkConnect = new NetworkConnect(URLConstants.PENDING_FOLLOWUP, urlParameters);
+                                jsonparse_followup(networkConnect.execute());*/
                                 networkConnect = new NetworkConnect(URLConstants.BIKE_MAKE_MODEL, urlParameters);
                                 jsonparse_makemodel(networkConnect.execute());
                                 //  }
@@ -333,12 +334,12 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     public void jsonparse_followup(String result) {
         Log.e("response_followup:", result);
         db = new DatabaseHelper(getContext());
-        db.cleartables();
+        db.clearfollowup_table();
         JSONObject jsono = null;
         JSONArray jarray = null;
         try {
             jsono = new JSONObject(result);
-            if(jsono.has("follow_up")) {
+            if (jsono.has("follow_up")) {
                 jarray = jsono.getJSONArray("follow_up");
                 for (int i = 0; i < jarray.length(); i++) {
                     JSONObject object = jarray.getJSONObject(i);
@@ -376,6 +377,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     public void jsonparse_makemodel(String result) {
         try {
             db = new DatabaseHelper(getContext());
+            db.clearmakemodel_table();
+
             JSONObject jsono = new JSONObject(result);
             JSONArray jarray = jsono.getJSONArray("make");
             Log.e("response_make_model:", result);
@@ -391,9 +394,9 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 db.addbikemodel(new Bike_model(object.getString("make_id"), object.getString("model_name")));
             }
 
-            PreferenceUtil.set_Syncdate(getContext(), current_date.toString());
+            PreferenceUtil.set_MakeSyncdate(getContext(), current_date.toString());
 
-            Log.e("sync_close", current_date.toString());
+            Log.e("make_sync_close", current_date.toString());
             //   progressBar.setVisibility(View.INVISIBLE);
 
         } catch (JSONException e) {
@@ -406,8 +409,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     public void fetch_pref() {
         user_id = PreferenceUtil.get_UserId(getContext());
         dealer_code = PreferenceUtil.get_DealerCode(getContext());
-        sync_date = PreferenceUtil.get_Syncdate(getContext());
-
+        sync_date = PreferenceUtil.get_MakeSyncdate(getContext());
     }
 
   /*  public class Encrypt_data extends AsyncTask<Void, Void, String> {

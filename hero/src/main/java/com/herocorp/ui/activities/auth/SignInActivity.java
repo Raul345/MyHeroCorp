@@ -11,28 +11,23 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.telephony.TelephonyManager;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.herocorp.R;
-import com.herocorp.core.constants.AppConstants;
 import com.herocorp.core.constants.URLConstants;
 import com.herocorp.infra.utils.NetConnections;
 import com.herocorp.ui.activities.BaseDrawerActivity;
 import com.herocorp.ui.activities.DSEapp.ConnectService.NetworkConnect;
-import com.herocorp.ui.activities.DSEapp.ProgressHUD;
 import com.herocorp.ui.activities.DSEapp.db.DatabaseHelper;
 import com.herocorp.ui.activities.DSEapp.models.State;
 import com.herocorp.ui.utility.CustomTypeFace;
@@ -45,13 +40,6 @@ import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
-
-import static android.webkit.ConsoleMessage.MessageLevel.LOG;
 
 public class SignInActivity extends Activity implements View.OnClickListener {
 
@@ -290,8 +278,6 @@ public class SignInActivity extends Activity implements View.OnClickListener {
 
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-            //   progressBar.setVisibility(View.INVISIBLE);
-            // ProgressHUD.dismissDialog();
             progressDialog.dismiss();
             db = new DatabaseHelper(getApplicationContext());
             db.clearstate_table();

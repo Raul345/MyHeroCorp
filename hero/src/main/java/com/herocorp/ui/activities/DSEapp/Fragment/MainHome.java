@@ -312,7 +312,7 @@ public class MainHome extends FragmentActivity implements View.OnClickListener {
     public void jsonparse_followup(String result) {
         Log.e("response_followup:", result);
         db = new DatabaseHelper(getApplicationContext());
-        db.cleartables();
+        db.clearfollowup_table();
         JSONObject jsono = null;
         JSONArray jarray = null;
         try {

@@ -20,6 +20,7 @@ public class PreferenceUtil {
     public static final String CITY_NAME = "city_name";
 
     public static final String SYNC_DATE = "sync_date";
+    public static final String MAKE_SYNC_DATE="make_sync_date";
 
     private SharedPreferences sharedPref;
 
@@ -39,6 +40,11 @@ public class PreferenceUtil {
     public static void set_Syncdate(Context context, String sync_date) {
         SharedPreferences.Editor edit = context.getSharedPreferences("hero", context.MODE_PRIVATE).edit();
         edit.putString(SYNC_DATE, sync_date);
+        edit.commit();
+    }
+    public static void set_MakeSyncdate(Context context, String sync_date) {
+        SharedPreferences.Editor edit = context.getSharedPreferences("hero", context.MODE_PRIVATE).edit();
+        edit.putString(MAKE_SYNC_DATE, sync_date);
         edit.commit();
     }
 
@@ -90,6 +96,12 @@ public class PreferenceUtil {
        /* String restoredText = "";
         if (sharedPref.contains(SYNC_DATE))*/
         String restoredText = sharedPref.getString(SYNC_DATE, "");
+        return restoredText;
+    }
+
+    public static String get_MakeSyncdate(Context context) {
+        SharedPreferences sharedPref = context.getSharedPreferences("hero", context.MODE_PRIVATE);
+        String restoredText = sharedPref.getString(MAKE_SYNC_DATE, "");
         return restoredText;
     }
 

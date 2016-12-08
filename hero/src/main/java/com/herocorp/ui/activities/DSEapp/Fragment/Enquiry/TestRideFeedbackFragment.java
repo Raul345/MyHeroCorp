@@ -200,7 +200,6 @@ public class TestRideFeedbackFragment extends Fragment implements View.OnClickLi
 
                     jsonparams.put("ans", jsonparams1.toString());
                     Log.e("testride_data", jsonparams.toString());
-
                     encryptuser(URLConstants.SYNC_TEST_RIDE, jsonparams.toString());
                 } catch (Exception e) {
                     e.printStackTrace();

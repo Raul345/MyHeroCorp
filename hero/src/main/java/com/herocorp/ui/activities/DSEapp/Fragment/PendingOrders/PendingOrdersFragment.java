@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -42,7 +43,7 @@ import java.util.ArrayList;
 /**
  * Created by rsawh on 20-Sep-16.
  */
-public class PendingOrdersFragment extends Fragment implements View.OnClickListener {
+public class PendingOrdersFragment extends Fragment implements View.OnClickListener, SwipeRefreshLayout.OnRefreshListener {
     private View rootView;
     private CustomViewParams customViewParams;
 
@@ -62,8 +63,7 @@ public class PendingOrdersFragment extends Fragment implements View.OnClickListe
     String campaign;
     String expected_date;
     String financer_name;
-
-    ProgressBar progressBar;
+    SwipeRefreshLayout swipe_refresh_orders;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -83,7 +83,6 @@ public class PendingOrdersFragment extends Fragment implements View.OnClickListe
 
         initView(rootView);
 
-
         return rootView;
     }
 
@@ -93,7 +92,7 @@ public class PendingOrdersFragment extends Fragment implements View.OnClickListe
             pendingorders_msg.setVisibility(View.INVISIBLE);
         else
             pendingorders_msg.setVisibility(View.VISIBLE);
-        //   progressbar.setVisibility(View.GONE);
+        swipe_refresh_orders.setRefreshing(false);
     }
 
     public void onDestroy() {
@@ -124,30 +123,20 @@ public class PendingOrdersFragment extends Fragment implements View.OnClickListe
         userAdapter = new PendingOrdersadapter(getContext(), R.layout.dse_pendingorder_row, userArray);
         userList = (ListView) rootView.findViewById(R.id.list_pendingorders);
         pendingorders_msg = (TextView) rootView.findViewById(R.id.pendingorders_message);
-        progressBar = (ProgressBar) rootView.findViewById(R.id.progress);
+        swipe_refresh_orders = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_refresh_orders);
 
+        swipe_refresh_orders.post(new Runnable() {
+                                      @Override
+                                      public void run() {
+                                          swipe_refresh_orders.setRefreshing(true);
+                                          send_request();
+                                      }
+                                  }
+        );
 
-        try {
-            JSONObject jsonparms = new JSONObject();
-            jsonparms.put("user_id", PreferenceUtil.get_UserId(getContext()));
-            jsonparms.put("dealer_code", PreferenceUtil.get_DealerCode(getContext()));
-
-            Log.e("pendingorder:", jsonparms.toString());
-            new Pending_orders(jsonparms.toString()).execute();
-           /* String newurlparams = "data=" + URLEncoder.encode(jsonparms.toString(), "UTF-8");
-            networkConnect = new NetworkConnect(URLConstants.ENCRYPT, newurlparams);
-            String data = networkConnect.execute();
-
-            String urldata = "data=" + URLEncoder.encode(data, "UTF-8");
-            networkConnect = new NetworkConnect(URLConstants.PENDING_ORDER, urldata);
-
-            jsonparse(networkConnect.execute());*/
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
 
         menu.setOnClickListener(this);
+        swipe_refresh_orders.setOnRefreshListener(this);
     }
 
     @Override
@@ -190,6 +179,11 @@ public class PendingOrdersFragment extends Fragment implements View.OnClickListe
         }
     }
 
+    @Override
+    public void onRefresh() {
+        send_request();
+    }
+
     public class Pending_orders extends AsyncTask<Void, Void, String> {
         String newurlParameters;
         NetworkConnect networkConnect;
@@ -202,7 +196,7 @@ public class PendingOrdersFragment extends Fragment implements View.OnClickListe
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            progressBar.setVisibility(View.VISIBLE);
+            swipe_refresh_orders.setRefreshing(true);
         }
 
         protected String doInBackground(Void... params) {
@@ -213,7 +207,6 @@ public class PendingOrdersFragment extends Fragment implements View.OnClickListe
                     String data = networkConnect.execute();
                     String urldata = "data=" + URLEncoder.encode(data, "UTF-8");
                     networkConnect = new NetworkConnect(URLConstants.PENDING_ORDER, urldata);
-                    // jsonparse(networkConnect.execute());
                     result = networkConnect.execute();
                     return result;
                 } catch (UnsupportedEncodingException e) {
@@ -233,8 +226,6 @@ public class PendingOrdersFragment extends Fragment implements View.OnClickListe
         protected void onPostExecute(String s) {
             try {
                 super.onPostExecute(s);
-                progressBar.setVisibility(View.INVISIBLE);
-
                 Log.e("followup_data:", result);
                 JSONObject jsono = new JSONObject(result);
                 if (jsono.has("order_data")) {
@@ -259,12 +250,25 @@ public class PendingOrdersFragment extends Fragment implements View.OnClickListe
                 }
                 updateList();
             } catch (JSONException e) {
+                swipe_refresh_orders.setRefreshing(false);
                 e.printStackTrace();
             } catch (Exception e) {
-                progressBar.setVisibility(View.INVISIBLE);
+                swipe_refresh_orders.setRefreshing(false);
                 pendingorders_msg.setVisibility(View.VISIBLE);
                 Toast.makeText(getContext(), "Check your Connection !!", Toast.LENGTH_SHORT);
             }
+        }
+    }
+    public void send_request() {
+        try {
+            JSONObject jsonparms = new JSONObject();
+            jsonparms.put("user_id", PreferenceUtil.get_UserId(getContext()));
+            jsonparms.put("dealer_code", PreferenceUtil.get_DealerCode(getContext()));
+
+            Log.e("pendingorder:", jsonparms.toString());
+            new Pending_orders(jsonparms.toString()).execute();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

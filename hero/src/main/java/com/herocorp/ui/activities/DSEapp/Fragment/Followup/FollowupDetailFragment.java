@@ -225,8 +225,8 @@ public class FollowupDetailFragment extends Fragment implements View.OnClickList
                     JSONObject jsonparams = new JSONObject();
                     jsonparams.put("user_id", user);
                     jsonparams.put("enq_id", enquiry_id);
+                    Log.e("testride_request:",jsonparams.toString());
                     new testride_feedback(jsonparams.toString()).execute();
-
                 } catch (JSONException e) {
                     e.printStackTrace();
                 } catch (Exception e) {
