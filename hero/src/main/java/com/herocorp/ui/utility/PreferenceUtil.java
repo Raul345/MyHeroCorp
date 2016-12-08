@@ -15,6 +15,10 @@ public class PreferenceUtil {
     public static final String VERSION_PATH = "path";
     public static final String STATE_ID = "state_id";
     public static final String STATE_NAME = "state_name";
+    public static final String DISTRICT_NAME = "district_name";
+    public static final String TEHSIL_NAME = "tehsil_name";
+    public static final String CITY_NAME = "city_name";
+
     public static final String SYNC_DATE = "sync_date";
 
     private SharedPreferences sharedPref;
@@ -97,6 +101,9 @@ public class PreferenceUtil {
         edit.remove(VERSION).commit();
         edit.remove(STATE_ID).commit();
         edit.remove(STATE_NAME).commit();
+        edit.remove(DISTRICT_NAME).commit();
+        edit.remove(TEHSIL_NAME).commit();
+        edit.remove(CITY_NAME).commit();
     }
 
     public static void clear_SyncDate(Context context) {
@@ -104,5 +111,44 @@ public class PreferenceUtil {
         SharedPreferences.Editor edit = mypref.edit();
         if (mypref.contains(SYNC_DATE))
             edit.remove(SYNC_DATE).commit();
+    }
+
+
+    public static void set_Address(Context context, String state, String district, String tehsil, String city) {
+        SharedPreferences.Editor edit = context.getSharedPreferences("hero", context.MODE_PRIVATE).edit();
+        edit.putString(STATE_NAME, state);
+        edit.putString(DISTRICT_NAME, district);
+        edit.putString(TEHSIL_NAME, tehsil);
+        edit.putString(CITY_NAME, city);
+        edit.commit();
+    }
+
+    public static String get_DistrictName(Context context) {
+        SharedPreferences sharedPref = context.getSharedPreferences("hero", context.MODE_PRIVATE);
+        String restoredText = sharedPref.getString(DISTRICT_NAME,"");
+        return restoredText;
+    }
+
+    public static String get_TehsilName(Context context) {
+        SharedPreferences sharedPref = context.getSharedPreferences("hero", context.MODE_PRIVATE);
+        String restoredText = sharedPref.getString(TEHSIL_NAME, "");
+        return restoredText;
+    }
+
+    public static String get_CityName(Context context) {
+        SharedPreferences sharedPref = context.getSharedPreferences("hero", context.MODE_PRIVATE);
+        String restoredText = sharedPref.getString(CITY_NAME, "");
+        return restoredText;
+    }
+
+    public static void clear_Address(Context context) {
+        SharedPreferences mypref = context.getSharedPreferences("hero", context.MODE_PRIVATE);
+        SharedPreferences.Editor edit = mypref.edit();
+        if (mypref.contains(DISTRICT_NAME))
+            edit.remove(DISTRICT_NAME).commit();
+        if (mypref.contains(TEHSIL_NAME))
+            edit.remove(TEHSIL_NAME).commit();
+        if (mypref.contains(CITY_NAME))
+            edit.remove(CITY_NAME).commit();
     }
 }

@@ -1,5 +1,6 @@
 package com.herocorp.ui.activities.DSEapp.Fragment.Followup;
 
+import android.app.ProgressDialog;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -30,6 +31,7 @@ import com.herocorp.ui.activities.DSEapp.Fragment.Alert.ContactAlertFragment;
 import com.herocorp.ui.activities.DSEapp.Fragment.Enquiry.EditFollowupFragment;
 import com.herocorp.ui.activities.DSEapp.Fragment.Enquiry.TestRideFeedbackFragment;
 import com.herocorp.ui.activities.DSEapp.models.Pendingorder;
+import com.herocorp.ui.activities.auth.SignInActivity;
 import com.herocorp.ui.utility.CustomTypeFace;
 import com.herocorp.ui.utility.CustomViewParams;
 
@@ -309,6 +311,7 @@ public class FollowupDetailFragment extends Fragment implements View.OnClickList
         String newurlParameters;
         NetworkConnect networkConnect;
         String result;
+        private ProgressDialog progressDialog;
 
         public testride_feedback(String urlParameters) {
             this.newurlParameters = urlParameters;
@@ -317,8 +320,9 @@ public class FollowupDetailFragment extends Fragment implements View.OnClickList
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            progressBar.setVisibility(View.VISIBLE);
-        }
+            progressDialog = ProgressDialog.show(getActivity(), null, null);
+            progressDialog.setContentView(R.layout.progresslayout);
+      }
 
         protected String doInBackground(Void... params) {
             if (NetConnections.isConnected(getContext())) {
@@ -348,8 +352,8 @@ public class FollowupDetailFragment extends Fragment implements View.OnClickList
         protected void onPostExecute(String s) {
             try {
                 super.onPostExecute(s);
+                progressDialog.dismiss();
                 Bundle bundle = new Bundle();
-                progressBar.setVisibility(View.INVISIBLE);
                 Log.e("testride_response:", result);
                 JSONObject jsonObject = new JSONObject(s);
                 if (jsonObject.getString("success").equals("0")) {
@@ -377,7 +381,7 @@ public class FollowupDetailFragment extends Fragment implements View.OnClickList
                 }
 
             } catch (Exception e) {
-                progressBar.setVisibility(View.INVISIBLE);
+                progressDialog.dismiss();
                 Toast.makeText(getContext(), "Check your Connection !!", Toast.LENGTH_SHORT);
             }
         }

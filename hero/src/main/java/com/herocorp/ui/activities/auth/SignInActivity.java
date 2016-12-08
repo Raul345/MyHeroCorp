@@ -2,6 +2,7 @@ package com.herocorp.ui.activities.auth;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -31,6 +32,7 @@ import com.herocorp.core.constants.URLConstants;
 import com.herocorp.infra.utils.NetConnections;
 import com.herocorp.ui.activities.BaseDrawerActivity;
 import com.herocorp.ui.activities.DSEapp.ConnectService.NetworkConnect;
+import com.herocorp.ui.activities.DSEapp.ProgressHUD;
 import com.herocorp.ui.activities.DSEapp.db.DatabaseHelper;
 import com.herocorp.ui.activities.DSEapp.models.State;
 import com.herocorp.ui.utility.CustomTypeFace;
@@ -72,8 +74,8 @@ public class SignInActivity extends Activity implements View.OnClickListener {
     private String respDesc = "", respCode = "", state_id = "", dealer_code = "", version = "", path = "", state_name = "", result = "", failure_msg = "";
     private String appVersion;
     private String deviceImei = "911441757449230";
-   // private String deviceImei = "351971070473217";
-  //private String deviceImei;
+    // private String deviceImei = "351971070473217";
+    // private String deviceImei;
     private String userCode, uuid = "0";
     private String encryptuser;
 
@@ -132,7 +134,7 @@ public class SignInActivity extends Activity implements View.OnClickListener {
         dealerCode.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if(hasFocus)
+                if (hasFocus)
                     dealerCode.setText(dealerCode.getText().toString().toUpperCase());
             }
         });
@@ -202,7 +204,7 @@ public class SignInActivity extends Activity implements View.OnClickListener {
             try {
                 info = manager.getPackageInfo(getPackageName(), 0);
                 appVersion = info.versionName;
-               // deviceImei = telephonyManager.getDeviceId();
+                //deviceImei = telephonyManager.getDeviceId();
                 userCode = dealerCode.getText().toString().toUpperCase();
 
                 if (userCode.equals("")) {
@@ -243,9 +245,9 @@ public class SignInActivity extends Activity implements View.OnClickListener {
     public class Login extends AsyncTask<Void, Void, String> {
         String targetURL;
         String newurlParameters;
-        ProgressBar progressBar;
         NetworkConnect networkConnect;
         String result;
+        private ProgressDialog progressDialog;
 
         public Login(String urlParameters, String targeturl) {
             this.targetURL = targeturl;
@@ -255,8 +257,8 @@ public class SignInActivity extends Activity implements View.OnClickListener {
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            progressBar = (ProgressBar) findViewById(R.id.progress);
-            progressBar.setVisibility(View.VISIBLE);
+            progressDialog = ProgressDialog.show(SignInActivity.this, null, null);
+            progressDialog.setContentView(R.layout.progresslayout);
         }
 
         protected String doInBackground(Void... params) {
@@ -288,7 +290,9 @@ public class SignInActivity extends Activity implements View.OnClickListener {
 
         protected void onPostExecute(String s) {
             super.onPostExecute(s);
-            progressBar.setVisibility(View.INVISIBLE);
+            //   progressBar.setVisibility(View.INVISIBLE);
+            // ProgressHUD.dismissDialog();
+            progressDialog.dismiss();
             db = new DatabaseHelper(getApplicationContext());
             db.clearstate_table();
             try {
@@ -316,9 +320,8 @@ public class SignInActivity extends Activity implements View.OnClickListener {
                     failure_msg = jsono.getString("failure_msg");
                     Toast.makeText(getApplicationContext(), failure_msg, Toast.LENGTH_SHORT).show();
                 }
-
-
             } catch (Exception e) {
+                progressDialog.dismiss();
                 Toast.makeText(getApplicationContext(), "Check your Connection !! ", Toast.LENGTH_SHORT).show();
             }
         }
@@ -329,6 +332,6 @@ public class SignInActivity extends Activity implements View.OnClickListener {
             PreferenceUtil.clear_SyncDate(getApplicationContext());
 
         PreferenceUtil.set_Userdata(getApplicationContext(), userCode, dealer_code, true, version, path, state_id, state_name);
+        PreferenceUtil.clear_Address(getApplicationContext());
     }
-
 }

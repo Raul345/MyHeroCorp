@@ -27,6 +27,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginRight="2dp"
                 android:background="#ffffff"
+                android:buttonTint="#000000"
                 android:padding="10dp"
                 android:textSize="17dp" />
         </LinearLayout>

@@ -3,12 +3,14 @@ package com.herocorp.ui.activities.DSEapp.Fragment.Enquiry;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -51,6 +53,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+
+import static android.content.Context.INPUT_METHOD_SERVICE;
 
 /**
  * Created by rsawh on 05-Oct-16.
@@ -239,7 +243,7 @@ public class EditEnquiryFragment extends Fragment implements View.OnClickListene
                     try {
                         jsonparams.put("user_id", user_id);
                         jsonparams.put("dealer_code", dealer_code);
-                        encryptuser1(URLConstants.GET_CAMPAIGN_DATA, jsonparams.toString(), 0);
+                        send_request(URLConstants.GET_CAMPAIGN_DATA, jsonparams.toString(), 0);
                         updateList();
                         chk_campaignid.clear();
                     } catch (JSONException e) {
@@ -353,19 +357,13 @@ public class EditEnquiryFragment extends Fragment implements View.OnClickListene
         super.onDestroy();
     }
 
-    public void encryptuser1(String url, String data, int flag) {
+    public void send_request(String url, String data, int flag) {
         if (NetConnections.isConnected(getContext())) {
             try {
                 String urlParameters = "data=" + URLEncoder.encode(data, "UTF-8");
 
                 if (flag == 0) {
-                    networkConnect = new NetworkConnect(URLConstants.ENCRYPT, urlParameters);
-                    String result = networkConnect.execute();
-                    if (result != null)
-                        encryptdata = result.replace("\\/", "/");
-                    String newurlparams = "data=" + URLEncoder.encode(encryptdata, "UTF-8");
-                    networkConnect = new NetworkConnect(url, newurlparams);
-                    jsonparse_campaign(networkConnect.execute());
+                    new Fetch_campaign(url, urlParameters).execute();
                 }
                 if (flag == 1) {
                     ProgressDialog progress = new ProgressDialog(getContext());
@@ -381,7 +379,7 @@ public class EditEnquiryFragment extends Fragment implements View.OnClickListene
                     }
                 }
                 if (flag == 2) {
-                   // networkConnect = new NetworkConnect(url, newurlparams);
+                    // networkConnect = new NetworkConnect(url, newurlparams);
                     //  jsonparse_model(networkConnect.execute());
                 }
 
@@ -395,7 +393,32 @@ public class EditEnquiryFragment extends Fragment implements View.OnClickListene
             Toast.makeText(getContext(), "Check your connection !!", Toast.LENGTH_SHORT).show();
     }
 
-    public void jsonparse_campaign(String result) {
+
+    public static void setListViewHeightBasedOnChildren(ListView listView) {
+        ListAdapter listAdapter = listView.getAdapter();
+        if (listAdapter == null) {
+            return;
+        }
+        int desiredWidth = View.MeasureSpec.makeMeasureSpec(listView.getWidth(), View.MeasureSpec.AT_MOST);
+        int totalHeight = 0;
+        View view = null;
+        for (int i = 0; i < listAdapter.getCount(); i++) {
+            view = listAdapter.getView(i, view, listView);
+            if (i == 0) {
+                view.setLayoutParams(new ViewGroup.LayoutParams(desiredWidth, ViewGroup.LayoutParams.WRAP_CONTENT));
+
+            }
+            view.measure(desiredWidth, View.MeasureSpec.UNSPECIFIED);
+            totalHeight += view.getMeasuredHeight();
+        }
+        ViewGroup.LayoutParams params = listView.getLayoutParams();
+        params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
+        listView.setLayoutParams(params);
+        listView.requestLayout();
+    }
+
+
+   /* public void jsonparse_campaign(String result) {
         try {
             // Toast.makeText(getContext(), result, Toast.LENGTH_SHORT).show();
             JSONObject jsono = new JSONObject(result);
@@ -456,30 +479,7 @@ public class EditEnquiryFragment extends Fragment implements View.OnClickListene
             System.out.println(Toast.makeText(getContext(), "Check your Connection !!", Toast.LENGTH_SHORT));
 
         }
-    }
-
-    public static void setListViewHeightBasedOnChildren(ListView listView) {
-        ListAdapter listAdapter = listView.getAdapter();
-        if (listAdapter == null) {
-            return;
-        }
-        int desiredWidth = View.MeasureSpec.makeMeasureSpec(listView.getWidth(), View.MeasureSpec.AT_MOST);
-        int totalHeight = 0;
-        View view = null;
-        for (int i = 0; i < listAdapter.getCount(); i++) {
-            view = listAdapter.getView(i, view, listView);
-            if (i == 0) {
-                view.setLayoutParams(new ViewGroup.LayoutParams(desiredWidth, ViewGroup.LayoutParams.WRAP_CONTENT));
-
-            }
-            view.measure(desiredWidth, View.MeasureSpec.UNSPECIFIED);
-            totalHeight += view.getMeasuredHeight();
-        }
-        ViewGroup.LayoutParams params = listView.getLayoutParams();
-        params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
-        listView.setLayoutParams(params);
-        listView.requestLayout();
-    }
+    }*/
 
    /* public void jsonparse_model(String result) {
         try {
@@ -586,6 +586,8 @@ public class EditEnquiryFragment extends Fragment implements View.OnClickListene
         } else if (i == R.id.exptpurchasedate_button) {
             showdatepicker(purchdate_btn, "pur_date");
         } else if (i == R.id.imageView_submit_addenquiry) {
+            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
             edit_enquiry();
         }
     }
@@ -654,13 +656,11 @@ public class EditEnquiryFragment extends Fragment implements View.OnClickListene
                 String json = jsonparams.toString().replace("\\/", "/");
 
                 Log.e("edit_enquiry", json);
-                encryptuser1(URLConstants.ADD_ENQUIRY, json, 1);
+                send_request(URLConstants.ADD_ENQUIRY, json, 1);
             }
-
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
     public void fetch_data1() {
@@ -872,5 +872,118 @@ public class EditEnquiryFragment extends Fragment implements View.OnClickListene
             Toast.makeText(getContext(), "Check your Connection !!", Toast.LENGTH_SHORT).show();
         }
     }
+
+    public class Fetch_campaign extends AsyncTask<Void, Void, String> {
+        String targetURL;
+        String newurlParameters;
+        NetworkConnect networkConnect;
+        private ProgressDialog progressDialog;
+
+        public Fetch_campaign(String targeturl, String urlParameters) {
+            this.targetURL = targeturl;
+            this.newurlParameters = urlParameters;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progressDialog = ProgressDialog.show(getActivity(), null, null);
+            progressDialog.setContentView(R.layout.progresslayout);
+        }
+
+        protected String doInBackground(Void... params) {
+            try {
+                if (NetConnections.isConnected(getContext())) {
+                    networkConnect = new NetworkConnect(URLConstants.ENCRYPT, newurlParameters);
+                    String result = networkConnect.execute();
+                    if (result != null)
+                        encryptdata = result.replace("\\/", "/");
+                    String newurlparams = null;
+                    newurlparams = "data=" + URLEncoder.encode(encryptdata, "UTF-8");
+                    networkConnect = new NetworkConnect(targetURL, newurlparams);
+                    result = networkConnect.execute();
+                    return result;
+                } else {
+                    Toast.makeText(getContext(), "Check your connection !!", Toast.LENGTH_SHORT).show();
+                    return null;
+                }
+            } catch (UnsupportedEncodingException e) {
+                progressDialog.dismiss();
+                e.printStackTrace();
+                return null;
+            } catch (Exception e) {
+                progressDialog.dismiss();
+                Toast.makeText(getContext(), "Check your Connection !!", Toast.LENGTH_SHORT).show();
+                return null;
+            }
+        }
+
+        protected void onPostExecute(String s) {
+            try {
+                super.onPostExecute(s);
+                userAdapter.clear();
+                userAdapter1.clear();
+                Log.e("campaign", s);
+                JSONObject jsono = new JSONObject(s);
+                JSONArray jarray = jsono.getJSONArray("campaign_data");
+                for (int i = 0; i < jarray.length(); i++) {
+                    JSONObject object = jarray.getJSONObject(i);
+                    String dealer_code = object.getString("dealer_code");
+                    String dealer_name = object.getString("dealer_name");
+                    String camp_id = object.getString("camp_id");
+                    String campaign_name = object.getString("campaign_name");
+                    String start_date = object.getString("start_date");
+                    String end_date = object.getString("end_date");
+                    String category = object.getString("category");
+                    String status = object.getString("status");
+                    String sub_category = object.getString("sub_category");
+                    String camp_type = object.getString("camp_type");
+                    String camp_source = object.getString("camp_source");
+                    String model1 = object.getString("model");
+
+                    if (model1.equalsIgnoreCase(model)) {
+                        userAdapter1.add(new Campaign(dealer_code,
+                                dealer_name,
+                                camp_id,
+                                campaign_name,
+                                start_date,
+                                end_date,
+                                category,
+                                status,
+                                sub_category,
+                                camp_type,
+                                camp_source,
+                                model1
+                        ));
+                        userAdapter1.notifyDataSetChanged();
+                    }
+                    if (model1.equalsIgnoreCase("")) {
+                        userAdapter.add(new Campaign(dealer_code,
+                                dealer_name,
+                                camp_id,
+                                campaign_name,
+                                start_date,
+                                end_date,
+                                category,
+                                status,
+                                sub_category,
+                                camp_type,
+                                camp_source,
+                                model1));
+                        userAdapter.notifyDataSetChanged();
+                    }
+                }
+                updateList();
+                progressDialog.dismiss();
+            } catch (JSONException e) {
+                progressDialog.dismiss();
+                e.printStackTrace();
+            } catch (Exception e) {
+                progressDialog.dismiss();
+                Toast.makeText(getContext(), "Check your Connection !!" + e, Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
 
 }

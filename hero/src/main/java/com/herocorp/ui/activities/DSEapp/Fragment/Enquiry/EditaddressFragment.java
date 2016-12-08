@@ -1,8 +1,11 @@
 package com.herocorp.ui.activities.DSEapp.Fragment.Enquiry;
 
+import android.app.ProgressDialog;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +27,7 @@ import com.herocorp.ui.activities.DSEapp.models.Tehsil;
 import com.herocorp.ui.activities.DSEapp.models.Village;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
@@ -40,13 +44,11 @@ public class EditaddressFragment extends Fragment {
 
     private int mPage;
     String state = "", district = "", tehsil = "", village = "", address1 = "", address2 = "", pincode = "";
+    String state_name = "", district_name = "", tehsil_name = "", village_name = "";
     Spinner state_spinner, district_spinner, tehsil_spinner, village_spinner;
     EditText address1_et, address2_et, pincode_et;
     ImageView editaddress_button;
     String data;
-    String encryptuser;
-    NetworkConnect networkConnect;
-
 
     ArrayList<State> arr_state = new ArrayList<State>();
     ArrayList<Tehsil> arr_tehsil = new ArrayList<Tehsil>();
@@ -57,7 +59,6 @@ public class EditaddressFragment extends Fragment {
     SharedPreferences mypref;
     SharedPreferences.Editor edit;
     int flag = 0, editflag = 0;
-    String username = "ROBINK11610", version = "1.0", imei = "10", uuid = "0";
 
     DatabaseHelper db;
 
@@ -98,6 +99,7 @@ public class EditaddressFragment extends Fragment {
         editaddress_button = (ImageView) rootView.findViewById(R.id.editaddress_button);
 
         fetch_data();
+
         state_spinner.setEnabled(false);
         district_spinner.setEnabled(false);
         tehsil_spinner.setEnabled(false);
@@ -107,15 +109,15 @@ public class EditaddressFragment extends Fragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (position != 0) {
-                    reset(0);
+                    reset(1);
                     state = parent.getItemAtPosition(position).toString();
                     State sel_state = (State) parent.getSelectedItem();
                     data = "{\"state_id\":\"" + sel_state.getId() + "\"}";
-                    encryptuser(data, URLConstants.GET_DISTRICT, 1);
+                    send_request(data, URLConstants.GET_DISTRICT, 1);
                     edit.putString("state", state);
                     edit.commit();
 
-                } else if (position == 0 && editflag == 1) {
+                } else if (position == 0) {
                     reset(0);
                     state = "";
                     edit.putString("state", state);
@@ -136,10 +138,10 @@ public class EditaddressFragment extends Fragment {
                     district = parent.getItemAtPosition(position).toString();
                     District sel_district = (District) parent.getSelectedItem();
                     data = "{\"district_id\":\"" + sel_district.getId() + "\"}";
-                    encryptuser(data, URLConstants.GET_DISTRICT_DATA, 2);
+                    send_request(data, URLConstants.GET_DISTRICT_DATA, 2);
                     edit.putString("district", district);
                     edit.commit();
-                } else if (position == 0 && editflag == 1) {
+                } else if (position == 0) {
                     reset(1);
                     district = "";
                     edit.putString("district", district);
@@ -162,12 +164,19 @@ public class EditaddressFragment extends Fragment {
                     Village req_village = new Village();
                     arr_village.clear();
                     arr_village = req_village.getVillage(sel_tehsil.getId());
+                    int cposition = 0;
+                    for (int i = 0; i < arr_village.size(); i++) {
+                        if (village_name.equalsIgnoreCase(arr_village.get(i))) {
+                            cposition = i;
+                        }
+                    }
                     ArrayAdapter<String> at2 = new ArrayAdapter<String>(getContext(), R.layout.spinner_textview, arr_village);
                     village_spinner.setAdapter(at2);
+                    village_spinner.setSelection(cposition);
                     edit.putString("tehsil", tehsil);
                     edit.commit();
                     //  village_spinner.setSelection(((ArrayAdapter<String>) village_spinner.getAdapter()).getPosition(village));
-                } else if (position == 0 && editflag == 1) {
+                } else if (position == 0) {
                     tehsil = "";
                     village = "";
                     edit.putString("tehsil", tehsil);
@@ -206,17 +215,6 @@ public class EditaddressFragment extends Fragment {
                     district_spinner.setEnabled(true);
                     tehsil_spinner.setEnabled(true);
                     village_spinner.setEnabled(true);
-                    edit.putString("state", "");
-                    edit.putString("district", "");
-                    edit.putString("tehsil", "");
-                    edit.putString("village", "");
-                    edit.commit();
-                    fetch_states();
-                    //  data = "{\"username\":\"ROBINK11610\",\"version\":\"1.0\",\"imei\":\"10\",\"uuid\":\"0\"}";
-                    /*data = "{\"username\":\"" + username + "\",\"version\":\"" + version + "\",\"imei\":\"" + imei + "\",\"uuid\":\"" + uuid + "\"}";
-                    encryptuser(data, URLConstants.LOGIN, 0);*/
-
-                    reset(0);
 
                 } else {
                     editaddress_button.setImageResource(R.drawable.button_offf);
@@ -264,22 +262,17 @@ public class EditaddressFragment extends Fragment {
 
 
     public void fetch_data() {
-       /* final Bundle bundle = getArguments();
-        state = bundle.getString("state");
-        tehsil = bundle.getString("tehsil");
-        district = bundle.getString("district");
-        village = bundle.getString("city");*/
         if (mypref.contains("state")) {
-            state = mypref.getString("state", "");
+            state_name = mypref.getString("state", "");
         }
         if (mypref.contains("district")) {
-            district = mypref.getString("district", "");
+            district_name = mypref.getString("district", "");
         }
         if (mypref.contains("tehsil")) {
-            tehsil = mypref.getString("tehsil", "");
+            tehsil_name = mypref.getString("tehsil", "");
         }
         if (mypref.contains("city")) {
-            village = mypref.getString("city", "");
+            village_name = mypref.getString("city", "");
         }
         if (mypref.contains("address1")) {
             address1 = mypref.getString("address1", "");
@@ -290,49 +283,8 @@ public class EditaddressFragment extends Fragment {
         if (mypref.contains("pincode")) {
             pincode = mypref.getString("pincode", "");
         }
-
-        ArrayList<String> prev_state = new ArrayList<String>();
-        ArrayList<String> prev_tehsil = new ArrayList<String>();
-        ArrayList<String> prev_district = new ArrayList<String>();
-        ArrayList<String> prev_village = new ArrayList<String>();
-
-        prev_state.add(state);
-        ArrayAdapter<String> at = new ArrayAdapter<String>(getContext(), R.layout.spinner_textview, prev_state);
-        state_spinner.setAdapter(at);
-
-        prev_district.add(district);
-        ArrayAdapter<String> at1 = new ArrayAdapter<String>(getContext(), R.layout.spinner_textview, prev_district);
-        district_spinner.setAdapter(at1);
-
-        prev_tehsil.add(tehsil);
-        ArrayAdapter<String> at2 = new ArrayAdapter<String>(getContext(), R.layout.spinner_textview, prev_tehsil);
-        tehsil_spinner.setAdapter(at2);
-
-        prev_village.add(village);
-        ArrayAdapter<String> at3 = new ArrayAdapter<String>(getContext(), R.layout.spinner_textview, prev_village);
-        village_spinner.setAdapter(at3);
-
-    }
-
-    public void jsonparse_state(String result) {
-        try {
-            JSONObject jsono = new JSONObject(result);
-            JSONArray jarray = jsono.getJSONArray("state");
-
-            arr_state.add(new State("", "--select--"));
-            for (int i = 0; i < jarray.length(); i++) {
-                JSONObject object = jarray.getJSONObject(i);
-                arr_state.add(new State(object.getString("id"), object.getString("state_name")));
-            }
-            ArrayAdapter<State> at1 = new ArrayAdapter<State>(getContext(), R.layout.spinner_textview, arr_state);
-            state_spinner.setAdapter(at1);
-
-            //   state_spinner.setSelection(Integer.parseInt(tehsil));
-
-        } catch (Exception e) {
-            Toast.makeText(getContext(), "Check your Connection !!" + e, Toast.LENGTH_SHORT).show();
-
-        }
+        Log.e("tehsilpref", tehsil + village);
+        fetch_states();
     }
 
     public void jsonparse_district(String result) {
@@ -341,14 +293,17 @@ public class EditaddressFragment extends Fragment {
             JSONObject jsono = new JSONObject(result);
             JSONArray jarray = jsono.getJSONArray("district");
             arr_district.add(new District("", "--select--"));
+
+            int position = 0;
             for (int i = 0; i < jarray.length(); i++) {
                 JSONObject object = jarray.getJSONObject(i);
                 arr_district.add(new District(object.getString("id"), object.getString("district_name")));
+                if (object.getString("district_name").equalsIgnoreCase(district_name))
+                    position = i + 1;
             }
             ArrayAdapter<District> at1 = new ArrayAdapter<District>(getContext(), R.layout.spinner_textview, arr_district);
             district_spinner.setAdapter(at1);
-            //          district_spinner.setSelection(((ArrayAdapter<String>) district_spinner.getAdapter()).getPosition(district));
-
+            district_spinner.setSelection(position);
 
         } catch (Exception e) {
             Toast.makeText(getContext(), "Check your Connection !!" + e, Toast.LENGTH_SHORT).show();
@@ -361,13 +316,21 @@ public class EditaddressFragment extends Fragment {
             JSONObject jsono = new JSONObject(result);
             JSONArray jarray = jsono.getJSONArray("tehsil");
             arr_tehsil.add(new Tehsil("", "", "--select--"));
+
+            int tposition = 0;
             for (int i = 0; i < jarray.length(); i++) {
                 JSONObject object = jarray.getJSONObject(i);
                 arr_tehsil.add(new Tehsil(object.getString("district_id"), object.getString("id"), object.getString("tehsil_name")));
+                Log.e("id", i + "" + object.getString("tehsil_name"));
+                if (object.getString("tehsil_name").equalsIgnoreCase(tehsil_name)) {
+                    tposition = i + 1;
+                }
             }
+
             ArrayAdapter<Tehsil> at1 = new ArrayAdapter<Tehsil>(getContext(), R.layout.spinner_textview, arr_tehsil);
             tehsil_spinner.setAdapter(at1);
-            //   tehsil_spinner.setSelection(((ArrayAdapter<Tehsil>) tehsil_spinner.getAdapter()).(tehsil));
+            tehsil_spinner.setSelection(tposition);
+
 
             JSONArray jarray1 = jsono.getJSONArray("village");
             //   new Village("", "", "--select--");
@@ -382,24 +345,22 @@ public class EditaddressFragment extends Fragment {
 
     }
 
-    public void encryptuser(String data, String url, int flag) {
+    public void send_request(String data, String url, int flag) {
         if (NetConnections.isConnected(getContext())) {
             try {
                 String urlParameters = "data=" + URLEncoder.encode(data, "UTF-8");
-                networkConnect = new NetworkConnect(URLConstants.ENCRYPT, urlParameters);
-                String result = networkConnect.execute();
-                if (result != null)
-                    encryptuser = result.replace("\\/", "/");
-                String newurlparams = "data=" + URLEncoder.encode(encryptuser, "UTF-8");
-                NetworkConnect networkConnect = new NetworkConnect(url, newurlparams);
+
                 if (flag == 0) {
-                    jsonparse_state(networkConnect.execute());
+                    // jsonparse_state(networkConnect.execute());
                 }
                 if (flag == 1) {
-                    jsonparse_district(networkConnect.execute());
+
+                    new Fetch_data(url, urlParameters).execute();
+
                 }
                 if (flag == 2) {
-                    jsonparse_tehsil_village(networkConnect.execute());
+                    new Fetch_data(url, urlParameters).execute();
+
                 }
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
@@ -422,7 +383,7 @@ public class EditaddressFragment extends Fragment {
             tehsil = "";
             village = "";
         } else if (flag == 1) {
-            // tehsil_spinner.setAdapter(at);
+            tehsil_spinner.setAdapter(at);
             village_spinner.setAdapter(at);
             tehsil = "";
             village = "";
@@ -433,10 +394,86 @@ public class EditaddressFragment extends Fragment {
         db = new DatabaseHelper(getContext());
         List<State> allrecords = db.getAllStates();
         arr_state.add(new State("", "--select--"));
+        int position = 0;
+        int i = 1;
         for (State record : allrecords) {
+            if (record.getState().equalsIgnoreCase(state_name))
+                position = i;
             arr_state.add(new State(record.getId(), record.getState()));
+            i++;
         }
         ArrayAdapter<State> at1 = new ArrayAdapter<State>(getContext(), R.layout.spinner_textview, arr_state);
         state_spinner.setAdapter(at1);
+        state_spinner.setSelection(position);
     }
+
+    public class Fetch_data extends AsyncTask<Void, Void, String> {
+        String targetURL;
+        String newurlParameters;
+        NetworkConnect networkConnect;
+        private ProgressDialog progressDialog;
+
+        public Fetch_data(String targeturl, String urlParameters) {
+            this.targetURL = targeturl;
+            this.newurlParameters = urlParameters;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progressDialog = ProgressDialog.show(getActivity(), null, null);
+            progressDialog.setContentView(R.layout.progresslayout);
+        }
+
+        protected String doInBackground(Void... params) {
+            try {
+                if (NetConnections.isConnected(getContext())) {
+                    String encryptdata = null;
+                    networkConnect = new NetworkConnect(URLConstants.ENCRYPT, newurlParameters);
+                    String result = networkConnect.execute();
+                    if (result != null)
+                        encryptdata = result.replace("\\/", "/");
+                    String newurlparams = null;
+                    newurlparams = "data=" + URLEncoder.encode(encryptdata, "UTF-8");
+                    networkConnect = new NetworkConnect(targetURL, newurlparams);
+                    result = networkConnect.execute();
+                    return result;
+                } else {
+                    Toast.makeText(getContext(), "Check your connection !!", Toast.LENGTH_SHORT).show();
+                    return null;
+                }
+            } catch (UnsupportedEncodingException e) {
+                progressDialog.dismiss();
+                e.printStackTrace();
+                return null;
+            } catch (Exception e) {
+                progressDialog.dismiss();
+                e.printStackTrace();
+                return null;
+            }
+        }
+
+        protected void onPostExecute(String s) {
+            try {
+                super.onPostExecute(s);
+                Log.e("response", s);
+                JSONObject jsonObject = new JSONObject(s);
+
+                if (jsonObject.has("district")) {
+                    jsonparse_district(s);
+                }
+                if (jsonObject.has("tehsil")) {
+                    jsonparse_tehsil_village(s);
+                }
+                progressDialog.dismiss();
+            } catch (JSONException e) {
+                progressDialog.dismiss();
+                e.printStackTrace();
+            } catch (Exception e) {
+                progressDialog.dismiss();
+                Toast.makeText(getContext(), "Check your Connection !!", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
 }

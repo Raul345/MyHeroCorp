@@ -115,6 +115,7 @@ public class ContactAlertFragment extends DialogFragment {
                 @Override
                 public void onClick(View v) {
                     PreferenceUtil.clearPref(getActivity());
+                    PreferenceUtil.clear_Address(getActivity());
                     startActivity(new Intent(getActivity(), SignInActivity.class));
                     getActivity().finish();
 
@@ -127,7 +128,6 @@ public class ContactAlertFragment extends DialogFragment {
 
                 }
             });
-
         } else if (flag == 4) {
             button_ok.setOnClickListener(new View.OnClickListener() {
                 @Override

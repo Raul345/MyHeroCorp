@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.telephony.TelephonyManager;
@@ -41,6 +42,8 @@ import com.herocorp.ui.activities.DSEapp.models.Bike_model;
 import com.herocorp.ui.activities.DSEapp.models.Bikemake;
 import com.herocorp.ui.activities.DSEapp.models.Bikemodel;
 import com.herocorp.ui.activities.DSEapp.models.Campaign;
+import com.herocorp.ui.activities.DSEapp.models.State;
+import com.herocorp.ui.activities.auth.SignInActivity;
 import com.herocorp.ui.utility.CustomTypeFace;
 import com.herocorp.ui.utility.CustomViewParams;
 import com.herocorp.ui.utility.PreferenceUtil;
@@ -81,7 +84,6 @@ public class AddenquiryFragment extends Fragment implements View.OnClickListener
 
     String firstname, lastname, mobile, email, age, gender, state, district, tehsil, village, address1, address2, pincode;
 
-    // String username = "ROBINK11610", dealercode = "11610";
     DatabaseHelper db;
 
     Campaignadapter userAdapter, userAdapter1;
@@ -204,8 +206,7 @@ public class AddenquiryFragment extends Fragment implements View.OnClickListener
                     try {
                         jsonparams.put("user_id", user_id);
                         jsonparams.put("dealer_code", dealer_code);
-                        encryptuser1(URLConstants.GET_CAMPAIGN_DATA, jsonparams.toString(), 0);
-                        updateList();
+                        send_request(URLConstants.GET_CAMPAIGN_DATA, jsonparams.toString(), 0);
                         chk_campaignid.clear();
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -337,23 +338,6 @@ public class AddenquiryFragment extends Fragment implements View.OnClickListener
         });
 
 
-     /*   PackageManager manager = getActivity().getPackageManager();
-        PackageInfo info = null;
-        try {
-
-
-            TelephonyManager telephonyManager = (TelephonyManager) getActivity().getSystemService(Context.TELEPHONY_SERVICE);
-
-
-            info = manager.getPackageInfo(getActivity().getPackageName(), 0);
-            appVersion = info.versionName;
-            deviceImei = telephonyManager.getDeviceId();
-
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-        }*/
-
-
         button_submit.setOnClickListener(this);
         nextfollowdate_btn.setOnClickListener(this);
         purchdate_btn.setOnClickListener(this);
@@ -427,21 +411,16 @@ public class AddenquiryFragment extends Fragment implements View.OnClickListener
           }
       }
   */
-    public void encryptuser1(String url, String data, int flag) {
+    public void send_request(String url, String data, int flag) {
         if (NetConnections.isConnected(getContext())) {
             try {
                 String urlParameters = "data=" + URLEncoder.encode(data, "UTF-8");
                 if (flag == 0) {
-                    networkConnect = new NetworkConnect(URLConstants.ENCRYPT, urlParameters);
-                    String result = networkConnect.execute();
-                    if (result != null)
-                        encryptdata = result.replace("\\/", "/");
-                    String newurlparams = "data=" + URLEncoder.encode(encryptdata, "UTF-8");
-                    networkConnect = new NetworkConnect(url, newurlparams);
-                    jsonparse_campaign(networkConnect.execute());
+                    new Fetch_campaign(url, urlParameters).execute();
                 }
                 if (flag == 1) {
                     ProgressDialog progress = new ProgressDialog(getContext());
+                    PreferenceUtil.set_Address(getContext(),state,district,tehsil,village);
                     new NetworkConnect1(url, urlParameters, progress, "Enquiry has been successfully submitted.", getContext(), 2).execute();
                 }
             } catch (UnsupportedEncodingException e) {
@@ -455,69 +434,72 @@ public class AddenquiryFragment extends Fragment implements View.OnClickListener
             Toast.makeText(getContext(), "Check your connection !!", Toast.LENGTH_SHORT).show();
     }
 
-    public void jsonparse_campaign(String result) {
-        try {
-            userAdapter.clear();
-            userAdapter1.clear();
-            // Toast.makeText(getContext(), result, Toast.LENGTH_SHORT).show();
-            JSONObject jsono = new JSONObject(result);
-            JSONArray jarray = jsono.getJSONArray("campaign_data");
-            for (int i = 0; i < jarray.length(); i++) {
-                JSONObject object = jarray.getJSONObject(i);
-                String dealer_code = object.getString("dealer_code");
-                String dealer_name = object.getString("dealer_name");
-                String camp_id = object.getString("camp_id");
-                String campaign_name = object.getString("campaign_name");
-                String start_date = object.getString("start_date");
-                String end_date = object.getString("end_date");
-                String category = object.getString("category");
-                String status = object.getString("status");
-                String sub_category = object.getString("sub_category");
-                String camp_type = object.getString("camp_type");
-                String camp_source = object.getString("camp_source");
-                String model1 = object.getString("model");
+    /* public void jsonparse_campaign(String result) {
+         try {
+             userAdapter.clear();
+             userAdapter1.clear();
+             progressDialog.dismiss();
+             // Toast.makeText(getContext(), result, Toast.LENGTH_SHORT).show();
+             JSONObject jsono = new JSONObject(result);
+             JSONArray jarray = jsono.getJSONArray("campaign_data");
+             for (int i = 0; i < jarray.length(); i++) {
+                 JSONObject object = jarray.getJSONObject(i);
+                 String dealer_code = object.getString("dealer_code");
+                 String dealer_name = object.getString("dealer_name");
+                 String camp_id = object.getString("camp_id");
+                 String campaign_name = object.getString("campaign_name");
+                 String start_date = object.getString("start_date");
+                 String end_date = object.getString("end_date");
+                 String category = object.getString("category");
+                 String status = object.getString("status");
+                 String sub_category = object.getString("sub_category");
+                 String camp_type = object.getString("camp_type");
+                 String camp_source = object.getString("camp_source");
+                 String model1 = object.getString("model");
 
-                if (model1.equalsIgnoreCase(model)) {
-                    userAdapter1.add(new Campaign(dealer_code,
-                            dealer_name,
-                            camp_id,
-                            campaign_name,
-                            start_date,
-                            end_date,
-                            category,
-                            status,
-                            sub_category,
-                            camp_type,
-                            camp_source,
-                            model1
-                    ));
-                    userAdapter1.notifyDataSetChanged();
-                }
-                if (model1.equalsIgnoreCase("")) {
-                    userAdapter.add(new Campaign(dealer_code,
-                            dealer_name,
-                            camp_id,
-                            campaign_name,
-                            start_date,
-                            end_date,
-                            category,
-                            status,
-                            sub_category,
-                            camp_type,
-                            camp_source,
-                            model1));
-                    userAdapter.notifyDataSetChanged();
-                }
-            }
+                 if (model1.equalsIgnoreCase(model)) {
+                     userAdapter1.add(new Campaign(dealer_code,
+                             dealer_name,
+                             camp_id,
+                             campaign_name,
+                             start_date,
+                             end_date,
+                             category,
+                             status,
+                             sub_category,
+                             camp_type,
+                             camp_source,
+                             model1
+                     ));
+                     userAdapter1.notifyDataSetChanged();
+                 }
+                 if (model1.equalsIgnoreCase("")) {
+                     userAdapter.add(new Campaign(dealer_code,
+                             dealer_name,
+                             camp_id,
+                             campaign_name,
+                             start_date,
+                             end_date,
+                             category,
+                             status,
+                             sub_category,
+                             camp_type,
+                             camp_source,
+                             model1));
+                     userAdapter.notifyDataSetChanged();
+                 }
+             }
 
 
-        } catch (JSONException e) {
-            e.printStackTrace();
-        } catch (Exception e) {
-            System.out.println(Toast.makeText(getContext(), "Check your Connection !!", Toast.LENGTH_SHORT));
-        }
-    }
-
+         } catch (JSONException e) {
+             progressDialog.dismiss();
+             e.printStackTrace();
+         } catch (Exception e) {
+             progressDialog.dismiss();
+             System.out.println(Toast.makeText(getContext(), "Check your Connection !!", Toast.LENGTH_SHORT));
+         }
+     }
+ */
     private void updateList() {
         if (userAdapter1.getCount() == 0)
             userList.setAdapter(userAdapter);
@@ -634,7 +616,7 @@ public class AddenquiryFragment extends Fragment implements View.OnClickListener
                 edit.commit();
                 String json = jsonparams.toString().replace("\\/", "/");
                 Log.e("add_enquiry", json);
-                encryptuser1(URLConstants.ADD_ENQUIRY, json, 1);
+                send_request(URLConstants.ADD_ENQUIRY, json, 1);
             }
 
         } catch (
@@ -714,39 +696,116 @@ public class AddenquiryFragment extends Fragment implements View.OnClickListener
         }
     }
 
-    /*public void jsonparse_model(String result) {
-        try {
-            String id = "";
-            JSONObject jsono = new JSONObject(result);
-            JSONArray jarray = jsono.getJSONArray("make");
-            arr_makelist.clear();
-            arr_makelist.add(new Bikemake("", "--select--"));
+    public class Fetch_campaign extends AsyncTask<Void, Void, String> {
+        String targetURL;
+        String newurlParameters;
+        NetworkConnect networkConnect;
+        private ProgressDialog progressDialog;
 
-            for (int i = 0; i < jarray.length(); i++) {
-                JSONObject object = jarray.getJSONObject(i);
-                arr_makelist.add(new Bikemake(object.getString("id"), object.getString("make_name")));
-                if (object.getString("make_name").equals("HERO MOTOCORP"))
-                    id = object.getString("id");
-            }
-
-            jarray = jsono.getJSONArray("model");
-            new Bikemodel("", "--select--");
-            arr_modellist.add("--select--");
-            for (int i = 0; i < jarray.length(); i++) {
-                JSONObject object = jarray.getJSONObject(i);
-                new Bikemodel(object.getString("make_id"), object.getString("model_name"));
-                if (object.getString("make_id").equals(id))
-                    arr_modellist.add(object.getString("model_name"));
-            }
-
-            ArrayAdapter<String> at1 = new ArrayAdapter<String>(getContext(), R.layout.spinner_textview2, arr_modellist);
-            model_spinner.setAdapter(at1);
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        } catch (Exception e) {
-            System.out.println(Toast.makeText(getContext(), "Check your Connection !!", Toast.LENGTH_SHORT));
-
+        public Fetch_campaign(String targeturl, String urlParameters) {
+            this.targetURL = targeturl;
+            this.newurlParameters = urlParameters;
         }
-    }*/
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progressDialog = ProgressDialog.show(getActivity(), null, null);
+            progressDialog.setContentView(R.layout.progresslayout);
+        }
+
+        protected String doInBackground(Void... params) {
+            try {
+                if (NetConnections.isConnected(getContext())) {
+                    networkConnect = new NetworkConnect(URLConstants.ENCRYPT, newurlParameters);
+                    String result = networkConnect.execute();
+                    if (result != null)
+                        encryptdata = result.replace("\\/", "/");
+                    String newurlparams = null;
+                    newurlparams = "data=" + URLEncoder.encode(encryptdata, "UTF-8");
+                    networkConnect = new NetworkConnect(targetURL, newurlparams);
+                    result = networkConnect.execute();
+                    return result;
+                } else {
+                    Toast.makeText(getContext(), "Check your connection !!", Toast.LENGTH_SHORT).show();
+                    return null;
+                }
+            } catch (UnsupportedEncodingException e) {
+                progressDialog.dismiss();
+                e.printStackTrace();
+                return null;
+            } catch (Exception e) {
+                progressDialog.dismiss();
+                Toast.makeText(getContext(), "Check your Connection !!", Toast.LENGTH_SHORT).show();
+                return null;
+            }
+        }
+
+        protected void onPostExecute(String s) {
+            try {
+                super.onPostExecute(s);
+                userAdapter.clear();
+                userAdapter1.clear();
+                Log.e("campaign", s);
+                JSONObject jsono = new JSONObject(s);
+                JSONArray jarray = jsono.getJSONArray("campaign_data");
+                for (int i = 0; i < jarray.length(); i++) {
+                    JSONObject object = jarray.getJSONObject(i);
+                    String dealer_code = object.getString("dealer_code");
+                    String dealer_name = object.getString("dealer_name");
+                    String camp_id = object.getString("camp_id");
+                    String campaign_name = object.getString("campaign_name");
+                    String start_date = object.getString("start_date");
+                    String end_date = object.getString("end_date");
+                    String category = object.getString("category");
+                    String status = object.getString("status");
+                    String sub_category = object.getString("sub_category");
+                    String camp_type = object.getString("camp_type");
+                    String camp_source = object.getString("camp_source");
+                    String model1 = object.getString("model");
+
+                    if (model1.equalsIgnoreCase(model)) {
+                        userAdapter1.add(new Campaign(dealer_code,
+                                dealer_name,
+                                camp_id,
+                                campaign_name,
+                                start_date,
+                                end_date,
+                                category,
+                                status,
+                                sub_category,
+                                camp_type,
+                                camp_source,
+                                model1
+                        ));
+                        userAdapter1.notifyDataSetChanged();
+                    }
+                    if (model1.equalsIgnoreCase("")) {
+                        userAdapter.add(new Campaign(dealer_code,
+                                dealer_name,
+                                camp_id,
+                                campaign_name,
+                                start_date,
+                                end_date,
+                                category,
+                                status,
+                                sub_category,
+                                camp_type,
+                                camp_source,
+                                model1));
+                        userAdapter.notifyDataSetChanged();
+                    }
+                }
+                updateList();
+                progressDialog.dismiss();
+            } catch (JSONException e) {
+                progressDialog.dismiss();
+                e.printStackTrace();
+            } catch (Exception e) {
+                progressDialog.dismiss();
+                Toast.makeText(getContext(), "Check your Connection !!" + e, Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
 }

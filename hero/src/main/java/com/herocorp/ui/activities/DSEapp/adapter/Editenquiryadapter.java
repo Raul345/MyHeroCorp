@@ -1,11 +1,15 @@
 package com.herocorp.ui.activities.DSEapp.adapter;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
 import com.astuetz.PagerSlidingTabStrip;
 import com.herocorp.R;
+import com.herocorp.ui.activities.DSEapp.Fragment.Alert.AlertDialogFragment;
 import com.herocorp.ui.activities.DSEapp.Fragment.Enquiry.EditEnquiryFragment;
 import com.herocorp.ui.activities.DSEapp.Fragment.Enquiry.EditPersonalInfoFragment;
 import com.herocorp.ui.activities.DSEapp.Fragment.Enquiry.EditaddressFragment;
@@ -19,6 +23,7 @@ public class Editenquiryadapter extends FragmentPagerAdapter implements
     private int icons[] = {R.drawable.icon_personalinfo, R.drawable.icon_address, R.drawable.icon_enquiry};
     private final Bundle fragmentBundle;
     //  private String tabTitles[] = new String[]{"GETTING READY TO DONATE", "DONATING YOUR BLOOD", "BLOOD DONATION DONT'S"};
+
 
     public Editenquiryadapter(android.support.v4.app.FragmentManager fm, Bundle bundle) {
         super(fm);

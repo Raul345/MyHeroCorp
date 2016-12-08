@@ -4,8 +4,10 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
+import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,7 +20,11 @@ import android.widget.TextView;
 
 import com.herocorp.R;
 import com.herocorp.ui.activities.BaseDrawerActivity;
+import com.herocorp.ui.activities.DSEapp.Fragment.Alert.AlertDialogFragment;
 import com.herocorp.ui.utility.CustomViewParams;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by rsawh on 05-Oct-16.
@@ -98,37 +104,42 @@ public class EditPersonalInfoFragment extends Fragment implements View.OnClickLi
         gender_spinner.setSelection(((ArrayAdapter<String>) gender_spinner.getAdapter()).getPosition(gender));
 
         firstname_et.setEnabled(false);
-        /*firstname_et.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+       /* firstname_et.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasFocus)
-                    edit.putString("firstname", firstname_et.getText().toString());
-                edit.commit();
+                if (!hasFocus) {
+                    if (TextUtils.isEmpty(firstname_et.getText().toString())) {
+                    } else {
+                        edit.putString("firstname", firstname_et.getText().toString());
+                        edit.commit();
+                    }
+                }
             }
-        })*/
-        ;
-
+        })
+        ;*/
 
         lastname_et.setEnabled(false);
         /*lastname_et.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (!hasFocus)
-                    edit.putString("lastname", lastname_et.getText().toString());
-                edit.commit();
-            }
-        });*/
+                        edit.putString("lastname", lastname_et.getText().toString());
+                        edit.commit();
+                    }
 
-        mobile_et.setEnabled(false);
-       /* mobile_et.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+
+        });
+*/
+       mobile_et.setEnabled(false);
+     /*   mobile_et.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (!hasFocus)
                     edit.putString("mobile", mobile_et.getText().toString());
                 edit.commit();
             }
-        });*/
-
+        });
+*/
         age_et.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
@@ -228,5 +239,14 @@ public class EditPersonalInfoFragment extends Fragment implements View.OnClickLi
             email = "";
         if (age.equalsIgnoreCase("null"))
             age = "";
+    }
+
+    public boolean emailValidator(String email) {
+        Pattern pattern;
+        Matcher matcher;
+        final String EMAIL_PATTERN = "^[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
+        pattern = Pattern.compile(EMAIL_PATTERN);
+        matcher = pattern.matcher(email);
+        return matcher.matches();
     }
 }

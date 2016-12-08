@@ -84,6 +84,7 @@ public class NetworkConnect1 extends AsyncTask<Void, Void, String> {
                     "application/x-www-form-urlencoded");
             connection.setRequestProperty("Content-Length", "" + Integer.toString(data.getBytes().length));
             connection.setRequestProperty("Content-Language", "en-US");
+            //connection.setConnectTimeout(5000);
             connection.setUseCaches(false);
             connection.setDoInput(true);
             connection.setDoOutput(true);
@@ -132,7 +133,6 @@ public class NetworkConnect1 extends AsyncTask<Void, Void, String> {
                 Bundle bundle = new Bundle();
                 bundle.putString("msg", message);
                 bundle.putInt("flag", flag);
-
 
                 FragmentManager fm = ((FragmentActivity) context).getSupportFragmentManager();
                 AlertDialogFragment dialogFragment = new AlertDialogFragment();

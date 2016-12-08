@@ -1,30 +1,34 @@
-package com.herocorp.ui.activities.DSEapp.Utilities;
+package com.herocorp.ui.activities.DSEapp;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.widget.ProgressBar;
+import android.graphics.drawable.AnimationDrawable;
+import android.view.Gravity;
+import android.view.View;
+import android.view.WindowManager;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.herocorp.R;
 
 /**
- * Created by rsawh on 06-Dec-16.
+ * Created by rsawh on 07-Dec-16.
  */
 
-/*
-public class ProgressDialog extends Dialog {
-    public static ProgressDialog progrssDialog;
+public class ProgressHUD extends Dialog {
+    public static ProgressHUD progrssDialog;
 
-    public ProgressDialog(Context context) {
+    public ProgressHUD(Context context) {
         super(context);
     }
 
-    public ProgressDialog(Context context, int theme) {
+    public ProgressHUD(Context context, int theme) {
         super(context, theme);
     }
 
 
     public void onWindowFocusChanged(boolean hasFocus) {
-        ProgressBar imageView = (ProgressBar) findViewById(R.id.progress);
+        ImageView imageView = (ImageView) findViewById(R.id.spinnerImageView);
         AnimationDrawable spinner = (AnimationDrawable) imageView.getBackground();
         spinner.start();
     }
@@ -38,8 +42,7 @@ public class ProgressDialog extends Dialog {
         }
     }
 
-    */
-/***
+    /***
      * show progress dialog
      *
      * @param context
@@ -48,13 +51,12 @@ public class ProgressDialog extends Dialog {
      * @param cancelable
      * @param cancelListener
      * @return
-     *//*
-
+     */
     public static ProgressHUD show(Context context, CharSequence message, boolean indeterminate, boolean cancelable,
                                    OnCancelListener cancelListener) {
         ProgressHUD dialog = new ProgressHUD(context, R.style.ProgressHUD);
         dialog.setTitle("");
-        dialog.setContentView(R.layout.progress_hud);
+        dialog.setContentView(R.layout.progress_hero);
         if (message == null || message.length() == 0) {
             dialog.findViewById(R.id.message).setVisibility(View.GONE);
         } else {
@@ -75,7 +77,6 @@ public class ProgressDialog extends Dialog {
     public static void showDialog(Context context, CharSequence message, boolean cancelable) {
         if (progrssDialog == null) {
             progrssDialog = ProgressHUD.show(context, message, false, false, null);
-
         }
     }
 
@@ -85,6 +86,5 @@ public class ProgressDialog extends Dialog {
             progrssDialog = null;
         }
     }
-
 }
-*/
+

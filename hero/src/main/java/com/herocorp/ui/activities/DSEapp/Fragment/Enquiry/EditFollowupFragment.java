@@ -1,10 +1,12 @@
 package com.herocorp.ui.activities.DSEapp.Fragment.Enquiry;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +21,9 @@ import com.herocorp.ui.activities.BaseDrawerActivity;
 import com.herocorp.ui.activities.DSEapp.adapter.Editenquiryadapter;
 import com.herocorp.ui.utility.CustomTypeFace;
 import com.herocorp.ui.utility.CustomViewParams;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Created by rsawh on 05-Oct-16.
@@ -48,11 +53,16 @@ public class EditFollowupFragment extends Fragment implements View.OnClickListen
     String enquiry_id;
     String follow_date;
 
+    SharedPreferences mypref;
+    int page_flag;
+
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
             savedInstanceState) {
 
         rootView = inflater.inflate(R.layout.dse_editfollowup_fragment, container, false);
+        mypref = getActivity().getSharedPreferences("herocorp", 0);
+
 
         initView(rootView);
 
@@ -78,16 +88,26 @@ public class EditFollowupFragment extends Fragment implements View.OnClickListen
         LinearLayout topLayout1 = (LinearLayout) rootView.findViewById(R.id.top_layout1);
         customViewParams.setMarginAndPadding(topLayout1, new int[]{100, 50, 100, 60}, new int[]{0, 0, 0, 0}, topLayout1.getParent());
 
-        ViewPager viewPager = (ViewPager) rootView.findViewById(R.id.viewpager_editenquiry);
-        fetch_data();
+        final ViewPager viewPager = (ViewPager) rootView.findViewById(R.id.viewpager_editenquiry);
+        fetch_data1();
         Bundle bundle = new Bundle();
         send_data(bundle);
+
         viewPager.setAdapter(new Editenquiryadapter(getChildFragmentManager(), bundle));
+
+        if (mypref.contains("page_flag")) {
+            page_flag = mypref.getInt("page_flag", 0);
+        }
+
+        if (page_flag == 1)
+            viewPager.setCurrentItem(2);
 
         // Give the PagerSlidingTabStrip the ViewPager
         tabsStrip = (PagerSlidingTabStrip) rootView.findViewById(R.id.tabs_editenquiry);
         // Attach the view pager to the tab strip
         tabsStrip.setViewPager(viewPager);
+
+
         menu.setOnClickListener(this);
 
 
@@ -103,9 +123,9 @@ public class EditFollowupFragment extends Fragment implements View.OnClickListen
 
     }
 
-    public void fetch_data() {
+ /*   public void fetch_data() {
         Bundle bundle = this.getArguments();
-        if(bundle!=null) {
+        if (bundle != null) {
             first_name = bundle.getString("fname");
             last_name = bundle.getString("lname");
             cell_ph_no = bundle.getString("mobile");
@@ -130,20 +150,20 @@ public class EditFollowupFragment extends Fragment implements View.OnClickListen
             enquiryid = bundle.getString("enquiryid");
         }
 
-    }
+    }*/
 
     public void send_data(Bundle bundle) {
 
-        bundle.putString("user_id", encryptuser);
+      /*  bundle.putString("user_id", encryptuser);
         bundle.putString("user", user);
-        bundle.putString("enquiry_id", enquiryid);
-        bundle.putString("fname", first_name);
+        bundle.putString("enquiry_id", enquiryid);*/
+       /* bundle.putString("fname", first_name);
         bundle.putString("lname", last_name);
         bundle.putString("mobile", cell_ph_no);
         bundle.putString("age", age);
-        bundle.putString("sex", gender);
+        bundle.putString("sex", gender);*/
         bundle.putString("email", email_addr);
-        bundle.putString("state", state);
+       /* bundle.putString("state", state);
         bundle.putString("district", district);
         bundle.putString("tehsil", tehsil);
         bundle.putString("city", city);
@@ -155,8 +175,37 @@ public class EditFollowupFragment extends Fragment implements View.OnClickListen
         bundle.putString("vtype", existvehicle);
         bundle.putString("comment", followup_comments);
         bundle.putString("followdate", follow_date);
-        bundle.putString("enquiryid", enquiry_id);
+        bundle.putString("enquiryid", enquiry_id);*/
     }
 
+    public void fetch_data1() {
+        if (mypref.contains("firstname")) {
+            first_name = mypref.getString("firstname", "");
+        }
+        if (mypref.contains("lastname")) {
+            last_name = mypref.getString("lastname", "");
+        }
+        if (mypref.contains("mobile")) {
+            cell_ph_no = mypref.getString("mobile", "");
+        }
+        if (mypref.contains("age")) {
+            age = mypref.getString("age", "");
+        }
+        if (mypref.contains("email")) {
+            email_addr = mypref.getString("email", "");
+        }
+        if (mypref.contains("gender")) {
+            gender = mypref.getString("gender", "");
+        }
 
+    }
+
+    public boolean emailValidator(String email) {
+        Pattern pattern;
+        Matcher matcher;
+        final String EMAIL_PATTERN = "^[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
+        pattern = Pattern.compile(EMAIL_PATTERN);
+        matcher = pattern.matcher(email);
+        return matcher.matches();
+    }
 }

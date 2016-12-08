@@ -1,7 +1,9 @@
 package com.herocorp.ui.activities.DSEapp.Fragment.Enquiry;
 
+import android.app.ProgressDialog;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -31,6 +33,7 @@ import com.herocorp.infra.utils.NetConnections;
 import com.herocorp.ui.activities.BaseDrawerActivity;
 import com.herocorp.ui.activities.DSEapp.ConnectService.NetworkConnect;
 import com.herocorp.ui.activities.DSEapp.db.DatabaseHelper;
+import com.herocorp.ui.activities.DSEapp.models.Campaign;
 import com.herocorp.ui.activities.DSEapp.models.District;
 import com.herocorp.ui.activities.DSEapp.models.Followup;
 import com.herocorp.ui.activities.DSEapp.models.State;
@@ -41,6 +44,7 @@ import com.herocorp.ui.utility.CustomViewParams;
 import com.herocorp.ui.utility.PreferenceUtil;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
@@ -71,12 +75,10 @@ public class PersonalinfoFragment extends Fragment implements View.OnClickListen
     String gender = "", state = "", district = "", tehsil = "", village = "";
     String firstname = "", lastname = "", mobile = "", age = "", email = "", address1 = "", address2 = "", pincode = "";
 
-    String encryptuser;
-    NetworkConnect networkConnect;
+
     String data;
     DatabaseHelper db;
-    private SharedPreferences sharedPreferences;
-    String state_name, state_id;
+    String state_name, state_id, district_name, tehsil_name, city_name;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
             savedInstanceState) {
@@ -84,8 +86,7 @@ public class PersonalinfoFragment extends Fragment implements View.OnClickListen
         rootView = inflater.inflate(R.layout.dse_personalinfo_fragment, container, false);
 
         initView(rootView);
-        // data = "{\"username\":\"" + username + "\",\"version\":\"" + version + "\",\"imei\":\"" + imei + "\",\"uuid\":\"" + uuid + "\"}";
-//        encryptuser(data, URLConstants.LOGIN, 0);
+
         fetch_states();
 
         return rootView;
@@ -144,7 +145,6 @@ public class PersonalinfoFragment extends Fragment implements View.OnClickListen
 
         district_spinner = (Spinner) rootView.findViewById(R.id.district_spinner);
 
-
         tehsil_spinner = (Spinner) rootView.findViewById(R.id.tehsil_spinner);
 
         village_spinner = (Spinner) rootView.findViewById(R.id.city_spinner);
@@ -161,7 +161,7 @@ public class PersonalinfoFragment extends Fragment implements View.OnClickListen
                     state = parent.getItemAtPosition(position).toString();
                     State sel_state = (State) parent.getSelectedItem();
                     data = "{\"state_id\":\"" + sel_state.getId() + "\"}";
-                    encryptuser(data, URLConstants.GET_DISTRICT, 1);
+                    send_request(data, URLConstants.GET_DISTRICT, 1);
                 } else
                     reset(0);
             }
@@ -181,7 +181,7 @@ public class PersonalinfoFragment extends Fragment implements View.OnClickListen
 
                     data = "{\"district_id\":\"" + sel_district.getId() + "\"}";
 
-                    encryptuser(data, URLConstants.GET_DISTRICT_DATA, 2);
+                    send_request(data, URLConstants.GET_DISTRICT_DATA, 2);
                 } else
                     reset(1);
             }
@@ -202,8 +202,15 @@ public class PersonalinfoFragment extends Fragment implements View.OnClickListen
                     Village req_village = new Village();
                     arr_village.clear();
                     arr_village = req_village.getVillage(sel_tehsil.getId());
+                    int cposition = 0;
+                    for (int i = 0; i < arr_village.size(); i++) {
+                        if (city_name.equalsIgnoreCase(arr_village.get(i))) {
+                            cposition = i;
+                        }
+                    }
                     ArrayAdapter<String> at2 = new ArrayAdapter<String>(getContext(), R.layout.spinner_textview, arr_village);
                     village_spinner.setAdapter(at2);
+                    village_spinner.setSelection(cposition);
                 }
             }
 
@@ -232,7 +239,6 @@ public class PersonalinfoFragment extends Fragment implements View.OnClickListen
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (position != 0)
                     gender = parent.getItemAtPosition(position).toString();
-
             }
 
             @Override
@@ -243,8 +249,6 @@ public class PersonalinfoFragment extends Fragment implements View.OnClickListen
 
         button_submit.setOnClickListener(this);
         menu.setOnClickListener(this);
-
-
     }
 
     @Override
@@ -263,9 +267,7 @@ public class PersonalinfoFragment extends Fragment implements View.OnClickListen
             address2 = address2_et.getText().toString();
             pincode = pincode_et.getText().toString();
             if (firstname.equals("") || lastname.equals("") || mobile.equals("")) {
-
                 Toast.makeText(getContext(), "Please fill all the required details !!", Toast.LENGTH_SHORT).show();
-
             } else if (!TextUtils.isEmpty(email) && emailValidator(email) == false) {
 
                 Toast.makeText(getContext(), "Invalid Email !!", Toast.LENGTH_LONG).show();
@@ -275,7 +277,6 @@ public class PersonalinfoFragment extends Fragment implements View.OnClickListen
                 Toast.makeText(getContext(), "Invalid Contact !!", Toast.LENGTH_LONG).show();
 
             else {
-                // Toast.makeText(getContext(), firstname + lastname + mobile + age + gender + state + district + tehsil + village + address1 + address2 + pincode, Toast.LENGTH_SHORT).show();
                 Bundle bundle = new Bundle();
                 bundle.putString("firstname", firstname);
                 bundle.putString("lastname", lastname);
@@ -295,7 +296,6 @@ public class PersonalinfoFragment extends Fragment implements View.OnClickListen
                 FragmentManager fm = getActivity().getSupportFragmentManager();
                 FragmentTransaction ft = fm.beginTransaction();
                 f.setArguments(bundle);
-                // ft.addToBackStack(null);
                 ft.replace(R.id.content_personalinfo, f);
                 ft.commit();
             }
@@ -319,64 +319,23 @@ public class PersonalinfoFragment extends Fragment implements View.OnClickListen
 
     }
 
-   /* public void encryptuser1() {
-        if (NetConnections.isConnected(getContext())) {
-            String json = "{\"username\":\"ROBINK11610\",\"version\":\"1.0\",\"imei\":\"10\",\"uuid\":\"0\"}";
-            try {
-                String urlParameters = "data=" + URLEncoder.encode(json, "UTF-8");
-                networkConnect = new NetworkConnect("http://abym.in/clientProof/hero_motors/encrypt", urlParameters);
-                String result = networkConnect.execute();
-                if (result != null)
-                    encryptuser = result.replace("\\/", "/");
-                String newurlparams = "data=" + URLEncoder.encode(encryptuser, "UTF-8");
-                NetworkConnect networkConnect = new NetworkConnect(URLConstants.LOGIN, newurlparams);
-                jsonparse_state(networkConnect.execute());
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-            }
 
-        } else
-            Toast.makeText(getContext(), "Check your connection !!", Toast.LENGTH_SHORT).show();
-    }
-*/
-   /* public void jsonparse_state(String result) {
-        try {
-            Log.e("login_response", result);
-            JSONObject jsono = new JSONObject(result);
-            JSONArray jarray = jsono.getJSONArray("state");
-
-            arr_state.add(new State("", "--select--"));
-            for (int i = 0; i < jarray.length(); i++) {
-                JSONObject object = jarray.getJSONObject(i);
-                arr_state.add(new State(object.getString("id"), object.getString("state_name")));
-            }
-            ArrayAdapter<State> at1 = new ArrayAdapter<State>(getContext(), R.layout.spinner_textview, arr_state);
-            state_spinner.setAdapter(at1);
-
-        } catch (Exception e) {
-            Toast.makeText(getContext(), "Check your Connection !!" + e, Toast.LENGTH_SHORT).show();
-
-        }
-    }*/
-
-    public void encryptuser(String data, String url, int flag) {
+    public void send_request(String data, String url, int flag) {
         if (NetConnections.isConnected(getContext())) {
             try {
                 String urlParameters = "data=" + URLEncoder.encode(data, "UTF-8");
-                networkConnect = new NetworkConnect("http://abym.in/clientProof/hero_motors/encrypt", urlParameters);
-                String result = networkConnect.execute();
-                if (result != null)
-                    encryptuser = result.replace("\\/", "/");
-                String newurlparams = "data=" + URLEncoder.encode(encryptuser, "UTF-8");
-                NetworkConnect networkConnect = new NetworkConnect(url, newurlparams);
+
                 if (flag == 0) {
                     // jsonparse_state(networkConnect.execute());
                 }
                 if (flag == 1) {
-                    jsonparse_district(networkConnect.execute());
+
+                    new Fetch_data(url, urlParameters).execute();
+
                 }
                 if (flag == 2) {
-                    jsonparse_tehsil_village(networkConnect.execute());
+                    new Fetch_data(url, urlParameters).execute();
+
                 }
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
@@ -393,12 +352,18 @@ public class PersonalinfoFragment extends Fragment implements View.OnClickListen
             JSONObject jsono = new JSONObject(result);
             JSONArray jarray = jsono.getJSONArray("district");
             arr_district.add(new District("", "--select--"));
+
+            int position = 0;
             for (int i = 0; i < jarray.length(); i++) {
                 JSONObject object = jarray.getJSONObject(i);
                 arr_district.add(new District(object.getString("id"), object.getString("district_name")));
+
+                if (object.getString("district_name").equalsIgnoreCase(district_name))
+                    position = i + 1;
             }
             ArrayAdapter<District> at1 = new ArrayAdapter<District>(getContext(), R.layout.spinner_textview, arr_district);
             district_spinner.setAdapter(at1);
+            district_spinner.setSelection(position);
 
         } catch (Exception e) {
             Toast.makeText(getContext(), "Check your Connection !!" + e, Toast.LENGTH_SHORT).show();
@@ -413,12 +378,18 @@ public class PersonalinfoFragment extends Fragment implements View.OnClickListen
             JSONObject jsono = new JSONObject(result);
             JSONArray jarray = jsono.getJSONArray("tehsil");
             arr_tehsil.add(new Tehsil("", "", "--select--"));
+
+            int tposition = 0;
             for (int i = 0; i < jarray.length(); i++) {
                 JSONObject object = jarray.getJSONObject(i);
                 arr_tehsil.add(new Tehsil(object.getString("district_id"), object.getString("id"), object.getString("tehsil_name")));
+
+                if (object.getString("tehsil_name").equalsIgnoreCase(tehsil_name))
+                    tposition = i + 1;
             }
             ArrayAdapter<Tehsil> at1 = new ArrayAdapter<Tehsil>(getContext(), R.layout.spinner_textview, arr_tehsil);
             tehsil_spinner.setAdapter(at1);
+            tehsil_spinner.setSelection(tposition);
 
             JSONArray jarray1 = jsono.getJSONArray("village");
 
@@ -426,6 +397,7 @@ public class PersonalinfoFragment extends Fragment implements View.OnClickListen
             for (int i = 0; i < jarray1.length(); i++) {
                 JSONObject object = jarray1.getJSONObject(i);
                 new Village(object.getString("tehsil_id"), object.getString("id"), object.getString("village_name"));
+
             }
         } catch (Exception e) {
             Toast.makeText(getContext(), "Check your Connection !!", Toast.LENGTH_SHORT).show();
@@ -455,7 +427,7 @@ public class PersonalinfoFragment extends Fragment implements View.OnClickListen
             tehsil = "";
             village = "";
         } else if (flag == 1) {
-            // tehsil_spinner.setAdapter(at);
+            tehsil_spinner.setAdapter(at);
             village_spinner.setAdapter(at);
             tehsil = "";
             village = "";
@@ -483,6 +455,79 @@ public class PersonalinfoFragment extends Fragment implements View.OnClickListen
     public void fetch_pref() {
         state_name = PreferenceUtil.get_StateName(getContext());
         state_id = PreferenceUtil.get_StateId(getContext());
-     }
+        tehsil_name = PreferenceUtil.get_TehsilName(getContext());
+        district_name = PreferenceUtil.get_DistrictName(getContext());
+        city_name = PreferenceUtil.get_CityName(getContext());
+    }
+
+
+    public class Fetch_data extends AsyncTask<Void, Void, String> {
+        String targetURL;
+        String newurlParameters;
+        NetworkConnect networkConnect;
+        private ProgressDialog progressDialog;
+
+        public Fetch_data(String targeturl, String urlParameters) {
+            this.targetURL = targeturl;
+            this.newurlParameters = urlParameters;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progressDialog = ProgressDialog.show(getActivity(), null, null);
+            progressDialog.setContentView(R.layout.progresslayout);
+        }
+
+        protected String doInBackground(Void... params) {
+            try {
+                if (NetConnections.isConnected(getContext())) {
+                    String encryptdata = null;
+                    networkConnect = new NetworkConnect(URLConstants.ENCRYPT, newurlParameters);
+                    String result = networkConnect.execute();
+                    if (result != null)
+                        encryptdata = result.replace("\\/", "/");
+                    String newurlparams = null;
+                    newurlparams = "data=" + URLEncoder.encode(encryptdata, "UTF-8");
+                    networkConnect = new NetworkConnect(targetURL, newurlparams);
+                    result = networkConnect.execute();
+                    return result;
+                } else {
+                    Toast.makeText(getContext(), "Check your connection !!", Toast.LENGTH_SHORT).show();
+                    return null;
+                }
+            } catch (UnsupportedEncodingException e) {
+                progressDialog.dismiss();
+                e.printStackTrace();
+                return null;
+            } catch (Exception e) {
+                progressDialog.dismiss();
+                e.printStackTrace();
+                return null;
+            }
+        }
+
+        protected void onPostExecute(String s) {
+            try {
+                super.onPostExecute(s);
+                Log.e("response", s);
+                JSONObject jsonObject = new JSONObject(s);
+
+                if (jsonObject.has("district")) {
+                    jsonparse_district(s);
+                }
+                if (jsonObject.has("tehsil")) {
+                    jsonparse_tehsil_village(s);
+                }
+                progressDialog.dismiss();
+            } catch (JSONException e) {
+                progressDialog.dismiss();
+                e.printStackTrace();
+            } catch (Exception e) {
+                progressDialog.dismiss();
+                Toast.makeText(getContext(), "Check your Connection !!", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
 
 }

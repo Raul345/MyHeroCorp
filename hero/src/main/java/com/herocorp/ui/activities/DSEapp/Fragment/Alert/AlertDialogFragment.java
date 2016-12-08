@@ -42,6 +42,8 @@ public class AlertDialogFragment extends DialogFragment {
         String msg = bundle.getString("msg");
         int flag = bundle.getInt("flag");
         textview_alert.setText(msg);
+        if (flag < 1)
+            textview_header.setText("");
 
         if (flag == 1) {
             button_ok.setOnClickListener(new View.OnClickListener() {
@@ -119,14 +121,13 @@ public class AlertDialogFragment extends DialogFragment {
                     dialogFragment.show(fm, "Sample Fragment");
                     dismiss();
 
-
                 }
             });
         } else {
             button_ok.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    textview_header.setVisibility(View.GONE);
+
                     // getActivity().onBackPressed();
                     dismiss();
                 }

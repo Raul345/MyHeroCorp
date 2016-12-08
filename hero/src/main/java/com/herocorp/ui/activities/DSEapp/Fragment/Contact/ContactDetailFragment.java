@@ -140,6 +140,7 @@ public class ContactDetailFragment extends Fragment implements View.OnClickListe
         fetch_data();
         fetch_data1();
         fetch_data2();
+        vehicleDetailadapter.clear();
         setList();
         set_data();
 
@@ -433,6 +434,7 @@ public class ContactDetailFragment extends Fragment implements View.OnClickListe
 
     public void setList() {
         vehicleDetailadapter.clear();
+
         for (int i = 0; i < vinarray.size(); i++) {
 
             vehicleDetailadapter.add(new VehicleDetail(modelarray.get(i).toString(), dealerarray.get(i).toString(),

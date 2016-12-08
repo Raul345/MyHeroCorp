@@ -352,7 +352,6 @@ public class ContactFragment extends Fragment implements View.OnClickListener {
             FragmentTransaction ft = fm.beginTransaction();
             Fragment f = new PersonalinfoFragment();
             f.setArguments(bundle);
-            // ft.addToBackStack(null);
             ft.replace(R.id.content_contact, f);
             ft.commit();
         }

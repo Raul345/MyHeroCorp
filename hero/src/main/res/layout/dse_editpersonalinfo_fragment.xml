@@ -174,7 +174,8 @@
                     android:padding="8dp"
                     android:singleLine="true"
                     android:textColor="#000000"
-                    android:textSize="15dp" />
+                    android:textSize="15dp"
+                    android:maxLength="10"/>
             </LinearLayout>
 
             <LinearLayout
