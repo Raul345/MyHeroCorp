@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -18,6 +19,7 @@ import android.widget.Toast;
 import com.astuetz.PagerSlidingTabStrip;
 import com.herocorp.R;
 import com.herocorp.ui.activities.BaseDrawerActivity;
+import com.herocorp.ui.activities.DSEapp.Fragment.Alert.AlertDialogFragment;
 import com.herocorp.ui.activities.DSEapp.adapter.Editenquiryadapter;
 import com.herocorp.ui.utility.CustomTypeFace;
 import com.herocorp.ui.utility.CustomViewParams;
@@ -43,8 +45,9 @@ public class EditFollowupFragment extends Fragment implements View.OnClickListen
     String district;
     String tehsil;
     String city;
-    String x_con_seq_no;
-    String x_model_interested;
+    String address1;
+    String address2;
+    String pincode;
     String expected_date_purchase;
     String x_exchange_required;
     String x_finance_required;
@@ -90,10 +93,11 @@ public class EditFollowupFragment extends Fragment implements View.OnClickListen
 
         final ViewPager viewPager = (ViewPager) rootView.findViewById(R.id.viewpager_editenquiry);
         fetch_data1();
+        fetch_data2();
         Bundle bundle = new Bundle();
         send_data(bundle);
 
-        viewPager.setAdapter(new Editenquiryadapter(getChildFragmentManager(), bundle));
+        viewPager.setAdapter(new Editenquiryadapter(getChildFragmentManager(), bundle, getContext()));
 
         if (mypref.contains("page_flag")) {
             page_flag = mypref.getInt("page_flag", 0);
@@ -102,10 +106,106 @@ public class EditFollowupFragment extends Fragment implements View.OnClickListen
         if (page_flag == 1)
             viewPager.setCurrentItem(2);
 
+        viewPager.setOffscreenPageLimit(3);
+
         // Give the PagerSlidingTabStrip the ViewPager
         tabsStrip = (PagerSlidingTabStrip) rootView.findViewById(R.id.tabs_editenquiry);
         // Attach the view pager to the tab strip
         tabsStrip.setViewPager(viewPager);
+
+       /* tabsStrip.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+                                              @Override
+                                              public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                                                  if (position == 1 || position == 2) {
+                                                      fetch_data1();
+                                                      if (!email_addr.equalsIgnoreCase("") && !emailValidator(email_addr)) {
+                                                          Bundle bundle = new Bundle();
+                                                          bundle.putString("msg", "Invalid Email address !!");
+                                                          bundle.putInt("flag", 0);
+                                                          FragmentManager fm = getActivity().getSupportFragmentManager();
+                                                          AlertDialogFragment dialogFragment = new AlertDialogFragment();
+                                                          dialogFragment.setArguments(bundle);
+                                                          dialogFragment.setCancelable(false);
+                                                          dialogFragment.show(fm, "Sample Fragment");
+                                                          viewPager.setCurrentItem(0);
+                                                          tabsStrip.setViewPager(viewPager);
+                                                      } else if (age.equalsIgnoreCase("")) {
+                                                          Bundle bundle = new Bundle();
+                                                          bundle.putString("msg", "Age cannot be empty !!");
+                                                          bundle.putInt("flag", 0);
+                                                          FragmentManager fm = getActivity().getSupportFragmentManager();
+                                                          AlertDialogFragment dialogFragment = new AlertDialogFragment();
+                                                          dialogFragment.setArguments(bundle);
+                                                          dialogFragment.setCancelable(false);
+                                                          dialogFragment.show(fm, "Sample Fragment");
+                                                          viewPager.setCurrentItem(0);
+                                                          tabsStrip.setViewPager(viewPager);
+                                                      }
+                                                  }
+                                                  if (position == 0 || position == 2) {
+                                                      fetch_data2();
+                                                      if (state.equalsIgnoreCase("")) {
+                                                          Bundle bundle = new Bundle();
+                                                          bundle.putString("msg", "Please select the state !!");
+                                                          bundle.putInt("flag", 0);
+                                                          FragmentManager fm = getActivity().getSupportFragmentManager();
+                                                          AlertDialogFragment dialogFragment = new AlertDialogFragment();
+                                                          dialogFragment.setArguments(bundle);
+                                                          dialogFragment.setCancelable(false);
+                                                          dialogFragment.show(fm, "Sample Fragment");
+                                                          viewPager.setCurrentItem(1);
+                                                          tabsStrip.setViewPager(viewPager);
+                                                      } else if (district.equalsIgnoreCase("")) {
+                                                          Bundle bundle = new Bundle();
+                                                          bundle.putString("msg", "Please select the district !!");
+                                                          bundle.putInt("flag", 0);
+                                                          FragmentManager fm = getActivity().getSupportFragmentManager();
+                                                          AlertDialogFragment dialogFragment = new AlertDialogFragment();
+                                                          dialogFragment.setArguments(bundle);
+                                                          dialogFragment.setCancelable(false);
+                                                          dialogFragment.show(fm, "Sample Fragment");
+                                                          viewPager.setCurrentItem(1);
+                                                          tabsStrip.setViewPager(viewPager);
+                                                      } else if (tehsil.equalsIgnoreCase("")) {
+                                                          Bundle bundle = new Bundle();
+                                                          bundle.putString("msg", "Please select the tehsil !!");
+                                                          bundle.putInt("flag", 0);
+                                                          FragmentManager fm = getActivity().getSupportFragmentManager();
+                                                          AlertDialogFragment dialogFragment = new AlertDialogFragment();
+                                                          dialogFragment.setArguments(bundle);
+                                                          dialogFragment.setCancelable(false);
+                                                          dialogFragment.show(fm, "Sample Fragment");
+                                                          viewPager.setCurrentItem(1);
+                                                          tabsStrip.setViewPager(viewPager);
+                                                      } else if (city.equalsIgnoreCase("")) {
+                                                          Bundle bundle = new Bundle();
+                                                          bundle.putString("msg", "Please select the village/city !!");
+                                                          bundle.putInt("flag", 0);
+                                                          FragmentManager fm = getActivity().getSupportFragmentManager();
+                                                          AlertDialogFragment dialogFragment = new AlertDialogFragment();
+                                                          dialogFragment.setArguments(bundle);
+                                                          dialogFragment.setCancelable(false);
+                                                          dialogFragment.show(fm, "Sample Fragment");
+                                                          viewPager.setCurrentItem(1);
+                                                          tabsStrip.setViewPager(viewPager);
+                                                      }
+                                                  }
+
+                                              }
+
+                                              @Override
+                                              public void onPageSelected(int position) {
+
+                                              }
+
+                                              @Override
+                                              public void onPageScrollStateChanged(int state) {
+
+                                              }
+                                          }
+
+        );
+*/
 
         menu.setOnClickListener(this);
 
@@ -175,6 +275,16 @@ public class EditFollowupFragment extends Fragment implements View.OnClickListen
         bundle.putString("enquiryid", enquiry_id);*/
     }
 
+
+    public boolean emailValidator(String email) {
+        Pattern pattern;
+        Matcher matcher;
+        final String EMAIL_PATTERN = "^[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
+        pattern = Pattern.compile(EMAIL_PATTERN);
+        matcher = pattern.matcher(email);
+        return matcher.matches();
+    }
+
     public void fetch_data1() {
         if (mypref.contains("firstname")) {
             first_name = mypref.getString("firstname", "");
@@ -194,15 +304,34 @@ public class EditFollowupFragment extends Fragment implements View.OnClickListen
         if (mypref.contains("gender")) {
             gender = mypref.getString("gender", "");
         }
+        if (email_addr.equalsIgnoreCase("null"))
+            email_addr = "";
 
     }
 
-    public boolean emailValidator(String email) {
-        Pattern pattern;
-        Matcher matcher;
-        final String EMAIL_PATTERN = "^[_A-Za-z0-9-]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
-        pattern = Pattern.compile(EMAIL_PATTERN);
-        matcher = pattern.matcher(email);
-        return matcher.matches();
+    public void fetch_data2() {
+
+        if (mypref.contains("state")) {
+            state = mypref.getString("state", "");
+        }
+        if (mypref.contains("district")) {
+            district = mypref.getString("district", "");
+        }
+        if (mypref.contains("tehsil")) {
+            tehsil = mypref.getString("tehsil", "");
+        }
+        if (mypref.contains("city")) {
+            city = mypref.getString("city", "");
+        }
+        if (mypref.contains("address1")) {
+            address1 = mypref.getString("address1", "");
+        }
+        if (mypref.contains("address2")) {
+            address2 = mypref.getString("address2", "");
+        }
+        if (mypref.contains("pincode")) {
+            pincode = mypref.getString("pincode", "");
+        }
+
     }
 }

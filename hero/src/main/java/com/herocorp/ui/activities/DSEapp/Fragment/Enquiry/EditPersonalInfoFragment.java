@@ -5,10 +5,13 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.text.Editable;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.text.style.ForegroundColorSpan;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -113,6 +116,21 @@ public class EditPersonalInfoFragment extends Fragment implements View.OnClickLi
         gender_spinner.setSelection(((ArrayAdapter<String>) gender_spinner.getAdapter()).getPosition(gender));
 
         firstname_et.setEnabled(false);
+      /*  firstname_et.addTextChangedListener(new TextWatcher() {
+
+            public void afterTextChanged(Editable s) {
+            }
+
+            public void beforeTextChanged(CharSequence s, int start,
+                                          int count, int after) {
+            }
+
+            public void onTextChanged(CharSequence s, int start,
+                                      int before, int count) {
+                edit.putString("firstname", firstname_et.getText().toString());
+                edit.commit();
+            }
+        });*/
        /* firstname_et.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
@@ -128,6 +146,21 @@ public class EditPersonalInfoFragment extends Fragment implements View.OnClickLi
         ;*/
 
         lastname_et.setEnabled(false);
+       /* lastname_et.addTextChangedListener(new TextWatcher() {
+
+            public void afterTextChanged(Editable s) {
+            }
+
+            public void beforeTextChanged(CharSequence s, int start,
+                                          int count, int after) {
+            }
+
+            public void onTextChanged(CharSequence s, int start,
+                                      int before, int count) {
+                edit.putString("lastname", lastname_et.getText().toString());
+                edit.commit();
+            }
+        });*/
         /*lastname_et.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
@@ -139,7 +172,7 @@ public class EditPersonalInfoFragment extends Fragment implements View.OnClickLi
 
         });
 */
-       mobile_et.setEnabled(false);
+        mobile_et.setEnabled(false);
      /*   mobile_et.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
@@ -149,23 +182,83 @@ public class EditPersonalInfoFragment extends Fragment implements View.OnClickLi
             }
         });
 */
-        age_et.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasFocus)
-                    edit.putString("age", age_et.getText().toString());
-                edit.commit();
-            }
-        });
 
-        email_et.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+      /*  mobile_et.addTextChangedListener(new TextWatcher() {
+
+            public void afterTextChanged(Editable s) {
+            }
+
+            public void beforeTextChanged(CharSequence s, int start,
+                                          int count, int after) {
+            }
+
+            public void onTextChanged(CharSequence s, int start,
+                                      int before, int count) {
+                edit.putString("mobile", mobile_et.getText().toString());
+                edit.commit();
+            }
+        });*/
+
+
+       age_et.addTextChangedListener(new TextWatcher() {
+
+            public void afterTextChanged(Editable s) {
+            }
+
+            public void beforeTextChanged(CharSequence s, int start,
+                                          int count, int after) {
+            }
+
+            public void onTextChanged(CharSequence s, int start,
+                                      int before, int count) {
+                edit.putString("age", age_et.getText().toString());
+                edit.commit();
+            }
+       });
+
+       /* age_et.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                edit.putString("age", age_et.getText().toString());
+                edit.commit();
+                return false;
+            }
+        });*/
+       /* age_et.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasFocus)
-                    edit.putString("email", email_et.getText().toString());
+                if (!hasFocus) {
+                    edit.putString("age", age_et.getText().toString());
+                    edit.commit();
+                }
+            }
+        });*/
+
+
+        email_et.addTextChangedListener(new TextWatcher() {
+
+            public void afterTextChanged(Editable s) {
+            }
+
+            public void beforeTextChanged(CharSequence s, int start,
+                                          int count, int after) {
+            }
+
+            public void onTextChanged(CharSequence s, int start,
+                                      int before, int count) {
+                edit.putString("email", email_et.getText().toString());
                 edit.commit();
             }
         });
+       /* email_et.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (!hasFocus) {
+                    edit.putString("email", email_et.getText().toString());
+                    edit.commit();
+                }
+            }
+        });*/
 
         gender_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override

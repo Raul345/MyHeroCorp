@@ -9,6 +9,8 @@ import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -420,7 +422,7 @@ public class AddenquiryFragment extends Fragment implements View.OnClickListener
                 }
                 if (flag == 1) {
                     ProgressDialog progress = new ProgressDialog(getContext());
-                    PreferenceUtil.set_Address(getContext(),state,district,tehsil,village);
+                    PreferenceUtil.set_Address(getContext(), state, district, tehsil, village);
                     new NetworkConnect1(url, urlParameters, progress, "Enquiry has been successfully submitted.", getContext(), 2).execute();
                 }
             } catch (UnsupportedEncodingException e) {

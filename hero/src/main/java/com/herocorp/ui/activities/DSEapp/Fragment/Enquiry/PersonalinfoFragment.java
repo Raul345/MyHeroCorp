@@ -84,7 +84,6 @@ public class PersonalinfoFragment extends Fragment implements View.OnClickListen
             savedInstanceState) {
 
         rootView = inflater.inflate(R.layout.dse_personalinfo_fragment, container, false);
-
         initView(rootView);
 
         fetch_states();
@@ -186,8 +185,10 @@ public class PersonalinfoFragment extends Fragment implements View.OnClickListen
                     State sel_state = (State) parent.getSelectedItem();
                     data = "{\"state_id\":\"" + sel_state.getId() + "\"}";
                     send_request(data, URLConstants.GET_DISTRICT, 1);
-                } else
+                } else {
+                    state = "";
                     reset(0);
+                }
             }
 
             @Override
@@ -206,8 +207,10 @@ public class PersonalinfoFragment extends Fragment implements View.OnClickListen
                     data = "{\"district_id\":\"" + sel_district.getId() + "\"}";
 
                     send_request(data, URLConstants.GET_DISTRICT_DATA, 2);
-                } else
+                } else {
+                    district = "";
                     reset(1);
+                }
             }
 
             @Override
@@ -235,20 +238,27 @@ public class PersonalinfoFragment extends Fragment implements View.OnClickListen
                     ArrayAdapter<String> at2 = new ArrayAdapter<String>(getContext(), R.layout.spinner_textview, arr_village);
                     village_spinner.setAdapter(at2);
                     village_spinner.setSelection(cposition);
-                }
+                    state_name = "";
+                    tehsil_name = "";
+                    district_name = "";
+                    city_name = "";
+
+                } else
+                    tehsil = "";
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                tehsil = "--select--";
+                tehsil = "";
             }
         });
 
         village_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                village = parent.getItemAtPosition(position).toString();
-                if (village.equals("--select--"))
+                if (position != 0) {
+                    village = parent.getItemAtPosition(position).toString();
+                } else
                     village = "";
             }
 
@@ -263,6 +273,7 @@ public class PersonalinfoFragment extends Fragment implements View.OnClickListen
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (position != 0)
                     gender = parent.getItemAtPosition(position).toString();
+
             }
 
             @Override
@@ -290,7 +301,8 @@ public class PersonalinfoFragment extends Fragment implements View.OnClickListen
             address1 = address1_et.getText().toString();
             address2 = address2_et.getText().toString();
             pincode = pincode_et.getText().toString();
-            if (firstname.equals("") || lastname.equals("") || mobile.equals("")) {
+            if (firstname.equals("") || lastname.equals("") || mobile.equals("") || age.equals("") || gender.equals("") || state.equals("")
+                    || district.equals("") || tehsil.equals("") || village.equals("")) {
                 Toast.makeText(getContext(), "Please fill all the required details !!", Toast.LENGTH_SHORT).show();
             } else if (!TextUtils.isEmpty(email) && emailValidator(email) == false) {
 
@@ -320,7 +332,7 @@ public class PersonalinfoFragment extends Fragment implements View.OnClickListen
                 FragmentManager fm = getActivity().getSupportFragmentManager();
                 FragmentTransaction ft = fm.beginTransaction();
                 f.setArguments(bundle);
-                ft.addToBackStack(null);
+                ft.addToBackStack("personalinfo");
                 ft.add(R.id.content_personalinfo, f);
                 ft.commit();
             }
@@ -447,6 +459,7 @@ public class PersonalinfoFragment extends Fragment implements View.OnClickListen
             district_spinner.setAdapter(at);
             tehsil_spinner.setAdapter(at);
             village_spinner.setAdapter(at);
+
             district = "";
             tehsil = "";
             village = "";

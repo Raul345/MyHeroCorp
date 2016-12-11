@@ -240,7 +240,7 @@ public class FollowupDetailFragment extends Fragment implements View.OnClickList
     public void transaction(final Fragment f) {
         FragmentManager fm = getActivity().getSupportFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
-        ft.replace(R.id.content_followupdetail, f);
+        ft.replace(R.id.content_followupdetail, f,"followupetail");
         ft.commit();
     }
 
@@ -375,6 +375,7 @@ public class FollowupDetailFragment extends Fragment implements View.OnClickList
                         Log.e("ques", object.getString("question"));
                     }
                     bundle.putStringArrayList("quesid", quesid);
+                    bundle.putInt("page_flag",1);
                     f = new TestRideFeedbackFragment();
                     f.setArguments(bundle);
                     transaction(f);

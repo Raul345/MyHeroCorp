@@ -3,6 +3,7 @@ package com.herocorp.ui.activities.DSEapp.adapter;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -30,9 +31,10 @@ public class Editenquiryadapter extends FragmentPagerAdapter implements
 
     Context context;
 
-    public Editenquiryadapter(android.support.v4.app.FragmentManager fm, Bundle bundle) {
+    public Editenquiryadapter(android.support.v4.app.FragmentManager fm, Bundle bundle,Context context) {
         super(fm);
         fragmentBundle = bundle;
+        this.context=context;
     }
 
     @Override
@@ -61,7 +63,6 @@ public class Editenquiryadapter extends FragmentPagerAdapter implements
     public int getPageIconResId(int position) {
         return icons[position];
     }
-
 
 
 }

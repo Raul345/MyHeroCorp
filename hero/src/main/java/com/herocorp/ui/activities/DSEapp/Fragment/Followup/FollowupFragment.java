@@ -4,6 +4,8 @@ import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -61,6 +63,11 @@ public class FollowupFragment extends Fragment implements View.OnClickListener {
 
         rootView = inflater.inflate(R.layout.dse_followup_fragment, container, false);
 
+        FragmentManager fm = getActivity().getSupportFragmentManager();
+
+        FragmentTransaction ft = fm.beginTransaction();
+
+        ft.addToBackStack(null);
         initView(rootView);
 
         return rootView;

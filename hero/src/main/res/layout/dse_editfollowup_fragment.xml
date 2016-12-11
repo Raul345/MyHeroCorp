@@ -79,15 +79,15 @@
             app:pstsTextAllCaps="true" />
 
 
-        <!--  <android.support.v4.view.ViewPager
+          <android.support.v4.view.ViewPager
               android:id="@+id/viewpager_editenquiry"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:background="#80000000"/>-->
-        <com.herocorp.ui.activities.DSEapp.Utilities.CustomViewPager
+              android:background="#80000000"/>
+      <!--  <com.herocorp.ui.activities.DSEapp.Utilities.CustomViewPager
             android:id="@+id/viewpager_editenquiry"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent" />-->
 
     </LinearLayout>
 

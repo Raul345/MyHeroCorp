@@ -81,15 +81,8 @@ public class AlertDialogFragment extends DialogFragment {
             button_ok.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                   /* FragmentManager fm = getActivity().getSupportFragmentManager();
-                    FragmentTransaction ft = fm.beginTransaction();
-                    Fragment f = new HomeFragment();
-                    ft.addToBackStack(null);
-                    ft.replace(R.id.content_testridefeedback, f);
-                    ft.commit();*/
                     dismiss();
                     getActivity().onBackPressed();
-
                 }
             });
         } else if (flag == 4) {
@@ -123,6 +116,17 @@ public class AlertDialogFragment extends DialogFragment {
 
                 }
             });
+        } else if (flag == 6) {
+            button_ok.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    dismiss();
+                    FragmentManager fm = getActivity().getSupportFragmentManager();
+                    fm.popBackStack("contact", FragmentManager.POP_BACK_STACK_INCLUSIVE);
+                    getActivity().onBackPressed();
+                }
+            });
+
         } else {
             button_ok.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -132,7 +136,6 @@ public class AlertDialogFragment extends DialogFragment {
                     dismiss();
                 }
             });
-//            getActivity().onBackPressed();
         }
 
         return view;

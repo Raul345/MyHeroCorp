@@ -238,8 +238,8 @@ public class ContactDetailFragment extends Fragment implements View.OnClickListe
             f.setArguments(bundle);
             FragmentManager fm = getActivity().getSupportFragmentManager();
             FragmentTransaction ft = fm.beginTransaction();
-            //  ft.addToBackStack(null);
-            ft.replace(R.id.content_contactdetail, f);
+            ft.addToBackStack(null);
+            ft.replace(R.id.content_contactdetail, f,"close");
             ft.commit();
             //transaction(f);
         } else if (i == R.id.button_followup) {
@@ -247,8 +247,8 @@ public class ContactDetailFragment extends Fragment implements View.OnClickListe
             f.setArguments(bundle);
             FragmentManager fm = getActivity().getSupportFragmentManager();
             FragmentTransaction ft = fm.beginTransaction();
-            //  ft.addToBackStack(null);
-            ft.replace(R.id.content_contactdetail, f);
+            ft.addToBackStack(null);
+            ft.replace(R.id.content_contactdetail, f,"followup");
             ft.commit();
             //   transaction(f);
         }
@@ -454,7 +454,6 @@ public class ContactDetailFragment extends Fragment implements View.OnClickListe
     private void updateList() {
         vehiclelist.setAdapter(vehicleDetailadapter);
         setListViewHeightBasedOnChildren(vehiclelist);
-
     }
 
     public void setListViewHeightBasedOnChildren(ListView listView) {

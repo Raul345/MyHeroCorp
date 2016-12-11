@@ -93,6 +93,7 @@ public class ContactAlertFragment extends DialogFragment {
                 public void onClick(View v) {
                     Bundle bundle = new Bundle();
                     question_add(bundle);
+                    bundle.putInt("page_flag",0);
                     FragmentManager fm = getActivity().getSupportFragmentManager();
                     FragmentTransaction ft = fm.beginTransaction();
                     Fragment f = new TestRideFeedbackFragment();
@@ -107,6 +108,8 @@ public class ContactAlertFragment extends DialogFragment {
                 @Override
                 public void onClick(View v) {
                     dismiss();
+                    FragmentManager fm = getActivity().getSupportFragmentManager();
+                    fm.popBackStack("contact", FragmentManager.POP_BACK_STACK_INCLUSIVE);
                     getActivity().onBackPressed();
                 }
             });
@@ -134,6 +137,7 @@ public class ContactAlertFragment extends DialogFragment {
                 public void onClick(View v) {
                     Bundle bundle = new Bundle();
                     question_add(bundle);
+                    bundle.putInt("page_flag",1);
                     FragmentManager fm = getActivity().getSupportFragmentManager();
                     FragmentTransaction ft = fm.beginTransaction();
                     Fragment f = new TestRideFeedbackFragment();
@@ -165,7 +169,5 @@ public class ContactAlertFragment extends DialogFragment {
         quesid.add("OVERALL RATING");
 
         bundle.putStringArrayList("quesid", quesid);
-
-
     }
 }

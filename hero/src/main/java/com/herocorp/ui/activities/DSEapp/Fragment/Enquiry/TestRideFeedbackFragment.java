@@ -52,13 +52,14 @@ public class TestRideFeedbackFragment extends Fragment implements View.OnClickLi
     String user_id;
     LinearLayout layout_vehiclerating, layout_ridingperform, layout_vehiclefeatures, layout_buyplan, layout_vehiclerefer, layout_comments, layout_overallrating;
 
+    int page_flag = 0;
+
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
             savedInstanceState) {
 
         rootView = inflater.inflate(R.layout.dse_testride_fragment, container, false);
 
         initView(rootView);
-
         return rootView;
     }
 
@@ -244,7 +245,10 @@ public class TestRideFeedbackFragment extends Fragment implements View.OnClickLi
                 }
               */
                 String newurlparams = "data=" + URLEncoder.encode(data, "UTF-8");
-                new NetworkConnect1(url, newurlparams, progress, "Test Ride Feedback has been successfully submitted.", getContext(), 3).execute();
+                if (page_flag == 0)
+                    new NetworkConnect1(url, newurlparams, progress, "Test Ride Feedback has been successfully submitted.", getContext(), 6).execute();
+                else
+                    new NetworkConnect1(url, newurlparams, progress, "Test Ride Feedback has been successfully submitted.", getContext(), 3).execute();
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -293,6 +297,12 @@ public class TestRideFeedbackFragment extends Fragment implements View.OnClickLi
                 layout_overallrating.setVisibility(View.VISIBLE);
             else
                 layout_overallrating.setVisibility(View.GONE);
+
+            if (bundle.containsKey("page_flag"))
+                page_flag = bundle.getInt("page_flag");
         }
+
     }
+
 }
+

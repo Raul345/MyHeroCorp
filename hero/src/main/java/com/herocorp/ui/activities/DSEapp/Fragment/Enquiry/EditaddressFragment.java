@@ -2,13 +2,9 @@ package com.herocorp.ui.activities.DSEapp.Fragment.Enquiry;
 
 import android.app.ProgressDialog;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.text.Spannable;
-import android.text.SpannableStringBuilder;
-import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,7 +14,6 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.herocorp.R;
@@ -94,21 +89,6 @@ public class EditaddressFragment extends Fragment {
         edit = mypref.edit();
 
 
-        TextView state_tv = (TextView) rootView.findViewById(R.id.state_textview);
-
-        state_tv.setText(colortext("State", "*"));
-
-        TextView district_tv = (TextView) rootView.findViewById(R.id.district_textview);
-
-        district_tv.setText(colortext("District", "*"));
-
-        TextView tehsil_tv = (TextView) rootView.findViewById(R.id.tehsil_textview);
-
-        tehsil_tv.setText(colortext("Tehsil", "*"));
-
-        TextView city_tv = (TextView) rootView.findViewById(R.id.city_textview);
-
-        city_tv.setText(colortext("City/Village/Tc", "*"));
         address1_et = (EditText) rootView.findViewById(R.id.address1_edittext);
         address2_et = (EditText) rootView.findViewById(R.id.address2_edittext);
         pincode_et = (EditText) rootView.findViewById(R.id.pincode_edittext);
@@ -193,9 +173,12 @@ public class EditaddressFragment extends Fragment {
                     ArrayAdapter<String> at2 = new ArrayAdapter<String>(getContext(), R.layout.spinner_textview, arr_village);
                     village_spinner.setAdapter(at2);
                     village_spinner.setSelection(cposition);
+                    state_name = "";
+                    tehsil_name = "";
+                    district_name = "";
+                    village_name = "";
                     edit.putString("tehsil", tehsil);
                     edit.commit();
-                    //  village_spinner.setSelection(((ArrayAdapter<String>) village_spinner.getAdapter()).getPosition(village));
                 } else if (position == 0) {
                     tehsil = "";
                     village = "";
@@ -213,9 +196,15 @@ public class EditaddressFragment extends Fragment {
         village_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                village = parent.getItemAtPosition(position).toString();
-                edit.putString("city", village);
-                edit.commit();
+                if (position != 0) {
+                    village = parent.getItemAtPosition(position).toString();
+                    edit.putString("city", village);
+                    edit.commit();
+                } else {
+                    village = "";
+                    edit.putString("city", village);
+                    edit.commit();
+                }
 
             }
 
@@ -280,20 +269,6 @@ public class EditaddressFragment extends Fragment {
 
     }
 
-    public SpannableStringBuilder colortext(String simple, String colored) {
-        SpannableStringBuilder builder = new SpannableStringBuilder();
-
-        builder.append(simple);
-        int start = builder.length();
-        builder.append(colored);
-        int end = builder.length();
-
-        builder.setSpan(new ForegroundColorSpan(Color.RED), start, end,
-                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-        return builder;
-
-    }
 
     public void fetch_data() {
         if (mypref.contains("state")) {

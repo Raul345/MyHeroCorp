@@ -313,7 +313,7 @@
                     android:digits="@string/numbers"
                     android:gravity="center"
                     android:hint="Enter age"
-                    android:maxLength="3"
+                    android:maxLength="2"
                     android:textColor="#000000"
                     android:textSize="20dp"
                     android:imeOptions="actionDone"/>
