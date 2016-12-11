@@ -25,7 +25,6 @@ import com.baoyz.swipemenulistview.SwipeMenuCreator;
 import com.baoyz.swipemenulistview.SwipeMenuItem;
 import com.baoyz.swipemenulistview.SwipeMenuListView;
 import com.herocorp.R;
-import com.herocorp.core.constants.URLConstants;
 import com.herocorp.infra.utils.NetConnections;
 import com.herocorp.ui.activities.BaseDrawerActivity;
 import com.herocorp.ui.activities.DSEapp.Fragment.Followup.CloseFollowupFragment;
@@ -276,7 +275,6 @@ public class TodayFollowupFragment extends Fragment implements View.OnClickListe
                                     }
         );
 
-
         try {
             Bundle bundle = this.getArguments();
            /* encryptuser = bundle.getString("user_id");
@@ -290,25 +288,20 @@ public class TodayFollowupFragment extends Fragment implements View.OnClickListe
             flag = bundle.getInt("flag");
 
             if (check != 0) {
-                buttonHeader.setText("       FOLLOWUP");
-                //     Toast.makeText(getContext(),""+fromdate+todate,Toast.LENGTH_SHORT).show();
+                buttonHeader.setText("  SEARCH ENQUIRY");
+
             }
             if (flag != 0) {
                 filterbutton.setVisibility(View.VISIBLE);
-                //     Toast.makeText(getContext(),""+fromdate+todate,Toast.LENGTH_SHORT).show();
+
             }
 
-          /*  String newurlparams = "data=" + URLEncoder.encode(encryptuser, "UTF-8");
-            networkConnect = new NetworkConnect(URLConstants.PENDING_FOLLOWUP, newurlparams);
-            jsonparse1(networkConnect.execute());*/
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         menu.setOnClickListener(this);
         filterbutton.setOnClickListener(this);
         swipe_refresh_followup.setOnRefreshListener(this);
-
     }
 
     @Override
@@ -370,14 +363,14 @@ public class TodayFollowupFragment extends Fragment implements View.OnClickListe
                         .parse(expected_date_purchase);
 
                 if (check == 0) {
-                   /* String date = new SimpleDateFormat("dd-MMM-yy").format(new Date());
+                    String date = new SimpleDateFormat("dd-MMM-yy").format(new Date());
                     if (follow_date.equals(date)) {
                         userAdapter.add(new Followup(first_name, last_name, cell_ph_no, age, gender, email_addr, state, district, tehsil, city, x_con_seq_no, x_model_interested,
-                                expected_date_purchase, x_exchange_required, x_finance_required, exist_vehicle, followup_comments, enquiry_id, follow_date, enquiry_entry_date, dealer_bu_id,followup_status));
-                    }*/
-                    userAdapter.add(new Followup(first_name, last_name, cell_ph_no, age, gender, email_addr, state, district, tehsil, city, x_con_seq_no, x_model_interested,
+                                expected_date_purchase, x_exchange_required, x_finance_required, exist_vehicle, followup_comments, enquiry_id, follow_date, enquiry_entry_date, dealer_bu_id, followup_status));
+                    }
+                  /*  userAdapter.add(new Followup(first_name, last_name, cell_ph_no, age, gender, email_addr, state, district, tehsil, city, x_con_seq_no, x_model_interested,
                             expected_date_purchase, x_exchange_required, x_finance_required, exist_vehicle, followup_comments, enquiry_id, follow_date, enquiry_entry_date, dealer_bu_id, followup_status));
-
+*/
                 } else if (check == 1) {
                     userAdapter.add(new Followup(first_name, last_name, cell_ph_no, age, gender, email_addr, state, district, tehsil, city, x_con_seq_no, x_model_interested,
                             expected_date_purchase, x_exchange_required, x_finance_required, exist_vehicle, followup_comments, enquiry_id, follow_date, enquiry_entry_date, dealer_bu_id, followup_status));

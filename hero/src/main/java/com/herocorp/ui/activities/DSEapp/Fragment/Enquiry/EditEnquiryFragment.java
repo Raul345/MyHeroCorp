@@ -87,7 +87,7 @@ public class EditEnquiryFragment extends Fragment implements View.OnClickListene
     int flag = 0;
 
     private int mYear, mMonth, mDay;
-    String date, follow_date = "", next_follow_date = "", purch_date = "", remark = "", exchange = "", finance = "", test = "N", model = "", existvehicle = "", existmake = "", existmodel = "";
+    String date, follow_date = "", next_follow_date = "", purch_date = "", remark = "", exchange = "N", finance = "N", test = "N", model = "", existvehicle = "", existmake = "", existmodel = "";
     String firstname = "", lastname = "", email = "", mobile = "", age = "", gender = "", state = "", district = "", tehsil = "", village = "", address1 = "", address2 = "", pincode = "";
 
     String encryptdata, data;
@@ -611,7 +611,7 @@ public class EditEnquiryFragment extends Fragment implements View.OnClickListene
             purch_date = Dateformatter.dateformat1(purchdate_btn.getText().toString());
 
             fetch_data2();
-            if (model.equals("") || flag == 0 || existvehicle.equals("--select--"))
+            if (model.equals("") || existvehicle.equals("--select--"))
                 Toast.makeText(getContext(), "Please fill all the details !!", Toast.LENGTH_LONG).show();
             else if (followup_date.before(current_date) && page_flag != 0)
                 Toast.makeText(getContext(), "Please check the followup date!!", Toast.LENGTH_LONG).show();

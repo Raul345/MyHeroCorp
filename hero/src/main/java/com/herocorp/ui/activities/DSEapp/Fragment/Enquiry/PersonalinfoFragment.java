@@ -126,6 +126,30 @@ public class PersonalinfoFragment extends Fragment implements View.OnClickListen
 
         mobile_tv.setText(colortext("Mobile", "*"));
 
+        TextView age_tv = (TextView) rootView.findViewById(R.id.age_tv);
+
+        age_tv.setText(colortext("Age", "*"));
+
+        TextView gender_tv = (TextView) rootView.findViewById(R.id.gender_tv);
+
+        gender_tv.setText(colortext("Gender", "*"));
+
+        TextView state_tv = (TextView) rootView.findViewById(R.id.state_textview);
+
+        state_tv.setText(colortext("State", "*"));
+
+        TextView district_tv = (TextView) rootView.findViewById(R.id.district_textview);
+
+        district_tv.setText(colortext("District", "*"));
+
+        TextView tehsil_tv = (TextView) rootView.findViewById(R.id.tehsil_textview);
+
+        tehsil_tv.setText(colortext("Tehsil", "*"));
+
+        TextView city_tv = (TextView) rootView.findViewById(R.id.city_textview);
+
+        city_tv.setText(colortext("City/Village/Tc", "*"));
+
         firstname_et = (EditText) rootView.findViewById(R.id.firstname_edittext);
         lastname_et = (EditText) rootView.findViewById(R.id.lastname_edittext);
         mobile_et = (EditText) rootView.findViewById(R.id.mobile_edittext);
@@ -296,10 +320,10 @@ public class PersonalinfoFragment extends Fragment implements View.OnClickListen
                 FragmentManager fm = getActivity().getSupportFragmentManager();
                 FragmentTransaction ft = fm.beginTransaction();
                 f.setArguments(bundle);
-                ft.replace(R.id.content_personalinfo, f);
+                ft.addToBackStack(null);
+                ft.add(R.id.content_personalinfo, f);
                 ft.commit();
             }
-
         }
 
     }

@@ -2,6 +2,7 @@ package com.herocorp.ui.activities.DSEapp.Fragment.Contact;
 
 import android.app.ProgressDialog;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -115,23 +116,28 @@ public class ContactFragment extends Fragment implements View.OnClickListener {
         customViewParams.setMarginAndPadding(topLayout1, new int[]{100, 50, 100, 60}, new int[]{0, 0, 0, 0}, topLayout1.getParent());
 
         addlayout = (RelativeLayout) rootView.findViewById(R.id.top_layout2);
+        customViewParams.setMarginAndPadding(addlayout, new int[]{0, 0, 0, 0}, new int[]{0, 0, 0, 0}, addlayout.getParent());
+
         ScrollView scrollView = (ScrollView) rootView.findViewById(R.id.scroll_view);
         customViewParams.setMarginAndPadding(scrollView, new int[]{100, 50, 100, 60}, new int[]{0, 0, 0, 0}, scrollView.getParent());
 
         enquiryContactadapter = new EnquiryContactadapter(getContext(), R.layout.dse_enquirycontact_row, enquirycontactarray);
         enquirycontacts = (ListView) rootView.findViewById(R.id.list_enquirycontacts);
+        customViewParams.setMarginAndPadding(enquirycontacts, new int[]{0, 0, 0, 0}, new int[]{0, 0, 0, 0}, enquirycontacts.getParent());
 
         enquirytitle = (TextView) rootView.findViewById(R.id.enquirytitle);
+        customViewParams.setMarginAndPadding(enquirytitle, new int[]{0, 0, 0, 0}, new int[]{10, 10, 10, 10}, enquirytitle.getParent());
 
         vintitle = (TextView) rootView.findViewById(R.id.vintitle);
+        customViewParams.setMarginAndPadding(vintitle, new int[]{0, 0, 0, 0}, new int[]{10, 10, 10, 10}, vintitle.getParent());
 
 
         vinContactadapter = new VinContactadapter(getContext(), R.layout.dse_vincontact_row, vincontactarray);
         vincontacts = (ListView) rootView.findViewById(R.id.list_vincontacts);
+        customViewParams.setMarginAndPadding(vincontacts, new int[]{0, 0, 0, 0}, new int[]{0, 0, 0, 0}, vincontacts.getParent());
 
         addenquiry_button = (Button) rootView.findViewById(R.id.addenquiry_button);
-
-
+        customViewParams.setMarginAndPadding(addenquiry_button, new int[]{0, 0, 0, 0}, new int[]{40, 0, 40, 0}, addenquiry_button.getParent());
 
         fetch_pref();
         fetch_data();
@@ -353,7 +359,8 @@ public class ContactFragment extends Fragment implements View.OnClickListener {
             FragmentTransaction ft = fm.beginTransaction();
             Fragment f = new PersonalinfoFragment();
             f.setArguments(bundle);
-            ft.replace(R.id.content_contact, f);
+            ft.addToBackStack(null);
+            ft.add(R.id.content_contact, f);
             ft.commit();
         }
     }
@@ -587,7 +594,7 @@ public class ContactFragment extends Fragment implements View.OnClickListener {
         FragmentManager fm = getActivity().getSupportFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
         ft.addToBackStack(null);
-        ft.replace(R.id.content_contact, f);
+        ft.add(R.id.content_contact, f);
         ft.commit();
     }
 
@@ -632,6 +639,7 @@ public class ContactFragment extends Fragment implements View.OnClickListener {
         String newurlParameters;
         NetworkConnect networkConnect;
         private ProgressDialog progressDialog;
+
         public Contactlist(String urlParameters) {
             this.newurlParameters = urlParameters;
         }
@@ -809,6 +817,10 @@ public class ContactFragment extends Fragment implements View.OnClickListener {
                 e.printStackTrace();
             }
         }
+    }
+    @Override
+    public void onConfigurationChanged(Configuration newConfig){
+        super.onConfigurationChanged(newConfig);
     }
 
 }

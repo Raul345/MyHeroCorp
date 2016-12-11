@@ -1,11 +1,15 @@
 package com.herocorp.ui.activities.DSEapp.adapter;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.text.TextUtils;
+import android.util.Log;
+import android.widget.Toast;
 
 import com.astuetz.PagerSlidingTabStrip;
 import com.herocorp.R;
@@ -24,6 +28,7 @@ public class Editenquiryadapter extends FragmentPagerAdapter implements
     private final Bundle fragmentBundle;
     //  private String tabTitles[] = new String[]{"GETTING READY TO DONATE", "DONATING YOUR BLOOD", "BLOOD DONATION DONT'S"};
 
+    Context context;
 
     public Editenquiryadapter(android.support.v4.app.FragmentManager fm, Bundle bundle) {
         super(fm);
@@ -33,13 +38,13 @@ public class Editenquiryadapter extends FragmentPagerAdapter implements
     @Override
     public android.support.v4.app.Fragment getItem(int position) {
         Fragment f = new Fragment();
-        if (position == 0)
+        if (position == 0) {
             f = EditPersonalInfoFragment.newInstance(position + 1);
-        else if (position == 1)
+        } else if (position == 1) {
             f = EditaddressFragment.newInstance(position + 1);
-        else if (position == 2)
+        } else if (position == 2) {
             f = EditEnquiryFragment.newInstance(position + 1);
-        else
+        } else
             f = EditPersonalInfoFragment.newInstance(position + 1);
         f.setArguments(fragmentBundle);
         return f;
@@ -56,4 +61,7 @@ public class Editenquiryadapter extends FragmentPagerAdapter implements
     public int getPageIconResId(int position) {
         return icons[position];
     }
+
+
+
 }

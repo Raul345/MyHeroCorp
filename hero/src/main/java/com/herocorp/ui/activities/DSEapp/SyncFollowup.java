@@ -66,8 +66,8 @@ public class SyncFollowup extends AsyncTask<Void, Void, String> {
     protected String doInBackground(Void... params) {
         try {
             final JSONObject jsonparams = new JSONObject();
-          //  jsonparams.put("user_id", PreferenceUtil.get_UserId(context));
-            jsonparams.put("user_id", "ROBINK11610");
+           jsonparams.put("user_id", PreferenceUtil.get_UserId(context));
+            //jsonparams.put("user_id", "ROBINK11610");
             Log.e("followup_sync_start:", new SimpleDateFormat("dd-MMM-yy").format(new Date()).toString());
             String newurlparams = "data=" + URLEncoder.encode(jsonparams.toString(), "UTF-8");
             networkConnect = new NetworkConnect(URLConstants.ENCRYPT, newurlparams);
@@ -76,7 +76,7 @@ public class SyncFollowup extends AsyncTask<Void, Void, String> {
             networkConnect = new NetworkConnect(URLConstants.PENDING_FOLLOWUP, urldata);
             result = networkConnect.execute();
             return result;
-        } catch (UnsupportedEncodingException e) {
+        }catch (UnsupportedEncodingException e) {
             e.printStackTrace();
             return null;
         } catch (Exception e) {

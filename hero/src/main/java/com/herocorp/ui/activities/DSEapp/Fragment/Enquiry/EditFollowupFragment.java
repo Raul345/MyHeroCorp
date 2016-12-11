@@ -107,7 +107,6 @@ public class EditFollowupFragment extends Fragment implements View.OnClickListen
         // Attach the view pager to the tab strip
         tabsStrip.setViewPager(viewPager);
 
-
         menu.setOnClickListener(this);
 
 
@@ -118,9 +117,7 @@ public class EditFollowupFragment extends Fragment implements View.OnClickListen
         int i = view.getId();
         if (i == R.id.menu_icon) {
             ((BaseDrawerActivity) getActivity()).toggleDrawer();
-
         }
-
     }
 
  /*   public void fetch_data() {

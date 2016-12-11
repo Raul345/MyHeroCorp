@@ -226,7 +226,7 @@ public class PendingOrdersFragment extends Fragment implements View.OnClickListe
         protected void onPostExecute(String s) {
             try {
                 super.onPostExecute(s);
-                Log.e("followup_data:", result);
+                Log.e("order_data:", result);
                 JSONObject jsono = new JSONObject(result);
                 if (jsono.has("order_data")) {
                     JSONArray jarray = jsono.getJSONArray("order_data");

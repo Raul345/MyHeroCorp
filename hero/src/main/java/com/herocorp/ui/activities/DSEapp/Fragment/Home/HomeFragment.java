@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -35,6 +36,7 @@ import com.herocorp.ui.activities.DSEapp.Fragment.PendingFollowup.PendingFollowu
 import com.herocorp.ui.activities.DSEapp.Fragment.PendingOrders.PendingOrdersFragment;
 import com.herocorp.ui.activities.DSEapp.Fragment.TodayFollowup.TodayFollowupFragment;
 import com.herocorp.ui.activities.DSEapp.SyncFollowup;
+import com.herocorp.ui.activities.DSEapp.Utilities.Syncmakemodel;
 import com.herocorp.ui.activities.DSEapp.db.DatabaseHelper;
 import com.herocorp.ui.activities.DSEapp.models.Bike_model;
 import com.herocorp.ui.activities.DSEapp.models.Bikemake;
@@ -109,7 +111,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         rootView = inflater.inflate(R.layout.dse_home_fragment, container, false);
         getActivity().setRequestedOrientation(
                 ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
-
+        setRetainInstance(true);
         try {
             initView(rootView);
         } catch (ParseException e) {
@@ -186,8 +188,9 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
         fetch_pref();
         current_date = new SimpleDateFormat("dd-MMM-yy").format(new Date());
-        if (!(sync_date.equalsIgnoreCase(current_date.toString())))
+        if (!(sync_date.equalsIgnoreCase(current_date.toString()) && NetConnections.isConnected(getContext())))
             sync_data();
+        //           new Syncmakemodel(getContext()).execute();
 
         menu.setOnClickListener(this);
         pendingorder.setOnClickListener(this);
@@ -228,7 +231,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             transaction(new TodayFollowupFragment());
 
         } else if (i == R.id.pendingfollowup) {
-            //  Toast.makeText(getActivity(), "penidng followup", Toast.LENGTH_SHORT).show();
+            //  Toast.makeText(getActivity(), "pendidng followup", Toast.LENGTH_SHORT).show();
             pendingorderText.setTextColor(Color.GRAY);
             pendingfollowupText.setTextColor(Color.WHITE);
             todayfollowupText.setTextColor(Color.GRAY);
@@ -249,7 +252,21 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             try {
                 InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
-                if (!(phoneno_et.getText().toString().equals("") && registration_et.getText().toString().equals(""))) {
+                int check = 1;
+                if (phoneno_et.getText().toString().equals("") && registration_et.getText().toString().equals("")) {
+                    check = 0;
+                    Toast.makeText(getActivity(), "Phone/RegNo missing!!", Toast.LENGTH_SHORT).show();
+                } else if (!phoneno_et.getText().toString().equals("") && phoneno_et.getText().toString().length() < 10) {
+                    check = 0;
+                    Toast.makeText(getActivity(), "Incorrect Phone No!!", Toast.LENGTH_SHORT).show();
+                }
+                if (check == 1) {
+                    if (NetConnections.isConnected(getContext())) {
+                        transaction(new ContactFragment());
+                    } else
+                        Toast.makeText(getActivity(), "Check your Connection !!", Toast.LENGTH_SHORT).show();
+                }
+              /*  if (!(phoneno_et.getText().toString().equals("") && registration_et.getText().toString().equals(""))) {
                     if (NetConnections.isConnected(getContext())) {
 
                         //new Encrypt_data().execute();
@@ -257,7 +274,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                     } else
                         Toast.makeText(getActivity(), "Check your Connection !!", Toast.LENGTH_SHORT).show();
                 } else
-                    Toast.makeText(getActivity(), "Phone/RegNo missing!!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "Phone/RegNo missing!!", Toast.LENGTH_SHORT).show();*/
             } catch (Exception e) {
             }
         }
@@ -274,8 +291,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         FragmentManager fm = getActivity().getSupportFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
         f.setArguments(bundle);
-        ft.addToBackStack(null);
         ft.add(R.id.content_dsehome, f);
+        ft.addToBackStack(null);
         ft.commit();
     }
 
@@ -302,7 +319,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                             if (result != null) {
                                 encryptuser = result.replace("\\/", "/");
                                 urlParameters = "data=" + URLEncoder.encode(encryptuser, "UTF-8");
-                               Log.e("make_sync_start", current_date.toString());
+                                Log.e("make_sync_start", current_date.toString());
                                 //new SyncFollowup(getContext()).execute();
                                 /*networkConnect = new NetworkConnect(URLConstants.PENDING_FOLLOWUP, urlParameters);
                                 jsonparse_followup(networkConnect.execute());*/
@@ -402,7 +419,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         } catch (JSONException e) {
             e.printStackTrace();
         } catch (Exception e) {
-            System.out.println(Toast.makeText(getContext(), "Check your Connection !!", Toast.LENGTH_SHORT));
+            Toast.makeText(getContext(), "Check your Connection !!", Toast.LENGTH_SHORT);
         }
     }
 
@@ -454,4 +471,9 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         }
     }
 */
+
+/*    @Override
+    public void onConfigurationChanged(Configuration newConfig){
+        super.onConfigurationChanged(newConfig);
+    }*/
 }

@@ -287,9 +287,17 @@ public class CloseFollowupFragment extends Fragment implements View.OnClickListe
             String remarks = remark.getText().toString();
             ProgressDialog progress = new ProgressDialog(getContext());
 
-            if (main_reason.equals("--select--") || sub_reason.equals("--select--") || make.equals("--select--") || model.equals("--select--"))
+            /*int check = 1;
+            if (main_reason.equalsIgnoreCase("Dropped the Idea")) {
+                sub_reason = "N.A";
+                make = "N.A";
+                model = "N.A";
+                check = 1;
+            }*/
+
+            if (main_reason.equals("--select--") || sub_reason.equals("--select--") || make.equals("--select--") || model.equals("--select--")) {
                 Toast.makeText(getContext(), "Please fill all the details !!", Toast.LENGTH_SHORT).show();
-            else {
+            } else {
                 sync_status = "1";
                 db = new DatabaseHelper(getContext());
 

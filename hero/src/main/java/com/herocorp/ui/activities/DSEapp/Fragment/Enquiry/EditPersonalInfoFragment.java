@@ -48,6 +48,7 @@ public class EditPersonalInfoFragment extends Fragment implements View.OnClickLi
     public static EditPersonalInfoFragment newInstance(int page) {
         Bundle args = new Bundle();
         args.putInt(ARG_PAGE, page);
+
         EditPersonalInfoFragment fragment = new EditPersonalInfoFragment();
         fragment.setArguments(args);
         return fragment;
@@ -84,6 +85,14 @@ public class EditPersonalInfoFragment extends Fragment implements View.OnClickLi
         TextView mobile_tv = (TextView) rootView.findViewById(R.id.mobile_textview);
 
         mobile_tv.setText(colortext("Mobile", "*"));
+
+        TextView age_tv = (TextView) rootView.findViewById(R.id.age_textview);
+
+        age_tv.setText(colortext("Age", "*"));
+
+        TextView gender_tv = (TextView) rootView.findViewById(R.id.gender_textview);
+
+        gender_tv.setText(colortext("Gender", "*"));
 
         firstname_et = (EditText) rootView.findViewById(R.id.firstname_edittext);
         lastname_et = (EditText) rootView.findViewById(R.id.lastname_edittext);

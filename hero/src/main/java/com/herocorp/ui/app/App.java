@@ -104,7 +104,6 @@ public class App extends Application {
                 progressBar.setProgress(Math.round(currentProgress));
 
             } else {
-
                 progressBar.dismiss();
                 progressBar = null;
                 currentProgress = 0;

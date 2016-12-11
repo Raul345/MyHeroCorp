@@ -11,6 +11,7 @@ import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.database.SQLException;
 import android.graphics.BitmapFactory;
 import android.media.Image;
@@ -141,7 +142,7 @@ public class BaseDrawerActivity extends FragmentActivity implements View.OnClick
 
             } else if (!(sharedPreferences.getBoolean(AppConstants.IS_USER_LOGGED_IN, false) &&
                     App.shouldAppRun(sharedPreferences.getString(AppConstants.VALIDITY_DATE, "")))) {
-                finish();
+                //finish();
             }
             insertRotationDataInDB();
            /* boolean bool = sharedPreferences.getBoolean(AppConstants.IS_360_RECORD_INSERTED, false);
@@ -289,12 +290,12 @@ public class BaseDrawerActivity extends FragmentActivity implements View.OnClick
         findViewById(R.id.nav_sync_layout).setOnClickListener(this);
         findViewById(R.id.nav_logout_layout).setOnClickListener(this);
 
-        if(null == savedInstanceState){
+        if (null == savedInstanceState) {
             FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager.beginTransaction().replace(R.id.frame_container, new DealerDashboardFragment()).commit();
             //set you initial fragment object
+        } else {
         }
-
 
 
     }
@@ -404,10 +405,6 @@ public class BaseDrawerActivity extends FragmentActivity implements View.OnClick
                 fragment = new HomeFragment();
                 openFragment(fragment, false);
 
-//                Intent intent = getPackageManager().getLaunchIntentForPackage("com.herocorp.ui.activities.DSEapp.Fragment.Home.HomeFragment;");
-//                startActivity(intent);
-
-
             } catch (Exception e) {
                 Toast.makeText(this, "DSE App not installed!", Toast.LENGTH_SHORT).show();
             }
@@ -425,7 +422,7 @@ public class BaseDrawerActivity extends FragmentActivity implements View.OnClick
 
                             fragment = new DealerDashboardFragment();
                             openFragment(fragment, false);
-                            //     wakeLock.acquire();
+
                             startSync();
                         }
                     })
@@ -1570,7 +1567,7 @@ public class BaseDrawerActivity extends FragmentActivity implements View.OnClick
     public void onBackPressed() {
         FragmentManager manager = getSupportFragmentManager();
         if (manager.getBackStackEntryCount() > 0) {
-            manager.popBackStack();
+            manager.popBackStackImmediate();
         } else {
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setMessage("Are you sure to exit?")
@@ -1592,6 +1589,16 @@ public class BaseDrawerActivity extends FragmentActivity implements View.OnClick
             AlertDialog alert = builder.create();
             alert.show();
         }
+    }
+
+    /*  @Override
+      public void onConfigurationChanged(Configuration newConfig){
+          super.onConfigurationChanged(newConfig);
+            }*/
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        // save your state here
     }
 }
 

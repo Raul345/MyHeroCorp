@@ -571,7 +571,7 @@ public class AddenquiryFragment extends Fragment implements View.OnClickListener
             purch_date = Dateformatter.dateformat1(purchdate_btn.getText().toString());
             key = random_key(7);
 
-            if (model.equals("") || flag == 0 || existvehicle.equals("--select--"))
+            if (model.equals("") || existvehicle.equals("--select--"))
                 Toast.makeText(getContext(), "Please fill all the details !!", Toast.LENGTH_LONG).show();
             else if (followup_date.before(current_date))
                 Toast.makeText(getContext(), "Please check the followup date!!", Toast.LENGTH_LONG).show();

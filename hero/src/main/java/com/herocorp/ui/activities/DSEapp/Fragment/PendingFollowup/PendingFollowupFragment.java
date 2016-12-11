@@ -266,6 +266,7 @@ public class PendingFollowupFragment extends Fragment implements View.OnClickLis
                                             current_date = new SimpleDateFormat("dd-MMM-yy").format(new Date());
                                             fetch_records();
                                             if ((!PreferenceUtil.get_Syncdate(getContext()).equalsIgnoreCase(current_date.toString()) && NetConnections.isConnected(getContext()))) {
+
                                                 new SyncFollowup(getContext()).execute();
                                                 fetch_records();
                                             }
@@ -323,7 +324,7 @@ public class PendingFollowupFragment extends Fragment implements View.OnClickLis
 
         } catch (Exception e) {
             swipe_refresh_followup.setRefreshing(false);
-            System.out.println(Toast.makeText(getContext(), "Server Error !!", Toast.LENGTH_SHORT));
+            Toast.makeText(getContext(), "Server Error !!", Toast.LENGTH_SHORT).show();
 
         }
     }

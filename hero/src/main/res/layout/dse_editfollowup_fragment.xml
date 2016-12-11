@@ -69,21 +69,25 @@
             android:id="@+id/tabs_editenquiry"
             android:layout_width="match_parent"
             android:layout_height="50dp"
+            android:background="#cc0000"
             android:textSize="14dp"
             android:typeface="serif"
             app:pstsDividerColor="#ffffff"
             app:pstsIndicatorColor="#80000000"
             app:pstsShouldExpand="true"
             app:pstsTabPaddingLeftRight="14dp"
-            app:pstsTextAllCaps="true"
-            android:background="#cc0000"/>
+            app:pstsTextAllCaps="true" />
 
 
-        <android.support.v4.view.ViewPager
+        <!--  <android.support.v4.view.ViewPager
+              android:id="@+id/viewpager_editenquiry"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="#80000000"/>-->
+        <com.herocorp.ui.activities.DSEapp.Utilities.CustomViewPager
             android:id="@+id/viewpager_editenquiry"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="#80000000"/>
+            android:layout_height="match_parent" />
 
     </LinearLayout>
 
