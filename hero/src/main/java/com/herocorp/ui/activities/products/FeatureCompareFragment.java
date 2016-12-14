@@ -1,5 +1,6 @@
 package com.herocorp.ui.activities.products;
 
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -24,6 +25,8 @@ public class FeatureCompareFragment extends Fragment implements View.OnClickList
             savedInstanceState) {
 
         rootView = inflater.inflate(R.layout.feature_compare_fragment, container, false);
+        getActivity().setRequestedOrientation(
+                ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
         initView(rootView);
 

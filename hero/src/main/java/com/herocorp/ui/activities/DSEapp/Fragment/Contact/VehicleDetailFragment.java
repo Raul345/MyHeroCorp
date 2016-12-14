@@ -1,7 +1,10 @@
 package com.herocorp.ui.activities.DSEapp.Fragment.Contact;
 
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +15,7 @@ import android.widget.TextView;
 
 import com.herocorp.R;
 import com.herocorp.ui.activities.BaseDrawerActivity;
+import com.herocorp.ui.activities.DSEapp.Fragment.Alert.ContactAlertFragment;
 import com.herocorp.ui.utility.CustomTypeFace;
 import com.herocorp.ui.utility.CustomViewParams;
 
@@ -99,6 +103,23 @@ public class VehicleDetailFragment extends Fragment implements View.OnClickListe
         tehsils.setText(tehsil);
         citys.setText(city);
         mobile.setText(cell_ph_num);
+
+        mobile.setPaintFlags(mobile.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+        mobile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                bundle.putString("mobile", cell_ph_num);
+                bundle.putString("header", "Are you Sure?");
+                bundle.putString("msg", "Call this number " + cell_ph_num);
+                bundle.putInt("flag", 0);
+                FragmentManager fm = ((FragmentActivity) getContext()).getSupportFragmentManager();
+                ContactAlertFragment dialogFragment = new ContactAlertFragment();
+                dialogFragment.setArguments(bundle);
+                dialogFragment.setCancelable(false);
+                dialogFragment.show(fm, "Sample Fragment");
+            }
+        });
         email.setText(email_addr);
         cust_id.setText(customer_id);
         cardno.setText(x_hmgl_card_num);

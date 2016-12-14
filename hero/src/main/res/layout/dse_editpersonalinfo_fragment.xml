@@ -222,7 +222,8 @@
                     android:padding="8dp"
                     android:singleLine="true"
                     android:textColor="#000000"
-                    android:textSize="15dp" />
+                    android:textSize="15dp"
+                    android:imeOptions="actionDone"/>
             </LinearLayout>
 
             <LinearLayout
@@ -271,7 +272,8 @@
                     android:textColor="#000000"
                     android:textSize="15dp"
                     android:maxLength="2"
-                    android:digits="@string/numbers"/>
+                    android:digits="@string/numbers"
+                    android:imeOptions="actionDone"/>
             </LinearLayout>
 
             <LinearLayout

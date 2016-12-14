@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +26,10 @@ import com.herocorp.R;
 import com.herocorp.core.constants.URLConstants;
 import com.herocorp.ui.activities.BaseDrawerActivity;
 import com.herocorp.ui.activities.DSEapp.ConnectService.NetworkConnect;
+import com.herocorp.ui.activities.DSEapp.db.DatabaseHelper;
+import com.herocorp.ui.activities.DSEapp.models.Bike_model;
+import com.herocorp.ui.activities.DSEapp.models.Bikemake;
+import com.herocorp.ui.activities.DSEapp.models.Bikemodel;
 import com.herocorp.ui.utility.CustomTypeFace;
 import com.herocorp.ui.utility.CustomViewParams;
 
@@ -35,6 +40,7 @@ import org.json.JSONObject;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by rsawh on 06-Oct-16.
@@ -44,9 +50,8 @@ public class VasMaintenanceFragment extends Fragment implements View.OnClickList
     private CustomViewParams customViewParams;
     Spinner spin_model;
     ArrayList<String> arr_modellist = new ArrayList<String>();
-    String model, encryptuser;
-    NetworkConnect networkConnect;
-
+    String model;
+    DatabaseHelper db;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
             savedInstanceState) {
@@ -55,7 +60,7 @@ public class VasMaintenanceFragment extends Fragment implements View.OnClickList
 
         try {
             initView(rootView);
-            encryptuser();
+            fetch_make_model();
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -81,7 +86,7 @@ public class VasMaintenanceFragment extends Fragment implements View.OnClickList
         customViewParams.setButtonCustomParams(buttonHeader, new int[]{0, 10, 0, 10}, new int[]{0, 0, 0, 0}, 90, 180, 40, customTypeFace.gillSansItalic, 0);
 
         ScrollView scrollView = (ScrollView) rootView.findViewById(R.id.scroll_view);
-        customViewParams.setMarginAndPadding(scrollView, new int[]{80, 20, 80, 140}, new int[]{0, 0, 0, 0}, scrollView.getParent());
+        customViewParams.setMarginAndPadding(scrollView, new int[]{80, 20, 80, 10}, new int[]{0, 0, 0, 0}, scrollView.getParent());
 
         LinearLayout topLayout1 = (LinearLayout) rootView.findViewById(R.id.top_layout1);
         customViewParams.setMarginAndPadding(topLayout1, new int[]{80, 20, 80, 140}, new int[]{0, 0, 0, 0}, topLayout1.getParent());
@@ -143,7 +148,6 @@ public class VasMaintenanceFragment extends Fragment implements View.OnClickList
         } else if (i == R.id.warranty_layout) {
             f = new VasWarrantyfragment();
             transaction(f);
-        } else if (i == R.id.maintenance_layout) {
         } else if (i == R.id.safety_layout) {
             f = new VasSafetytipsFragment();
             transaction(f);
@@ -151,58 +155,42 @@ public class VasMaintenanceFragment extends Fragment implements View.OnClickList
             f = new VasGenuinePartsFragment();
             transaction(f);
         }
-
-    }
-
-    public void jsonparse(String result) {
-        try {
-            JSONObject jsono = new JSONObject(result);
-            JSONArray jarray = jsono.getJSONArray("model");
-
-            arr_modellist.add("--select--");
-            for (int i = 0; i < jarray.length(); i++) {
-                JSONObject object = jarray.getJSONObject(i);
-                arr_modellist.add(object.getString("model_name"));
-            }
-
-            ArrayAdapter<String> at1 = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, arr_modellist);
-            spin_model.setAdapter(at1);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        } catch (Exception e) {
-            System.out.println(Toast.makeText(getContext(), "Check your Connection !!", Toast.LENGTH_SHORT));
-
-        }
-    }
-
-    public void encryptuser() {
-        String json = "{\"user_id\":\"ROBINK11610\"}";
-        try {
-            String urlParameters = "data=" + URLEncoder.encode(json, "UTF-8");
-            networkConnect = new NetworkConnect(URLConstants.ENCRYPT, urlParameters);
-            String result = networkConnect.execute();
-            if (result != null) {
-                encryptuser = result.replace("\\/", "/");
-                String newurlparams = "data=" + URLEncoder.encode(encryptuser, "UTF-8");
-                NetworkConnect networkConnect = new NetworkConnect(URLConstants.BIKE_MAKE_MODEL, newurlparams);
-                jsonparse(networkConnect.execute());
-
-            }
-
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        } catch (Exception e) {
-            Toast.makeText(getContext(), "Check your connection !!", Toast.LENGTH_SHORT).show();
-        }
     }
 
 
     public void transaction(final Fragment f) {
         FragmentManager fm = getActivity().getSupportFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
-        ft.replace(R.id.content_vasmaintenance, f);
+        ft.add(R.id.content_vasmaintenance, f);
         ft.commit();
     }
+
+    public void fetch_make_model() {
+        try {
+            String id = "";
+            db = new DatabaseHelper(getContext());
+            List<Bikemake> allrecords = db.getAllBikemakes();
+            for (Bikemake record : allrecords) {
+                if (record.getMakename().equalsIgnoreCase("HERO MOTOCORP"))
+                    id = record.getId();
+            }
+
+            arr_modellist.add("--select--");
+
+            List<Bike_model> records = db.getAllBikemodels();
+            for (Bike_model record : records) {
+                if (record.getMakeid().equals(id)) {
+                    arr_modellist.add(record.getModelname());
+
+                }
+            }
+            ArrayAdapter<String> at1 = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, arr_modellist);
+            spin_model.setAdapter(at1);
+        } catch (Exception e) {
+            Toast.makeText(getContext(), "Check your Connection !!", Toast.LENGTH_SHORT).show();
+        }
+    }
+
 }
 
 

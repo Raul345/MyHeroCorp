@@ -1,5 +1,6 @@
 package com.herocorp.ui.activities.products;
 
+import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -49,6 +50,8 @@ public class ComparisonDetailFragment extends Fragment implements View.OnClickLi
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         rootView = inflater.inflate(R.layout.comparison_detail_fragment, container, false);
+        getActivity().setRequestedOrientation(
+                ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
         productId = ((BaseDrawerActivity) getActivity()).productId;
         otherProductId = ((BaseDrawerActivity) getActivity()).otherProductId;

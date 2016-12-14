@@ -370,8 +370,7 @@ public class EditEnquiryFragment extends Fragment implements View.OnClickListene
                     if (page_flag == 0) {
                         db = new DatabaseHelper(getContext());
                         db.update_edit_followup(new Followup(firstname, lastname, mobile, age, gender, email, state, district, tehsil, village, model,
-                                purch_date, exchange, finance, existvehicle, remark, enquiry_id, follow_date, "0"));
-
+                                purch_date.toUpperCase(), exchange, finance, existvehicle, remark, enquiry_id, follow_date.toUpperCase(), "0"));
                         new NetworkConnect1(url, urlParameters, progress, "Enquiry has been successfully submitted.", getContext(), 1).execute();
                     } else {
                         new NetworkConnect1(url, urlParameters, progress, "Enquiry has been successfully submitted.", getContext(), 5).execute();

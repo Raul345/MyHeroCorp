@@ -33,7 +33,7 @@
     <string name="full_address">Hero Motocorp Ltd., 34, Community Center, Basant Lok, Vasant Vihar, New Delhi - 110057, India</string>
     <string name="company_url">www.heromotocorp.com</string>
 
-    <string name="home_text">HOME</string>
+    <string name="home_text">ENQUIRY</string>
     <string name="enquiry_text">To see enquiries you need to search for mobile or registration no.</string>
     <string name="numbers">0123456789</string>
     <string name="contactnotfound">No such contact found.You can add new contact and enquiry.</string>

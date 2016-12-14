@@ -41,12 +41,17 @@ public class EnquiryContact {
     static ArrayList states = new ArrayList();
     static ArrayList districts = new ArrayList();
 
+
     public static ArrayList enquiryids = new ArrayList();
     public static ArrayList models = new ArrayList();
     public static ArrayList enquirydates = new ArrayList();
     public static ArrayList followupdates = new ArrayList();
     public static ArrayList purchasedates = new ArrayList();
 
+    static ArrayList exchanges_reqd = new ArrayList();
+    static ArrayList finances_reqd = new ArrayList();
+    static ArrayList comments = new ArrayList();
+    static ArrayList exist_vehicles = new ArrayList();
 
     public void setFst_name(String fst_name) {
         this.fst_name = fst_name;
@@ -308,6 +313,50 @@ public class EnquiryContact {
         return purchasedate;
     }
 
+    public String getX_exchange_required(String firstname, String lastname, String mobile, String state, String district) {
+        String exchange_reqd = "";
+        for (int i = 0; i < exchanges_reqd.size(); i++) {
+            if (fst_names.get(i).equals(firstname) && last_names.get(i).equals(lastname) && cell_ph_nums.get(i).equals(mobile) && states.get(i).equals(state)
+                    && districts.get(i).equals(district)) {
+                exchange_reqd = exchanges_reqd.get(i).toString();
+            }
+        }
+        return exchange_reqd;
+    }
+
+    public String getX_finance_required(String firstname, String lastname, String mobile, String state, String district) {
+        String finance_reqd = "";
+        for (int i = 0; i < finances_reqd.size(); i++) {
+            if (fst_names.get(i).equals(firstname) && last_names.get(i).equals(lastname) && cell_ph_nums.get(i).equals(mobile) && states.get(i).equals(state)
+                    && districts.get(i).equals(district)) {
+                finance_reqd = finances_reqd.get(i).toString();
+            }
+        }
+        return finance_reqd;
+    }
+
+    public String getExisting_vehicle(String firstname, String lastname, String mobile, String state, String district) {
+        String exist_vehicle = "";
+        for (int i = 0; i < exist_vehicles.size(); i++) {
+            if (fst_names.get(i).equals(firstname) && last_names.get(i).equals(lastname) && cell_ph_nums.get(i).equals(mobile) && states.get(i).equals(state)
+                    && districts.get(i).equals(district)) {
+                exist_vehicle = exist_vehicles.get(i).toString();
+            }
+        }
+        return exist_vehicle;
+    }
+
+    public String getFollowup_comments(String firstname, String lastname, String mobile, String state, String district) {
+        String comment = "";
+        for (int i = 0; i < comments.size(); i++) {
+            if (fst_names.get(i).equals(firstname) && last_names.get(i).equals(lastname) && cell_ph_nums.get(i).equals(mobile) && states.get(i).equals(state)
+                    && districts.get(i).equals(district)) {
+                comment = comments.get(i).toString();
+            }
+        }
+        return comment;
+    }
+
     public String getFollow_date(String firstname, String lastname, String mobile, String state, String district) {
         String followupdate = "";
         for (int i = 0; i < enquiryids.size(); i++) {
@@ -386,9 +435,16 @@ public class EnquiryContact {
         this.enquirydates.add(enquiry_entry_date);
         this.purchasedates.add(expctd_dt_purchase);
         this.followupdates.add(follow_date);
+
+        this.exchanges_reqd.add(x_exchange_required);
+        this.finances_reqd.add(x_finance_required);
+        this.comments.add(followup_comments);
+        this.exist_vehicles.add(existing_vehicle);
+
     }
 
-    public EnquiryContact(){}
+    public EnquiryContact() {
+    }
 }
 
 

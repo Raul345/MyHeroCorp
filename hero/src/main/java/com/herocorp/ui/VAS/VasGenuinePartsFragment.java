@@ -132,17 +132,13 @@ public class VasGenuinePartsFragment extends Fragment implements View.OnClickLis
             f = new VasGenuinenessFragment();
             transaction(f);
         } else if (i == R.id.gallery_button) {
-
         }
-
-
     }
-
 
     public void transaction(final Fragment f) {
         FragmentManager fm = getActivity().getSupportFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
-        ft.replace(R.id.content_vasgenuineparts, f);
+        ft.add(R.id.content_vasgenuineparts, f);
         ft.commit();
     }
 }

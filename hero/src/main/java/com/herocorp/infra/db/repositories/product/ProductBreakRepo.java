@@ -45,6 +45,7 @@ public class ProductBreakRepo extends BaseRepository<ProductBreakModel> {
             if (mCursor.moveToFirst()) {
                 do {
                     if (mCursor.getColumnIndex(ProductBreakTable.Cols._ID) != -1) {
+
                         breakModels.add(
                                 new ProductBreakModel(
                                         mCursor.getInt(mCursor.getColumnIndexOrThrow(ProductBreakTable.Cols._ID)),
@@ -74,11 +75,11 @@ public class ProductBreakRepo extends BaseRepository<ProductBreakModel> {
 
         for (ProductBreakModel breakModel : entityList) {
 
-            if (objects.contains(breakModel.getProductID())) {
+            if(objects.contains(breakModel.getProductID())){
                 //Already Contains, Update it
                 operations.add(
                         ContentProviderOperation.newUpdate(uri)
-                                .withSelection(ProductBreakTable.Cols.PRODUCT_ID + "=?", new String[]{String.valueOf(breakModel.getProductID())})
+                                .withSelection(ProductBreakTable.Cols.PRODUCT_ID+ "=?", new String[]{String.valueOf(breakModel.getProductID())})
                                 .withValue(ProductBreakTable.Cols.FRONT_DISC, breakModel.getFrontDisc())
                                 .withValue(ProductBreakTable.Cols.FRONT_DRUM, breakModel.getFrontDrum())
                                 .withValue(ProductBreakTable.Cols.RARE_DISK, breakModel.getRareDisk())

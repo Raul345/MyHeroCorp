@@ -102,12 +102,6 @@ public class CloseFollowupFragment extends Fragment implements View.OnClickListe
 
         rootView = inflater.inflate(R.layout.dse_closefollowup_fragment, container, false);
 
-        FragmentManager fm = getActivity().getSupportFragmentManager();
-
-        FragmentTransaction ft = fm.beginTransaction();
-
-        ft.addToBackStack(null);
-
         initView(rootView);
 
         return rootView;

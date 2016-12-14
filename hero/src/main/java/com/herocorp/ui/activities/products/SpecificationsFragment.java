@@ -1,5 +1,6 @@
 package com.herocorp.ui.activities.products;
 
+import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -42,7 +43,8 @@ public class SpecificationsFragment extends Fragment implements View.OnClickList
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         rootView = inflater.inflate(R.layout.specification_fragment, container, false);
-
+        getActivity().setRequestedOrientation(
+                ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         productId = ((BaseDrawerActivity) getActivity()).productId;
 
         initView(rootView);

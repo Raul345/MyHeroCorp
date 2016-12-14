@@ -1,12 +1,9 @@
 package com.herocorp.ui.activities.DSEapp.Fragment.Home;
 
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
-import android.content.res.Configuration;
 import android.graphics.Color;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -17,7 +14,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -35,12 +31,10 @@ import com.herocorp.ui.activities.DSEapp.ConnectService.NetworkConnect;
 import com.herocorp.ui.activities.DSEapp.Fragment.PendingFollowup.PendingFollowupFragment;
 import com.herocorp.ui.activities.DSEapp.Fragment.PendingOrders.PendingOrdersFragment;
 import com.herocorp.ui.activities.DSEapp.Fragment.TodayFollowup.TodayFollowupFragment;
-import com.herocorp.ui.activities.DSEapp.SyncFollowup;
 import com.herocorp.ui.activities.DSEapp.Utilities.Syncmakemodel;
 import com.herocorp.ui.activities.DSEapp.db.DatabaseHelper;
 import com.herocorp.ui.activities.DSEapp.models.Bike_model;
 import com.herocorp.ui.activities.DSEapp.models.Bikemake;
-import com.herocorp.ui.activities.DSEapp.models.Bikemodel;
 import com.herocorp.ui.activities.DSEapp.models.Followup;
 import com.herocorp.ui.utility.CustomTypeFace;
 import com.herocorp.ui.utility.CustomViewParams;
@@ -54,9 +48,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.Locale;
 
 import static android.content.Context.INPUT_METHOD_SERVICE;
 
@@ -110,7 +102,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
         rootView = inflater.inflate(R.layout.dse_home_fragment, container, false);
         getActivity().setRequestedOrientation(
-                ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
+                ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setRetainInstance(true);
         try {
             initView(rootView);
@@ -189,8 +181,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         fetch_pref();
         current_date = new SimpleDateFormat("dd-MMM-yy").format(new Date());
         if (!(sync_date.equalsIgnoreCase(current_date.toString()) && NetConnections.isConnected(getContext())))
-            sync_data();
-        //           new Syncmakemodel(getContext()).execute();
+            //  sync_data();
+            new Syncmakemodel(getContext()).execute();
 
         menu.setOnClickListener(this);
         pendingorder.setOnClickListener(this);
@@ -207,6 +199,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             ((BaseDrawerActivity) getActivity()).toggleDrawer();
 
         } else if (i == R.id.pendingorders) {
+            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
             pendingorderText.setTextColor(Color.WHITE);
             pendingfollowupText.setTextColor(Color.GRAY);
             todayfollowupText.setTextColor(Color.GRAY);
@@ -218,7 +212,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 Toast.makeText(getActivity(), "Check your Connection !!", Toast.LENGTH_SHORT).show();
 
         } else if (i == R.id.followup) {
-
+            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
             // Toast.makeText(getActivity(), "today followup", Toast.LENGTH_SHORT).show();
             pendingorderText.setTextColor(Color.GRAY);
             pendingfollowupText.setTextColor(Color.GRAY);
@@ -231,6 +226,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             transaction(new TodayFollowupFragment());
 
         } else if (i == R.id.pendingfollowup) {
+            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
             //  Toast.makeText(getActivity(), "pendidng followup", Toast.LENGTH_SHORT).show();
             pendingorderText.setTextColor(Color.GRAY);
             pendingfollowupText.setTextColor(Color.WHITE);
@@ -240,6 +237,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             transaction(new PendingFollowupFragment());
 
         } else if (i == R.id.searchenquiry) {
+            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
             // Toast.makeText(getActivity(), "search enquiry", Toast.LENGTH_SHORT).show();
             pendingorderText.setTextColor(Color.GRAY);
             pendingfollowupText.setTextColor(Color.GRAY);
@@ -281,9 +280,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     }
 
     public void transaction(final Fragment f) {
-        // bundle.putString("user_id", encryptuser);
-       /* bundle.putString("user", user_id);
-        bundle.putString("dealercode", dealer_code);*/
         bundle.putInt("check", check);
         bundle.putInt("flag", flag);
         bundle.putString("phone_no", phoneno_et.getText().toString());
@@ -320,9 +316,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                                 encryptuser = result.replace("\\/", "/");
                                 urlParameters = "data=" + URLEncoder.encode(encryptuser, "UTF-8");
                                 Log.e("make_sync_start", current_date.toString());
-                                //new SyncFollowup(getContext()).execute();
-                                /*networkConnect = new NetworkConnect(URLConstants.PENDING_FOLLOWUP, urlParameters);
-                                jsonparse_followup(networkConnect.execute());*/
                                 networkConnect = new NetworkConnect(URLConstants.BIKE_MAKE_MODEL, urlParameters);
                                 jsonparse_makemodel(networkConnect.execute());
                                 //  }
@@ -419,7 +412,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         } catch (JSONException e) {
             e.printStackTrace();
         } catch (Exception e) {
-            Toast.makeText(getContext(), "Check your Connection !!", Toast.LENGTH_SHORT);
+            e.printStackTrace();
+            // Toast.makeText(getContext(), "Check your Connection !!", Toast.LENGTH_SHORT);
         }
     }
 
@@ -429,51 +423,4 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         sync_date = PreferenceUtil.get_MakeSyncdate(getContext());
     }
 
-  /*  public class Encrypt_data extends AsyncTask<Void, Void, String> {
-        NetworkConnect networkConnect;
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            // progressBar.setVisibility(View.VISIBLE);
-        }
-
-        protected String doInBackground(Void... params) {
-            if (NetConnections.isConnected(getContext())) try {
-                JSONObject json = new JSONObject();
-                try {
-                    user_id = "ROBINK11610";
-                    json.put("user_id", user_id);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                String urlParameters = "data=" + URLEncoder.encode(json.toString(), "UTF-8");
-                networkConnect = new NetworkConnect("http://abym.in/clientProof/hero_motors/encrypt", urlParameters);
-                String result = networkConnect.execute();
-                if (result != null)
-                    encryptuser = result.replace("\\/", "/");
-                Log.e("encrypt", encryptuser);
-
-                return result;
-            } catch (UnsupportedEncodingException e) {
-                e.printStackTrace();
-                return null;
-            }
-            else {
-                Toast.makeText(getContext(), "Check your connection !!", Toast.LENGTH_SHORT).show();
-                return null;
-            }
-        }
-
-        protected void onPostExecute(String s) {
-            super.onPostExecute(s);
-            //  progressBar.setVisibility(View.INVISIBLE);
-        }
-    }
-*/
-
-/*    @Override
-    public void onConfigurationChanged(Configuration newConfig){
-        super.onConfigurationChanged(newConfig);
-    }*/
 }

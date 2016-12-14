@@ -11,6 +11,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -32,7 +33,7 @@ import com.herocorp.ui.activities.DSEapp.Fragment.Followup.FollowupDetailFragmen
 import com.herocorp.ui.activities.DSEapp.Fragment.Followup.FollowupFragment;
 import com.herocorp.ui.activities.DSEapp.ConnectService.NetworkConnect;
 import com.herocorp.ui.activities.DSEapp.Fragment.Search.SearchfilterFragment;
-import com.herocorp.ui.activities.DSEapp.SyncFollowup;
+import com.herocorp.ui.activities.DSEapp.Utilities.SyncFollowup;
 import com.herocorp.ui.activities.DSEapp.adapter.Followupadapter;
 import com.herocorp.ui.activities.DSEapp.db.DatabaseHelper;
 import com.herocorp.ui.activities.DSEapp.models.Followup;
@@ -157,6 +158,8 @@ public class TodayFollowupFragment extends Fragment implements View.OnClickListe
                 bundle.putString("user_id", encryptuser);
                 bundle.putString("user", user);
                 bundle.putString("enquiry_id", data.getEnquiry_id());
+                bundle.putString("pur_date",data.getExpcted_date_purchase());
+
                 switch (index) {
                     case 0:
                         // open
@@ -261,6 +264,21 @@ public class TodayFollowupFragment extends Fragment implements View.OnClickListe
         customViewParams.setMarginAndPadding(swipe_refresh_followup, new int[]{100, 30, 100, 40}, new int[]{0, 0, 0, 0}, swipe_refresh_followup.getParent());
 
         //fetch_records();
+
+        userList.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                if (userList.getChildAt(0) != null) {
+                    swipe_refresh_followup.setEnabled(userList.getFirstVisiblePosition() == 0 && userList.getChildAt(0).getTop() == 0);
+                }
+            }
+        });
+
         swipe_refresh_followup.post(new Runnable() {
                                         @Override
                                         public void run() {
@@ -268,13 +286,13 @@ public class TodayFollowupFragment extends Fragment implements View.OnClickListe
                                             current_date = new SimpleDateFormat("dd-MMM-yy").format(new Date());
                                             fetch_records();
                                             if ((!PreferenceUtil.get_Syncdate(getContext()).equalsIgnoreCase(current_date.toString()) && NetConnections.isConnected(getContext()))) {
+                                                swipe_refresh_followup.setRefreshing(true);
                                                 new SyncFollowup(getContext()).execute();
                                                 fetch_records();
                                             }
                                         }
                                     }
         );
-
         try {
             Bundle bundle = this.getArguments();
            /* encryptuser = bundle.getString("user_id");
@@ -299,6 +317,8 @@ public class TodayFollowupFragment extends Fragment implements View.OnClickListe
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+
         menu.setOnClickListener(this);
         filterbutton.setOnClickListener(this);
         swipe_refresh_followup.setOnRefreshListener(this);
@@ -364,7 +384,7 @@ public class TodayFollowupFragment extends Fragment implements View.OnClickListe
 
                 if (check == 0) {
                     String date = new SimpleDateFormat("dd-MMM-yy").format(new Date());
-                    if (follow_date.equals(date)) {
+                    if (follow_date.equalsIgnoreCase(date)) {
                         userAdapter.add(new Followup(first_name, last_name, cell_ph_no, age, gender, email_addr, state, district, tehsil, city, x_con_seq_no, x_model_interested,
                                 expected_date_purchase, x_exchange_required, x_finance_required, exist_vehicle, followup_comments, enquiry_id, follow_date, enquiry_entry_date, dealer_bu_id, followup_status));
                     }

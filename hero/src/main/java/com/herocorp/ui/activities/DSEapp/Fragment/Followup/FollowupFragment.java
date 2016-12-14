@@ -37,6 +37,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 import static android.content.Context.INPUT_METHOD_SERVICE;
 
@@ -56,6 +57,8 @@ public class FollowupFragment extends Fragment implements View.OnClickListener {
     DatabaseHelper db;
     String followup_status;
     int enq_flag = 0;
+    String purch_date;
+    Date start, end;
 
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
@@ -63,11 +66,6 @@ public class FollowupFragment extends Fragment implements View.OnClickListener {
 
         rootView = inflater.inflate(R.layout.dse_followup_fragment, container, false);
 
-        FragmentManager fm = getActivity().getSupportFragmentManager();
-
-        FragmentTransaction ft = fm.beginTransaction();
-
-        ft.addToBackStack(null);
         initView(rootView);
 
         return rootView;
@@ -119,6 +117,7 @@ public class FollowupFragment extends Fragment implements View.OnClickListener {
            /* encryptuser = bundle.getString("user_id");*/
             user = bundle.getString("user");
             enquiryid = bundle.getString("enquiry_id");
+            purch_date = bundle.getString("pur_date");
             if (bundle.containsKey("enq_flag"))
                 enq_flag = bundle.getInt("enq_flag");
 
@@ -148,16 +147,26 @@ public class FollowupFragment extends Fragment implements View.OnClickListener {
                 InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
                 reason = followupreason.getText().toString();
+                convertdate();
+                String date = new SimpleDateFormat("dd-MMM-yyyy").format(new Date());
+                Date current_date = new SimpleDateFormat("dd-MMM-yyyy", Locale.ENGLISH)
+                        .parse(date);
                 if (reason.equals("")) {
                     Toast.makeText(getContext(), "Please fill all the details !!", Toast.LENGTH_SHORT).show();
+
+                }/* else if (end.before(start)) {
+                    Toast.makeText(getContext(), "New schedule must be before purchase date!!", Toast.LENGTH_SHORT).show();
+
+                }*/ else if (start.before(current_date)) {
+                    Toast.makeText(getContext(), "Invalid schedule!!", Toast.LENGTH_SHORT).show();
 
                 } else {
                     followup_status = "1";
                     db = new DatabaseHelper(getContext());
                     if (enq_flag == 0) {
-                        db.update_followup(followup_status, follow_date, reason, enquiryid);
+                        db.update_followup(followup_status, follow_date.toUpperCase(), reason, enquiryid);
                     } else
-                        db.update_contactfollowup(followup_status, follow_date, reason, enquiryid);
+                        db.update_contactfollowup(followup_status, follow_date.toUpperCase(), reason, enquiryid);
 
                     if (NetConnections.isConnected(getContext())) {
                         String newurlparams = null;
@@ -276,5 +285,12 @@ public class FollowupFragment extends Fragment implements View.OnClickListener {
         } catch (ParseException e) {
             e.printStackTrace();
         }
+    }
+
+
+    public void convertdate() throws ParseException {
+        start = new SimpleDateFormat("dd-MMM-yy", Locale.ENGLISH).parse(follow_date);
+       /* end = new SimpleDateFormat("dd-MMM-yy", Locale.ENGLISH)
+                .parse(purch_date);*/
     }
 }

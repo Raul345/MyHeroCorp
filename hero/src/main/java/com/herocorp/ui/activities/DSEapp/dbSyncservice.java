@@ -1,3 +1,4 @@
+/*
 package com.herocorp.ui.activities.DSEapp;
 
 import android.app.Service;
@@ -12,9 +13,11 @@ import android.util.Log;
 import android.widget.Toast;
 import android.os.Process;
 
+*/
 /**
  * Created by rsawh on 28-Nov-16.
- */
+ *//*
+
 
 public class dbSyncservice extends Service {
     @Nullable
@@ -79,3 +82,4 @@ public class dbSyncservice extends Service {
         }
     }
 }
+*/

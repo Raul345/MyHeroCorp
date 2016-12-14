@@ -158,4 +158,5 @@ public class AlertDialogFragment extends DialogFragment {
         if (sharedPreferences.contains("reg_no"))
             edit.remove("reg_no").commit();
     }
+
 }

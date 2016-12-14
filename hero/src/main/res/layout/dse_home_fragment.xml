@@ -3,8 +3,7 @@
     android:id="@+id/content_dsehome"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_dashboard"
-    >
+    android:background="@drawable/bg_dashboard">
 
     <ImageView
         android:id="@+id/app_logo"
@@ -80,8 +79,8 @@
         android:layout_above="@+id/seprator"
         android:layout_below="@+id/top_layout1"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="20dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginBottom="15dp"
+        android:layout_marginTop="15dp"
         android:gravity="center"
         android:orientation="horizontal">
 
@@ -105,6 +104,35 @@
                 android:gravity="center"
                 android:text="Pending Orders"
                 android:textColor="#ffffff" />
+            <!--
+                        <RelativeLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="1dp">
+
+                            <ImageView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:src="@drawable/count_icon" />
+
+                            <RelativeLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerInParent="true">
+
+                                <TextView
+                                    android:id="@+id/count_orders"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center_horizontal"
+                                    android:text="10"
+                                    android:textColor="#000000"
+                                    android:textStyle="bold" />
+
+                            </RelativeLayout>
+
+
+                        </RelativeLayout>-->
         </LinearLayout>
 
         <LinearLayout
@@ -126,7 +154,39 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="Today's Followup" />
+            <!--     <RelativeLayout
+                     android:layout_width="wrap_content"
+                     android:layout_height="wrap_content"
+                     android:layout_marginTop="1dp">
 
+                     <RelativeLayout
+                         android:layout_width="wrap_content"
+                         android:layout_height="wrap_content"
+                         android:layout_centerInParent="true">
+
+                         <TextView
+                             android:id="@+id/count_tfollowup"
+                             android:layout_width="wrap_content"
+                             android:layout_height="wrap_content"
+                             android:gravity="center_horizontal"
+                             android:text="10"
+                             android:textColor="#000000"
+                             android:textStyle="bold" />
+
+                         <ImageView
+                             android:layout_width="wrap_content"
+                             android:layout_height="wrap_content"
+                             android:src="@drawable/count_icon"
+                             android:layout_alignParentTop="true"
+                             android:layout_alignParentLeft="true"
+                             android:layout_alignParentStart="true"
+                             android:id="@+id/imageView" />
+
+                     </RelativeLayout>
+
+
+                 </RelativeLayout>
+     -->
         </LinearLayout>
 
         <LinearLayout
@@ -148,6 +208,34 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="Pending Followup" />
+            <!--    <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="1dp">
+
+                    <ImageView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:src="@drawable/count_icon" />
+
+                    <RelativeLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true">
+
+                        <TextView
+                            android:id="@+id/count_pfollowup"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_horizontal"
+                            android:text="10"
+                            android:textColor="#000000"
+                            android:textStyle="bold" />
+
+                    </RelativeLayout>
+
+
+                </RelativeLayout>-->
 
         </LinearLayout>
 
@@ -186,8 +274,7 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:gravity="center"
-            android:orientation="horizontal"
-            >
+            android:orientation="horizontal">
 
             <LinearLayout
                 android:id="@+id/textbox1_container"
@@ -209,14 +296,13 @@
                     android:layout_height="match_parent"
                     android:background="#ffffff"
                     android:digits="@string/numbers"
+                    android:focusableInTouchMode="true"
                     android:hint="91#####"
                     android:maxLength="10"
-                    android:padding="10dp"
-                    android:textColor="#000000"
-                    android:focusableInTouchMode="true"
-                    android:singleLine="true"
                     android:maxLines="1"
-                    />
+                    android:padding="10dp"
+                    android:singleLine="true"
+                    android:textColor="#000000" />
 
 
             </LinearLayout>
@@ -250,20 +336,20 @@
                     android:layout_height="wrap_content"
                     android:background="#ffffff"
                     android:digits="@string/numbers"
+                    android:focusableInTouchMode="true"
                     android:hint="1234****"
                     android:padding="10dp"
-                    android:textColor="#000000"
-                    android:focusableInTouchMode="true"/>
+                    android:textColor="#000000" />
             </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/textbox3_container"
                 android:layout_width="0sp"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
                 android:layout_marginTop="4dp"
                 android:layout_weight="0.2"
                 android:gravity="center"
-                android:layout_marginLeft="5dp"
                 android:orientation="vertical">
 
                 <ImageView
@@ -278,18 +364,6 @@
 
         </LinearLayout>
     </LinearLayout>
-
-    <com.github.ybq.android.spinkit.SpinKitView xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:id="@+id/progress"
-        style="@style/SpinKitView.Wave"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:layout_gravity="center"
-        android:layout_marginLeft="100dp"
-        android:visibility="gone"
-        app:SpinKit_Color="#cc0000" />
     <!-- <android.support.design.widget.FloatingActionButton
          xmlns:app="http://schemas.android.com/apk/res-auto"
          android:id="@+id/imageView_submit_home"

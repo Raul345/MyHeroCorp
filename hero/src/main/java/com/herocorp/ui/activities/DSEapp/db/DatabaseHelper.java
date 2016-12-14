@@ -529,6 +529,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 followups.add(t);
             } while (c.moveToNext());
         }
+        closeDB();
         return followups;
     }
 
@@ -550,6 +551,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 makes.add(t);
             } while (c.moveToNext());
         }
+        closeDB();
         return makes;
     }
 
@@ -571,6 +573,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 models.add(t);
             } while (c.moveToNext());
         }
+        closeDB();
         return models;
     }
 

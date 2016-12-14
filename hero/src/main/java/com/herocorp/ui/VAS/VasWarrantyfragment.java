@@ -104,7 +104,6 @@ public class VasWarrantyfragment extends Fragment implements View.OnClickListene
         int i = view.getId();
         if (i == R.id.menu_icon) {
             ((BaseDrawerActivity) getActivity()).toggleDrawer();
-        } else if (i == R.id.warranty_layout) {
         } else if (i == R.id.maintenance_layout) {
             f = new VasMaintenanceFragment();
             transaction(f);

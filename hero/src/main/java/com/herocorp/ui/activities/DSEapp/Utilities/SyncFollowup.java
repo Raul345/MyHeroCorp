@@ -1,4 +1,4 @@
-package com.herocorp.ui.activities.DSEapp;
+package com.herocorp.ui.activities.DSEapp.Utilities;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -11,6 +11,7 @@ import com.herocorp.ui.activities.DSEapp.ConnectService.NetworkConnect;
 import com.herocorp.ui.activities.DSEapp.db.DatabaseHelper;
 import com.herocorp.ui.activities.DSEapp.models.Followup;
 import com.herocorp.ui.utility.PreferenceUtil;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -66,8 +67,8 @@ public class SyncFollowup extends AsyncTask<Void, Void, String> {
     protected String doInBackground(Void... params) {
         try {
             final JSONObject jsonparams = new JSONObject();
-           jsonparams.put("user_id", PreferenceUtil.get_UserId(context));
-            //jsonparams.put("user_id", "ROBINK11610");
+           // jsonparams.put("user_id", PreferenceUtil.get_UserId(context));
+              jsonparams.put("user_id", "DSE10866");
             Log.e("followup_sync_start:", new SimpleDateFormat("dd-MMM-yy").format(new Date()).toString());
             String newurlparams = "data=" + URLEncoder.encode(jsonparams.toString(), "UTF-8");
             networkConnect = new NetworkConnect(URLConstants.ENCRYPT, newurlparams);
@@ -76,7 +77,7 @@ public class SyncFollowup extends AsyncTask<Void, Void, String> {
             networkConnect = new NetworkConnect(URLConstants.PENDING_FOLLOWUP, urldata);
             result = networkConnect.execute();
             return result;
-        }catch (UnsupportedEncodingException e) {
+        } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
             return null;
         } catch (Exception e) {
@@ -124,14 +125,15 @@ public class SyncFollowup extends AsyncTask<Void, Void, String> {
                                 expected_date_purchase, x_exchange_required, x_finance_required, exist_vehicle, followup_comments, enquiry_id, follow_date, enquiry_entry_date, dealer_bu_id, "0"));
                     }
                 }
-                PreferenceUtil.set_Syncdate(context,new SimpleDateFormat("dd-MMM-yy").format(new Date()).toString());
+                PreferenceUtil.set_Syncdate(context, new SimpleDateFormat("dd-MMM-yy").format(new Date()).toString());
                 Log.e("followup_sync_end:", new SimpleDateFormat("dd-MMM-yy").format(new Date()).toString());
 
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         } catch (Exception e) {
-            Toast.makeText(context, "Check your Connection !!", Toast.LENGTH_SHORT);
+            e.printStackTrace();
+            //Toast.makeText(context, "Check your Connection !!", Toast.LENGTH_SHORT);
         }
     }
 }

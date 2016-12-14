@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -78,9 +79,6 @@ public class PendingOrdersFragment extends Fragment implements View.OnClickListe
         rootView = inflater.inflate(R.layout.dse_pendingorders_fragment, container, false);
         getActivity().overridePendingTransition(R.anim.slide_in_up, R.anim.slide_out_up);
 
-       /* getActivity().setRequestedOrientation(
-                ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);*/
-
         initView(rootView);
 
         return rootView;
@@ -118,12 +116,27 @@ public class PendingOrdersFragment extends Fragment implements View.OnClickListe
         customViewParams.setButtonCustomParams(buttonHeader, new int[]{0, 10, 0, 10}, new int[]{70, 0, 0, 0}, 90, 180, 40, customTypeFace.gillSansItalic, 0);
 
         RelativeLayout topLayout1 = (RelativeLayout) rootView.findViewById(R.id.top_layout1);
-        customViewParams.setMarginAndPadding(topLayout1, new int[]{100, 30, 100, 40}, new int[]{0, 0, 0, 0}, topLayout1.getParent());
+        customViewParams.setMarginAndPadding(topLayout1, new int[]{0, 0, 0, 0}, new int[]{0, 0, 0, 0}, topLayout1.getParent());
 
         userAdapter = new PendingOrdersadapter(getContext(), R.layout.dse_pendingorder_row, userArray);
         userList = (ListView) rootView.findViewById(R.id.list_pendingorders);
         pendingorders_msg = (TextView) rootView.findViewById(R.id.pendingorders_message);
         swipe_refresh_orders = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_refresh_orders);
+        customViewParams.setMarginAndPadding(swipe_refresh_orders, new int[]{100, 30, 100, 40}, new int[]{0, 0, 0, 0},swipe_refresh_orders.getParent());
+
+        userList.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                if (userList.getChildAt(0) != null) {
+                    swipe_refresh_orders.setEnabled(userList.getFirstVisiblePosition() == 0 && userList.getChildAt(0).getTop() == 0);
+                }
+            }
+        });
 
         swipe_refresh_orders.post(new Runnable() {
                                       @Override
@@ -255,10 +268,12 @@ public class PendingOrdersFragment extends Fragment implements View.OnClickListe
             } catch (Exception e) {
                 swipe_refresh_orders.setRefreshing(false);
                 pendingorders_msg.setVisibility(View.VISIBLE);
-                Toast.makeText(getContext(), "Check your Connection !!", Toast.LENGTH_SHORT);
+                e.printStackTrace();
+               // Toast.makeText(getContext(), "Check your Connection !!", Toast.LENGTH_SHORT);
             }
         }
     }
+
     public void send_request() {
         try {
             JSONObject jsonparms = new JSONObject();

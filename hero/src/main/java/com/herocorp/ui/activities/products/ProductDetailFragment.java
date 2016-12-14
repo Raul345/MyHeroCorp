@@ -3,6 +3,7 @@ package com.herocorp.ui.activities.products;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -61,7 +62,8 @@ public class ProductDetailFragment extends Fragment implements View.OnClickListe
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.bike_detail_fragment, container, false);
-
+        getActivity().setRequestedOrientation(
+                ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
         try {
             categoryRepo = new ProductCategoryRepo(getActivity());

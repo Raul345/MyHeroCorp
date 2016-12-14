@@ -1,5 +1,6 @@
 package com.herocorp.ui.activities.products;
 
+import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
@@ -71,6 +72,8 @@ public class GalleryFragment extends Fragment implements View.OnClickListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         rootView = inflater.inflate(R.layout.gallery_fragment, container, false);
+        getActivity().setRequestedOrientation(
+                ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
         productId = ((BaseDrawerActivity) getActivity()).productId;
 

@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.herocorp.R;
@@ -50,6 +51,8 @@ public class EnquiryContactadapter extends ArrayAdapter<EnquiryContact> {
             holder.follow_date = (TextView) row.findViewById(R.id.textview_follow_date);
             holder.state = (TextView) row.findViewById(R.id.textview_state);
             holder.district = (TextView) row.findViewById(R.id.textview_district);
+          //  holder.call = (LinearLayout) row.findViewById(R.id.layout_call);
+
 //    typeface = Typeface.createFromAsset(getContext().getAssets(), "DroidSerif-Regular.ttf");
             //   holder.textname.setTypeface(typeface);
 
@@ -63,7 +66,6 @@ public class EnquiryContactadapter extends ArrayAdapter<EnquiryContact> {
 
         holder.cell_ph_num.setPaintFlags(holder.cell_ph_num.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
         holder.cell_ph_num.setText(user.getCell_ph_num());
-
         holder.follow_date.setText(user.getFollow_date());
         holder.state.setText(user.getState());
         holder.district.setText(user.getDistrict());
@@ -82,6 +84,22 @@ public class EnquiryContactadapter extends ArrayAdapter<EnquiryContact> {
                 dialogFragment.show(fm, "Sample Fragment");
             }
         });
+
+       /* holder.call.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                bundle.putString("mobile", user.getCell_ph_num());
+                bundle.putString("header", "Are you Sure?");
+                bundle.putString("msg", "Call this number " + user.getCell_ph_num());
+                bundle.putInt("flag", 0);
+                FragmentManager fm = ((FragmentActivity) getContext()).getSupportFragmentManager();
+                ContactAlertFragment dialogFragment = new ContactAlertFragment();
+                dialogFragment.setArguments(bundle);
+                dialogFragment.setCancelable(false);
+                dialogFragment.show(fm, "Sample Fragment");
+            }
+        });*/
         return row;
     }
 
@@ -90,6 +108,7 @@ public class EnquiryContactadapter extends ArrayAdapter<EnquiryContact> {
         TextView cell_ph_num;
         TextView state, district;
         TextView follow_date;
+       // LinearLayout call;
     }
 
 

@@ -8,10 +8,10 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -25,14 +25,13 @@ import com.baoyz.swipemenulistview.SwipeMenuCreator;
 import com.baoyz.swipemenulistview.SwipeMenuItem;
 import com.baoyz.swipemenulistview.SwipeMenuListView;
 import com.herocorp.R;
-import com.herocorp.core.constants.URLConstants;
 import com.herocorp.infra.utils.NetConnections;
 import com.herocorp.ui.activities.BaseDrawerActivity;
 import com.herocorp.ui.activities.DSEapp.Fragment.Followup.CloseFollowupFragment;
 import com.herocorp.ui.activities.DSEapp.Fragment.Followup.FollowupDetailFragment;
 import com.herocorp.ui.activities.DSEapp.Fragment.Followup.FollowupFragment;
 import com.herocorp.ui.activities.DSEapp.ConnectService.NetworkConnect;
-import com.herocorp.ui.activities.DSEapp.SyncFollowup;
+import com.herocorp.ui.activities.DSEapp.Utilities.SyncFollowup;
 import com.herocorp.ui.activities.DSEapp.adapter.Followupadapter;
 import com.herocorp.ui.activities.DSEapp.db.DatabaseHelper;
 import com.herocorp.ui.activities.DSEapp.interfaces.PageRefreshListener;
@@ -41,12 +40,6 @@ import com.herocorp.ui.utility.CustomTypeFace;
 import com.herocorp.ui.utility.CustomViewParams;
 import com.herocorp.ui.utility.PreferenceUtil;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -156,6 +149,7 @@ public class PendingFollowupFragment extends Fragment implements View.OnClickLis
                 bundle.putString("user_id", encryptuser);
                 bundle.putString("user", PreferenceUtil.get_UserId(getContext()));
                 bundle.putString("enquiry_id", data.getEnquiry_id());
+                bundle.putString("pur_date",data.getExpcted_date_purchase());
                 switch (index) {
                     case 0:
                         // open
@@ -259,6 +253,21 @@ public class PendingFollowupFragment extends Fragment implements View.OnClickLis
         swipe_refresh_followup = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_refresh_followup);
         customViewParams.setMarginAndPadding(swipe_refresh_followup, new int[]{100, 30, 100, 40}, new int[]{0, 0, 0, 0}, swipe_refresh_followup.getParent());
 
+        userList.setOnScrollListener(new AbsListView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                if (userList.getChildAt(0) != null) {
+                    swipe_refresh_followup.setEnabled(userList.getFirstVisiblePosition() == 0 && userList.getChildAt(0).getTop() == 0);
+                }
+            }
+        });
+
+
         swipe_refresh_followup.post(new Runnable() {
                                         @Override
                                         public void run() {
@@ -266,7 +275,7 @@ public class PendingFollowupFragment extends Fragment implements View.OnClickLis
                                             current_date = new SimpleDateFormat("dd-MMM-yy").format(new Date());
                                             fetch_records();
                                             if ((!PreferenceUtil.get_Syncdate(getContext()).equalsIgnoreCase(current_date.toString()) && NetConnections.isConnected(getContext()))) {
-
+                                                swipe_refresh_followup.setRefreshing(true);
                                                 new SyncFollowup(getContext()).execute();
                                                 fetch_records();
                                             }
@@ -289,7 +298,6 @@ public class PendingFollowupFragment extends Fragment implements View.OnClickLis
 
     public void fetch_records() {
         try {
-            swipe_refresh_followup.setRefreshing(true);
             db = new DatabaseHelper(getContext());
             List<Followup> allrecords = db.getAllFollowups();
             userAdapter.clear();

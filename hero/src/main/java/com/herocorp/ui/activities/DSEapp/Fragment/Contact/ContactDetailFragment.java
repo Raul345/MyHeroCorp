@@ -1,8 +1,10 @@
 package com.herocorp.ui.activities.DSEapp.Fragment.Contact;
 
 import android.content.SharedPreferences;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
@@ -19,6 +21,7 @@ import android.widget.TextView;
 
 import com.herocorp.R;
 import com.herocorp.ui.activities.BaseDrawerActivity;
+import com.herocorp.ui.activities.DSEapp.Fragment.Alert.ContactAlertFragment;
 import com.herocorp.ui.activities.DSEapp.Fragment.Followup.CloseFollowupFragment;
 import com.herocorp.ui.activities.DSEapp.Fragment.Enquiry.EditFollowupFragment;
 import com.herocorp.ui.activities.DSEapp.Fragment.Followup.FollowupDetailFragment;
@@ -60,7 +63,7 @@ public class ContactDetailFragment extends Fragment implements View.OnClickListe
 
     ArrayList vinarray = new ArrayList(), variantarray = new ArrayList(), dealerarray = new ArrayList(), colourarray = new ArrayList(), modelarray = new ArrayList(), datearray = new ArrayList(), descarray = new ArrayList();
 
-    ArrayList cardnoarray = new ArrayList(), currentpointsarray = new ArrayList(), lastservicearray = new ArrayList(), nextservicearray, expirydatearray = new ArrayList(),
+    ArrayList cardnoarray = new ArrayList(), currentpointsarray = new ArrayList(), lastservicearray = new ArrayList(), nextservicearray=new ArrayList(), expirydatearray = new ArrayList(),
             policynoarray = new ArrayList(), insurancecoarray = new ArrayList();
 
     ListView vehiclelist;
@@ -222,6 +225,8 @@ public class ContactDetailFragment extends Fragment implements View.OnClickListe
         bundle.putString("user", user);
         bundle.putString("enquiry_id", enquiry_id);
         bundle.putInt("enq_flag", 1);
+        bundle.putString("pur_date", expctd_dt_purchase);
+
         int i = view.getId();
         if (i == R.id.menu_icon) {
             ((BaseDrawerActivity) getActivity()).toggleDrawer();
@@ -239,7 +244,7 @@ public class ContactDetailFragment extends Fragment implements View.OnClickListe
             FragmentManager fm = getActivity().getSupportFragmentManager();
             FragmentTransaction ft = fm.beginTransaction();
             ft.addToBackStack(null);
-            ft.replace(R.id.content_contactdetail, f,"close");
+            ft.replace(R.id.content_contactdetail, f, "close");
             ft.commit();
             //transaction(f);
         } else if (i == R.id.button_followup) {
@@ -248,7 +253,7 @@ public class ContactDetailFragment extends Fragment implements View.OnClickListe
             FragmentManager fm = getActivity().getSupportFragmentManager();
             FragmentTransaction ft = fm.beginTransaction();
             ft.addToBackStack(null);
-            ft.replace(R.id.content_contactdetail, f,"followup");
+            ft.replace(R.id.content_contactdetail, f, "followup");
             ft.commit();
             //   transaction(f);
         }
@@ -308,6 +313,22 @@ public class ContactDetailFragment extends Fragment implements View.OnClickListe
         tehsils.setText(tehsil);
         citys.setText(city);
         mobile.setText(contact);
+        mobile.setPaintFlags(mobile.getPaintFlags() | Paint.UNDERLINE_TEXT_FLAG);
+        mobile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                bundle.putString("mobile", contact);
+                bundle.putString("header", "Are you Sure?");
+                bundle.putString("msg", "Call this number " + contact);
+                bundle.putInt("flag", 0);
+                FragmentManager fm = ((FragmentActivity) getContext()).getSupportFragmentManager();
+                ContactAlertFragment dialogFragment = new ContactAlertFragment();
+                dialogFragment.setArguments(bundle);
+                dialogFragment.setCancelable(false);
+                dialogFragment.show(fm, "Sample Fragment");
+            }
+        });
         email.setText(email_addr);
         customer_id.setText("  Customer id: " + cust_id);
 
@@ -414,6 +435,21 @@ public class ContactDetailFragment extends Fragment implements View.OnClickListe
 
     public void fetch_data2() {
         Bundle bundle = this.getArguments();
+        modelarray.clear();
+        dealerarray.clear();
+        vinarray.clear();
+        variantarray.clear();
+        colourarray.clear();
+        descarray.clear();
+        datearray.clear();
+        cardnoarray.clear();
+        currentpointsarray.clear();
+        lastservicearray.clear();
+        nextservicearray.clear();
+        expirydatearray.clear();
+        policynoarray.clear();
+        insurancecoarray.clear();
+
         modelarray = bundle.getStringArrayList("modelarray");
         dealerarray = bundle.getStringArrayList("dealerarray");
         vinarray = bundle.getStringArrayList("vinarray");
@@ -434,7 +470,7 @@ public class ContactDetailFragment extends Fragment implements View.OnClickListe
 
     public void setList() {
         vehicleDetailadapter.clear();
-
+        vehiclelist.setAdapter(null);
         for (int i = 0; i < vinarray.size(); i++) {
 
             vehicleDetailadapter.add(new VehicleDetail(modelarray.get(i).toString(), dealerarray.get(i).toString(),

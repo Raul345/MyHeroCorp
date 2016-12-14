@@ -247,5 +247,17 @@
                       android:visibility="visible"/>
               </LinearLayout>-->
         </LinearLayout>
+
+     <!--   <LinearLayout
+            android:id="@+id/layout_call"
+            android:layout_width="0sp"
+            android:layout_height="match_parent"
+            android:layout_marginRight="5dp"
+            android:layout_weight="1"
+            android:background="@drawable/call_icon"
+            android:orientation="horizontal">
+
+        </LinearLayout>
+-->
     </LinearLayout>
 </FrameLayout>

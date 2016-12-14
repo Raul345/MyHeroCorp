@@ -282,7 +282,6 @@ public class DataSyncService extends Service {
         }
 
         if (success) {
-
             DataSyncService.syncServiceCallBack.completed();
             return;
         }

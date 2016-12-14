@@ -163,7 +163,6 @@ public class ContactFragment extends Fragment implements View.OnClickListener {
                 ArrayList descarray = detail.getskudetail(data.getFst_name(), data.getLast_name(), data.getCell_ph_num()
                         , data.getState(), data.getDistrict());
 
-
                 ArrayList cardnoarray = detail.getcardnodetail(data.getFst_name(), data.getLast_name(), data.getCell_ph_num()
                         , data.getState(), data.getDistrict());
                 ArrayList currentpointsarray = detail.getCurrentpointsdetail(data.getFst_name(), data.getLast_name(), data.getCell_ph_num()
@@ -280,7 +279,7 @@ public class ContactFragment extends Fragment implements View.OnClickListener {
                 EnquiryContact enq = new EnquiryContact();
                 String enquiryid = enq.getEnquiry_id(data.getFst_name(), data.getLast_name(), data.getCell_ph_num()
                         , data.getState(), data.getDistrict());
-
+/*
                 String model = enq.getModel_cd(data.getFst_name(), data.getLast_name(), data.getCell_ph_num()
                         , data.getState(), data.getDistrict());
 
@@ -289,7 +288,18 @@ public class ContactFragment extends Fragment implements View.OnClickListener {
                 String purchasedate = enq.getExpctd_dt_purchase(data.getFst_name(), data.getLast_name(), data.getCell_ph_num()
                         , data.getState(), data.getDistrict());
                 String followupdate = enq.getFollow_date(data.getFst_name(), data.getLast_name(), data.getCell_ph_num()
+                        , data.getState(), data.getDistrict());*/
+
+                String exchange_reqd = enq.getX_exchange_required(data.getFst_name(), data.getLast_name(), data.getCell_ph_num()
                         , data.getState(), data.getDistrict());
+                String finance_reqd = enq.getX_finance_required(data.getFst_name(), data.getLast_name(), data.getCell_ph_num()
+                        , data.getState(), data.getDistrict());
+                String exist_vehicle = enq.getExisting_vehicle(data.getFst_name(), data.getLast_name(), data.getCell_ph_num()
+                        , data.getState(), data.getDistrict());
+                String comments = enq.getFollowup_comments(data.getFst_name(), data.getLast_name(), data.getCell_ph_num()
+                        , data.getState(), data.getDistrict());
+
+
 
               /*  for (int i = 0; i < vinarray.size(); i++) {
                     Toast.makeText(getContext(), model + vinarray.get(i).toString() + variantarray.get(i).toString() +
@@ -309,9 +319,15 @@ public class ContactFragment extends Fragment implements View.OnClickListener {
                 bundle.putString("tehsil2", data.getTehsil());
                 bundle.putString("city2", data.getCity());
                 bundle.putString("x_con_seq_no_2", data.getX_con_seq_no());
-
                 bundle.putString("enquiry_id", enquiryid);
-              /* bundle.putString("x_model_interested", model);
+
+                bundle.putString("x_exchange_required", exchange_reqd);
+                bundle.putString("x_finance_required", finance_reqd);
+                bundle.putString("existing_vehicle",exist_vehicle);
+                bundle.putString("followup_comments", comments);
+
+
+              /*bundle.putString("x_model_interested", model);
                 bundle.putString("enquiry_entry_date", enquirydate);
                 bundle.putString("expctd_dt_purchase", purchasedate);
                 bundle.putString("follow_date", followupdate);
@@ -818,8 +834,9 @@ public class ContactFragment extends Fragment implements View.OnClickListener {
             }
         }
     }
+
     @Override
-    public void onConfigurationChanged(Configuration newConfig){
+    public void onConfigurationChanged(Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
     }
 

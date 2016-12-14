@@ -56,19 +56,20 @@
 
     </LinearLayout>
 
-    <RelativeLayout
-        android:id="@+id/top_layout1"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/top_layout"
-        android:background="#ffffff"
-        android:gravity="center_vertical"
-        android:orientation="vertical">
 
-        <android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
-            android:id="@+id/swipe_refresh_orders"
+    <android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/swipe_refresh_orders"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/top_layout">
+
+        <RelativeLayout
+            android:id="@+id/top_layout1"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent"
+            android:background="#ffffff"
+            android:gravity="center_vertical"
+            android:orientation="vertical">
 
             <TextView
                 android:id="@+id/pendingorders_message"
@@ -90,8 +91,8 @@
                 android:dividerHeight="0.5dp"
                 android:paddingLeft="3dp"
                 android:paddingRight="3dp"></ListView>
+        </RelativeLayout>
 
+    </android.support.v4.widget.SwipeRefreshLayout>
 
-        </android.support.v4.widget.SwipeRefreshLayout>
-    </RelativeLayout>
 </RelativeLayout>

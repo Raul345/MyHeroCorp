@@ -106,14 +106,14 @@ public class EditFollowupFragment extends Fragment implements View.OnClickListen
         if (page_flag == 1)
             viewPager.setCurrentItem(2);
 
-        viewPager.setOffscreenPageLimit(3);
+        viewPager.setOffscreenPageLimit(2);
 
         // Give the PagerSlidingTabStrip the ViewPager
         tabsStrip = (PagerSlidingTabStrip) rootView.findViewById(R.id.tabs_editenquiry);
         // Attach the view pager to the tab strip
         tabsStrip.setViewPager(viewPager);
 
-       /* tabsStrip.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        tabsStrip.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
                                               @Override
                                               public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
                                                   if (position == 1 || position == 2) {
@@ -128,7 +128,7 @@ public class EditFollowupFragment extends Fragment implements View.OnClickListen
                                                           dialogFragment.setCancelable(false);
                                                           dialogFragment.show(fm, "Sample Fragment");
                                                           viewPager.setCurrentItem(0);
-                                                          tabsStrip.setViewPager(viewPager);
+                                                        //  tabsStrip.setViewPager(viewPager);
                                                       } else if (age.equalsIgnoreCase("")) {
                                                           Bundle bundle = new Bundle();
                                                           bundle.putString("msg", "Age cannot be empty !!");
@@ -139,10 +139,10 @@ public class EditFollowupFragment extends Fragment implements View.OnClickListen
                                                           dialogFragment.setCancelable(false);
                                                           dialogFragment.show(fm, "Sample Fragment");
                                                           viewPager.setCurrentItem(0);
-                                                          tabsStrip.setViewPager(viewPager);
+                                                         // tabsStrip.setViewPager(viewPager);
                                                       }
                                                   }
-                                                  if (position == 0 || position == 2) {
+                                                 /* if (position == 0 || position == 2) {
                                                       fetch_data2();
                                                       if (state.equalsIgnoreCase("")) {
                                                           Bundle bundle = new Bundle();
@@ -154,7 +154,7 @@ public class EditFollowupFragment extends Fragment implements View.OnClickListen
                                                           dialogFragment.setCancelable(false);
                                                           dialogFragment.show(fm, "Sample Fragment");
                                                           viewPager.setCurrentItem(1);
-                                                          tabsStrip.setViewPager(viewPager);
+                                                        //  tabsStrip.setViewPager(viewPager);
                                                       } else if (district.equalsIgnoreCase("")) {
                                                           Bundle bundle = new Bundle();
                                                           bundle.putString("msg", "Please select the district !!");
@@ -165,7 +165,7 @@ public class EditFollowupFragment extends Fragment implements View.OnClickListen
                                                           dialogFragment.setCancelable(false);
                                                           dialogFragment.show(fm, "Sample Fragment");
                                                           viewPager.setCurrentItem(1);
-                                                          tabsStrip.setViewPager(viewPager);
+                                                        //  tabsStrip.setViewPager(viewPager);
                                                       } else if (tehsil.equalsIgnoreCase("")) {
                                                           Bundle bundle = new Bundle();
                                                           bundle.putString("msg", "Please select the tehsil !!");
@@ -176,7 +176,7 @@ public class EditFollowupFragment extends Fragment implements View.OnClickListen
                                                           dialogFragment.setCancelable(false);
                                                           dialogFragment.show(fm, "Sample Fragment");
                                                           viewPager.setCurrentItem(1);
-                                                          tabsStrip.setViewPager(viewPager);
+                                                         // tabsStrip.setViewPager(viewPager);
                                                       } else if (city.equalsIgnoreCase("")) {
                                                           Bundle bundle = new Bundle();
                                                           bundle.putString("msg", "Please select the village/city !!");
@@ -185,12 +185,13 @@ public class EditFollowupFragment extends Fragment implements View.OnClickListen
                                                           AlertDialogFragment dialogFragment = new AlertDialogFragment();
                                                           dialogFragment.setArguments(bundle);
                                                           dialogFragment.setCancelable(false);
-                                                          dialogFragment.show(fm, "Sample Fragment");
+                                                          if (!dialogFragment.isVisible())
+                                                              dialogFragment.show(fm, "Sample Fragment");
                                                           viewPager.setCurrentItem(1);
-                                                          tabsStrip.setViewPager(viewPager);
+
                                                       }
                                                   }
-
+*/
                                               }
 
                                               @Override
@@ -205,7 +206,7 @@ public class EditFollowupFragment extends Fragment implements View.OnClickListen
                                           }
 
         );
-*/
+
 
         menu.setOnClickListener(this);
 

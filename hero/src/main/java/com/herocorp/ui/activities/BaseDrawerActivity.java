@@ -233,7 +233,7 @@ public class BaseDrawerActivity extends FragmentActivity implements View.OnClick
         ImageView navDseImage = (ImageView) findViewById(R.id.nav_dse_image);
         ImageView navContactImage = (ImageView) findViewById(R.id.nav_contactus_image);
         ImageView navFAQImage = (ImageView) findViewById(R.id.nav_faq_image);
-        ImageView navIssueImage = (ImageView) findViewById(R.id.nav_issue_image);
+        //  ImageView navIssueImage = (ImageView) findViewById(R.id.nav_issue_image);
         ImageView navSyncImage = (ImageView) findViewById(R.id.nav_sync_image);
         ImageView navEmiImage = (ImageView) findViewById(R.id.nav_emi_image);
         ImageView navlogoutimage = (ImageView) findViewById(R.id.nav_logout_image);
@@ -246,7 +246,7 @@ public class BaseDrawerActivity extends FragmentActivity implements View.OnClick
         customViewParams.setImageViewCustomParams(navDseImage, new int[]{30, 0, 20, 0}, new int[]{0, 0, 0, 0}, 40, 40);
         customViewParams.setImageViewCustomParams(navContactImage, new int[]{30, 0, 20, 0}, new int[]{0, 0, 0, 0}, 40, 40);
         customViewParams.setImageViewCustomParams(navFAQImage, new int[]{30, 0, 20, 0}, new int[]{0, 0, 0, 0}, 40, 40);
-        customViewParams.setImageViewCustomParams(navIssueImage, new int[]{30, 0, 20, 0}, new int[]{0, 0, 0, 0}, 40, 40);
+        // customViewParams.setImageViewCustomParams(navIssueImage, new int[]{30, 0, 20, 0}, new int[]{0, 0, 0, 0}, 40, 40);
         customViewParams.setImageViewCustomParams(navSyncImage, new int[]{30, 0, 20, 0}, new int[]{0, 0, 0, 0}, 40, 40);
         customViewParams.setImageViewCustomParams(navEmiImage, new int[]{30, 0, 20, 0}, new int[]{0, 0, 0, 0}, 40, 40);
         customViewParams.setImageViewCustomParams(navlogoutimage, new int[]{30, 0, 20, 0}, new int[]{0, 0, 0, 0}, 40, 40);
@@ -259,7 +259,7 @@ public class BaseDrawerActivity extends FragmentActivity implements View.OnClick
         TextView navDseText = (TextView) findViewById(R.id.nav_dse_text);
         TextView navContactText = (TextView) findViewById(R.id.nav_contactus_text);
         TextView navFAQText = (TextView) findViewById(R.id.nav_faq_text);
-        TextView navIssueText = (TextView) findViewById(R.id.nav_issue_text);
+        // TextView navIssueText = (TextView) findViewById(R.id.nav_issue_text);
         TextView navSyncText = (TextView) findViewById(R.id.nav_sync_text);
         TextView navEmiText = (TextView) findViewById(R.id.nav_emi_text);
         TextView navLogoutText = (TextView) findViewById(R.id.nav_logout_text);
@@ -271,7 +271,7 @@ public class BaseDrawerActivity extends FragmentActivity implements View.OnClick
         customViewParams.setTextViewCustomParams(navDseText, new int[]{0, 30, 0, 30}, new int[]{0, 0, 0, 0}, 35, customTypeFace.gillSans, 0);
         customViewParams.setTextViewCustomParams(navContactText, new int[]{0, 30, 0, 30}, new int[]{0, 0, 0, 0}, 35, customTypeFace.gillSans, 0);
         customViewParams.setTextViewCustomParams(navFAQText, new int[]{0, 30, 0, 30}, new int[]{0, 0, 0, 0}, 35, customTypeFace.gillSans, 0);
-        customViewParams.setTextViewCustomParams(navIssueText, new int[]{0, 30, 0, 30}, new int[]{0, 0, 0, 0}, 35, customTypeFace.gillSans, 0);
+        // customViewParams.setTextViewCustomParams(navIssueText, new int[]{0, 30, 0, 30}, new int[]{0, 0, 0, 0}, 35, customTypeFace.gillSans, 0);
         customViewParams.setTextViewCustomParams(navSyncText, new int[]{0, 30, 0, 30}, new int[]{0, 0, 0, 0}, 35, customTypeFace.gillSans, 0);
         customViewParams.setTextViewCustomParams(navEmiText, new int[]{0, 30, 0, 30}, new int[]{0, 0, 0, 0}, 35, customTypeFace.gillSans, 0);
         customViewParams.setTextViewCustomParams(navLogoutText, new int[]{0, 30, 0, 30}, new int[]{0, 0, 0, 0}, 35, customTypeFace.gillSans, 0);
@@ -283,7 +283,7 @@ public class BaseDrawerActivity extends FragmentActivity implements View.OnClick
         findViewById(R.id.nav_contactus_layout).setOnClickListener(this);
         findViewById(R.id.nav_faq_layout).setOnClickListener(this);
         findViewById(R.id.nav_dse_layout).setOnClickListener(this);
-        findViewById(R.id.nav_issue_layout).setOnClickListener(this);
+        // findViewById(R.id.nav_issue_layout).setOnClickListener(this);
         findViewById(R.id.nav_value_layout).setOnClickListener(this);
         findViewById(R.id.nav_news_layout).setOnClickListener(this);
         findViewById(R.id.nav_emi_layout).setOnClickListener(this);
@@ -400,8 +400,7 @@ public class BaseDrawerActivity extends FragmentActivity implements View.OnClick
 
             toggleDrawer();
             try {
-                toggleDrawer();
-              /*  startActivity(new Intent(getApplicationContext(), MainHome.class));*/
+                /*  startActivity(new Intent(getApplicationContext(), MainHome.class));*/
                 fragment = new HomeFragment();
                 openFragment(fragment, false);
 

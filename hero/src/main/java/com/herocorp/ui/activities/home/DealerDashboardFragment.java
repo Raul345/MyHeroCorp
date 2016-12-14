@@ -121,39 +121,19 @@ public class DealerDashboardFragment extends Fragment implements View.OnClickLis
 
         } else if (i == R.id.contact_us_layout) {
             try {
-               /* Intent intent = getActivity().getPackageManager().getLaunchIntentForPackage("com.hero.dsehero");
-                startActivity(intent);*/
-               /* Fragment f = new HomeFragment();
-                FragmentManager fm = getActivity().getSupportFragmentManager();
-                FragmentTransaction ft = fm.beginTransaction();
-                ft.addToBackStack(null);
-                ft.replace(R.id.content_dealerdashboard, f);
-                ft.commit();*/
+
                 ((BaseDrawerActivity) getActivity()).openFragment(new HomeFragment(), true);
             } catch (Exception e) {
                 Toast.makeText(getActivity(), "DSE App not installed!", Toast.LENGTH_SHORT).show();
             }
         } else if (i == R.id.value_layout) {
             try {
-               /* Intent intent = getActivity().getPackageManager().getLaunchIntentForPackage("com.hero.dsehero");
-                startActivity(intent);*/
-               /* Fragment f = new VasWarrantyfragment();
-                FragmentManager fm = getActivity().getSupportFragmentManager();
-                FragmentTransaction ft = fm.beginTransaction();
-                ft.add(R.id.content_dealerdashboard, f);
-                ft.commit();*/
+
                 ((BaseDrawerActivity) getActivity()).openFragment(new VasWarrantyfragment(), true);
             } catch (Exception e) {
                 Toast.makeText(getActivity(), "VAS  not installed!", Toast.LENGTH_SHORT).show();
             }
         }
     }
-   /* @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-        if(isVisibleToUser) {
-            Activity a = getActivity();
-            if(a != null) a.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-        }
-    }*/
+
 }

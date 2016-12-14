@@ -121,7 +121,7 @@ public class VasSafetytipsFragment extends Fragment implements View.OnClickListe
     public void transaction(final Fragment f) {
         FragmentManager fm = getActivity().getSupportFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
-        ft.replace(R.id.content_vassafety, f);
+        ft.add(R.id.content_vassafety, f);
         ft.commit();
     }
 }

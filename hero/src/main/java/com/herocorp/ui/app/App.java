@@ -83,7 +83,6 @@ public class App extends Application {
     public static void getProgressBar(Context context, String message) {
 
         if(progressBar == null) {
-
             progressBar = new ProgressDialog(context);
             progressBar.setCancelable(false);
             progressBar.setMessage(message);
@@ -102,7 +101,6 @@ public class App extends Application {
 
             if (Math.round(currentProgress) < 100) {
                 progressBar.setProgress(Math.round(currentProgress));
-
             } else {
                 progressBar.dismiss();
                 progressBar = null;
