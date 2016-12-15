@@ -61,7 +61,7 @@ public class SignInActivity extends Activity implements View.OnClickListener {
        };*/
     private String respDesc = "", respCode = "", state_id = "", dealer_code = "", version = "", path = "", state_name = "", result = "", failure_msg = "";
     private String appVersion;
-    //private String deviceImei = "911441757449230";
+   // private String deviceImei = "911441757449230";
     // private String deviceImei = "351971070473217";
     private String deviceImei;
     private String userCode, uuid = "0";
@@ -73,6 +73,8 @@ public class SignInActivity extends Activity implements View.OnClickListener {
         setContentView(R.layout.activity_sign_in);
         setRequestedOrientation(
                 ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        overridePendingTransition(R.anim.trans_left_in, R.anim.trans_left_out);
+
 
        /* if (PreferenceUtil.get_IsUserLogin(getApplicationContext()))
             openHomeScreen();*/

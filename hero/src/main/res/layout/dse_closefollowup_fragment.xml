@@ -58,21 +58,17 @@
     <LinearLayout
         android:id="@+id/top_layout1"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
+        android:layout_height="wrap_content"
         android:layout_below="@+id/top_layout">
 
         <RelativeLayout
             android:id="@+id/top_layout2"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            >
+            android:layout_height="wrap_content">
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginRight="20dp"
                 android:layout_marginTop="30dp"
                 android:background="@android:color/darker_gray">
@@ -80,9 +76,8 @@
                 <ScrollView
                     android:id="@+id/scroll_view"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:background="#ffffff">
-
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -98,10 +93,11 @@
 
                             <LinearLayout
                                 android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
+                                android:layout_height="match_parent"
                                 android:background="#ffffff">
 
                                 <TextView
+                                    android:id="@+id/textView9"
                                     android:layout_width="0sp"
                                     android:layout_height="match_parent"
                                     android:layout_marginBottom="1dp"
@@ -111,12 +107,11 @@
                                     android:padding="10dp"
                                     android:text="Main Reason"
                                     android:textColor="#000000"
-                                    android:textSize="20dp"
-                                    android:id="@+id/textView9" />
+                                    android:textSize="16sp" />
 
                                 <LinearLayout
                                     android:layout_width="0sp"
-                                    android:layout_height="wrap_content"
+                                    android:layout_height="match_parent"
                                     android:layout_marginBottom="1dp"
                                     android:layout_weight="0.5"
                                     android:background="#424242"
@@ -124,9 +119,8 @@
 
                                     <Spinner
                                         android:id="@+id/spinner_mainreason"
-                                        android:layout_width="250dp"
-                                        android:layout_height="70dp"
-                                        android:layout_gravity="center_horizontal"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
                                         android:spinnerMode="dialog">
 
                                     </Spinner>
@@ -149,7 +143,7 @@
                                     android:padding="10dp"
                                     android:text="Sub Reason"
                                     android:textColor="#000000"
-                                    android:textSize="20dp" />
+                                    android:textSize="16dp" />
 
                                 <LinearLayout
                                     android:layout_width="0sp"
@@ -161,9 +155,8 @@
 
                                     <Spinner
                                         android:id="@+id/spinner_subreason"
-                                        android:layout_width="250dp"
-                                        android:layout_height="70dp"
-                                        android:layout_gravity="center_horizontal"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
                                         android:spinnerMode="dialog">
 
                                     </Spinner>
@@ -187,7 +180,7 @@
                                     android:padding="10dp"
                                     android:text="Make"
                                     android:textColor="#000000"
-                                    android:textSize="20dp" />
+                                    android:textSize="16dp" />
 
                                 <LinearLayout
                                     android:layout_width="0sp"
@@ -199,9 +192,8 @@
 
                                     <Spinner
                                         android:id="@+id/spinner_make"
-                                        android:layout_width="250dp"
-                                        android:layout_height="70dp"
-                                        android:layout_gravity="center_horizontal"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
                                         android:spinnerMode="dialog">
 
                                     </Spinner>
@@ -225,7 +217,7 @@
                                     android:padding="10dp"
                                     android:text="Model"
                                     android:textColor="#000000"
-                                    android:textSize="20dp" />
+                                    android:textSize="16dp" />
 
                                 <LinearLayout
                                     android:layout_width="0sp"
@@ -237,9 +229,8 @@
 
                                     <Spinner
                                         android:id="@+id/spinner_model"
-                                        android:layout_width="250dp"
-                                        android:layout_height="70dp"
-                                        android:layout_gravity="center_horizontal"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
                                         android:spinnerMode="dialog">
 
                                     </Spinner>
@@ -255,14 +246,15 @@
                                 android:orientation="vertical">
 
                                 <TextView
-                                    android:layout_width="match_parent"
-                                    android:layout_height="match_parent"
+                                    android:id="@+id/textView12"
+                                    android:layout_width="1006dp"
+                                    android:layout_height="wrap_content"
                                     android:background="#ffffff"
                                     android:paddingLeft="30dp"
                                     android:paddingTop="10dp"
                                     android:text="Remark"
                                     android:textColor="#000000"
-                                    android:textSize="20dp" />
+                                    android:textSize="16sp" />
 
                                 <EditText
                                     android:id="@+id/edittext_remark"
@@ -271,24 +263,14 @@
                                     android:layout_marginBottom="1dp"
                                     android:background="#ffffff"
                                     android:hint="Remark"
+                                    android:imeOptions="actionDone"
                                     android:paddingBottom="10dp"
                                     android:paddingLeft="30dp"
                                     android:textColor="#000000"
-                                    android:textSize="18dp"
-                                    android:imeOptions="actionDone"/>
+                                    android:textSize="18dp" />
 
                             </LinearLayout>
                         </LinearLayout>
-
-                        <ImageView
-                            android:id="@+id/imageView_submit_closefollowup"
-                            android:layout_width="70dp"
-                            android:layout_height="70dp"
-                            android:layout_gravity="bottom|end"
-                            android:layout_margin="10dp"
-                            android:background="@android:color/transparent"
-                            android:focusable="false"
-                            android:src="@drawable/edit_icon" />
                     </LinearLayout>
                 </ScrollView>
 
@@ -309,4 +291,16 @@
         </RelativeLayout>
 
     </LinearLayout>
+
+    <ImageView
+        android:id="@+id/imageView_submit_closefollowup"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_below="@+id/top_layout1"
+        android:background="@android:color/transparent"
+        android:clickable="true"
+        android:src="@drawable/edit_icon" />
 </RelativeLayout>

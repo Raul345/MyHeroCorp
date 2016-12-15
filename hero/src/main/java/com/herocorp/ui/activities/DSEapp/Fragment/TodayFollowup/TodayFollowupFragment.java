@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -158,7 +159,7 @@ public class TodayFollowupFragment extends Fragment implements View.OnClickListe
                 bundle.putString("user_id", encryptuser);
                 bundle.putString("user", user);
                 bundle.putString("enquiry_id", data.getEnquiry_id());
-                bundle.putString("pur_date",data.getExpcted_date_purchase());
+                bundle.putString("pur_date", data.getExpcted_date_purchase());
 
                 switch (index) {
                     case 0:
@@ -379,12 +380,17 @@ public class TodayFollowupFragment extends Fragment implements View.OnClickListe
                 enquiry_entry_date = record.getEnquiry_entry_date();
                 dealer_bu_id = record.getDealer_bu_id();
                 followup_status = record.getFollowup_status();
-                Date expt_purc_date = new SimpleDateFormat("dd-MMM-yy", Locale.ENGLISH)
-                        .parse(expected_date_purchase);
-
+                Date expt_purc_date = null;
+                try {
+                    expt_purc_date = new SimpleDateFormat("dd-MMM-yy", Locale.ENGLISH)
+                            .parse(expected_date_purchase);
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
                 if (check == 0) {
                     String date = new SimpleDateFormat("dd-MMM-yy").format(new Date());
-                    if (follow_date.equalsIgnoreCase(date)) {
+                    String ddate = new SimpleDateFormat("dd-MMM-yyyy").format(new Date());
+                    if (follow_date.equalsIgnoreCase(date) || follow_date.equalsIgnoreCase(ddate)) {
                         userAdapter.add(new Followup(first_name, last_name, cell_ph_no, age, gender, email_addr, state, district, tehsil, city, x_con_seq_no, x_model_interested,
                                 expected_date_purchase, x_exchange_required, x_finance_required, exist_vehicle, followup_comments, enquiry_id, follow_date, enquiry_entry_date, dealer_bu_id, followup_status));
                     }
@@ -554,7 +560,8 @@ public class TodayFollowupFragment extends Fragment implements View.OnClickListe
             updateList();
         } catch (Exception e) {
             swipe_refresh_followup.setRefreshing(false);
-            Toast.makeText(getContext(), "Check your Connection !!", Toast.LENGTH_SHORT).show();
+            Log.e("error", e.toString());
+            // Toast.makeText(getContext(), "Check your Connection !!", Toast.LENGTH_SHORT).show();
         }
     }
 

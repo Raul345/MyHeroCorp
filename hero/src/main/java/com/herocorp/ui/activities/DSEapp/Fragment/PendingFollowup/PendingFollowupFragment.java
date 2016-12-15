@@ -247,6 +247,7 @@ public class PendingFollowupFragment extends Fragment implements View.OnClickLis
         pendingfollowup_msg = (TextView) rootView.findViewById(R.id.pendingfollowup_message);
 
         userAdapter = new Followupadapter(getContext(), R.layout.dse_pendingfollowup_row, userArray);
+
         userList = (SwipeMenuListView) rootView.findViewById(R.id.list_pendingfollowup);
         customViewParams.setMarginAndPadding(userList, new int[]{0, 0, 0, 0}, new int[]{0, 0, 0, 0}, userList.getParent());
 

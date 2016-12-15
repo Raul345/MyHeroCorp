@@ -54,4 +54,8 @@
     <string name="maintainschedule">Hero MotoCorp Ltd.(hereinafter called \'Hero MotoCorp\') warrants its motorcycles and scooters
     (hereinafter called \'Vehicles\') assembled/manufactures in its Plants and sold through its authorized dealers, to be free from any
     defect- both in material and workmanship, under normal use and conditions, subject to the following terms and conditions.</string>
+
+    <string name="title_activity_splash">activity_splash</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
 </resources>

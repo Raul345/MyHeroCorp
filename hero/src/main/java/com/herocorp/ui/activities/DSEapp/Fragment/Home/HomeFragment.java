@@ -101,6 +101,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             savedInstanceState) {
 
         rootView = inflater.inflate(R.layout.dse_home_fragment, container, false);
+        ((BaseDrawerActivity)getActivity()).closeDrawer();
         getActivity().setRequestedOrientation(
                 ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setRetainInstance(true);
@@ -181,8 +182,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         fetch_pref();
         current_date = new SimpleDateFormat("dd-MMM-yy").format(new Date());
         if (!(sync_date.equalsIgnoreCase(current_date.toString()) && NetConnections.isConnected(getContext())))
-            //  sync_data();
-            new Syncmakemodel(getContext()).execute();
+            sync_data();
+            //new Syncmakemodel(getContext()).execute();
 
         menu.setOnClickListener(this);
         pendingorder.setOnClickListener(this);

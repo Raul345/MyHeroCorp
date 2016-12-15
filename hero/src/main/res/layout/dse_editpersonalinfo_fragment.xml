@@ -48,13 +48,12 @@
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
                     android:layout_margin="0.5dp"
-                    android:layout_weight="5"
+                    android:layout_weight="0.5"
                     android:background="#ffffff"
                     android:gravity="center"
                     android:text="First Name*"
                     android:textColor="#000000"
-                    android:textSize="15dp"
-                    />
+                    android:textSize="16dp" />
 
                 <LinearLayout
                     android:id="@+id/top_layout22"
@@ -63,24 +62,24 @@
                     android:layout_marginBottom="0.5dp"
                     android:layout_marginLeft="0.5dp"
                     android:layout_marginTop="0.5dp"
-                    android:layout_weight="1.5"
+                    android:layout_weight="0.5"
                     android:background="#ffffff"
-                    android:orientation="horizontal" />
+                    android:gravity="center"
+                    android:orientation="horizontal">
 
-                <EditText
-                    android:id="@+id/firstname_edittext"
-                    android:layout_width="0sp"
-                    android:layout_height="match_parent"
-                    android:layout_marginBottom="0.5dp"
-                    android:layout_marginRight="0.5dp"
-                    android:layout_marginTop="0.5dp"
-                    android:layout_weight="3.5"
-                    android:background="#ffffff"
-                    android:hint="Enter first name"
-                    android:padding="8dp"
-                    android:singleLine="true"
-                    android:textColor="#000000"
-                    android:textSize="15dp" />
+                    <EditText
+                        android:id="@+id/firstname_edittext"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginBottom="0.5dp"
+                        android:layout_marginTop="0.5dp"
+                        android:background="#ffffff"
+                        android:hint="Enter first name"
+                        android:padding="8dp"
+                        android:singleLine="true"
+                        android:textColor="#000000"
+                        android:textSize="16sp" />
+                </LinearLayout>
             </LinearLayout>
 
             <LinearLayout
@@ -96,13 +95,12 @@
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
                     android:layout_margin="0.5dp"
-                    android:layout_weight="5"
+                    android:layout_weight="0.5"
                     android:background="#ffffff"
                     android:gravity="center"
                     android:text="Last Name*"
                     android:textColor="#000000"
-                    android:textSize="15dp"
-                    />
+                    android:textSize="16dp" />
 
                 <LinearLayout
                     android:layout_width="0sp"
@@ -110,24 +108,24 @@
                     android:layout_marginBottom="0.5dp"
                     android:layout_marginLeft="0.5dp"
                     android:layout_marginTop="0.5dp"
-                    android:layout_weight="1.5"
+                    android:layout_weight="0.5"
                     android:background="#ffffff"
-                    android:orientation="horizontal" />
+                    android:gravity="center"
+                    android:orientation="horizontal">
 
-                <EditText
-                    android:id="@+id/lastname_edittext"
-                    android:layout_width="0sp"
-                    android:layout_height="match_parent"
-                    android:layout_marginBottom="0.5dp"
-                    android:layout_marginRight="0.5dp"
-                    android:layout_marginTop="0.5dp"
-                    android:layout_weight="3.5"
-                    android:background="#ffffff"
-                    android:hint="Enter Last name"
-                    android:padding="8dp"
-                    android:singleLine="true"
-                    android:textColor="#000000"
-                    android:textSize="15dp" />
+                    <EditText
+                        android:id="@+id/lastname_edittext"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginBottom="0.5dp"
+                        android:layout_marginTop="0.5dp"
+                        android:background="#ffffff"
+                        android:hint="Enter Last name"
+                        android:padding="8dp"
+                        android:singleLine="true"
+                        android:textColor="#000000"
+                        android:textSize="16sp" />
+                </LinearLayout>
             </LinearLayout>
 
             <LinearLayout
@@ -148,8 +146,7 @@
                     android:gravity="center"
                     android:text="Mobile*"
                     android:textColor="#000000"
-                    android:textSize="15dp"
-                    />
+                    android:textSize="16dp" />
 
                 <LinearLayout
                     android:layout_width="0sp"
@@ -157,26 +154,26 @@
                     android:layout_marginBottom="0.5dp"
                     android:layout_marginLeft="0.5dp"
                     android:layout_marginTop="0.5dp"
-                    android:layout_weight="1.5"
+                    android:layout_weight="5"
                     android:background="#ffffff"
-                    android:orientation="horizontal" />
+                    android:gravity="center"
+                    android:orientation="horizontal">
 
-                <EditText
-                    android:id="@+id/mobile_edittext"
-                    android:layout_width="0sp"
-                    android:layout_height="match_parent"
-                    android:layout_marginBottom="0.5dp"
-                    android:layout_marginRight="0.5dp"
-                    android:layout_marginTop="0.5dp"
-                    android:layout_weight="3.5"
-                    android:background="#ffffff"
-                    android:hint="Enter Mobile no"
-                    android:padding="8dp"
-                    android:singleLine="true"
-                    android:textColor="#000000"
-                    android:textSize="15dp"
-                    android:maxLength="10"
-                    android:digits="@string/numbers"/>
+                    <EditText
+                        android:id="@+id/mobile_edittext"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginBottom="0.5dp"
+                        android:layout_marginTop="0.5dp"
+                        android:background="#ffffff"
+                        android:digits="@string/numbers"
+                        android:hint="Enter Mobile no"
+                        android:maxLength="10"
+                        android:padding="8dp"
+                        android:singleLine="true"
+                        android:textColor="#000000"
+                        android:textSize="16sp" />
+                </LinearLayout>
             </LinearLayout>
 
             <LinearLayout
@@ -197,7 +194,7 @@
                     android:gravity="center"
                     android:text="Email"
                     android:textColor="#000000"
-                    android:textSize="15dp" />
+                    android:textSize="16dp" />
 
                 <LinearLayout
                     android:layout_width="0sp"
@@ -205,25 +202,24 @@
                     android:layout_marginBottom="0.5dp"
                     android:layout_marginLeft="0.5dp"
                     android:layout_marginTop="0.5dp"
-                    android:layout_weight="1.5"
+                    android:layout_weight="5"
                     android:background="#ffffff"
-                    android:orientation="horizontal" />
+                    android:gravity="center">
 
-                <EditText
-                    android:id="@+id/email_edittext"
-                    android:layout_width="0sp"
-                    android:layout_height="match_parent"
-                    android:layout_marginBottom="0.5dp"
-                    android:layout_marginRight="0.5dp"
-                    android:layout_marginTop="0.5dp"
-                    android:layout_weight="3.5"
-                    android:background="#ffffff"
-                    android:hint="Enter email address"
-                    android:padding="8dp"
-                    android:singleLine="true"
-                    android:textColor="#000000"
-                    android:textSize="15dp"
-                    android:imeOptions="actionDone"/>
+                    <EditText
+                        android:id="@+id/email_edittext"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginBottom="0.5dp"
+                        android:layout_marginTop="0.5dp"
+                        android:background="#ffffff"
+                        android:hint="Enter email address"
+                        android:imeOptions="actionDone"
+                        android:padding="8dp"
+                        android:singleLine="true"
+                        android:textColor="#000000"
+                        android:textSize="16sp" />
+                </LinearLayout>
             </LinearLayout>
 
             <LinearLayout
@@ -244,8 +240,7 @@
                     android:gravity="center"
                     android:text="Age"
                     android:textColor="#000000"
-                    android:textSize="15dp"
-                    />
+                    android:textSize="16dp" />
 
                 <LinearLayout
                     android:layout_width="0sp"
@@ -253,27 +248,27 @@
                     android:layout_marginBottom="0.5dp"
                     android:layout_marginLeft="0.5dp"
                     android:layout_marginTop="0.5dp"
-                    android:layout_weight="1.5"
+                    android:layout_weight="5"
                     android:background="#ffffff"
-                    android:orientation="horizontal" />
+                    android:gravity="center">
 
-                <EditText
-                    android:id="@+id/age_edittext"
-                    android:layout_width="0sp"
-                    android:layout_height="match_parent"
-                    android:layout_marginBottom="0.5dp"
-                    android:layout_marginRight="0.5dp"
-                    android:layout_marginTop="0.5dp"
-                    android:layout_weight="3.5"
-                    android:background="#ffffff"
-                    android:hint="Enter Age"
-                    android:padding="8dp"
-                    android:singleLine="true"
-                    android:textColor="#000000"
-                    android:textSize="15dp"
-                    android:maxLength="2"
-                    android:digits="@string/numbers"
-                    android:imeOptions="actionDone"/>
+                    <EditText
+                        android:id="@+id/age_edittext"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginBottom="0.5dp"
+                        android:layout_marginTop="0.5dp"
+                        android:background="#ffffff"
+                        android:digits="@string/numbers"
+                        android:gravity=""
+                        android:hint="Enter Age"
+                        android:imeOptions="actionDone"
+                        android:maxLength="2"
+                        android:padding="8dp"
+                        android:singleLine="true"
+                        android:textColor="#000000"
+                        android:textSize="16sp" />
+                </LinearLayout>
             </LinearLayout>
 
             <LinearLayout
@@ -294,8 +289,7 @@
                     android:gravity="center"
                     android:text="Gender"
                     android:textColor="#000000"
-                    android:textSize="15dp"
-                     />
+                    android:textSize="16dp" />
 
                 <LinearLayout
                     android:id="@+id/top_layout16"
@@ -303,35 +297,17 @@
                     android:layout_height="match_parent"
                     android:layout_margin="0.5dp"
                     android:layout_weight="5"
-                    android:background="#ffffff">
-
-                    <LinearLayout
-                        android:id="@+id/top_layout17"
-                        android:layout_width="0sp"
-                        android:layout_height="match_parent"
-                        android:layout_margin="0.5dp"
-                        android:layout_weight="0.2"
-                        android:background="#ffffff"
-                        android:orientation="horizontal"></LinearLayout>
-
+                    android:background="#ffffff"
+                    android:gravity="center">
                     <Spinner
                         android:id="@+id/gender_spinner"
-                        android:layout_width="0sp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="5dp"
-                        android:layout_marginRight="30dp"
-                        android:layout_marginTop="10dp"
-                        android:layout_weight="0.4"
-                        android:background="#ffffff"
-                        android:dropDownSelector="#f30d0d"
-                        android:focusable="true"
-                        android:textSize="10dp"
-                        android:spinnerMode="dialog"/>
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginRight="10dp"
+                        android:gravity="center"
+                        android:spinnerMode="dialog" />
                 </LinearLayout>
-
             </LinearLayout>
-
         </LinearLayout>
-
     </LinearLayout>
 </ScrollView>

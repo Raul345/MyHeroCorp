@@ -71,6 +71,7 @@ import com.herocorp.ui.activities.products.ProductDetailFragment;
 import com.herocorp.ui.app.App;
 import com.herocorp.ui.utility.CustomTypeFace;
 import com.herocorp.ui.utility.CustomViewParams;
+import com.herocorp.ui.utility.PreferenceUtil;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -110,6 +111,7 @@ public class BaseDrawerActivity extends FragmentActivity implements View.OnClick
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_base_drawer);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+        overridePendingTransition(R.anim.trans_left_in, R.anim.trans_left_out);
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
@@ -125,7 +127,6 @@ public class BaseDrawerActivity extends FragmentActivity implements View.OnClick
                 deviceImei = telephonyManager.getDeviceId();
 
                 //  showPhoneStatePermission();
-                showExternalStoragePermission();
                 //  fetch_data();
                 new check_version().execute(URLConstants.CHECK_VERSION);
                 //FCM service
@@ -145,6 +146,8 @@ public class BaseDrawerActivity extends FragmentActivity implements View.OnClick
                 //finish();
             }
             insertRotationDataInDB();
+            showExternalStoragePermission();
+
            /* boolean bool = sharedPreferences.getBoolean(AppConstants.IS_360_RECORD_INSERTED, false);
             if (bool) {
                 new Thread(new Runnable() {
@@ -223,8 +226,13 @@ public class BaseDrawerActivity extends FragmentActivity implements View.OnClick
         customViewParams.setImageViewCustomParams(logoDrawer, new int[]{30, 30, 0, 0}, new int[]{0, 0, 0, 0}, 120, 120);
 
         TextView nameText = (TextView) findViewById(R.id.name_text);
-        customViewParams.setTextViewCustomParams(nameText, new int[]{0, 10, 0, 0}, new int[]{0, 0, 0, 0}, 55, customTypeFace.gillSans, 0);
-        nameText.setVisibility(View.GONE);
+        customViewParams.setTextViewCustomParams(nameText, new int[]{0, 10, 0, 0}, new int[]{0, 0, 0, 0}, 40, customTypeFace.gillSans, 0);
+        TextView stateText = (TextView) findViewById(R.id.state_text);
+        customViewParams.setTextViewCustomParams(stateText, new int[]{0, 5, 0, 0}, new int[]{0, 0, 0, 0}, 40, customTypeFace.gillSans, 0);
+        nameText.setVisibility(View.VISIBLE);
+        stateText.setVisibility(View.GONE);
+        nameText.setText(PreferenceUtil.get_UserId(getApplicationContext()));
+        // stateText.setText(PreferenceUtil.get_StateName(getApplicationContext()));
 
         ImageView navHomeImage = (ImageView) findViewById(R.id.nav_home_image);
         ImageView navProductImage = (ImageView) findViewById(R.id.nav_products_image);
@@ -417,10 +425,10 @@ public class BaseDrawerActivity extends FragmentActivity implements View.OnClick
                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
 
-                            sharedPreferences.edit().putBoolean(AppConstants.IS_SYNC_COMPLETED, false).commit();
+                           /* sharedPreferences.edit().putBoolean(AppConstants.IS_SYNC_COMPLETED, false).commit();
 
                             fragment = new DealerDashboardFragment();
-                            openFragment(fragment, false);
+                            openFragment(fragment, false);*/
 
                             startSync();
                         }
@@ -437,13 +445,11 @@ public class BaseDrawerActivity extends FragmentActivity implements View.OnClick
             openFragment(new ContactUsFragmrnt(), false);
         } else if (i == R.id.nav_value_layout) {
 
-            toggleDrawer();
-
             try {
                 toggleDrawer();
                 //Toast.makeText(this, "VAS App not installed!", Toast.LENGTH_SHORT).show();
-                fragment = new VasWarrantyfragment();
-                openFragment(fragment, false);
+               /* fragment = new VasWarrantyfragment();
+                openFragment(fragment, true);*/
 //                Intent intent = getPackageManager().getLaunchIntentForPackage("com.herocorp.ui.activities.DSEapp.Fragment.Home.HomeFragment;");
 //                startActivity(intent);
 
@@ -491,7 +497,7 @@ public class BaseDrawerActivity extends FragmentActivity implements View.OnClick
 
             FragmentTransaction transaction = fragmentManager.beginTransaction();
             transaction.replace(R.id.frame_container, fragment);
-
+            clear_backstack();
             if (doBackStack)
                 transaction.addToBackStack("yo");
 
@@ -1598,6 +1604,13 @@ public class BaseDrawerActivity extends FragmentActivity implements View.OnClick
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         // save your state here
+    }
+
+
+    public void clear_backstack() {
+        while (getSupportFragmentManager().getBackStackEntryCount() > 0) {
+            getSupportFragmentManager().popBackStackImmediate();
+        }
     }
 }
 

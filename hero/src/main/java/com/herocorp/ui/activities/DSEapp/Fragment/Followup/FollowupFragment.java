@@ -88,7 +88,7 @@ public class FollowupFragment extends Fragment implements View.OnClickListener {
         customViewParams.setButtonCustomParams(buttonHeader, new int[]{0, 10, 0, 10}, new int[]{70, 0, 0, 0}, 90, 180, 40, customTypeFace.gillSansItalic, 0);
 
         LinearLayout topLayout1 = (LinearLayout) rootView.findViewById(R.id.top_layout1);
-        customViewParams.setMarginAndPadding(topLayout1, new int[]{100, 10, 100, 40}, new int[]{0, 0, 0, 0}, topLayout1.getParent());
+        customViewParams.setMarginAndPadding(topLayout1, new int[]{100, 10, 80, 40}, new int[]{0, 0, 0, 0}, topLayout1.getParent());
 
 
         followupreason = (EditText) rootView.findViewById(R.id.edittext_followupreason);

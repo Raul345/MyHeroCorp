@@ -34,7 +34,7 @@ public class VasWarrantyfragment extends Fragment implements View.OnClickListene
             savedInstanceState) {
 
         rootView = inflater.inflate(R.layout.vas_warranty_fragment, container, false);
-
+        ((BaseDrawerActivity)getActivity()).closeDrawer();
         initView(rootView);
 
         return rootView;

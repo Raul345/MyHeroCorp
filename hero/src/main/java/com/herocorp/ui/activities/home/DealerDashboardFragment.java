@@ -129,7 +129,7 @@ public class DealerDashboardFragment extends Fragment implements View.OnClickLis
         } else if (i == R.id.value_layout) {
             try {
 
-                ((BaseDrawerActivity) getActivity()).openFragment(new VasWarrantyfragment(), true);
+              //  ((BaseDrawerActivity) getActivity()).openFragment(new VasWarrantyfragment(), true);
             } catch (Exception e) {
                 Toast.makeText(getActivity(), "VAS  not installed!", Toast.LENGTH_SHORT).show();
             }

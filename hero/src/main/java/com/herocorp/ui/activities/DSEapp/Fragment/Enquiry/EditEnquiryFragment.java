@@ -21,6 +21,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -128,8 +130,14 @@ public class EditEnquiryFragment extends Fragment implements View.OnClickListene
 
         customViewParams = new CustomViewParams(getActivity());
 
+        RelativeLayout relativeLayout1 = (RelativeLayout) rootView.findViewById(R.id.relativelayout1);
+        customViewParams.setMarginAndPadding(relativeLayout1, new int[]{100, 50, 100, 60}, new int[]{0, 0, 0, 0}, relativeLayout1.getParent());
+
+        ScrollView scrollview = (ScrollView) rootView.findViewById(R.id.scrollview);
+        customViewParams.setMarginAndPadding(scrollview, new int[]{0, 0, 0, 0}, new int[]{0, 0, 0, 0}, scrollview.getParent());
+
         LinearLayout topLayout1 = (LinearLayout) rootView.findViewById(R.id.top_layout1);
-        customViewParams.setMarginAndPadding(topLayout1, new int[]{100, 50, 100, 60}, new int[]{0, 0, 0, 0}, topLayout1.getParent());
+        customViewParams.setMarginAndPadding(topLayout1, new int[]{0, 0, 0, 0}, new int[]{0, 0, 0, 0}, topLayout1.getParent());
 
         exchange_chkbox = (CheckBox) rootView.findViewById(R.id.exchange_chkbox);
         finance_chkbox = (CheckBox) rootView.findViewById(R.id.finance_chkbox);
@@ -370,7 +378,7 @@ public class EditEnquiryFragment extends Fragment implements View.OnClickListene
                     if (page_flag == 0) {
                         db = new DatabaseHelper(getContext());
                         db.update_edit_followup(new Followup(firstname, lastname, mobile, age, gender, email, state, district, tehsil, village, model,
-                                purch_date.toUpperCase(), exchange, finance, existvehicle, remark, enquiry_id, follow_date.toUpperCase(), "0"));
+                                purchdate_btn.getText().toString().toUpperCase(), exchange, finance, existvehicle, remark, enquiry_id, nextfollowdate_btn.getText().toString().toUpperCase(), "0"));
                         new NetworkConnect1(url, urlParameters, progress, "Enquiry has been successfully submitted.", getContext(), 1).execute();
                     } else {
                         new NetworkConnect1(url, urlParameters, progress, "Enquiry has been successfully submitted.", getContext(), 5).execute();

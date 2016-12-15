@@ -93,7 +93,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
                                 android:background="#80000000"
-                                android:paddingLeft="20dp"
+                                android:paddingLeft="10dp"
                                 android:paddingTop="10dp"
                                 android:text="Username"
                                 android:textColor="#ffffff"
@@ -116,18 +116,21 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:background="#80000000">
+                        android:background="#80000000"
+                        android:gravity="center">
+                        >
 
                         <LinearLayout
                             android:layout_width="0sp"
-                            android:layout_height="match_parent"
                             android:layout_weight="5"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10dp"
+                            android:gravity="left"
                             android:orientation="horizontal">
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
-                                android:paddingLeft="20dp"
                                 android:paddingTop="10dp"
                                 android:text="Mobile         :"
                                 android:textColor="#ffffff" />
@@ -136,7 +139,7 @@
                                 android:id="@+id/mobile_textview"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:paddingLeft="20dp"
+                                android:paddingLeft="10dp"
                                 android:paddingTop="10dp"
                                 android:text="9798657664"
                                 android:textColor="#ffffff" />
@@ -145,22 +148,23 @@
                         <LinearLayout
                             android:layout_width="0sp"
                             android:layout_height="match_parent"
-                            android:layout_weight="5">
+                            android:layout_marginRight="10dp"
+                            android:layout_weight="5"
+                            android:gravity="left">
 
                             <TextView
+                                android:id="@+id/textView5"
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
-                                android:paddingLeft="20dp"
                                 android:paddingTop="10dp"
                                 android:text="District      :"
-                                android:textColor="#ffffff"
-                                android:id="@+id/textView5" />
+                                android:textColor="#ffffff" />
 
                             <TextView
                                 android:id="@+id/district_textview"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:paddingLeft="20dp"
+                                android:paddingLeft="10dp"
                                 android:paddingTop="10dp"
                                 android:text="Jammu"
                                 android:textColor="#ffffff" />
@@ -178,23 +182,24 @@
                         <LinearLayout
                             android:layout_width="0sp"
                             android:layout_height="match_parent"
+                            android:layout_marginLeft="10dp"
                             android:layout_weight="5"
+                            android:gravity="left"
                             android:orientation="horizontal">
 
                             <TextView
+                                android:id="@+id/textView6"
                                 android:layout_width="wrap_content"
-                                android:layout_height="match_parent"
-                                android:paddingLeft="20dp"
+                                android:layout_height="wrap_content"
                                 android:paddingTop="10dp"
                                 android:text="Email           :"
-                                android:textColor="#ffffff"
-                                android:id="@+id/textView6" />
+                                android:textColor="#ffffff" />
 
                             <TextView
                                 android:id="@+id/email_textview"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:paddingLeft="20dp"
+                                android:paddingLeft="10dp"
                                 android:paddingTop="10dp"
                                 android:text="abc@gmail.com"
                                 android:textColor="#ffffff" />
@@ -203,12 +208,12 @@
                         <LinearLayout
                             android:layout_width="0sp"
                             android:layout_height="match_parent"
-                            android:layout_weight="5">
+                            android:layout_weight="5"
+                            android:orientation="horizontal">
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
-                                android:paddingLeft="20dp"
                                 android:paddingTop="10dp"
                                 android:text="Tehsil        :"
                                 android:textColor="#ffffff" />
@@ -235,13 +240,15 @@
                         <LinearLayout
                             android:layout_width="0sp"
                             android:layout_height="match_parent"
+                            android:layout_marginLeft="10dp"
                             android:layout_weight="5"
+                            android:gravity="left"
                             android:orientation="horizontal">
 
                             <TextView
+                                android:id="@+id/textView16"
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
-                                android:paddingLeft="20dp"
                                 android:paddingTop="10dp"
                                 android:text="State            :"
                                 android:textColor="#ffffff" />
@@ -259,14 +266,16 @@
                         <LinearLayout
                             android:layout_width="0sp"
                             android:layout_height="match_parent"
-                            android:layout_weight="5">
+                            android:layout_marginLeft="10dp"
+                            android:layout_weight="5"
+                            android:gravity="left"
+                            android:orientation="horizontal">
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
-                                android:paddingLeft="20dp"
                                 android:paddingTop="10dp"
-                                android:text="City            :"
+                                android:text="City           :"
                                 android:textColor="#ffffff" />
 
                             <TextView
@@ -302,7 +311,7 @@
                                 android:drawableLeft="@drawable/customer_id_icon"
                                 android:gravity="center_vertical"
                                 android:paddingBottom="10dp"
-                                android:paddingLeft="20dp"
+                                android:paddingLeft="10dp"
                                 android:paddingTop="10dp"
                                 android:text="Customer_id"
                                 android:textSize="15dp" />

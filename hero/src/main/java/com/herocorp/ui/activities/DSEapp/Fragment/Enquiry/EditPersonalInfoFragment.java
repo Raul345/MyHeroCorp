@@ -77,6 +77,8 @@ public class EditPersonalInfoFragment extends Fragment implements View.OnClickLi
         mypref = getActivity().getSharedPreferences("herocorp", 0);
         edit = mypref.edit();
 
+        customViewParams = new CustomViewParams(getActivity());
+
         TextView firstname_tv = (TextView) rootView.findViewById(R.id.firstname_textview);
 
         firstname_tv.setText(colortext("First Name", "*"));
@@ -96,6 +98,8 @@ public class EditPersonalInfoFragment extends Fragment implements View.OnClickLi
         TextView gender_tv = (TextView) rootView.findViewById(R.id.gender_textview);
 
         gender_tv.setText(colortext("Gender", "*"));
+
+
 
         firstname_et = (EditText) rootView.findViewById(R.id.firstname_edittext);
         lastname_et = (EditText) rootView.findViewById(R.id.lastname_edittext);

@@ -1,5 +1,6 @@
 package com.herocorp.ui.activities.contact_us;
 
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -22,7 +23,8 @@ public class ContactUsFragmrnt extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         View rootView = inflater.inflate(R.layout.contact_us_fragment, container, false);
-
+        getActivity().setRequestedOrientation(
+                ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         ((BaseDrawerActivity)getActivity()).closeDrawer();
         initView(rootView);
 
