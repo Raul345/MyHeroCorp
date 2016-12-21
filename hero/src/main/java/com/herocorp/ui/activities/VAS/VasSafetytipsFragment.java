@@ -1,4 +1,4 @@
-package com.herocorp.ui.VAS;
+package com.herocorp.ui.activities.VAS;
 
 import android.graphics.Color;
 import android.os.Bundle;
@@ -23,9 +23,9 @@ import com.herocorp.ui.utility.CustomTypeFace;
 import com.herocorp.ui.utility.CustomViewParams;
 
 /**
- * Created by rsawh on 23-Sep-16.
+ * Created by rsawh on 06-Oct-16.
  */
-public class VasWarrantyfragment extends Fragment implements View.OnClickListener {
+public class VasSafetytipsFragment extends Fragment implements View.OnClickListener {
     private View rootView;
     private CustomViewParams customViewParams;
 
@@ -33,8 +33,8 @@ public class VasWarrantyfragment extends Fragment implements View.OnClickListene
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
             savedInstanceState) {
 
-        rootView = inflater.inflate(R.layout.vas_warranty_fragment, container, false);
-        ((BaseDrawerActivity)getActivity()).closeDrawer();
+        rootView = inflater.inflate(R.layout.vas_safetytips_fragment, container, false);
+
         initView(rootView);
 
         return rootView;
@@ -57,7 +57,7 @@ public class VasWarrantyfragment extends Fragment implements View.OnClickListene
         customViewParams.setButtonCustomParams(buttonHeader, new int[]{0, 10, 0, 10}, new int[]{0, 0, 0, 0}, 90, 180, 40, customTypeFace.gillSansItalic, 0);
 
         ScrollView scrollView = (ScrollView) rootView.findViewById(R.id.scroll_view);
-        customViewParams.setMarginAndPadding(scrollView, new int[]{100, 20, 100, 0}, new int[]{0, 0, 0, 0}, scrollView.getParent());
+        customViewParams.setMarginAndPadding(scrollView, new int[]{80, 20, 80, 140}, new int[]{0, 0, 0, 0}, scrollView.getParent());
 
         LinearLayout topLayout1 = (LinearLayout) rootView.findViewById(R.id.top_layout1);
         customViewParams.setMarginAndPadding(topLayout1, new int[]{80, 20, 80, 140}, new int[]{0, 0, 0, 0}, topLayout1.getParent());
@@ -104,24 +104,24 @@ public class VasWarrantyfragment extends Fragment implements View.OnClickListene
         int i = view.getId();
         if (i == R.id.menu_icon) {
             ((BaseDrawerActivity) getActivity()).toggleDrawer();
+        } else if (i == R.id.warranty_layout) {
+            f = new VasWarrantyfragment();
+            transaction(f);
         } else if (i == R.id.maintenance_layout) {
             f = new VasMaintenanceFragment();
             transaction(f);
         } else if (i == R.id.safety_layout) {
-            f = new VasSafetytipsFragment();
-            transaction(f);
         } else if (i == R.id.genuineparts_layout) {
             f = new VasGenuinePartsFragment();
             transaction(f);
         }
-
-
     }
+
 
     public void transaction(final Fragment f) {
         FragmentManager fm = getActivity().getSupportFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
-        ft.add(R.id.content_vaswarranty, f);
+        ft.add(R.id.content_vassafety, f);
         ft.commit();
     }
 }

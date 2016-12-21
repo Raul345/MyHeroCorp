@@ -1,7 +1,6 @@
 package com.herocorp.ui.activities;
 
 import android.Manifest;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -12,17 +11,14 @@ import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.content.res.Configuration;
 import android.database.SQLException;
 import android.graphics.BitmapFactory;
-import android.media.Image;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
-import android.os.PowerManager;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityCompat;
@@ -50,7 +46,6 @@ import android.widget.Toast;
 //import com.google.firebase.messaging.FirebaseMessaging;
 import com.herocorp.R;
 import com.herocorp.core.constants.AppConstants;
-import com.herocorp.core.constants.URLConstants;
 import com.herocorp.core.interfaces.SyncServiceCallBack;
 import com.herocorp.core.interfaces.iNetworkResponseCallback;
 import com.herocorp.core.models.AuthenticateUserModel;
@@ -60,14 +55,12 @@ import com.herocorp.infra.netio.AuthenticateUserService;
 import com.herocorp.infra.utils.NetConnections;
 //import com.herocorp.ui.FCMservice.FCMInstanceIdservice;
 import com.herocorp.ui.EMI.EmicalcFragment;
-import com.herocorp.ui.VAS.VasWarrantyfragment;
 import com.herocorp.ui.activities.DSEapp.Fragment.Alert.ContactAlertFragment;
 import com.herocorp.ui.activities.DSEapp.Fragment.Home.HomeFragment;
 import com.herocorp.ui.activities.DSEapp.ConnectService.NetworkConnect;
-import com.herocorp.ui.activities.DSEapp.Fragment.MainHome;
-import com.herocorp.ui.activities.auth.SignInActivity;
 import com.herocorp.ui.activities.contact_us.ContactUsFragmrnt;
 import com.herocorp.ui.activities.home.DealerDashboardFragment;
+import com.herocorp.ui.activities.news.NewsFragment;
 import com.herocorp.ui.activities.products.ProductDetailFragment;
 import com.herocorp.ui.app.App;
 import com.herocorp.ui.utility.CustomTypeFace;
@@ -393,6 +386,9 @@ public class BaseDrawerActivity extends FragmentActivity implements View.OnClick
         } else if (i == R.id.nav_contactus_layout) {
             toggleDrawer();
             openFragment(new ContactUsFragmrnt(), false);
+        }else if (i == R.id.nav_news_layout) {
+            toggleDrawer();
+            openFragment(new NewsFragment(), false);
         } else if (i == R.id.nav_value_layout) {
 
             try {

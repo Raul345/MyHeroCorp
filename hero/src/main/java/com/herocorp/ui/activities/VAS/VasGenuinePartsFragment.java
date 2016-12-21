@@ -1,4 +1,4 @@
-package com.herocorp.ui.VAS;
+package com.herocorp.ui.activities.VAS;
 
 import android.graphics.Color;
 import android.os.Bundle;
@@ -25,7 +25,7 @@ import com.herocorp.ui.utility.CustomViewParams;
 /**
  * Created by rsawh on 06-Oct-16.
  */
-public class VasSafetytipsFragment extends Fragment implements View.OnClickListener {
+public class VasGenuinePartsFragment extends Fragment implements View.OnClickListener {
     private View rootView;
     private CustomViewParams customViewParams;
 
@@ -33,7 +33,7 @@ public class VasSafetytipsFragment extends Fragment implements View.OnClickListe
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
             savedInstanceState) {
 
-        rootView = inflater.inflate(R.layout.vas_safetytips_fragment, container, false);
+        rootView = inflater.inflate(R.layout.vas_genuineparts_fragment, container, false);
 
         initView(rootView);
 
@@ -89,12 +89,21 @@ public class VasSafetytipsFragment extends Fragment implements View.OnClickListe
         LinearLayout safety_layout = (LinearLayout) rootView.findViewById(R.id.safety_layout);
         LinearLayout genuine_layout = (LinearLayout) rootView.findViewById(R.id.genuineparts_layout);
 
+        Button genuineparts_button = (Button) rootView.findViewById(R.id.genuineparts_button);
+        Button faq_button = (Button) rootView.findViewById(R.id.faq_button);
+        Button genuineness_button = (Button) rootView.findViewById(R.id.genuineness_button);
+        Button gallery_button = (Button) rootView.findViewById(R.id.gallery_button);
+
 
         warranty_layout.setOnClickListener(this);
         maintenance_layout.setOnClickListener(this);
         safety_layout.setOnClickListener(this);
         genuine_layout.setOnClickListener(this);
         menu.setOnClickListener(this);
+        genuineparts_button.setOnClickListener(this);
+        faq_button.setOnClickListener(this);
+        genuineness_button.setOnClickListener(this);
+        gallery_button.setOnClickListener(this);
 
     }
 
@@ -111,17 +120,25 @@ public class VasSafetytipsFragment extends Fragment implements View.OnClickListe
             f = new VasMaintenanceFragment();
             transaction(f);
         } else if (i == R.id.safety_layout) {
-        } else if (i == R.id.genuineparts_layout) {
-            f = new VasGenuinePartsFragment();
+            f = new VasSafetytipsFragment();
             transaction(f);
+        } else if (i == R.id.genuineparts_layout) {
+
+        } else if (i == R.id.genuineparts_button) {
+
+        } else if (i == R.id.faq_button) {
+
+        } else if (i == R.id.genuineness_button) {
+            f = new VasGenuinenessFragment();
+            transaction(f);
+        } else if (i == R.id.gallery_button) {
         }
     }
-
 
     public void transaction(final Fragment f) {
         FragmentManager fm = getActivity().getSupportFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
-        ft.add(R.id.content_vassafety, f);
+        ft.add(R.id.content_vasgenuineparts, f);
         ft.commit();
     }
 }

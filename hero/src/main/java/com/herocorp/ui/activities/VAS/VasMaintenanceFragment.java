@@ -1,4 +1,4 @@
-package com.herocorp.ui.VAS;
+package com.herocorp.ui.activities.VAS;
 
 import android.graphics.Color;
 import android.os.Bundle;
@@ -8,7 +8,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.style.ForegroundColorSpan;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,22 +22,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.herocorp.R;
-import com.herocorp.core.constants.URLConstants;
 import com.herocorp.ui.activities.BaseDrawerActivity;
-import com.herocorp.ui.activities.DSEapp.ConnectService.NetworkConnect;
 import com.herocorp.ui.activities.DSEapp.db.DatabaseHelper;
 import com.herocorp.ui.activities.DSEapp.models.Bike_model;
 import com.herocorp.ui.activities.DSEapp.models.Bikemake;
-import com.herocorp.ui.activities.DSEapp.models.Bikemodel;
 import com.herocorp.ui.utility.CustomTypeFace;
 import com.herocorp.ui.utility.CustomViewParams;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package com.herocorp.ui.VAS;
+package com.herocorp.ui.activities.VAS;
 
 import android.graphics.Color;
 import android.os.Bundle;
@@ -23,9 +23,9 @@ import com.herocorp.ui.utility.CustomTypeFace;
 import com.herocorp.ui.utility.CustomViewParams;
 
 /**
- * Created by rsawh on 06-Oct-16.
+ * Created by rsawh on 23-Sep-16.
  */
-public class VasGenuinePartsFragment extends Fragment implements View.OnClickListener {
+public class VasWarrantyfragment extends Fragment implements View.OnClickListener {
     private View rootView;
     private CustomViewParams customViewParams;
 
@@ -33,8 +33,8 @@ public class VasGenuinePartsFragment extends Fragment implements View.OnClickLis
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
             savedInstanceState) {
 
-        rootView = inflater.inflate(R.layout.vas_genuineparts_fragment, container, false);
-
+        rootView = inflater.inflate(R.layout.vas_warranty_fragment, container, false);
+        ((BaseDrawerActivity)getActivity()).closeDrawer();
         initView(rootView);
 
         return rootView;
@@ -57,7 +57,7 @@ public class VasGenuinePartsFragment extends Fragment implements View.OnClickLis
         customViewParams.setButtonCustomParams(buttonHeader, new int[]{0, 10, 0, 10}, new int[]{0, 0, 0, 0}, 90, 180, 40, customTypeFace.gillSansItalic, 0);
 
         ScrollView scrollView = (ScrollView) rootView.findViewById(R.id.scroll_view);
-        customViewParams.setMarginAndPadding(scrollView, new int[]{80, 20, 80, 140}, new int[]{0, 0, 0, 0}, scrollView.getParent());
+        customViewParams.setMarginAndPadding(scrollView, new int[]{100, 20, 100, 0}, new int[]{0, 0, 0, 0}, scrollView.getParent());
 
         LinearLayout topLayout1 = (LinearLayout) rootView.findViewById(R.id.top_layout1);
         customViewParams.setMarginAndPadding(topLayout1, new int[]{80, 20, 80, 140}, new int[]{0, 0, 0, 0}, topLayout1.getParent());
@@ -89,21 +89,12 @@ public class VasGenuinePartsFragment extends Fragment implements View.OnClickLis
         LinearLayout safety_layout = (LinearLayout) rootView.findViewById(R.id.safety_layout);
         LinearLayout genuine_layout = (LinearLayout) rootView.findViewById(R.id.genuineparts_layout);
 
-        Button genuineparts_button = (Button) rootView.findViewById(R.id.genuineparts_button);
-        Button faq_button = (Button) rootView.findViewById(R.id.faq_button);
-        Button genuineness_button = (Button) rootView.findViewById(R.id.genuineness_button);
-        Button gallery_button = (Button) rootView.findViewById(R.id.gallery_button);
-
 
         warranty_layout.setOnClickListener(this);
         maintenance_layout.setOnClickListener(this);
         safety_layout.setOnClickListener(this);
         genuine_layout.setOnClickListener(this);
         menu.setOnClickListener(this);
-        genuineparts_button.setOnClickListener(this);
-        faq_button.setOnClickListener(this);
-        genuineness_button.setOnClickListener(this);
-        gallery_button.setOnClickListener(this);
 
     }
 
@@ -113,9 +104,6 @@ public class VasGenuinePartsFragment extends Fragment implements View.OnClickLis
         int i = view.getId();
         if (i == R.id.menu_icon) {
             ((BaseDrawerActivity) getActivity()).toggleDrawer();
-        } else if (i == R.id.warranty_layout) {
-            f = new VasWarrantyfragment();
-            transaction(f);
         } else if (i == R.id.maintenance_layout) {
             f = new VasMaintenanceFragment();
             transaction(f);
@@ -123,22 +111,17 @@ public class VasGenuinePartsFragment extends Fragment implements View.OnClickLis
             f = new VasSafetytipsFragment();
             transaction(f);
         } else if (i == R.id.genuineparts_layout) {
-
-        } else if (i == R.id.genuineparts_button) {
-
-        } else if (i == R.id.faq_button) {
-
-        } else if (i == R.id.genuineness_button) {
-            f = new VasGenuinenessFragment();
+            f = new VasGenuinePartsFragment();
             transaction(f);
-        } else if (i == R.id.gallery_button) {
         }
+
+
     }
 
     public void transaction(final Fragment f) {
         FragmentManager fm = getActivity().getSupportFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
-        ft.add(R.id.content_vasgenuineparts, f);
+        ft.add(R.id.content_vaswarranty, f);
         ft.commit();
     }
 }
