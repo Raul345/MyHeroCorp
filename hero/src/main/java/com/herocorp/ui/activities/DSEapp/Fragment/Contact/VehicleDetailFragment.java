@@ -37,10 +37,8 @@ public class VehicleDetailFragment extends Fragment implements View.OnClickListe
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
             savedInstanceState) {
 
-        rootView = inflater.inflate(R.layout.dse_vehicledetail_fragment, container, false);
-
+        rootView = inflater.inflate(R.layout.dse_vehicledetail1_fragment, container, false);
         initView(rootView);
-
         return rootView;
     }
 

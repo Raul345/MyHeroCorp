@@ -3,7 +3,7 @@
     android:id="@+id/content_addenquiry"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_dashboard"
+    android:background="#212121"
     android:clickable="true">
 
     <ImageView
@@ -57,8 +57,8 @@
 
     <ScrollView
         android:id="@+id/scroll_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_below="@id/top_layout"
         android:fillViewport="true">
 
@@ -368,7 +368,6 @@
                 android:divider="@android:color/darker_gray"
                 android:dividerHeight="0.5dp"
                 android:focusable="true"></ListView>
-
         </LinearLayout>
     </ScrollView>
 

@@ -164,7 +164,7 @@ public class FollowupFragment extends Fragment implements View.OnClickListener {
                     followup_status = "1";
                     db = new DatabaseHelper(getContext());
                     if (enq_flag == 0) {
-                        db.update_followup(followup_status, follow_date.toUpperCase(), reason, enquiryid);
+                        db.update_followup(followup_status,Dateformatter.dateformat4(follow_date).toUpperCase(), reason, enquiryid);
                     } else
                         db.update_contactfollowup(followup_status, follow_date.toUpperCase(), reason, enquiryid);
 

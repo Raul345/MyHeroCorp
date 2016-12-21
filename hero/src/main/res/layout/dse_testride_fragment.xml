@@ -4,7 +4,7 @@
     android:id="@+id/content_testridefeedback"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_dashboard">
+    android:background="#212121">
 
     <ImageView
         android:id="@+id/app_logo"
@@ -558,7 +558,8 @@
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:layout_gravity="bottom|end"
-        android:layout_margin="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginBottom="10dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:background="@android:color/transparent"

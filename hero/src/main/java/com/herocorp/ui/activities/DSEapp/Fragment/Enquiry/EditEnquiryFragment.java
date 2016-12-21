@@ -619,14 +619,15 @@ public class EditEnquiryFragment extends Fragment implements View.OnClickListene
 
             fetch_data2();
             if (model.equals("") || existvehicle.equals("--select--"))
-                Toast.makeText(getContext(), "Please fill all the details !!", Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(), "Please fill all the details !!", Toast.LENGTH_SHORT).show();
             else if (followup_date.before(current_date) && page_flag != 0)
-                Toast.makeText(getContext(), "Please check the followup date!!", Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(), "Please check the followup date!!", Toast.LENGTH_SHORT).show();
             else if (expt_purc_date.before(followup_date))
-                Toast.makeText(getContext(), "Please check the purchase date!!", Toast.LENGTH_LONG).show();
-            else {
+                Toast.makeText(getContext(), "Please check the purchase date!!", Toast.LENGTH_SHORT).show();
+            else if (state.equalsIgnoreCase("") || district.equalsIgnoreCase("") || tehsil.equalsIgnoreCase("") || village.equalsIgnoreCase("")) {
+                Toast.makeText(getContext(), "Please fill the address details!!", Toast.LENGTH_SHORT).show();
+            } else {
                 JSONObject jsonparams = new JSONObject();
-
                 jsonparams.put("key", key);
                 jsonparams.put("mobile", mobile);
                 jsonparams.put("email", email);

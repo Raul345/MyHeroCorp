@@ -3,7 +3,7 @@
     android:id="@+id/content_followupdetail"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_dashboard"
+    android:background="#212121"
     android:clickable="true">
 
     <ImageView
@@ -66,7 +66,8 @@
         <RelativeLayout
             android:id="@+id/top_layout2"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:background="#ffffff">
 
             <ScrollView
                 android:id="@+id/scroll_view"
@@ -81,7 +82,8 @@
 
                     <LinearLayout
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent">
+                        android:layout_height="match_parent"
+                        android:background="#000000">
 
                         <LinearLayout
                             android:layout_width="0sp"
@@ -92,7 +94,6 @@
                                 android:id="@+id/cust_name"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:background="#80000000"
                                 android:paddingLeft="20dp"
                                 android:paddingTop="10dp"
                                 android:text="Username"
@@ -109,7 +110,6 @@
                                 android:id="@+id/cust_mobile"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:background="#80000000"
                                 android:paddingLeft="20dp"
                                 android:paddingTop="10dp"
                                 android:text="Mobile:"
@@ -123,7 +123,7 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:background="#80000000">
+                        android:background="#000000">
 
                         <LinearLayout
                             android:layout_width="0sp"
@@ -163,7 +163,7 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:background="#80000000">
+                        android:background="#000000">
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -181,9 +181,8 @@
                                 android:paddingTop="10dp"
                                 android:text="Customer_id"
                                 android:textSize="15dp" />
+
                         </LinearLayout>
-
-
                     </LinearLayout>
 
                     <LinearLayout
@@ -338,7 +337,8 @@
                             android:paddingLeft="20dp"
                             android:paddingTop="10dp"
                             android:text="Followup Comments:"
-                            android:textColor="#000000" />
+                            android:textColor="#000000"
+                            android:id="@+id/textView18" />
 
                         <TextView
                             android:id="@+id/followup_comments"
@@ -384,57 +384,62 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_marginTop="0.5dp"
-                        android:background="#ffffff"
-                        android:orientation="vertical"
-                        android:padding="20dp">
+                        android:orientation="vertical">
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:background="#ffffff"
-                            android:padding="2dp">
+                            android:padding="10dp">
 
-                            <Button
-                                android:id="@+id/button_close"
-                                android:layout_width="0sp"
+                            <LinearLayout
+                                android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:layout_marginRight="2dp"
-                                android:layout_weight="0.3"
-                                android:background="#cc0000"
-                                android:gravity="center"
-                                android:text="Close"
-                                android:textColor="#ffffff" />
+                                android:background="#ffffff"
+                                android:padding="2dp">
 
-                            <Button
-                                android:id="@+id/button_followup"
-                                android:layout_width="0sp"
-                                android:layout_height="match_parent"
-                                android:layout_marginRight="2dp"
-                                android:layout_weight="0.3"
-                                android:background="#cc0000"
-                                android:gravity="center"
-                                android:text="Followup"
-                                android:textColor="#ffffff" />
+                                <Button
+                                    android:id="@+id/button_close"
+                                    android:layout_width="0sp"
+                                    android:layout_height="match_parent"
+                                    android:layout_marginRight="2dp"
+                                    android:layout_weight="0.3"
+                                    android:background="#cc0000"
+                                    android:gravity="center"
+                                    android:text="Close"
+                                    android:textColor="#ffffff" />
 
+                                <Button
+                                    android:id="@+id/button_followup"
+                                    android:layout_width="0sp"
+                                    android:layout_height="match_parent"
+                                    android:layout_marginRight="2dp"
+                                    android:layout_weight="0.3"
+                                    android:background="#cc0000"
+                                    android:gravity="center"
+                                    android:text="Followup"
+                                    android:textColor="#ffffff" />
 
-                            <Button
-                                android:id="@+id/button_edit"
-                                android:layout_width="0sp"
-                                android:layout_height="match_parent"
-                                android:layout_weight="0.3"
-                                android:background="#cc0000"
-                                android:gravity="center"
-                                android:text="Edit"
-                                android:textColor="#ffffff" />
+                                <Button
+                                    android:id="@+id/button_edit"
+                                    android:layout_width="0sp"
+                                    android:layout_height="match_parent"
+                                    android:layout_weight="0.3"
+                                    android:background="#cc0000"
+                                    android:gravity="center"
+                                    android:text="Edit"
+                                    android:textColor="#ffffff" />
 
+                            </LinearLayout>
                         </LinearLayout>
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:layout_marginTop="20dp"
                             android:background="#ffffff"
-                            android:padding="2dp">
+                            android:padding="10dp"
+                            android:layout_marginTop="1dp"
+                            android:layout_marginBottom="1dp">
 
                             <Button
                                 android:id="@+id/button_testride"

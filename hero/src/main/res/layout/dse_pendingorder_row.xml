@@ -289,8 +289,8 @@
 
             <ImageView
                 android:id="@+id/img_pendingfollowup_check"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
                 android:scaleType="fitCenter"
                 android:layout_gravity="center_horizontal"
                 android:src="@drawable/error_icon"

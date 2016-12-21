@@ -1,6 +1,7 @@
 package com.herocorp.ui.activities;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -112,23 +113,31 @@ public class BaseDrawerActivity extends FragmentActivity implements View.OnClick
         setContentView(R.layout.activity_base_drawer);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         overridePendingTransition(R.anim.trans_left_in, R.anim.trans_left_out);
+        setRequestedOrientation(
+                ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
+        if (getResources().getConfiguration().orientation == getResources().getConfiguration().ORIENTATION_LANDSCAPE) {
+            initview1();
+        } else
+            initview2();
+
         initView(savedInstanceState);
-
         try {
-            if (NetConnections.isConnected(this)) {
-                telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-                PackageManager manager = getPackageManager();
-                PackageInfo info = manager.getPackageInfo(getPackageName(), 0);
-                appVersion = info.versionName;
-                deviceVersion = Build.VERSION.CODENAME;
-                deviceImei = telephonyManager.getDeviceId();
+            telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+            PackageManager manager = getPackageManager();
+            PackageInfo info = manager.getPackageInfo(getPackageName(), 0);
+            appVersion = info.versionName;
+            deviceVersion = Build.VERSION.CODENAME;
+            deviceImei = telephonyManager.getDeviceId();
 
-                //  showPhoneStatePermission();
-                //  fetch_data();
-                new check_version().execute(URLConstants.CHECK_VERSION);
+            fetch_data();
+
+            if (NetConnections.isConnected(this)) {
+                //  new check_version().execute(URLConstants.CHECK_VERSION);
+                showPhoneStatePermission();
                 //FCM service
                 /*FirebaseMessaging.getInstance().subscribeToTopic("news");
                 runOnUiThread(new Runnable() {
@@ -145,8 +154,11 @@ public class BaseDrawerActivity extends FragmentActivity implements View.OnClick
                     App.shouldAppRun(sharedPreferences.getString(AppConstants.VALIDITY_DATE, "")))) {
                 //finish();
             }
-            insertRotationDataInDB();
-            showExternalStoragePermission();
+
+
+            //for 360 data
+            if (!(sharedPreferences.getBoolean(AppConstants.IS_360_RECORD_INSERTED, false)))
+                insertRotationDataInDB();
 
            /* boolean bool = sharedPreferences.getBoolean(AppConstants.IS_360_RECORD_INSERTED, false);
             if (bool) {
@@ -205,87 +217,6 @@ public class BaseDrawerActivity extends FragmentActivity implements View.OnClick
 
     private void initView(Bundle savedInstanceState) {
 
-        CustomViewParams customViewParams = new CustomViewParams(this);
-        CustomTypeFace customTypeFace = new CustomTypeFace(this);
-
-        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        //drawerLayout.setDrawerListener(this);
-
-        LinearLayout navMenuLayout = (LinearLayout) findViewById(R.id.nav_menu_layout);
-        customViewParams.setHeightAndWidth(navMenuLayout, 0, 650);
-
-        RelativeLayout profileContainer = (RelativeLayout) findViewById(R.id.profile_contaioner);
-        customViewParams.setHeightAndWidth(profileContainer, 400, 0);
-
-        ImageView imageView = (ImageView) findViewById(R.id.profile_image_container);
-        ImageView closeDrawer = (ImageView) findViewById(R.id.drawer_close);
-        ImageView logoDrawer = (ImageView) findViewById(R.id.drawer_logo);
-
-        customViewParams.setImageViewCustomParams(imageView, new int[]{0, 0, 0, 20}, new int[]{0, 0, 0, 0}, 150, 150);
-        customViewParams.setImageViewCustomParams(closeDrawer, new int[]{0, 20, 20, 0}, new int[]{0, 0, 0, 0}, 60, 60);
-        customViewParams.setImageViewCustomParams(logoDrawer, new int[]{30, 30, 0, 0}, new int[]{0, 0, 0, 0}, 120, 120);
-
-        TextView nameText = (TextView) findViewById(R.id.name_text);
-        customViewParams.setTextViewCustomParams(nameText, new int[]{0, 10, 0, 0}, new int[]{0, 0, 0, 0}, 40, customTypeFace.gillSans, 0);
-        TextView stateText = (TextView) findViewById(R.id.state_text);
-        customViewParams.setTextViewCustomParams(stateText, new int[]{0, 5, 0, 0}, new int[]{0, 0, 0, 0}, 40, customTypeFace.gillSans, 0);
-        nameText.setVisibility(View.VISIBLE);
-        stateText.setVisibility(View.GONE);
-        nameText.setText(PreferenceUtil.get_UserId(getApplicationContext()));
-        // stateText.setText(PreferenceUtil.get_StateName(getApplicationContext()));
-
-        ImageView navHomeImage = (ImageView) findViewById(R.id.nav_home_image);
-        ImageView navProductImage = (ImageView) findViewById(R.id.nav_products_image);
-        ImageView navValueImage = (ImageView) findViewById(R.id.nav_value_image);
-        ImageView navNewsImage = (ImageView) findViewById(R.id.nav_news_image);
-        ImageView navDseImage = (ImageView) findViewById(R.id.nav_dse_image);
-        ImageView navContactImage = (ImageView) findViewById(R.id.nav_contactus_image);
-        ImageView navFAQImage = (ImageView) findViewById(R.id.nav_faq_image);
-        //  ImageView navIssueImage = (ImageView) findViewById(R.id.nav_issue_image);
-        ImageView navSyncImage = (ImageView) findViewById(R.id.nav_sync_image);
-        ImageView navEmiImage = (ImageView) findViewById(R.id.nav_emi_image);
-        ImageView navlogoutimage = (ImageView) findViewById(R.id.nav_logout_image);
-
-
-        customViewParams.setImageViewCustomParams(navHomeImage, new int[]{30, 0, 20, 0}, new int[]{0, 0, 0, 0}, 40, 40);
-        customViewParams.setImageViewCustomParams(navProductImage, new int[]{30, 0, 20, 0}, new int[]{0, 0, 0, 0}, 40, 40);
-        customViewParams.setImageViewCustomParams(navValueImage, new int[]{30, 0, 20, 0}, new int[]{0, 0, 0, 0}, 40, 40);
-        customViewParams.setImageViewCustomParams(navNewsImage, new int[]{30, 0, 20, 0}, new int[]{0, 0, 0, 0}, 40, 40);
-        customViewParams.setImageViewCustomParams(navDseImage, new int[]{30, 0, 20, 0}, new int[]{0, 0, 0, 0}, 40, 40);
-        customViewParams.setImageViewCustomParams(navContactImage, new int[]{30, 0, 20, 0}, new int[]{0, 0, 0, 0}, 40, 40);
-        customViewParams.setImageViewCustomParams(navFAQImage, new int[]{30, 0, 20, 0}, new int[]{0, 0, 0, 0}, 40, 40);
-        // customViewParams.setImageViewCustomParams(navIssueImage, new int[]{30, 0, 20, 0}, new int[]{0, 0, 0, 0}, 40, 40);
-        customViewParams.setImageViewCustomParams(navSyncImage, new int[]{30, 0, 20, 0}, new int[]{0, 0, 0, 0}, 40, 40);
-        customViewParams.setImageViewCustomParams(navEmiImage, new int[]{30, 0, 20, 0}, new int[]{0, 0, 0, 0}, 40, 40);
-        customViewParams.setImageViewCustomParams(navlogoutimage, new int[]{30, 0, 20, 0}, new int[]{0, 0, 0, 0}, 40, 40);
-
-
-        TextView navHomeText = (TextView) findViewById(R.id.nav_home_text);
-        TextView navProductText = (TextView) findViewById(R.id.nav_products_text);
-        TextView navValueText = (TextView) findViewById(R.id.nav_value_text);
-        TextView navNewsText = (TextView) findViewById(R.id.nav_news_text);
-        TextView navDseText = (TextView) findViewById(R.id.nav_dse_text);
-        TextView navContactText = (TextView) findViewById(R.id.nav_contactus_text);
-        TextView navFAQText = (TextView) findViewById(R.id.nav_faq_text);
-        // TextView navIssueText = (TextView) findViewById(R.id.nav_issue_text);
-        TextView navSyncText = (TextView) findViewById(R.id.nav_sync_text);
-        TextView navEmiText = (TextView) findViewById(R.id.nav_emi_text);
-        TextView navLogoutText = (TextView) findViewById(R.id.nav_logout_text);
-
-        customViewParams.setTextViewCustomParams(navHomeText, new int[]{0, 30, 0, 30}, new int[]{0, 0, 0, 0}, 35, customTypeFace.gillSans, 0);
-        customViewParams.setTextViewCustomParams(navProductText, new int[]{0, 30, 0, 30}, new int[]{0, 0, 0, 0}, 35, customTypeFace.gillSans, 0);
-        customViewParams.setTextViewCustomParams(navValueText, new int[]{0, 30, 0, 30}, new int[]{0, 0, 0, 0}, 35, customTypeFace.gillSans, 0);
-        customViewParams.setTextViewCustomParams(navNewsText, new int[]{0, 30, 0, 30}, new int[]{0, 0, 0, 0}, 35, customTypeFace.gillSans, 0);
-        customViewParams.setTextViewCustomParams(navDseText, new int[]{0, 30, 0, 30}, new int[]{0, 0, 0, 0}, 35, customTypeFace.gillSans, 0);
-        customViewParams.setTextViewCustomParams(navContactText, new int[]{0, 30, 0, 30}, new int[]{0, 0, 0, 0}, 35, customTypeFace.gillSans, 0);
-        customViewParams.setTextViewCustomParams(navFAQText, new int[]{0, 30, 0, 30}, new int[]{0, 0, 0, 0}, 35, customTypeFace.gillSans, 0);
-        // customViewParams.setTextViewCustomParams(navIssueText, new int[]{0, 30, 0, 30}, new int[]{0, 0, 0, 0}, 35, customTypeFace.gillSans, 0);
-        customViewParams.setTextViewCustomParams(navSyncText, new int[]{0, 30, 0, 30}, new int[]{0, 0, 0, 0}, 35, customTypeFace.gillSans, 0);
-        customViewParams.setTextViewCustomParams(navEmiText, new int[]{0, 30, 0, 30}, new int[]{0, 0, 0, 0}, 35, customTypeFace.gillSans, 0);
-        customViewParams.setTextViewCustomParams(navLogoutText, new int[]{0, 30, 0, 30}, new int[]{0, 0, 0, 0}, 35, customTypeFace.gillSans, 0);
-
-        navMenuLayout.setOnClickListener(this);
-        closeDrawer.setOnClickListener(this);
         findViewById(R.id.nav_home_layout).setOnClickListener(this);
         findViewById(R.id.nav_products_layout).setOnClickListener(this);
         findViewById(R.id.nav_contactus_layout).setOnClickListener(this);
@@ -301,14 +232,12 @@ public class BaseDrawerActivity extends FragmentActivity implements View.OnClick
         if (null == savedInstanceState) {
             FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager.beginTransaction().replace(R.id.frame_container, new DealerDashboardFragment()).commit();
+
             //set you initial fragment object
-        } else {
         }
-
-
     }
 
-    @Override
+   /* @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
 
         switch (requestCode) {
@@ -346,7 +275,7 @@ public class BaseDrawerActivity extends FragmentActivity implements View.OnClick
                     Toast.makeText(this, "Permission Denied!", Toast.LENGTH_SHORT).show();
                 }
         }
-    }
+    }*/
 
     public void showExternalStoragePermission() {
 
@@ -359,9 +288,30 @@ public class BaseDrawerActivity extends FragmentActivity implements View.OnClick
             }
 
         } else {
+            if (!sharedPreferences.getBoolean(AppConstants.IS_SYNC_COMPLETED, false)) {
+                // startSync();
+                new AlertDialog.Builder(this)
+                        .setTitle("Do you want to start sync?")
+                        .setMessage("Sync will take a while, and cannot be canceled once started.\nPress yes to continue.")
+                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
 
-            if (!sharedPreferences.getBoolean(AppConstants.IS_SYNC_COMPLETED, false))
-                startSync();
+                           /* sharedPreferences.edit().putBoolean(AppConstants.IS_SYNC_COMPLETED, false).commit();
+
+                            fragment = new DealerDashboardFragment();
+                            openFragment(fragment, false);*/
+
+                                startSync();
+                            }
+                        })
+                        .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                dialog.dismiss();
+                            }
+                        })
+                        .setIcon(android.R.drawable.ic_dialog_alert)
+                        .show();
+            }
         }
     }
 
@@ -376,8 +326,8 @@ public class BaseDrawerActivity extends FragmentActivity implements View.OnClick
             }
 
         } else {
-
-            authenticateUser(telephonyManager.getDeviceId(), appVersion, deviceVersion);
+            showExternalStoragePermission();
+            //   authenticateUser(telephonyManager.getDeviceId(), appVersion, deviceVersion);
         }
     }
 
@@ -402,7 +352,6 @@ public class BaseDrawerActivity extends FragmentActivity implements View.OnClick
             } else {
                 Toast.makeText(this, "Please Wait! data sync is in process.", Toast.LENGTH_SHORT).show();
             }
-
 
         } else if (i == R.id.nav_dse_layout) {
 
@@ -442,6 +391,7 @@ public class BaseDrawerActivity extends FragmentActivity implements View.OnClick
                     .show();
 
         } else if (i == R.id.nav_contactus_layout) {
+            toggleDrawer();
             openFragment(new ContactUsFragmrnt(), false);
         } else if (i == R.id.nav_value_layout) {
 
@@ -533,32 +483,34 @@ public class BaseDrawerActivity extends FragmentActivity implements View.OnClick
     }
 
     private void startSync() {
-        App.getInstance().startSync(new SyncServiceCallBack() {
-            @Override
-            public void completed() {
-                // wakeLock.release();
-                Toast.makeText(BaseDrawerActivity.this, "Sync Completed", Toast.LENGTH_LONG).show();
-                Log.e("Sync", "Completed");
+        try {
+            App.getInstance().startSync(new SyncServiceCallBack() {
+                @Override
+                public void completed() {
+                    Toast.makeText(BaseDrawerActivity.this, "Sync Completed", Toast.LENGTH_LONG).show();
+                    Log.e("Sync", "Completed");
+                    sharedPreferences.edit().putBoolean(AppConstants.IS_SYNC_COMPLETED, true).commit();
+                    App.setProgress(100);
+                    //Copy database
+                    writeDatabaseToSD(BaseDrawerActivity.this);
+                }
 
+                @Override
+                public void error() {
+                    Toast.makeText(BaseDrawerActivity.this, "Sync error", Toast.LENGTH_LONG).show();
+                    sharedPreferences.edit().putBoolean(AppConstants.IS_SYNC_COMPLETED, false).commit();
+                    App.setProgress(100);
+                    Log.e("Sync", "Error");
+                }
+            });
 
-                sharedPreferences.edit().putBoolean(AppConstants.IS_SYNC_COMPLETED, true).commit();
-                App.setProgress(100);
-                //Copy database
-                writeDatabaseToSD(BaseDrawerActivity.this);
-            }
-
-            @Override
-            public void error() {
-                Toast.makeText(BaseDrawerActivity.this, "Sync error", Toast.LENGTH_LONG).show();
-                sharedPreferences.edit().putBoolean(AppConstants.IS_SYNC_COMPLETED, false).commit();
-                App.setProgress(100);
-                Log.e("Sync", "Error");
-            }
-        });
-
-        App.getProgressBar(this, "Sync is running");
-        //Toast.makeText(this, "Sync Started", Toast.LENGTH_SHORT).show();
-        Log.e("Sync", "Started");
+            App.getProgressBar(this, "Sync is running");
+            //Toast.makeText(this, "Sync Started", Toast.LENGTH_SHORT).show();
+            Log.e("Sync", "Started");
+        } catch (Exception
+                e) {
+            Log.e("sync_error", e.toString());
+        }
     }
 
     public static void writeDatabaseToSD(Context context) {
@@ -1521,7 +1473,6 @@ public class BaseDrawerActivity extends FragmentActivity implements View.OnClick
             } catch (Exception e) {
                 System.out.println(Toast.makeText(getApplicationContext(), "Check your Connection !!", Toast.LENGTH_SHORT));
             }
-
         }
     }
 
@@ -1542,14 +1493,15 @@ public class BaseDrawerActivity extends FragmentActivity implements View.OnClick
 
 
     public void fetch_data() {
-        String newversion, path;
-        sharedPreferences = getSharedPreferences("hero", 0);
-        newversion = sharedPreferences.getString("version", "1.0");
-        path = sharedPreferences.getString("path", null);
+        String newversion, app_version, path;
 
+        newversion = PreferenceUtil.get_Version(this);
+        path = PreferenceUtil.get_VersionPath(this);
         String new_version = newversion.replace(".", "");
-        appVersion = appVersion.replace(".", "");
-        if (Integer.parseInt(appVersion) < Integer.parseInt(new_version)) {
+        app_version = appVersion.replace(".", "");
+
+        Log.e("version_path", app_version + "" + new_version + "" + path);
+        if (Integer.parseInt(app_version) < Integer.parseInt(new_version)) {
             push_notification(newversion, path);
             update_alert(newversion, path);
         }
@@ -1611,6 +1563,173 @@ public class BaseDrawerActivity extends FragmentActivity implements View.OnClick
         while (getSupportFragmentManager().getBackStackEntryCount() > 0) {
             getSupportFragmentManager().popBackStackImmediate();
         }
+    }
+
+
+    public void initview1() {
+        CustomViewParams customViewParams = new CustomViewParams(this);
+        CustomTypeFace customTypeFace = new CustomTypeFace(this);
+
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        //drawerLayout.setDrawerListener(this);
+
+        LinearLayout navMenuLayout = (LinearLayout) findViewById(R.id.nav_menu_layout);
+        customViewParams.setHeightAndWidth(navMenuLayout, 0, 650);
+
+        RelativeLayout profileContainer = (RelativeLayout) findViewById(R.id.profile_contaioner);
+        customViewParams.setHeightAndWidth(profileContainer, 400, 0);
+
+        ImageView imageView = (ImageView) findViewById(R.id.profile_image_container);
+        ImageView closeDrawer = (ImageView) findViewById(R.id.drawer_close);
+        ImageView logoDrawer = (ImageView) findViewById(R.id.drawer_logo);
+
+        customViewParams.setImageViewCustomParams(imageView, new int[]{0, 0, 0, 20}, new int[]{0, 0, 0, 0}, 150, 150);
+        customViewParams.setImageViewCustomParams(closeDrawer, new int[]{0, 20, 20, 0}, new int[]{0, 0, 0, 0}, 60, 60);
+        customViewParams.setImageViewCustomParams(logoDrawer, new int[]{30, 30, 0, 0}, new int[]{0, 0, 0, 0}, 120, 120);
+
+        TextView nameText = (TextView) findViewById(R.id.name_text);
+        customViewParams.setTextViewCustomParams(nameText, new int[]{0, 10, 0, 0}, new int[]{0, 0, 0, 0}, 40, customTypeFace.gillSans, 0);
+        TextView stateText = (TextView) findViewById(R.id.state_text);
+        customViewParams.setTextViewCustomParams(stateText, new int[]{0, 5, 0, 0}, new int[]{0, 0, 0, 0}, 40, customTypeFace.gillSans, 0);
+        nameText.setVisibility(View.VISIBLE);
+        stateText.setVisibility(View.GONE);
+        nameText.setText(PreferenceUtil.get_UserId(getApplicationContext()));
+        // stateText.setText(PreferenceUtil.get_StateName(getApplicationContext()));
+
+        ImageView navHomeImage = (ImageView) findViewById(R.id.nav_home_image);
+        ImageView navProductImage = (ImageView) findViewById(R.id.nav_products_image);
+        ImageView navValueImage = (ImageView) findViewById(R.id.nav_value_image);
+        ImageView navNewsImage = (ImageView) findViewById(R.id.nav_news_image);
+        ImageView navDseImage = (ImageView) findViewById(R.id.nav_dse_image);
+        ImageView navContactImage = (ImageView) findViewById(R.id.nav_contactus_image);
+        ImageView navFAQImage = (ImageView) findViewById(R.id.nav_faq_image);
+        //  ImageView navIssueImage = (ImageView) findViewById(R.id.nav_issue_image);
+        ImageView navSyncImage = (ImageView) findViewById(R.id.nav_sync_image);
+        ImageView navEmiImage = (ImageView) findViewById(R.id.nav_emi_image);
+        ImageView navlogoutimage = (ImageView) findViewById(R.id.nav_logout_image);
+
+
+        customViewParams.setImageViewCustomParams(navHomeImage, new int[]{30, 0, 20, 0}, new int[]{0, 0, 0, 0}, 40, 40);
+        customViewParams.setImageViewCustomParams(navProductImage, new int[]{30, 0, 20, 0}, new int[]{0, 0, 0, 0}, 40, 40);
+        customViewParams.setImageViewCustomParams(navValueImage, new int[]{30, 0, 20, 0}, new int[]{0, 0, 0, 0}, 40, 40);
+        customViewParams.setImageViewCustomParams(navNewsImage, new int[]{30, 0, 20, 0}, new int[]{0, 0, 0, 0}, 40, 40);
+        customViewParams.setImageViewCustomParams(navDseImage, new int[]{30, 0, 20, 0}, new int[]{0, 0, 0, 0}, 40, 40);
+        customViewParams.setImageViewCustomParams(navContactImage, new int[]{30, 0, 20, 0}, new int[]{0, 0, 0, 0}, 40, 40);
+        customViewParams.setImageViewCustomParams(navFAQImage, new int[]{30, 0, 20, 0}, new int[]{0, 0, 0, 0}, 40, 40);
+        // customViewParams.setImageViewCustomParams(navIssueImage, new int[]{30, 0, 20, 0}, new int[]{0, 0, 0, 0}, 40, 40);
+        customViewParams.setImageViewCustomParams(navSyncImage, new int[]{30, 0, 20, 0}, new int[]{0, 0, 0, 0}, 40, 40);
+        customViewParams.setImageViewCustomParams(navEmiImage, new int[]{30, 0, 20, 0}, new int[]{0, 0, 0, 0}, 40, 40);
+        customViewParams.setImageViewCustomParams(navlogoutimage, new int[]{30, 0, 20, 0}, new int[]{0, 0, 0, 0}, 40, 40);
+
+
+        TextView navHomeText = (TextView) findViewById(R.id.nav_home_text);
+        TextView navProductText = (TextView) findViewById(R.id.nav_products_text);
+        TextView navValueText = (TextView) findViewById(R.id.nav_value_text);
+        TextView navNewsText = (TextView) findViewById(R.id.nav_news_text);
+        TextView navDseText = (TextView) findViewById(R.id.nav_dse_text);
+        TextView navContactText = (TextView) findViewById(R.id.nav_contactus_text);
+        TextView navFAQText = (TextView) findViewById(R.id.nav_faq_text);
+        // TextView navIssueText = (TextView) findViewById(R.id.nav_issue_text);
+        TextView navSyncText = (TextView) findViewById(R.id.nav_sync_text);
+        TextView navEmiText = (TextView) findViewById(R.id.nav_emi_text);
+        TextView navLogoutText = (TextView) findViewById(R.id.nav_logout_text);
+
+        customViewParams.setTextViewCustomParams(navHomeText, new int[]{0, 30, 0, 30}, new int[]{0, 0, 0, 0}, 35, customTypeFace.gillSans, 0);
+        customViewParams.setTextViewCustomParams(navProductText, new int[]{0, 30, 0, 30}, new int[]{0, 0, 0, 0}, 35, customTypeFace.gillSans, 0);
+        customViewParams.setTextViewCustomParams(navValueText, new int[]{0, 30, 0, 30}, new int[]{0, 0, 0, 0}, 35, customTypeFace.gillSans, 0);
+        customViewParams.setTextViewCustomParams(navNewsText, new int[]{0, 30, 0, 30}, new int[]{0, 0, 0, 0}, 35, customTypeFace.gillSans, 0);
+        customViewParams.setTextViewCustomParams(navDseText, new int[]{0, 30, 0, 30}, new int[]{0, 0, 0, 0}, 35, customTypeFace.gillSans, 0);
+        customViewParams.setTextViewCustomParams(navContactText, new int[]{0, 30, 0, 30}, new int[]{0, 0, 0, 0}, 35, customTypeFace.gillSans, 0);
+        customViewParams.setTextViewCustomParams(navFAQText, new int[]{0, 30, 0, 30}, new int[]{0, 0, 0, 0}, 35, customTypeFace.gillSans, 0);
+        // customViewParams.setTextViewCustomParams(navIssueText, new int[]{0, 30, 0, 30}, new int[]{0, 0, 0, 0}, 35, customTypeFace.gillSans, 0);
+        customViewParams.setTextViewCustomParams(navSyncText, new int[]{0, 30, 0, 30}, new int[]{0, 0, 0, 0}, 35, customTypeFace.gillSans, 0);
+        customViewParams.setTextViewCustomParams(navEmiText, new int[]{0, 30, 0, 30}, new int[]{0, 0, 0, 0}, 35, customTypeFace.gillSans, 0);
+        customViewParams.setTextViewCustomParams(navLogoutText, new int[]{0, 30, 0, 30}, new int[]{0, 0, 0, 0}, 35, customTypeFace.gillSans, 0);
+        navMenuLayout.setOnClickListener(this);
+        closeDrawer.setOnClickListener(this);
+    }
+
+    public void initview2() {
+        CustomViewParams customViewParams = new CustomViewParams(this);
+        CustomTypeFace customTypeFace = new CustomTypeFace(this);
+
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        //drawerLayout.setDrawerListener(this);
+
+        LinearLayout navMenuLayout = (LinearLayout) findViewById(R.id.nav_menu_layout);
+        customViewParams.setHeightAndWidth(navMenuLayout, 0, 850);
+
+        RelativeLayout profileContainer = (RelativeLayout) findViewById(R.id.profile_contaioner);
+        customViewParams.setHeightAndWidth(profileContainer, 400, 0);
+
+        ImageView imageView = (ImageView) findViewById(R.id.profile_image_container);
+        ImageView closeDrawer = (ImageView) findViewById(R.id.drawer_close);
+        ImageView logoDrawer = (ImageView) findViewById(R.id.drawer_logo);
+
+        customViewParams.setImageViewCustomParams(imageView, new int[]{0, 0, 0, 20}, new int[]{0, 0, 0, 0}, 150, 150);
+        customViewParams.setImageViewCustomParams(closeDrawer, new int[]{0, 20, 20, 0}, new int[]{0, 0, 0, 0}, 60, 60);
+        customViewParams.setImageViewCustomParams(logoDrawer, new int[]{30, 30, 0, 0}, new int[]{0, 0, 0, 0}, 120, 120);
+
+        TextView nameText = (TextView) findViewById(R.id.name_text);
+        customViewParams.setTextViewCustomParams(nameText, new int[]{0, 10, 0, 0}, new int[]{0, 0, 0, 0}, 40, customTypeFace.gillSans, 0);
+        TextView stateText = (TextView) findViewById(R.id.state_text);
+        customViewParams.setTextViewCustomParams(stateText, new int[]{0, 5, 0, 0}, new int[]{0, 0, 0, 0}, 40, customTypeFace.gillSans, 0);
+        nameText.setVisibility(View.VISIBLE);
+        stateText.setVisibility(View.GONE);
+        nameText.setText(PreferenceUtil.get_UserId(getApplicationContext()));
+        // stateText.setText(PreferenceUtil.get_StateName(getApplicationContext()));
+
+        ImageView navHomeImage = (ImageView) findViewById(R.id.nav_home_image);
+        ImageView navProductImage = (ImageView) findViewById(R.id.nav_products_image);
+        ImageView navValueImage = (ImageView) findViewById(R.id.nav_value_image);
+        ImageView navNewsImage = (ImageView) findViewById(R.id.nav_news_image);
+        ImageView navDseImage = (ImageView) findViewById(R.id.nav_dse_image);
+        ImageView navContactImage = (ImageView) findViewById(R.id.nav_contactus_image);
+        ImageView navFAQImage = (ImageView) findViewById(R.id.nav_faq_image);
+        //  ImageView navIssueImage = (ImageView) findViewById(R.id.nav_issue_image);
+        ImageView navSyncImage = (ImageView) findViewById(R.id.nav_sync_image);
+        ImageView navEmiImage = (ImageView) findViewById(R.id.nav_emi_image);
+        ImageView navlogoutimage = (ImageView) findViewById(R.id.nav_logout_image);
+
+
+        customViewParams.setImageViewCustomParams(navHomeImage, new int[]{30, 0, 20, 0}, new int[]{0, 0, 0, 0}, 80, 80);
+        customViewParams.setImageViewCustomParams(navProductImage, new int[]{30, 0, 20, 0}, new int[]{0, 0, 0, 0}, 80, 80);
+        customViewParams.setImageViewCustomParams(navValueImage, new int[]{30, 0, 20, 0}, new int[]{0, 0, 0, 0}, 80, 80);
+        customViewParams.setImageViewCustomParams(navNewsImage, new int[]{30, 0, 20, 0}, new int[]{0, 0, 0, 0}, 80, 80);
+        customViewParams.setImageViewCustomParams(navDseImage, new int[]{30, 0, 20, 0}, new int[]{0, 0, 0, 0}, 80, 80);
+        customViewParams.setImageViewCustomParams(navContactImage, new int[]{30, 0, 20, 0}, new int[]{0, 0, 0, 0}, 80, 80);
+        customViewParams.setImageViewCustomParams(navFAQImage, new int[]{30, 0, 20, 0}, new int[]{0, 0, 0, 0}, 80, 80);
+        // customViewParams.setImageViewCustomParams(navIssueImage, new int[]{30, 0, 20, 0}, new int[]{0, 0, 0, 0}, 40, 40);
+        customViewParams.setImageViewCustomParams(navSyncImage, new int[]{30, 0, 20, 0}, new int[]{0, 0, 0, 0}, 80, 80);
+        customViewParams.setImageViewCustomParams(navEmiImage, new int[]{30, 0, 20, 0}, new int[]{0, 0, 0, 0}, 80, 80);
+        customViewParams.setImageViewCustomParams(navlogoutimage, new int[]{30, 0, 20, 0}, new int[]{0, 0, 0, 0}, 80, 80);
+
+
+        TextView navHomeText = (TextView) findViewById(R.id.nav_home_text);
+        TextView navProductText = (TextView) findViewById(R.id.nav_products_text);
+        TextView navValueText = (TextView) findViewById(R.id.nav_value_text);
+        TextView navNewsText = (TextView) findViewById(R.id.nav_news_text);
+        TextView navDseText = (TextView) findViewById(R.id.nav_dse_text);
+        TextView navContactText = (TextView) findViewById(R.id.nav_contactus_text);
+        TextView navFAQText = (TextView) findViewById(R.id.nav_faq_text);
+        // TextView navIssueText = (TextView) findViewById(R.id.nav_issue_text);
+        TextView navSyncText = (TextView) findViewById(R.id.nav_sync_text);
+        TextView navEmiText = (TextView) findViewById(R.id.nav_emi_text);
+        TextView navLogoutText = (TextView) findViewById(R.id.nav_logout_text);
+
+        customViewParams.setTextViewCustomParams(navHomeText, new int[]{0, 30, 0, 30}, new int[]{0, 0, 0, 0}, 65, customTypeFace.gillSans, 0);
+        customViewParams.setTextViewCustomParams(navProductText, new int[]{0, 30, 0, 30}, new int[]{0, 0, 0, 0}, 65, customTypeFace.gillSans, 0);
+        customViewParams.setTextViewCustomParams(navValueText, new int[]{0, 30, 0, 30}, new int[]{0, 0, 0, 0}, 65, customTypeFace.gillSans, 0);
+        customViewParams.setTextViewCustomParams(navNewsText, new int[]{0, 30, 0, 30}, new int[]{0, 0, 0, 0}, 65, customTypeFace.gillSans, 0);
+        customViewParams.setTextViewCustomParams(navDseText, new int[]{0, 30, 0, 30}, new int[]{0, 0, 0, 0}, 65, customTypeFace.gillSans, 0);
+        customViewParams.setTextViewCustomParams(navContactText, new int[]{0, 30, 0, 30}, new int[]{0, 0, 0, 0}, 65, customTypeFace.gillSans, 0);
+        customViewParams.setTextViewCustomParams(navFAQText, new int[]{0, 30, 0, 30}, new int[]{0, 0, 0, 0}, 65, customTypeFace.gillSans, 0);
+        // customViewParams.setTextViewCustomParams(navIssueText, new int[]{0, 30, 0, 30}, new int[]{0, 0, 0, 0}, 35, customTypeFace.gillSans, 0);
+        customViewParams.setTextViewCustomParams(navSyncText, new int[]{0, 30, 0, 30}, new int[]{0, 0, 0, 0}, 65, customTypeFace.gillSans, 0);
+        customViewParams.setTextViewCustomParams(navEmiText, new int[]{0, 30, 0, 30}, new int[]{0, 0, 0, 0}, 65, customTypeFace.gillSans, 0);
+        customViewParams.setTextViewCustomParams(navLogoutText, new int[]{0, 30, 0, 30}, new int[]{0, 0, 0, 0}, 65, customTypeFace.gillSans, 0);
+        navMenuLayout.setOnClickListener(this);
+        closeDrawer.setOnClickListener(this);
     }
 }
 

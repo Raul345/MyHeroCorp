@@ -401,19 +401,7 @@ public class AddenquiryFragment extends Fragment implements View.OnClickListener
 
     }
 
-    /*  public void datechange(String olddate) {
-          SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy");
-          Date newDate;
-          try {
-              newDate = format.parse(olddate);
-              format = new SimpleDateFormat("MM/dd/yyyy");
-              follow_date = format.format(newDate);
-          } catch (ParseException e) {
-              e.printStackTrace();
-          }
-      }
-  */
-    public void send_request(String url, String data, int flag) {
+   public void send_request(String url, String data, int flag) {
         if (NetConnections.isConnected(getContext())) {
             try {
                 String urlParameters = "data=" + URLEncoder.encode(data, "UTF-8");
@@ -436,73 +424,7 @@ public class AddenquiryFragment extends Fragment implements View.OnClickListener
             Toast.makeText(getContext(), "Check your connection !!", Toast.LENGTH_SHORT).show();
     }
 
-    /* public void jsonparse_campaign(String result) {
-         try {
-             userAdapter.clear();
-             userAdapter1.clear();
-             progressDialog.dismiss();
-             // Toast.makeText(getContext(), result, Toast.LENGTH_SHORT).show();
-             JSONObject jsono = new JSONObject(result);
-             JSONArray jarray = jsono.getJSONArray("campaign_data");
-             for (int i = 0; i < jarray.length(); i++) {
-                 JSONObject object = jarray.getJSONObject(i);
-                 String dealer_code = object.getString("dealer_code");
-                 String dealer_name = object.getString("dealer_name");
-                 String camp_id = object.getString("camp_id");
-                 String campaign_name = object.getString("campaign_name");
-                 String start_date = object.getString("start_date");
-                 String end_date = object.getString("end_date");
-                 String category = object.getString("category");
-                 String status = object.getString("status");
-                 String sub_category = object.getString("sub_category");
-                 String camp_type = object.getString("camp_type");
-                 String camp_source = object.getString("camp_source");
-                 String model1 = object.getString("model");
-
-                 if (model1.equalsIgnoreCase(model)) {
-                     userAdapter1.add(new Campaign(dealer_code,
-                             dealer_name,
-                             camp_id,
-                             campaign_name,
-                             start_date,
-                             end_date,
-                             category,
-                             status,
-                             sub_category,
-                             camp_type,
-                             camp_source,
-                             model1
-                     ));
-                     userAdapter1.notifyDataSetChanged();
-                 }
-                 if (model1.equalsIgnoreCase("")) {
-                     userAdapter.add(new Campaign(dealer_code,
-                             dealer_name,
-                             camp_id,
-                             campaign_name,
-                             start_date,
-                             end_date,
-                             category,
-                             status,
-                             sub_category,
-                             camp_type,
-                             camp_source,
-                             model1));
-                     userAdapter.notifyDataSetChanged();
-                 }
-             }
-
-
-         } catch (JSONException e) {
-             progressDialog.dismiss();
-             e.printStackTrace();
-         } catch (Exception e) {
-             progressDialog.dismiss();
-             System.out.println(Toast.makeText(getContext(), "Check your Connection !!", Toast.LENGTH_SHORT));
-         }
-     }
- */
-    private void updateList() {
+     private void updateList() {
         if (userAdapter1.getCount() == 0)
             userList.setAdapter(userAdapter);
         else
@@ -574,11 +496,11 @@ public class AddenquiryFragment extends Fragment implements View.OnClickListener
             key = random_key(7);
 
             if (model.equals("") || existvehicle.equals("--select--"))
-                Toast.makeText(getContext(), "Please fill all the details !!", Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(), "Please fill all the details !!", Toast.LENGTH_SHORT).show();
             else if (followup_date.before(current_date))
-                Toast.makeText(getContext(), "Please check the followup date!!", Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(), "Please check the followup date!!", Toast.LENGTH_SHORT).show();
             else if (expt_purc_date.before(followup_date))
-                Toast.makeText(getContext(), "Please check the purchase date!!", Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(), "Please check the purchase date!!", Toast.LENGTH_SHORT).show();
             else {
                 JSONObject jsonparams = new JSONObject();
                 jsonparams.put("mobile", mobile);

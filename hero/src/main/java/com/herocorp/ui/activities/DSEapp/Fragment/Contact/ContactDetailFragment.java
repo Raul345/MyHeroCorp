@@ -1,12 +1,15 @@
 package com.herocorp.ui.activities.DSEapp.Fragment.Contact;
 
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,9 +19,14 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.baoyz.swipemenulistview.SwipeMenu;
+import com.baoyz.swipemenulistview.SwipeMenuCreator;
+import com.baoyz.swipemenulistview.SwipeMenuItem;
+import com.baoyz.swipemenulistview.SwipeMenuListView;
 import com.herocorp.R;
 import com.herocorp.ui.activities.BaseDrawerActivity;
 import com.herocorp.ui.activities.DSEapp.Fragment.Alert.ContactAlertFragment;
@@ -26,12 +34,15 @@ import com.herocorp.ui.activities.DSEapp.Fragment.Followup.CloseFollowupFragment
 import com.herocorp.ui.activities.DSEapp.Fragment.Enquiry.EditFollowupFragment;
 import com.herocorp.ui.activities.DSEapp.Fragment.Followup.FollowupDetailFragment;
 import com.herocorp.ui.activities.DSEapp.Fragment.Followup.FollowupFragment;
+import com.herocorp.ui.activities.DSEapp.adapter.ContactFollowupadapter;
+import com.herocorp.ui.activities.DSEapp.adapter.Followupadapter;
 import com.herocorp.ui.activities.DSEapp.adapter.VehicleDetailadapter;
 import com.herocorp.ui.activities.DSEapp.db.DatabaseHelper;
 import com.herocorp.ui.activities.DSEapp.models.Followup;
 import com.herocorp.ui.activities.DSEapp.models.VehicleDetail;
 import com.herocorp.ui.utility.CustomTypeFace;
 import com.herocorp.ui.utility.CustomViewParams;
+import com.herocorp.ui.utility.PreferenceUtil;
 
 import java.security.SecureRandom;
 import java.util.ArrayList;
@@ -63,7 +74,7 @@ public class ContactDetailFragment extends Fragment implements View.OnClickListe
 
     ArrayList vinarray = new ArrayList(), variantarray = new ArrayList(), dealerarray = new ArrayList(), colourarray = new ArrayList(), modelarray = new ArrayList(), datearray = new ArrayList(), descarray = new ArrayList();
 
-    ArrayList cardnoarray = new ArrayList(), currentpointsarray = new ArrayList(), lastservicearray = new ArrayList(), nextservicearray=new ArrayList(), expirydatearray = new ArrayList(),
+    ArrayList cardnoarray = new ArrayList(), currentpointsarray = new ArrayList(), lastservicearray = new ArrayList(), nextservicearray = new ArrayList(), expirydatearray = new ArrayList(),
             policynoarray = new ArrayList(), insurancecoarray = new ArrayList();
 
     ListView vehiclelist;
@@ -75,15 +86,122 @@ public class ContactDetailFragment extends Fragment implements View.OnClickListe
 
     SharedPreferences mypref;
     SharedPreferences.Editor edit;
+    com.baoyz.swipemenulistview.SwipeMenuListView userList;
+    ContactFollowupadapter userAdapter;
+    ArrayList<Followup> userArray = new ArrayList<Followup>();
+    SwipeMenuCreator creator;
 
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
             savedInstanceState) {
 
-        rootView = inflater.inflate(R.layout.dse_contactdetail_fragment, container, false);
+        rootView = inflater.inflate(R.layout.dse_contactdetail1_fragment, container, false);
 
         initView(rootView);
 
+        creator = new SwipeMenuCreator() {
+            @Override
+            public void create(SwipeMenu menu) {
+                // create "delete" item
+                SwipeMenuItem closeItem = new SwipeMenuItem(
+                        getContext());
+                // set item background
+                closeItem.setBackground(new ColorDrawable(Color.rgb(0xF9,
+                        0x3F, 0x25)));
+                // set item width
+                closeItem.setWidth(120);
+                closeItem.setTitle("Close");
+                closeItem.setTitleSize(18);
+                closeItem.setTitleColor(Color.WHITE);
+                // set a icon
+                // deleteItem.setIcon(R.drawable.cross_icon);
+                // add to menu
+                menu.addMenuItem(closeItem);
+
+
+                SwipeMenuItem followupItem = new SwipeMenuItem(
+                        getContext());
+                // set item background
+                /*editItem.setBackground(new ColorDrawable(Color.rgb(0xC9, 0xC9,
+                        0xCE)));*/
+                followupItem.setBackground(new ColorDrawable(Color.DKGRAY));
+                // set item width
+                followupItem.setWidth(160);
+                // set item title
+                followupItem.setTitle("Followup");
+                // set item title fontsize
+                followupItem.setTitleSize(18);
+                // set item title font color
+                followupItem.setTitleColor(Color.WHITE);
+                // add to menu
+                //  editItem.setIcon(R.drawable.edit_icon);
+                menu.addMenuItem(followupItem);
+
+
+            }
+        };
+        userList.setMenuCreator(creator);
+        userList.setSwipeDirection(SwipeMenuListView.DIRECTION_LEFT);
+        userList.setOnMenuItemClickListener(new SwipeMenuListView.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(int position, SwipeMenu menu, int index) {
+
+                Followup data = userAdapter.getItem(position);
+                Bundle bundle = new Bundle();
+                bundle.putString("user", PreferenceUtil.get_UserId(getContext()));
+                bundle.putString("enquiry_id", data.getEnquiry_id());
+                bundle.putString("pur_date", data.getExpcted_date_purchase());
+                bundle.putInt("enq_flag", 1);
+
+                switch (index) {
+                    case 0:
+                        f = new CloseFollowupFragment();
+                        f.setArguments(bundle);
+                        transaction(f);
+                        break;
+                    case 1:
+                        f = new FollowupFragment();
+                        f.setArguments(bundle);
+                        transaction(f);
+                        break;
+                }
+                // false : close the menu; true : not close the menu
+                return false;
+            }
+        });
+
+        userList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Followup data = userAdapter.getItem(position);
+                Bundle bundle = new Bundle();
+                bundle.putString("fname", firstname);
+                bundle.putString("lname", lastname);
+                bundle.putString("mobile", contact);
+                bundle.putString("age", age);
+                bundle.putString("sex", sex);
+                bundle.putString("email", email_addr);
+                bundle.putString("state", state);
+                bundle.putString("district", district);
+                bundle.putString("tehsil", tehsil);
+                bundle.putString("city", city);
+                bundle.putString("model", data.getX_model_interested());
+                bundle.putString("id", cust_id);
+                bundle.putString("pur_date", data.getExpcted_date_purchase());
+                bundle.putString("exchange", x_exchange_required);
+                bundle.putString("finance", x_finance_required);
+                bundle.putString("vtype", existing_vehicle);
+                bundle.putString("comment", followup_comments);
+                bundle.putString("followdate", data.getFollow_date());
+                bundle.putString("enquiryid", data.getEnquiry_id());
+                bundle.putString("user", user);
+                bundle.putInt("page_flag", 1);
+
+                f = new FollowupDetailFragment();
+                f.setArguments(bundle);
+                transaction(f);
+            }
+        });
         return rootView;
     }
 
@@ -116,9 +234,6 @@ public class ContactDetailFragment extends Fragment implements View.OnClickListe
         addenquiry = (LinearLayout) rootView.findViewById(R.id.addenquiry_layout);
         viewenquiry = (LinearLayout) rootView.findViewById(R.id.viewenquiry_layout);
 
-        LinearLayout layout_enquiry = (LinearLayout) rootView.findViewById(R.id.layout_enquiry);
-
-
         name = (TextView) rootView.findViewById(R.id.cust_name_textview);
         ages = (TextView) rootView.findViewById(R.id.agesex_textview);
         states = (TextView) rootView.findViewById(R.id.state_textview);
@@ -132,13 +247,10 @@ public class ContactDetailFragment extends Fragment implements View.OnClickListe
         closeenquiry = (Button) rootView.findViewById(R.id.button_close);
         followupenquiry = (Button) rootView.findViewById(R.id.button_followup);
 
+        userAdapter = new ContactFollowupadapter(getContext(), R.layout.dse_contactfollowup_row, userArray);
+        userList = (SwipeMenuListView) rootView.findViewById(R.id.list_contactfollowup);
+        customViewParams.setMarginAndPadding(userList, new int[]{0, 0, 0, 0}, new int[]{0, 0, 0, 0}, userList.getParent());
 
-        interestedmodel = (TextView) rootView.findViewById(R.id.textview_x_model_interested);
-        enquirydate = (TextView) rootView.findViewById(R.id.textview_enquiry_date);
-        expecteddate = (TextView) rootView.findViewById(R.id.textview_expctd_dt_purchase);
-        followdate = (TextView) rootView.findViewById(R.id.textview_follow_date);
-
-        followup_check = (ImageView) rootView.findViewById(R.id.img_pendingfollowup_check);
 
         fetch_data();
         fetch_data1();
@@ -177,43 +289,8 @@ public class ContactDetailFragment extends Fragment implements View.OnClickListe
 
         );
 
-        layout_enquiry.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Bundle bundle = new Bundle();
-                bundle.putString("fname", firstname);
-                bundle.putString("lname", lastname);
-                bundle.putString("mobile", contact);
-                bundle.putString("age", age);
-                bundle.putString("sex", sex);
-                bundle.putString("email", email_addr);
-                bundle.putString("state", state);
-                bundle.putString("district", district);
-                bundle.putString("tehsil", tehsil);
-                bundle.putString("city", city);
-                bundle.putString("model", x_model_interested);
-                bundle.putString("id", cust_id);
-                bundle.putString("pur_date", expctd_dt_purchase);
-                bundle.putString("exchange", x_exchange_required);
-                bundle.putString("finance", x_finance_required);
-                bundle.putString("vtype", existing_vehicle);
-                bundle.putString("comment", followup_comments);
-                bundle.putString("followdate", follow_date);
-                bundle.putString("enquiryid", enquiry_id);
-                //  bundle.putString("user_id", encryptuser);
-                bundle.putString("user", user);
-
-                f = new FollowupDetailFragment();
-                f.setArguments(bundle);
-                transaction(f);
-            }
-        });
-
 
         addenquiry.setOnClickListener(this);
-        closeenquiry.setOnClickListener(this);
-        followupenquiry.setOnClickListener(this);
-
         menu.setOnClickListener(this);
 
     }
@@ -233,29 +310,7 @@ public class ContactDetailFragment extends Fragment implements View.OnClickListe
         } else if (i == R.id.addenquiry_layout) {
             save_preference();
             f = new EditFollowupFragment();
-           /* FragmentManager fm = getActivity().getSupportFragmentManager();
-            FragmentTransaction ft = fm.beginTransaction();
-                   ft.replace(R.id.content_contactdetail, f);
-            ft.commit();*/
             transaction(f);
-        } else if (i == R.id.button_close) {
-            f = new CloseFollowupFragment();
-            f.setArguments(bundle);
-            FragmentManager fm = getActivity().getSupportFragmentManager();
-            FragmentTransaction ft = fm.beginTransaction();
-            ft.addToBackStack(null);
-            ft.replace(R.id.content_contactdetail, f, "close");
-            ft.commit();
-            //transaction(f);
-        } else if (i == R.id.button_followup) {
-            f = new FollowupFragment();
-            f.setArguments(bundle);
-            FragmentManager fm = getActivity().getSupportFragmentManager();
-            FragmentTransaction ft = fm.beginTransaction();
-            ft.addToBackStack(null);
-            ft.replace(R.id.content_contactdetail, f, "followup");
-            ft.commit();
-            //   transaction(f);
         }
 
     }
@@ -332,22 +387,6 @@ public class ContactDetailFragment extends Fragment implements View.OnClickListe
         email.setText(email_addr);
         customer_id.setText("  Customer id: " + cust_id);
 
-        if (x_model_interested.equals("")) {
-            addenquiry.setVisibility(View.VISIBLE);
-            viewenquiry.setVisibility(View.INVISIBLE);
-        } else {
-            viewenquiry.setVisibility(View.VISIBLE);
-            addenquiry.setVisibility(View.INVISIBLE);
-            interestedmodel.setText(x_model_interested);
-            enquirydate.setText(enquiry_entry_date);
-            expecteddate.setText(expctd_dt_purchase);
-            followdate.setText(follow_date);
-
-            if (pendingfollowup_check.equalsIgnoreCase("0"))
-                followup_check.setImageResource(R.drawable.error_icon);
-            else
-                followup_check.setImageResource(R.drawable.tick_image);
-        }
     }
 
     public void fetch_data() {
@@ -363,10 +402,6 @@ public class ContactDetailFragment extends Fragment implements View.OnClickListe
         tehsil1 = bundle.getString("tehsil1");
         city1 = bundle.getString("city1");
         x_con_seq_no1 = bundle.getString("x_con_seq_no_1");
-        // x_model_interested = bundle.getString("x_model_interested");
-        // expctd_dt_purchase = bundle.getString("expctd_dt_purchase");
-        // follow_date = bundle.getString("follow_date");
-        //enquiry_entry_date = bundle.getString("enquiry_entry_date");
         x_exchange_required = bundle.getString("x_exchange_required");
         x_finance_required = bundle.getString("x_finance_required");
         existing_vehicle = bundle.getString("existing_vehicle");
@@ -411,23 +446,15 @@ public class ContactDetailFragment extends Fragment implements View.OnClickListe
         first_sale_dt = bundle.getString("first_sale_dt");
         ins_policy_co = bundle.getString("ins_policy_co");
         x_hmgl_card_points = bundle.getString("x_hmgl_card_points");
-      /*  follow_date = bundle.getString("follow_date");
-        enquiry_entry_date = bundle.getString("enquiry_entry_date");
-        model_cd1 = bundle.getString("x_model_interested");
-        expctd_dt_purchase = bundle.getString("expctd_dt_purchase");*/
         enquiry_id = bundle.getString("enquiry_id");
 
         DatabaseHelper db = new DatabaseHelper(getContext());
         List<Followup> allrecords = db.getContactFollowup(enquiry_id);
         for (Followup record : allrecords) {
-            x_model_interested = record.getX_model_interested();
-            expctd_dt_purchase = record.getExpcted_date_purchase();
-            enquiry_id = record.getEnquiry_id();
-            follow_date = record.getFollow_date();
-            enquiry_entry_date = record.getEnquiry_entry_date();
-            pendingfollowup_check = record.getFollowup_status();
-            Log.e("get:", x_model_interested + expctd_dt_purchase + enquiry_id + follow_date + enquiry_entry_date);
+            userAdapter.add(new Followup(record.getX_model_interested(), record.getEnquiry_entry_date(), record.getExpcted_date_purchase(), record.getFollow_date(), record.getEnquiry_id(), record.getFollowup_status()));
+            userAdapter.notifyDataSetChanged();
         }
+        updateList1();
 
         user = bundle.getString("user");
         encryptuser = bundle.getString("user_id");
@@ -492,6 +519,18 @@ public class ContactDetailFragment extends Fragment implements View.OnClickListe
         setListViewHeightBasedOnChildren(vehiclelist);
     }
 
+    private void updateList1() {
+        userList.setAdapter(userAdapter);
+        if (userAdapter.getCount() > 0) {
+            viewenquiry.setVisibility(View.VISIBLE);
+            addenquiry.setVisibility(View.INVISIBLE);
+            //  setListViewHeightBasedOnChildren1(userList);
+        } else {
+            viewenquiry.setVisibility(View.INVISIBLE);
+            addenquiry.setVisibility(View.VISIBLE);
+        }
+    }
+
     public void setListViewHeightBasedOnChildren(ListView listView) {
         ArrayAdapter listAdapter = (ArrayAdapter) listView.getAdapter();
         if (listAdapter == null) {
@@ -507,7 +546,7 @@ public class ContactDetailFragment extends Fragment implements View.OnClickListe
         }
 
         ViewGroup.LayoutParams params = listView.getLayoutParams();
-        params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
+        params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount()));
         listView.setLayoutParams(params);
         listView.requestLayout();
     }
@@ -549,6 +588,31 @@ public class ContactDetailFragment extends Fragment implements View.OnClickListe
             sb.append(AB.charAt(rnd.nextInt(AB.length())));
         return sb.toString();
     }
+
+
+    public static void setListViewHeightBasedOnChildren1(ListView listView) {
+        ListAdapter listAdapter = listView.getAdapter();
+        if (listAdapter == null) {
+            return;
+        }
+        int desiredWidth = View.MeasureSpec.makeMeasureSpec(listView.getWidth(), View.MeasureSpec.AT_MOST);
+        int totalHeight = 0;
+        View view = null;
+        for (int i = 0; i < listAdapter.getCount(); i++) {
+            view = listAdapter.getView(i, view, listView);
+            if (i == 0) {
+                view.setLayoutParams(new ViewGroup.LayoutParams(desiredWidth, ViewGroup.LayoutParams.WRAP_CONTENT));
+
+            }
+            view.measure(desiredWidth, View.MeasureSpec.UNSPECIFIED);
+            totalHeight += view.getMeasuredHeight();
+        }
+        ViewGroup.LayoutParams params = listView.getLayoutParams();
+        params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
+        listView.setLayoutParams(params);
+        listView.requestLayout();
+    }
+
 }
 
 

@@ -302,6 +302,7 @@
                     android:maxLines="1"
                     android:padding="10dp"
                     android:singleLine="true"
+                    android:textSize="18sp"
                     android:textColor="#000000" />
 
 
@@ -339,6 +340,10 @@
                     android:focusableInTouchMode="true"
                     android:hint="1234****"
                     android:padding="10dp"
+                    android:textSize="18sp"
+                    android:maxLength="16"
+                    android:maxLines="1"
+                    android:singleLine="true"
                     android:textColor="#000000" />
             </LinearLayout>
 

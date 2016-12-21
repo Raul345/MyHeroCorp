@@ -77,6 +77,7 @@ public class FollowupDetailFragment extends Fragment implements View.OnClickList
     SharedPreferences.Editor edit;
     Fragment f;
     ProgressBar progressBar;
+    int page_flag = 0;
 
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
@@ -181,6 +182,9 @@ public class FollowupDetailFragment extends Fragment implements View.OnClickList
         bundle.putString("comment", followup_comments);
         bundle.putString("followdate", follow_date);
         bundle.putString("enquiryid", enquiry_id);
+        if (page_flag == 1)
+            bundle.putInt("enq_flag", page_flag);
+
         int i = view.getId();
         if (i == R.id.menu_icon) {
             ((BaseDrawerActivity) getActivity()).toggleDrawer();
@@ -225,7 +229,7 @@ public class FollowupDetailFragment extends Fragment implements View.OnClickList
                     JSONObject jsonparams = new JSONObject();
                     jsonparams.put("user_id", user);
                     jsonparams.put("enq_id", enquiry_id);
-                    Log.e("testride_request:",jsonparams.toString());
+                    Log.e("testride_request:", jsonparams.toString());
                     new testride_feedback(jsonparams.toString()).execute();
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -240,7 +244,7 @@ public class FollowupDetailFragment extends Fragment implements View.OnClickList
     public void transaction(final Fragment f) {
         FragmentManager fm = getActivity().getSupportFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
-        ft.replace(R.id.content_followupdetail, f,"followupetail");
+        ft.replace(R.id.content_followupdetail, f, "followupetail");
         ft.commit();
     }
 
@@ -269,6 +273,9 @@ public class FollowupDetailFragment extends Fragment implements View.OnClickList
         encryptuser = bundle.getString("user_id");
         enquiryid = bundle.getString("enquiryid");
         dealerid = bundle.getString("dealerid");
+
+        if (bundle.containsKey("page_flag"))
+            page_flag = bundle.getInt("page_flag");
 
         if (email_addr.equalsIgnoreCase("null"))
             email_addr = "";
@@ -322,7 +329,7 @@ public class FollowupDetailFragment extends Fragment implements View.OnClickList
             super.onPreExecute();
             progressDialog = ProgressDialog.show(getActivity(), null, null);
             progressDialog.setContentView(R.layout.progresslayout);
-      }
+        }
 
         protected String doInBackground(Void... params) {
             if (NetConnections.isConnected(getContext())) {
@@ -375,7 +382,7 @@ public class FollowupDetailFragment extends Fragment implements View.OnClickList
                         Log.e("ques", object.getString("question"));
                     }
                     bundle.putStringArrayList("quesid", quesid);
-                    bundle.putInt("page_flag",1);
+                    bundle.putInt("page_flag", 1);
                     f = new TestRideFeedbackFragment();
                     f.setArguments(bundle);
                     transaction(f);

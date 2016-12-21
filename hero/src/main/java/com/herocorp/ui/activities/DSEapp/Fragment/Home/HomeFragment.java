@@ -71,29 +71,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
     TextView pendingorderText, todayfollowupText, pendingfollowupText, searchenquiryText;
 
-    String first_name;
-    String last_name;
-    String cell_ph_no;
-    String age;
-    String gender;
-    String email_addr;
-    String state;
-    String district;
-    String tehsil;
-    String city;
-    String x_con_seq_no;
-    String x_model_interested;
-    String expected_date_purchase;
-    String x_exchange_required;
-    String x_finance_required;
-    String exist_vehicle;
-    String followup_comments;
-    String enquiry_id;
-    String follow_date;
-    String enquiry_entry_date;
-    String dealer_bu_id;
-
-    private SharedPreferences sharedPreferences;
     String user_id, dealer_code, sync_date = "";
     String current_date;
 
@@ -266,16 +243,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                     } else
                         Toast.makeText(getActivity(), "Check your Connection !!", Toast.LENGTH_SHORT).show();
                 }
-              /*  if (!(phoneno_et.getText().toString().equals("") && registration_et.getText().toString().equals(""))) {
-                    if (NetConnections.isConnected(getContext())) {
-
-                        //new Encrypt_data().execute();
-                        transaction(new ContactFragment());
-                    } else
-                        Toast.makeText(getActivity(), "Check your Connection !!", Toast.LENGTH_SHORT).show();
-                } else
-                    Toast.makeText(getActivity(), "Phone/RegNo missing!!", Toast.LENGTH_SHORT).show();*/
-            } catch (Exception e) {
+              } catch (Exception e) {
             }
         }
     }
@@ -342,48 +310,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
     }
 
-    public void jsonparse_followup(String result) {
-        Log.e("response_followup:", result);
-        db = new DatabaseHelper(getContext());
-        db.clearfollowup_table();
-        JSONObject jsono = null;
-        JSONArray jarray = null;
-        try {
-            jsono = new JSONObject(result);
-            if (jsono.has("follow_up")) {
-                jarray = jsono.getJSONArray("follow_up");
-                for (int i = 0; i < jarray.length(); i++) {
-                    JSONObject object = jarray.getJSONObject(i);
-                    first_name = object.getString("FST_NAME");
-                    last_name = object.getString("LAST_NAME");
-                    cell_ph_no = object.getString("CELL_PH_NUM");
-                    age = object.getString("AGE");
-                    gender = object.getString("GENDER");
-                    email_addr = object.getString("EMAIL_ADDR");
-                    state = object.getString("STATE");
-                    district = object.getString("DISTRICT");
-                    tehsil = object.getString("TEHSIL");
-                    city = object.getString("CITY");
-                    x_con_seq_no = object.getString("X_CON_SEQ_NUM");
-                    x_model_interested = object.getString("X_MODEL_INTERESTED");
-                    expected_date_purchase = object.getString("EXPCTD_DT_PURCHASE");
-                    x_exchange_required = object.getString("X_EXCHANGE_REQUIRED");
-                    x_finance_required = object.getString("X_FINANCE_REQUIRED");
-                    exist_vehicle = object.getString("EXISTING_VEHICLE");
-                    followup_comments = object.getString("FOLLOWUP_COMMENTS");
-                    enquiry_id = object.getString("ENQUIRY_ID");
-                    follow_date = object.getString("FOLLOW_DATE");
-                    enquiry_entry_date = object.getString("ENQUIRY_ENTRY_DATE");
-                    dealer_bu_id = object.getString("DEALER_BU_ID");
-                    db.addfollowup(new Followup(first_name, last_name, cell_ph_no, age, gender, email_addr, state, district, tehsil, city, x_con_seq_no, x_model_interested,
-                            expected_date_purchase, x_exchange_required, x_finance_required, exist_vehicle, followup_comments, enquiry_id, follow_date, enquiry_entry_date, dealer_bu_id, "0"));
-                }
-            }
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-    }
 
     public void jsonparse_makemodel(String result) {
         try {

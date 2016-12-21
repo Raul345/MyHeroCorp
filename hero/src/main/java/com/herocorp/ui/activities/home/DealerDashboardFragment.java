@@ -1,11 +1,15 @@
 package com.herocorp.ui.activities.home;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,6 +42,7 @@ public class DealerDashboardFragment extends Fragment implements View.OnClickLis
                 ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
         initView(rootView);
+
 
         return rootView;
     }
@@ -129,11 +134,12 @@ public class DealerDashboardFragment extends Fragment implements View.OnClickLis
         } else if (i == R.id.value_layout) {
             try {
 
-              //  ((BaseDrawerActivity) getActivity()).openFragment(new VasWarrantyfragment(), true);
+                //  ((BaseDrawerActivity) getActivity()).openFragment(new VasWarrantyfragment(), true);
             } catch (Exception e) {
                 Toast.makeText(getActivity(), "VAS  not installed!", Toast.LENGTH_SHORT).show();
             }
         }
     }
+
 
 }

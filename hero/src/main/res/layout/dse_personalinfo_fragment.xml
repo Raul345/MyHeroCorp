@@ -3,7 +3,7 @@
     android:id="@+id/content_personalinfo"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_dashboard"
+    android:background="#212121"
     android:clickable="true">
 
     <ImageView
@@ -218,7 +218,7 @@
                     android:padding="8dp"
                     android:singleLine="true"
                     android:textColor="#000000"
-                    android:textSize="20dp" />
+                    android:textSize="16dp" />
             </LinearLayout>
 
             <LinearLayout
@@ -585,7 +585,7 @@
         android:layout_gravity="bottom|end"
         android:layout_margin="10dp"
         android:layout_marginBottom="15dp"
-        android:layout_marginRight="15dp"
+        android:layout_marginRight="10dp"
         android:background="@android:color/transparent"
         android:clickable="true"
         android:src="@drawable/edit_icon" />

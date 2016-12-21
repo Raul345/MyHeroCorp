@@ -47,4 +47,17 @@ public class Dateformatter {
             return null;
         }
     }
+
+    public static String dateformat4(String olddate) {
+        SimpleDateFormat format = new SimpleDateFormat("dd-MMM-yyyy");
+        Date newDate;
+        try {
+            newDate = format.parse(olddate);
+            format = new SimpleDateFormat("dd-MMM-yy");
+            return format.format(newDate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 }

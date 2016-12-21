@@ -67,8 +67,8 @@ public class SyncFollowup extends AsyncTask<Void, Void, String> {
     protected String doInBackground(Void... params) {
         try {
             final JSONObject jsonparams = new JSONObject();
-           // jsonparams.put("user_id", PreferenceUtil.get_UserId(context));
-              jsonparams.put("user_id", "DSE10866");
+            jsonparams.put("user_id", PreferenceUtil.get_UserId(context));
+            //jsonparams.put("user_id", "DSE10866");
             Log.e("followup_sync_start:", new SimpleDateFormat("dd-MMM-yy").format(new Date()).toString());
             String newurlparams = "data=" + URLEncoder.encode(jsonparams.toString(), "UTF-8");
             networkConnect = new NetworkConnect(URLConstants.ENCRYPT, newurlparams);
