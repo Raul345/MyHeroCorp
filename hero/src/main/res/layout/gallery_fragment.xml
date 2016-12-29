@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/content_gallery"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg3"
-    android:id="@+id/content_gallery">
+    android:background="@drawable/bg3">
 
     <ImageView
         android:id="@+id/app_logo"
@@ -73,12 +73,14 @@
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             android:orientation="horizontal">
+
             <TextView
                 android:id="@+id/color_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/color_text"
                 android:textColor="@color/color_red" />
+
             <TextView
                 android:id="@+id/txt_separator"
                 android:layout_width="2dp"
@@ -90,8 +92,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/tst_text"
-                android:textSize="15dp"
-                android:textColor="#ffffff" />
+                android:textColor="#ffffff"
+                android:textSize="15dp" />
         </LinearLayout>
 
         <LinearLayout
@@ -228,25 +230,101 @@
         android:id="@+id/feature_individual_image_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#ddffffff"
+        android:background="#ffffff"
         android:clickable="false"
         android:visibility="gone">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/app_log"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_alignParentLeft="true"
+                android:layout_margin="5dp"
+                android:src="@drawable/hero_logo" />
+
+            <ImageView
+                android:id="@+id/close_btnn"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_alignParentRight="true"
+                android:layout_gravity="end"
+                android:layout_marginRight="5dp"
+                android:clickable="true"
+                android:src="@drawable/cross_icon" />
+        </RelativeLayout>
 
         <ImageView
             android:id="@+id/feature_individual_image"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-          />
+            android:src="@drawable/bike" />
 
         <TextView
             android:id="@+id/feature_individual_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_below="@+id/feature_individual_image"
             android:layout_centerInParent="true"
             android:background="#ff1010"
-            android:textColor="#ffffff"
-            android:layout_below="@+id/feature_individual_image"/>
+            android:textColor="#ffffff" />
+
+    </RelativeLayout>
+
+
+    <RelativeLayout
+        android:id="@+id/layout360"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#ffffff"
+        android:orientation="vertical"
+        android:clickable="true"
+        android:visibility="gone">
+
+        <RelativeLayout
+            android:id="@+id/rel_image"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/app_logoo"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_alignParentLeft="true"
+                android:layout_margin="5dp"
+                android:src="@drawable/hero_logo" />
+
+            <ImageView
+                android:id="@+id/close_btn"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_alignParentRight="true"
+                android:layout_gravity="end"
+                android:layout_marginRight="5dp"
+                android:clickable="true"
+                android:src="@drawable/cross_icon" />
+        </RelativeLayout>
+
+        <ImageView
+            android:id="@+id/bike_image360"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/seekbar_container"
+            android:layout_below="@+id/rel_image"
+            android:layout_centerInParent="true"
+            android:src="@drawable/bike" />
+
+        <RelativeLayout
+            android:id="@+id/seekbar_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:gravity="center"
+            android:layout_margin="5dp"></RelativeLayout>
 
     </RelativeLayout>
 </RelativeLayout>

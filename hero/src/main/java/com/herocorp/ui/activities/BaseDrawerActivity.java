@@ -46,6 +46,7 @@ import android.widget.Toast;
 //import com.google.firebase.messaging.FirebaseMessaging;
 import com.herocorp.R;
 import com.herocorp.core.constants.AppConstants;
+import com.herocorp.core.constants.URLConstants;
 import com.herocorp.core.interfaces.SyncServiceCallBack;
 import com.herocorp.core.interfaces.iNetworkResponseCallback;
 import com.herocorp.core.models.AuthenticateUserModel;
@@ -55,6 +56,7 @@ import com.herocorp.infra.netio.AuthenticateUserService;
 import com.herocorp.infra.utils.NetConnections;
 //import com.herocorp.ui.FCMservice.FCMInstanceIdservice;
 import com.herocorp.ui.EMI.EmicalcFragment;
+import com.herocorp.ui.activities.DSEapp.DbSyncservice;
 import com.herocorp.ui.activities.DSEapp.Fragment.Alert.ContactAlertFragment;
 import com.herocorp.ui.activities.DSEapp.Fragment.Home.HomeFragment;
 import com.herocorp.ui.activities.DSEapp.ConnectService.NetworkConnect;
@@ -79,7 +81,9 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.channels.FileChannel;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class BaseDrawerActivity extends FragmentActivity implements View.OnClickListener {
     private static final int drawerGravity = Gravity.LEFT;
@@ -126,11 +130,12 @@ public class BaseDrawerActivity extends FragmentActivity implements View.OnClick
             deviceVersion = Build.VERSION.CODENAME;
             deviceImei = telephonyManager.getDeviceId();
 
-            fetch_data();
+            // fetch_data();
 
             if (NetConnections.isConnected(this)) {
-                //  new check_version().execute(URLConstants.CHECK_VERSION);
-                showPhoneStatePermission();
+                if (!PreferenceUtil.get_Syncyn(getApplicationContext()))
+                    showPhoneStatePermission();
+
                 //FCM service
                 /*FirebaseMessaging.getInstance().subscribeToTopic("news");
                 runOnUiThread(new Runnable() {
@@ -138,14 +143,11 @@ public class BaseDrawerActivity extends FragmentActivity implements View.OnClick
                     public void run() {
                         FCMInstanceIdservice fcm = new FCMInstanceIdservice(deviceImei, userId, appVersion, deviceVersion, "1.0");
                         fcm.onTokenRefresh();
-
                    }
                 });*/
-
-
             } else if (!(sharedPreferences.getBoolean(AppConstants.IS_USER_LOGGED_IN, false) &&
                     App.shouldAppRun(sharedPreferences.getString(AppConstants.VALIDITY_DATE, "")))) {
-                //finish();
+                //  finish();
             }
 
 
@@ -167,6 +169,7 @@ public class BaseDrawerActivity extends FragmentActivity implements View.OnClick
             e.printStackTrace();
             finish();
         }
+
     }
 
     private boolean authenticateUser(String deviceId, String appVersion, String deviceVersion) throws Exception {
@@ -225,7 +228,7 @@ public class BaseDrawerActivity extends FragmentActivity implements View.OnClick
         if (null == savedInstanceState) {
             FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager.beginTransaction().replace(R.id.frame_container, new DealerDashboardFragment()).commit();
-
+            request();
             //set you initial fragment object
         }
     }
@@ -299,6 +302,7 @@ public class BaseDrawerActivity extends FragmentActivity implements View.OnClick
                         })
                         .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int which) {
+                                PreferenceUtil.set_Syncyn(getApplicationContext(), true);
                                 dialog.dismiss();
                             }
                         })
@@ -353,7 +357,6 @@ public class BaseDrawerActivity extends FragmentActivity implements View.OnClick
                 /*  startActivity(new Intent(getApplicationContext(), MainHome.class));*/
                 fragment = new HomeFragment();
                 openFragment(fragment, false);
-
             } catch (Exception e) {
                 Toast.makeText(this, "DSE App not installed!", Toast.LENGTH_SHORT).show();
             }
@@ -386,13 +389,15 @@ public class BaseDrawerActivity extends FragmentActivity implements View.OnClick
         } else if (i == R.id.nav_contactus_layout) {
             toggleDrawer();
             openFragment(new ContactUsFragmrnt(), false);
-        }else if (i == R.id.nav_news_layout) {
+        } else if (i == R.id.nav_news_layout) {
             toggleDrawer();
             openFragment(new NewsFragment(), false);
         } else if (i == R.id.nav_value_layout) {
 
             try {
                 toggleDrawer();
+                Intent intent = new Intent(getApplicationContext(), DbSyncservice.class);
+                startService(intent);
                 //Toast.makeText(this, "VAS App not installed!", Toast.LENGTH_SHORT).show();
                /* fragment = new VasWarrantyfragment();
                 openFragment(fragment, true);*/
@@ -418,9 +423,6 @@ public class BaseDrawerActivity extends FragmentActivity implements View.OnClick
         } else if (i == R.id.nav_emi_layout) {
             try {
                 toggleDrawer();
-               /* fragment = new EmicalcFragment();
-
-                openFragment(fragment, false);*/
                 startActivity(new Intent(getApplicationContext(), EmicalcFragment.class));
 
             } catch (Exception e) {
@@ -1726,6 +1728,23 @@ public class BaseDrawerActivity extends FragmentActivity implements View.OnClick
         customViewParams.setTextViewCustomParams(navLogoutText, new int[]{0, 30, 0, 30}, new int[]{0, 0, 0, 0}, 65, customTypeFace.gillSans, 0);
         navMenuLayout.setOnClickListener(this);
         closeDrawer.setOnClickListener(this);
+    }
+
+
+    public void request() {
+        try {
+            if (NetConnections.isConnected(this)) {
+                String current_date = new SimpleDateFormat("dd-MMM-yy").format(new Date());
+                if ((!PreferenceUtil.get_Versiondate(this).equalsIgnoreCase(current_date.toString()))) {
+                    {
+                        new check_version().execute(URLConstants.CHECK_VERSION);
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            finish();
+        }
     }
 }
 

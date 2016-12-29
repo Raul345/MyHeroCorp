@@ -50,10 +50,10 @@ public class NewsFragment extends Fragment {
         customViewParams.setMarginAndPadding(topLayout, new int[]{80, 30, 80, 0}, new int[]{0, 0, 0, 0}, topLayout.getParent());
 
         Button buttonHeader = (Button) rootView.findViewById(R.id.buttonHeader);
-        customViewParams.setButtonCustomParams(buttonHeader, new int[]{0, 10, 0, 10}, new int[]{50, 0, 0, 0}, 90, 400, 40, customTypeFace.gillSansItalic, 0);
+        customViewParams.setButtonCustomParams(buttonHeader, new int[]{0, 10, 0, 10}, new int[]{120, 0, 0, 0}, 90, 400, 40, customTypeFace.gillSansItalic, 0);
 
         LinearLayout detailLayout = (LinearLayout) rootView.findViewById(R.id.detail_layout);
-        customViewParams.setMarginAndPadding(detailLayout, new int[]{100, 50, 100, 50}, new int[]{40, 0, 0, 40}, detailLayout.getParent());
+        customViewParams.setMarginAndPadding(detailLayout, new int[]{90, 30, 90, 30}, new int[]{40, 0, 0, 40}, detailLayout.getParent());
 
         menu.setOnClickListener(new View.OnClickListener() {
             @Override

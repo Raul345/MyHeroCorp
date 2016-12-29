@@ -97,6 +97,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         public static final String SUB_REASON = "sub_reason";
         public static final String EXIST_MAKE = "existmake";
         public static final String EXIST_MODEL = "existmodel";
+        public static final String REMARKS = "reason";
         public static final String USER_ID = "user_id";
         public static final String DMS_ENQUIRYID = "dms_enquiryid";
         public static final String SYNC_STATUS = "sync_status";
@@ -267,7 +268,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(Cols_model.MAKE_ID, model.getMakeid());
         values.put(Cols_model.MODEL_NAME, model.getModelname());
-
         // Inserting Row
         db.insert(TABLE_MODEL, null, values);
         db.close();
@@ -304,34 +304,73 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     public void add_close_followup(Close_followup followup) {
+        List<Close_followup> all_records = getCloseFollowup();
+        int flag = 0;
+        for (Close_followup record : all_records) {
+            if (record.getDms_enquiryid().equalsIgnoreCase(followup.getDms_enquiryid()))
+                flag = 1;
+        }
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put(Cols_closefollowup.REASON, followup.getReason());
-        values.put(Cols_closefollowup.SUB_REASON, followup.getSubreason());
-        values.put(Cols_closefollowup.EXIST_MAKE, followup.getExistmake());
-        values.put(Cols_closefollowup.EXIST_MODEL, followup.getExistmodel());
-        values.put(Cols_closefollowup.USER_ID, followup.getUser_id());
-        values.put(Cols_closefollowup.DMS_ENQUIRYID, followup.getDms_enquiryid());
-        values.put(Cols_closefollowup.SYNC_STATUS, followup.getSync_status());
+        if (flag == 0) {
+            values.put(Cols_closefollowup.REASON, followup.getReason());
+            values.put(Cols_closefollowup.SUB_REASON, followup.getSubreason());
+            values.put(Cols_closefollowup.EXIST_MAKE, followup.getExistmake());
+            values.put(Cols_closefollowup.EXIST_MODEL, followup.getExistmodel());
+            values.put(Cols_closefollowup.REMARKS, followup.getRemarks());
+            values.put(Cols_closefollowup.USER_ID, followup.getUser_id());
+            values.put(Cols_closefollowup.DMS_ENQUIRYID, followup.getDms_enquiryid());
+            values.put(Cols_closefollowup.SYNC_STATUS, followup.getSync_status());
 
-        // Inserting Row
-        db.insert(TABLE_CLOSEFOLLOWUP, null, values);
+            // Inserting Row
+            db.insert(TABLE_CLOSEFOLLOWUP, null, values);
+        } else {
+            values.put(Cols_closefollowup.REASON, followup.getReason());
+            values.put(Cols_closefollowup.SUB_REASON, followup.getSubreason());
+            values.put(Cols_closefollowup.EXIST_MAKE, followup.getExistmake());
+            values.put(Cols_closefollowup.EXIST_MODEL, followup.getExistmodel());
+            values.put(Cols_closefollowup.REMARKS, followup.getRemarks());
+            values.put(Cols_closefollowup.USER_ID, followup.getUser_id());
+            values.put(Cols_closefollowup.SYNC_STATUS, followup.getSync_status());
+
+            db.update(TABLE_CLOSEFOLLOWUP, values, Cols_closefollowup.DMS_ENQUIRYID + " = ?",
+                    new String[]{String.valueOf(followup.getDms_enquiryid())});
+        }
         db.close();
+
     }
 
     public void add_next_followup(Next_Followup followup) {
+        List<Next_Followup> all_records = getNextFollowup();
+        int flag = 0;
+        for (Next_Followup record : all_records) {
+            if (record.getDms_enquiryid().equalsIgnoreCase(followup.getDms_enquiryid()))
+                flag = 1;
+        }
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put(Cols_nextfollowup.DATE, followup.getDate());
-        values.put(Cols_nextfollowup.REMARKS, followup.getRemarks());
-        values.put(Cols_nextfollowup.FOLLOW_DATE, followup.getFollowdate());
-        values.put(Cols_nextfollowup.USER_ID, followup.getUser_id());
-        values.put(Cols_nextfollowup.DMS_ENQUIRYID, followup.getDms_enquiryid());
-        values.put(Cols_nextfollowup.SYNC_STATUS, followup.getSync_status());
 
-        // Inserting Row
-        db.insert(TABLE_CLOSEFOLLOWUP, null, values);
+        if (flag == 0) {
+            values.put(Cols_nextfollowup.DATE, followup.getDate());
+            values.put(Cols_nextfollowup.REMARKS, followup.getRemarks());
+            values.put(Cols_nextfollowup.FOLLOW_DATE, followup.getFollowdate());
+            values.put(Cols_nextfollowup.USER_ID, followup.getUser_id());
+            values.put(Cols_nextfollowup.DMS_ENQUIRYID, followup.getDms_enquiryid());
+            values.put(Cols_nextfollowup.SYNC_STATUS, followup.getSync_status());
+            // Inserting Row
+            db.insert(TABLE_CLOSEFOLLOWUP, null, values);
+        } else {
+            values.put(Cols_nextfollowup.DATE, followup.getDate());
+            values.put(Cols_nextfollowup.REMARKS, followup.getRemarks());
+            values.put(Cols_nextfollowup.FOLLOW_DATE, followup.getFollowdate());
+            values.put(Cols_nextfollowup.USER_ID, followup.getUser_id());
+            values.put(Cols_nextfollowup.SYNC_STATUS, followup.getSync_status());
+            // Inserting Row
+            db.update(TABLE_NEXTFOLLOWUP, values, Cols_nextfollowup.DMS_ENQUIRYID + " = ?",
+                    new String[]{String.valueOf(followup.getDms_enquiryid())});
+        }
         db.close();
+
     }
 
     public void add_state(State state) {
@@ -370,7 +409,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
     }
 
-    public void update_contactfollowup(String followup_status, String followupdate, String followupcomment, String enquiryid) {
+    public void update_contactfollowup(String followup_status, String followupdate, String
+            followupcomment, String enquiryid) {
         try {
             SQLiteDatabase db = this.getWritableDatabase();
             ContentValues values = new ContentValues();
@@ -456,7 +496,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         if (db != null && db.isOpen())
             db.close();
     }
-
 
     public void clearfollowup_table() {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -599,7 +638,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return states;
     }
 
-    public void update_followup(String followup_status, String followupdate, String followupcomment, String enquiryid) {
+    public void update_followup(String followup_status, String followupdate, String
+            followupcomment, String enquiryid) {
         try {
             SQLiteDatabase db = this.getWritableDatabase();
             ContentValues values = new ContentValues();
@@ -648,6 +688,73 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.update(TABLE_FOLLOWUP, values, Cols_followup.ENQUIRY_ID + " = ?",
                 new String[]{String.valueOf(followup.getEnquiry_id())});
         // Inserting Row
+        db.close();
+    }
+
+
+    public List<Close_followup> getCloseFollowup() {
+        List<Close_followup> followups = new ArrayList<Close_followup>();
+        String selectQuery = "SELECT * FROM " + TABLE_CLOSEFOLLOWUP;
+
+        Log.e(LOG, selectQuery);
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c = db.rawQuery(selectQuery, null);
+
+        // looping through all rows and adding to list
+        if (c.moveToFirst()) {
+            do {
+                Close_followup t = new Close_followup();
+                t.setReason(c.getString((c.getColumnIndex(Cols_closefollowup.REASON))));
+                t.setSubreason(c.getString((c.getColumnIndex(Cols_closefollowup.SUB_REASON))));
+                t.setExistmake(c.getString((c.getColumnIndex(Cols_closefollowup.EXIST_MAKE))));
+                t.setExistmodel(c.getString((c.getColumnIndex(Cols_closefollowup.EXIST_MODEL))));
+                t.setRemarks(c.getString((c.getColumnIndex(Cols_closefollowup.REMARKS))));
+                t.setUser_id(c.getString((c.getColumnIndex(Cols_closefollowup.USER_ID))));
+                t.setDms_enquiryid(c.getString((c.getColumnIndex(Cols_closefollowup.DMS_ENQUIRYID))));
+                followups.add(t);
+            } while (c.moveToNext());
+        }
+        closeDB();
+        return followups;
+    }
+
+    public List<Next_Followup> getNextFollowup() {
+        List<Next_Followup> followups = new ArrayList<Next_Followup>();
+        String selectQuery = "SELECT * FROM " + TABLE_NEXTFOLLOWUP;
+
+        Log.e(LOG, selectQuery);
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c = db.rawQuery(selectQuery, null);
+
+        // looping through all rows and adding to list
+        if (c.moveToFirst()) {
+            do {
+                Next_Followup t = new Next_Followup();
+                t.setRemarks(c.getString((c.getColumnIndex(Cols_nextfollowup.REMARKS))));
+                t.setDate(c.getString((c.getColumnIndex(Cols_nextfollowup.DATE))));
+                t.setFollowdate(c.getString((c.getColumnIndex(Cols_nextfollowup.FOLLOW_DATE))));
+                t.setUser_id(c.getString((c.getColumnIndex(Cols_nextfollowup.USER_ID))));
+                t.setDms_enquiryid(c.getString((c.getColumnIndex(Cols_nextfollowup.DMS_ENQUIRYID))));
+                followups.add(t);
+            } while (c.moveToNext());
+        }
+        closeDB();
+        return followups;
+    }
+
+    public void delete_closefollowup(String enquiryid) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(TABLE_CLOSEFOLLOWUP, Cols_closefollowup.DMS_ENQUIRYID + " = ?",
+                new String[]{String.valueOf(enquiryid)});
+        db.close();
+    }
+
+    public void delete_nextfollowup(String enquiryid) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(TABLE_NEXTFOLLOWUP, Cols_nextfollowup.DMS_ENQUIRYID + " = ?",
+                new String[]{String.valueOf(enquiryid)});
         db.close();
     }
 }

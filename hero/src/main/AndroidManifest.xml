@@ -46,8 +46,8 @@
             android:windowSoftInputMode="adjustResize"></activity>
         <activity
             android:name=".ui.EMI.EmicalcFragment"
-            android:screenOrientation="landscape"
-            android:configChanges="orientation|screenSize|keyboardHidden"/>
+            android:configChanges="orientation|screenSize|keyboardHidden"
+            android:screenOrientation="landscape" />
 
         <provider
             android:name=".infra.db.AppContentProvider"
@@ -59,12 +59,10 @@
             android:enabled="true"
             android:exported="false" />
 
-        <!--
-             <service
-             android:name="com.herocorp.ui.activities.DSEapp.dbSyncservice"
-             android:enabled="true"
-             android:exported="false" />
-        -->
+        <service
+            android:name="com.herocorp.ui.activities.DSEapp.DbSyncservice"
+            android:exported="false"
+            android:enabled="true"/>
         <!--
            <service android:name=".ui.FCMservice.FCMmessageservice">
                <intent-filter>

@@ -344,6 +344,7 @@ public class PendingFollowupFragment extends Fragment implements View.OnClickLis
 
         } catch (Exception e) {
             swipe_refresh_followup.setRefreshing(false);
+            e.printStackTrace();
             Toast.makeText(getContext(), "Server Error !!", Toast.LENGTH_SHORT).show();
 
         }

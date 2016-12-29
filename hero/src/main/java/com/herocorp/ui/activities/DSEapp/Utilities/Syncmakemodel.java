@@ -32,7 +32,7 @@ import java.util.Date;
 public class Syncmakemodel extends AsyncTask<Void, Void, String> {
     DatabaseHelper db;
     NetworkConnect networkConnect;
-    //   final ProgressDialog progressDialog;
+    final ProgressDialog progressDialog;
 
     String result;
     private SharedPreferences sharedPreferences;
@@ -40,8 +40,8 @@ public class Syncmakemodel extends AsyncTask<Void, Void, String> {
 
     public Syncmakemodel(Context context) {
         this.context = context;
-       // progressDialog = ProgressDialog.show(context, null, null);
-      //  progressDialog.setContentView(R.layout.progresslayout);
+        progressDialog = ProgressDialog.show(context, null, null);
+        progressDialog.setContentView(R.layout.progresslayout);
     }
 
     @Override
@@ -96,7 +96,7 @@ public class Syncmakemodel extends AsyncTask<Void, Void, String> {
             PreferenceUtil.set_MakeSyncdate(context, new SimpleDateFormat("dd-MMM-yy").format(new Date()).toString());
 
             Log.e("make_sync_close", new SimpleDateFormat("dd-MMM-yy").format(new Date()).toString());
-            // progressDialog.dismiss();
+            progressDialog.dismiss();
 
         } catch (JSONException e) {
             e.printStackTrace();

@@ -3,6 +3,7 @@ package com.herocorp.ui.activities.DSEapp.Fragment.Followup;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
@@ -25,6 +26,7 @@ import com.herocorp.infra.utils.NetConnections;
 import com.herocorp.ui.activities.BaseDrawerActivity;
 import com.herocorp.ui.activities.DSEapp.ConnectService.NetworkConnect;
 import com.herocorp.ui.activities.DSEapp.ConnectService.NetworkConnect1;
+import com.herocorp.ui.activities.DSEapp.Fragment.Alert.AlertDialogFragment;
 import com.herocorp.ui.activities.DSEapp.db.DatabaseHelper;
 import com.herocorp.ui.activities.DSEapp.models.Bike_model;
 import com.herocorp.ui.activities.DSEapp.models.Bikemake;
@@ -169,6 +171,8 @@ public class CloseFollowupFragment extends Fragment implements View.OnClickListe
                     arr_subreason.add("--select--");
                     ArrayAdapter<String> at2 = new ArrayAdapter<String>(getContext(), R.layout.spinner_textview1, arr_subreason);
                     spin_subreason.setAdapter(at2);
+                    spin_make.setAdapter(at2);
+                    spin_model.setAdapter(at2);
                     sub_reason = "--select--";
                 } else if (main_reason.equals("Others")) {
                     arr_subreason.clear();
@@ -178,7 +182,7 @@ public class CloseFollowupFragment extends Fragment implements View.OnClickListe
                     ArrayAdapter<String> at2 = new ArrayAdapter<String>(getContext(), R.layout.spinner_textview1, arr_subreason);
                     spin_subreason.setAdapter(at2);
                     sub_reason = others[0];
-
+                    fetch_records();
                 } else if (main_reason.equals("Purchased From Competition")) {
                     arr_subreason.clear();
                     for (int i = 0; i < competiton.length; i++) {
@@ -187,6 +191,7 @@ public class CloseFollowupFragment extends Fragment implements View.OnClickListe
                     ArrayAdapter<String> at4 = new ArrayAdapter<String>(getContext(), R.layout.spinner_textview1, arr_subreason);
                     spin_subreason.setAdapter(at4);
                     sub_reason = competiton[0];
+                    fetch_records();
                 } else if (main_reason.equals("Purchased From CoDealer")) {
                     arr_subreason.clear();
                     for (int i = 0; i < codealer.length; i++) {
@@ -195,13 +200,25 @@ public class CloseFollowupFragment extends Fragment implements View.OnClickListe
                     ArrayAdapter<String> at3 = new ArrayAdapter<String>(getContext(), R.layout.spinner_textview1, arr_subreason);
                     spin_subreason.setAdapter(at3);
                     sub_reason = codealer[0];
-
-                } else {
+                    fetch_records();
+                } else if (main_reason.equals("Purchased from Own Dealership")) {
                     arr_subreason.clear();
                     arr_subreason.add("N.A.");
                     ArrayAdapter<String> at1 = new ArrayAdapter<String>(getContext(), R.layout.spinner_textview1, arr_subreason);
                     spin_subreason.setAdapter(at1);
                     sub_reason = "";
+                    fetch_records();
+                } else {
+                    arr_subreason.clear();
+                    arr_subreason.add("N.A.");
+                    ArrayAdapter<String> at1 = new ArrayAdapter<String>(getContext(), R.layout.spinner_textview1, arr_subreason);
+                    spin_subreason.setAdapter(at1);
+                    spin_make.setAdapter(at1);
+                    spin_model.setAdapter(at1);
+                    sub_reason = "";
+                    make = "";
+                    model = "";
+
 
                 }
 
@@ -241,6 +258,8 @@ public class CloseFollowupFragment extends Fragment implements View.OnClickListe
                     arr_modellist = bikemodel.getModelname(bikemake.getId());
                     ArrayAdapter<String> at2 = new ArrayAdapter<String>(getContext(), R.layout.spinner_textview1, arr_modellist);
                     spin_model.setAdapter(at2);
+                } else if (position == 0 && make == "N.A.") {
+                    make = "";
                 } else {
                     arr_modellist.clear();
                     arr_modellist.add("--select--");
@@ -260,6 +279,7 @@ public class CloseFollowupFragment extends Fragment implements View.OnClickListe
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 model = parent.getItemAtPosition(position).toString();
+
             }
 
             @Override
@@ -289,17 +309,15 @@ public class CloseFollowupFragment extends Fragment implements View.OnClickListe
             String remarks = remark.getText().toString();
             ProgressDialog progress = new ProgressDialog(getContext());
 
-            /*int check = 1;
-            if (main_reason.equalsIgnoreCase("Dropped the Idea")) {
-                sub_reason = "N.A";
-                make = "N.A";
-                model = "N.A";
-                check = 1;
-            }*/
 
             if (main_reason.equals("--select--") || sub_reason.equals("--select--") || make.equals("--select--") || model.equals("--select--")) {
                 Toast.makeText(getContext(), "Please fill all the details !!", Toast.LENGTH_SHORT).show();
             } else {
+                if (main_reason.equalsIgnoreCase("Dropped the Idea")) {
+                    sub_reason = "N.A.";
+                    model = "N.A.";
+                    make = "N.A";
+                }
                 sync_status = "1";
                 db = new DatabaseHelper(getContext());
 
@@ -311,9 +329,7 @@ public class CloseFollowupFragment extends Fragment implements View.OnClickListe
                 if (NetConnections.isConnected(getContext())) {
                     String newurlparams = null;
                     try {
-                       /* String data = "{\"reason\":\"" + main_reason + "\",\"sub_reason\":\"" + sub_reason + "\",\"existMake\":\"" + make + "\",\"existModel\":\"" + model + "\",\n" +
-                                "\", \"user_id\":\"" + user + "\",\"dms_enquiry_id\":\"" + enquiryid + "\"}";
-                       */
+
                         JSONObject jsonparams = new JSONObject();
                         jsonparams.put("reason", main_reason);
                         jsonparams.put("sub_reason", sub_reason);
@@ -330,41 +346,21 @@ public class CloseFollowupFragment extends Fragment implements View.OnClickListe
                         e.printStackTrace();
                     } catch (Exception e) {
                     }
-                } else
-                    db.add_close_followup(new Close_followup(main_reason, sub_reason, make, model, user, enquiryid, sync_status));
+                } else {
+                    db.add_close_followup(new Close_followup(main_reason, sub_reason, make, model, remarks, user, enquiryid, sync_status));
+                    Bundle bundle = new Bundle();
+                    bundle.putString("msg", "Followup has been successfully submitted.");
+                    bundle.putInt("flag", 1);
+                    FragmentManager fm = getActivity().getSupportFragmentManager();
+                    AlertDialogFragment dialogFragment = new AlertDialogFragment();
+                    dialogFragment.setArguments(bundle);
+                    dialogFragment.setCancelable(false);
+                    dialogFragment.show(fm, "Sample Fragment");
+                }
             }
         }
     }
 
-    /*  public void jsonparse(String result) {
-          try {
-              JSONObject jsono = new JSONObject(result);
-              JSONArray jarray = jsono.getJSONArray("make");
-              arr_makelist.add(new Bikemake("", "--select--"));
-
-              for (int i = 0; i < jarray.length(); i++) {
-                  JSONObject object = jarray.getJSONObject(i);
-                  arr_makelist.add(new Bikemake(object.getString("id"), object.getString("make_name")));
-              }
-
-              ArrayAdapter<Bikemake> at1 = new ArrayAdapter<Bikemake>(getContext(), R.layout.spinner_textview1, arr_makelist);
-              spin_make.setAdapter(at1);
-
-              new Bikemodel("", "--select--");
-
-              JSONArray jarray1 = jsono.getJSONArray("model");
-              for (int i = 0; i < jarray1.length(); i++) {
-                  JSONObject object = jarray1.getJSONObject(i);
-                  new Bikemodel(object.getString("make_id"), object.getString("model_name"));
-              }
-          } catch (JSONException e) {
-              e.printStackTrace();
-          } catch (Exception e) {
-              System.out.println(Toast.makeText(getContext(), "Check your Connection !!", Toast.LENGTH_SHORT));
-
-          }
-      }
-  */
     public void fetch_records() {
         try {
             db = new DatabaseHelper(getContext());

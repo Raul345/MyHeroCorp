@@ -76,17 +76,21 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
             savedInstanceState) {
-
         rootView = inflater.inflate(R.layout.dse_home_fragment, container, false);
-        ((BaseDrawerActivity)getActivity()).closeDrawer();
         getActivity().setRequestedOrientation(
                 ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
+        ((BaseDrawerActivity) getActivity()).closeDrawer();
+
         setRetainInstance(true);
         try {
             initView(rootView);
         } catch (ParseException e) {
             e.printStackTrace();
         }
+        current_date = new SimpleDateFormat("dd-MMM-yy").format(new Date());
+        if (!(sync_date.equalsIgnoreCase(current_date.toString()) && NetConnections.isConnected(getContext())))
+            sync_data();
 
         return rootView;
     }
@@ -157,10 +161,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         registration_et = (EditText) rootView.findViewById(R.id.registration_edittext);
 
         fetch_pref();
-        current_date = new SimpleDateFormat("dd-MMM-yy").format(new Date());
-        if (!(sync_date.equalsIgnoreCase(current_date.toString()) && NetConnections.isConnected(getContext())))
-            sync_data();
-            //new Syncmakemodel(getContext()).execute();
+           // new Syncmakemodel(getContext()).execute();
 
         menu.setOnClickListener(this);
         pendingorder.setOnClickListener(this);
@@ -243,7 +244,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                     } else
                         Toast.makeText(getActivity(), "Check your Connection !!", Toast.LENGTH_SHORT).show();
                 }
-              } catch (Exception e) {
+            } catch (Exception e) {
             }
         }
     }
@@ -335,6 +336,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
             Log.e("make_sync_close", current_date.toString());
             //   progressBar.setVisibility(View.INVISIBLE);
+            progressDialog.dismiss();
 
         } catch (JSONException e) {
             e.printStackTrace();

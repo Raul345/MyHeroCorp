@@ -4,9 +4,6 @@ import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.ClipDrawable;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
 import android.os.Bundle;
@@ -15,13 +12,13 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
 import android.text.method.ScrollingMovementMethod;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -46,6 +43,13 @@ import com.herocorp.ui.utility.Params;
 
 import java.util.ArrayList;
 
+import uk.co.senab.photoview.PhotoViewAttacher;
+
+/**
+ * Created by rsawh on 27-Dec-16.
+ */
+
+
 public class GalleryFragment extends Fragment implements View.OnClickListener {
 
     int productId;
@@ -54,6 +58,9 @@ public class GalleryFragment extends Fragment implements View.OnClickListener {
     private ImageView bikeImage, arrowLeft, arrowRight;
     private TextView colorText, picturesText, threeSixtyText;
     private TextView colorNameText;
+
+    private RelativeLayout layout360, seekbar_container;
+    private ImageView bike_image360, close_btn, close_btnn;
 
     private int currentIndex;
 
@@ -64,6 +71,7 @@ public class GalleryFragment extends Fragment implements View.OnClickListener {
     private ImageView featureIndividualImage;
     private View rootView;
     private ArrayList<ProductRotationModel> images360;
+    PhotoViewAttacher mAttacher;
 
     public GalleryFragment() {
     }
@@ -96,7 +104,7 @@ public class GalleryFragment extends Fragment implements View.OnClickListener {
         return rootView;
     }
 
-    private void initView(View rootView) {
+    private void initView(final View rootView) {
 
         try {
 
@@ -172,6 +180,27 @@ public class GalleryFragment extends Fragment implements View.OnClickListener {
             productName.setText(productList.get(0).getProductName());
             productTag.setText(productList.get(0).getProductTag());
             productDetail.setText(productList.get(0).getProductDetails());
+
+            layout360 = (RelativeLayout) rootView.findViewById(R.id.layout360);
+            bike_image360 = (ImageView) rootView.findViewById(R.id.bike_image360);
+            close_btn = (ImageView) rootView.findViewById(R.id.close_btn);
+            close_btnn = (ImageView) rootView.findViewById(R.id.close_btnn);
+            seekbar_container = (RelativeLayout) rootView.findViewById(R.id.seekbar_container);
+            close_btn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    colorText.setTextColor(getResources().getColor(R.color.color_red));
+                    picturesText.setTextColor(Color.WHITE);
+                    threeSixtyText.setTextColor(Color.WHITE);
+                    layout360.setVisibility(View.GONE);
+                }
+            });
+            close_btnn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    rootView.findViewById(R.id.feature_individual_image_container).setVisibility(View.GONE);
+                }
+            });
 
             menu.setOnClickListener(this);
             galleryButton.setOnClickListener(this);
@@ -282,17 +311,22 @@ public class GalleryFragment extends Fragment implements View.OnClickListener {
                 currentIndex = 0;
 
             } else if (view.getId() == R.id.three_sixty_text) {
-
                 colorText.setTextColor(Color.WHITE);
+                picturesText.setTextColor(Color.WHITE);
+                threeSixtyText.setTextColor(getResources().getColor(R.color.color_red));
+                layout360.setVisibility(View.VISIBLE);
+                setThreeSixty();
+
+              /*  colorText.setTextColor(Color.WHITE);
                 picturesText.setTextColor(Color.WHITE);
                 threeSixtyText.setTextColor(getResources().getColor(R.color.color_red));
                 arrowLeft.setVisibility(View.GONE);
                 arrowRight.setVisibility(View.GONE);
                 colorImageContainer.removeAllViews();
-                colorNameText.setVisibility(View.INVISIBLE);
-                colorImageContainer.setVisibility(View.VISIBLE);
-                setThreeSixty();
-                bikeImage.setClickable(false);
+                colorNameText.setVisibility(View.INVISIBLE);*/
+
+                // colorImageContainer.setVisibility(View.VISIBLE);
+
 
             } else if (view.getId() == R.id.left_arrow) {
                 if (currentIndex > 0) {
@@ -309,15 +343,17 @@ public class GalleryFragment extends Fragment implements View.OnClickListener {
                     colorNameText.setText(getColorName(galleryList.get(currentIndex).getGalleryImgText()));
                 }
 
-            } else if (view.getId() == R.id.feature_individual_image_container) {
+            }/* else if (view.getId() == R.id.feature_individual_image_container) {
 
                 rootView.findViewById(R.id.feature_individual_image_container).setVisibility(View.GONE);
 
-            } else if (view.getId() == R.id.bike_image) {
+            } */ else if (view.getId() == R.id.bike_image) {
 
                 try {
                     featureIndividualImage.setImageBitmap(((BitmapDrawable) bikeImage.getDrawable()).getBitmap());
                     rootView.findViewById(R.id.feature_individual_image_container).setVisibility(View.VISIBLE);
+                    mAttacher = new PhotoViewAttacher(featureIndividualImage);
+                    mAttacher.update();
                     //Toast.makeText(getActivity(), featureList.get(view.getId()).getFeatureImgText(), Toast.LENGTH_SHORT).show();
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -329,7 +365,6 @@ public class GalleryFragment extends Fragment implements View.OnClickListener {
                 bikeImage.setImageBitmap(ImageHandler.getInstance(getActivity()).loadImageFromStorage(colorList.get(view.getId()).getImageName()));
 
             }
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -355,7 +390,9 @@ public class GalleryFragment extends Fragment implements View.OnClickListener {
         Resources res = getActivity().getApplicationContext().getResources();
         int id = res.getIdentifier(model.getImageName().replace(".png", ""), "drawable", getActivity().getPackageName());
 
-        bikeImage.setImageDrawable(res.getDrawable(id));
+        bike_image360.setImageDrawable(res.getDrawable(id));
+        mAttacher = new PhotoViewAttacher(featureIndividualImage);
+        mAttacher.update();
 
         SeekBar seekBar = new SeekBar(getActivity());
         seekBar.setMax(23);
@@ -364,20 +401,20 @@ public class GalleryFragment extends Fragment implements View.OnClickListener {
         seekBar.setProgressDrawable(getResources().getDrawable(R.drawable.seek_bar_style));
 
         ShapeDrawable thumb = new ShapeDrawable(new OvalShape());
-        thumb.setIntrinsicHeight(new Params(getResources().getDisplayMetrics()).getSquareViewSize(50));
-        thumb.setIntrinsicWidth(new Params(getResources().getDisplayMetrics()).getSquareViewSize(50));
+        thumb.setIntrinsicHeight(new Params(getResources().getDisplayMetrics()).getSquareViewSize(60));
+        thumb.setIntrinsicWidth(new Params(getResources().getDisplayMetrics()).getSquareViewSize(60));
         seekBar.setThumb(thumb);
 
-        colorImageContainer.addView(seekBar);
-        customViewParams.setHeightAndWidth(seekBar, 80, 800);
-        customViewParams.setMarginAndPadding(seekBar, new int[]{0, 10, 0, 10}, new int[]{30, 25, 25, 25}, seekBar.getParent());
+        seekbar_container.removeAllViews();
+        seekbar_container.addView(seekBar);
+        customViewParams.setHeightAndWidth(seekBar, 70, 1000);
+        customViewParams.setMarginAndPadding(seekBar, new int[]{0, 10, 0, 10}, new int[]{30, 10, 30, 25}, seekBar.getParent());
 
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 
             public void onStopTrackingTouch(SeekBar seekBar) {
                 // TODO Auto-generated method stub
                 System.out.println(".....111.......");
-
             }
 
             public void onStartTrackingTouch(SeekBar seekBar) {
@@ -390,8 +427,8 @@ public class GalleryFragment extends Fragment implements View.OnClickListener {
                 ProductRotationModel model = images360.get(progress);
                 Resources res = getActivity().getApplicationContext().getResources();
                 int id = res.getIdentifier(model.getImageName().replace(".png", ""), "drawable", getActivity().getPackageName());
-                bikeImage.setImageDrawable(res.getDrawable(id));
-            }
+                bike_image360.setImageDrawable(res.getDrawable(id));
+                           }
         });
     }
 }

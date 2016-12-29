@@ -18,9 +18,10 @@ public class PreferenceUtil {
     public static final String DISTRICT_NAME = "district_name";
     public static final String TEHSIL_NAME = "tehsil_name";
     public static final String CITY_NAME = "city_name";
-
     public static final String SYNC_DATE = "sync_date";
     public static final String MAKE_SYNC_DATE = "make_sync_date";
+    public static final String VERSION_CHECK = "version_date";
+    public static final String SYNC_YN= "sync_yn";
 
     private SharedPreferences sharedPref;
 
@@ -43,13 +44,29 @@ public class PreferenceUtil {
         edit.commit();
     }
 
+    public static void set_Syncyn(Context context, Boolean sync_yn) {
+        SharedPreferences.Editor edit = context.getSharedPreferences("hero", context.MODE_PRIVATE).edit();
+        edit.putBoolean(SYNC_YN, sync_yn);
+        edit.commit();
+    }
+    public static void set_Versiondate(Context context, String version_date) {
+        SharedPreferences.Editor edit = context.getSharedPreferences("hero", context.MODE_PRIVATE).edit();
+        edit.putString(VERSION_CHECK, version_date);
+        edit.commit();
+    }
+
+
     public static void set_MakeSyncdate(Context context, String sync_date) {
         SharedPreferences.Editor edit = context.getSharedPreferences("hero", context.MODE_PRIVATE).edit();
         edit.putString(MAKE_SYNC_DATE, sync_date);
         edit.commit();
     }
 
-
+    public static Boolean get_Syncyn(Context context) {
+        SharedPreferences sharedPref = context.getSharedPreferences("hero", context.MODE_PRIVATE);
+        Boolean restoredText = sharedPref.getBoolean(SYNC_YN, false);
+        return restoredText;
+    }
     public static Boolean get_IsUserLogin(Context context) {
         SharedPreferences sharedPref = context.getSharedPreferences("hero", context.MODE_PRIVATE);
         Boolean restoredText = sharedPref.getBoolean(IS_USER_LOGIN, false);
@@ -103,6 +120,12 @@ public class PreferenceUtil {
     public static String get_MakeSyncdate(Context context) {
         SharedPreferences sharedPref = context.getSharedPreferences("hero", context.MODE_PRIVATE);
         String restoredText = sharedPref.getString(MAKE_SYNC_DATE, "");
+        return restoredText;
+    }
+
+    public static String get_Versiondate(Context context) {
+        SharedPreferences sharedPref = context.getSharedPreferences("hero", context.MODE_PRIVATE);
+        String restoredText = sharedPref.getString(VERSION_CHECK, "");
         return restoredText;
     }
 

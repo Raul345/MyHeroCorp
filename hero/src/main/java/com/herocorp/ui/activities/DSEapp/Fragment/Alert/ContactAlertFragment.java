@@ -20,7 +20,9 @@ import com.herocorp.ui.activities.DSEapp.Fragment.Enquiry.TestRideFeedbackFragme
 import com.herocorp.ui.activities.auth.SignInActivity;
 import com.herocorp.ui.utility.PreferenceUtil;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * Created by rsawh on 07-Oct-16.
@@ -75,6 +77,7 @@ public class ContactAlertFragment extends DialogFragment {
             button_ok.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    PreferenceUtil.set_Versiondate(getContext(),new SimpleDateFormat("dd-MMM-yy").format(new Date()));
                     Intent resultIntent = new Intent(Intent.ACTION_VIEW);
                     resultIntent.setData(Uri.parse(path));
                     startActivity(resultIntent);
@@ -84,6 +87,7 @@ public class ContactAlertFragment extends DialogFragment {
             button_cancel.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    PreferenceUtil.set_Versiondate(getContext(),new SimpleDateFormat("dd-MMM-yy").format(new Date()));
                     dismiss();
                 }
             });
