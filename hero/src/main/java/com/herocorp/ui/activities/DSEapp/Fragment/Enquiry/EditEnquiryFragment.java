@@ -251,6 +251,7 @@ public class EditEnquiryFragment extends Fragment implements View.OnClickListene
                     try {
                         jsonparams.put("user_id", user_id);
                         jsonparams.put("dealer_code", dealer_code);
+                        Log.e("campaign_request",jsonparams.toString());
                         send_request(URLConstants.GET_CAMPAIGN_DATA, jsonparams.toString(), 0);
                         updateList();
                         chk_campaignid.clear();
@@ -931,7 +932,7 @@ public class EditEnquiryFragment extends Fragment implements View.OnClickListene
                 super.onPostExecute(s);
                 userAdapter.clear();
                 userAdapter1.clear();
-                Log.e("campaign", s);
+                Log.e("campaign_response", s);
                 JSONObject jsono = new JSONObject(s);
                 JSONArray jarray = jsono.getJSONArray("campaign_data");
                 for (int i = 0; i < jarray.length(); i++) {
@@ -988,7 +989,8 @@ public class EditEnquiryFragment extends Fragment implements View.OnClickListene
                 e.printStackTrace();
             } catch (Exception e) {
                 progressDialog.dismiss();
-                Toast.makeText(getContext(), "Check your Connection !!" + e, Toast.LENGTH_SHORT).show();
+                e.printStackTrace();
+               // Toast.makeText(getContext(), "Check your Connection !!" + e, Toast.LENGTH_SHORT).show();
             }
         }
     }

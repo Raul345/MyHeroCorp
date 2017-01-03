@@ -181,7 +181,6 @@ public class BaseDrawerActivity extends FragmentActivity implements View.OnClick
                         try {
                             sharedPreferences.edit().putBoolean(AppConstants.IS_USER_LOGGED_IN, true).commit();
                             sharedPreferences.edit().putString(AppConstants.VALIDITY_DATE, data.get(0).getAppValiditiDate()).commit();
-
                             showExternalStoragePermission();
 
                         } catch (Exception e) {
@@ -391,13 +390,12 @@ public class BaseDrawerActivity extends FragmentActivity implements View.OnClick
             openFragment(new ContactUsFragmrnt(), false);
         } else if (i == R.id.nav_news_layout) {
             toggleDrawer();
-            openFragment(new NewsFragment(), false);
+          //  openFragment(new NewsFragment(), false);
         } else if (i == R.id.nav_value_layout) {
-
             try {
                 toggleDrawer();
-                Intent intent = new Intent(getApplicationContext(), DbSyncservice.class);
-                startService(intent);
+               /* Intent intent = new Intent(getApplicationContext(), DbSyncservice.class);
+                startService(intent);*/
                 //Toast.makeText(this, "VAS App not installed!", Toast.LENGTH_SHORT).show();
                /* fragment = new VasWarrantyfragment();
                 openFragment(fragment, true);*/

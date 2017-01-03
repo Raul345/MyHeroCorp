@@ -208,6 +208,7 @@ public class AddenquiryFragment extends Fragment implements View.OnClickListener
                     try {
                         jsonparams.put("user_id", user_id);
                         jsonparams.put("dealer_code", dealer_code);
+                        Log.e("campaign_request",jsonparams.toString());
                         send_request(URLConstants.GET_CAMPAIGN_DATA, jsonparams.toString(), 0);
                         chk_campaignid.clear();
                     } catch (JSONException e) {
@@ -670,7 +671,7 @@ public class AddenquiryFragment extends Fragment implements View.OnClickListener
                 super.onPostExecute(s);
                 userAdapter.clear();
                 userAdapter1.clear();
-                Log.e("campaign", s);
+                Log.e("campaign_response", s);
                 JSONObject jsono = new JSONObject(s);
                 JSONArray jarray = jsono.getJSONArray("campaign_data");
                 for (int i = 0; i < jarray.length(); i++) {
@@ -727,7 +728,8 @@ public class AddenquiryFragment extends Fragment implements View.OnClickListener
                 e.printStackTrace();
             } catch (Exception e) {
                 progressDialog.dismiss();
-                Toast.makeText(getContext(), "Check your Connection !!" + e, Toast.LENGTH_SHORT).show();
+                e.printStackTrace();
+//                Toast.makeText(getContext(), "Check your Connection !!" + e, Toast.LENGTH_SHORT).show();
             }
         }
     }

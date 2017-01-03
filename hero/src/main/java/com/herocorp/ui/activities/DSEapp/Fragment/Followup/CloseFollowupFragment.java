@@ -145,7 +145,7 @@ public class CloseFollowupFragment extends Fragment implements View.OnClickListe
             if (bundle.containsKey("enq_flag"))
                 enq_flag = bundle.getInt("enq_flag");
 
-            fetch_records();
+            fetch_make();
             /*String newurlparams = "data=" + URLEncoder.encode(encryptuser, "UTF-8");
             NetworkConnect networkConnect = new NetworkConnect(URLConstants.BIKE_MAKE_MODEL, newurlparams);
             jsonparse(networkConnect.execute());*/
@@ -182,7 +182,7 @@ public class CloseFollowupFragment extends Fragment implements View.OnClickListe
                     ArrayAdapter<String> at2 = new ArrayAdapter<String>(getContext(), R.layout.spinner_textview1, arr_subreason);
                     spin_subreason.setAdapter(at2);
                     sub_reason = others[0];
-                    fetch_records();
+                    fetch_records(0);
                 } else if (main_reason.equals("Purchased From Competition")) {
                     arr_subreason.clear();
                     for (int i = 0; i < competiton.length; i++) {
@@ -191,7 +191,7 @@ public class CloseFollowupFragment extends Fragment implements View.OnClickListe
                     ArrayAdapter<String> at4 = new ArrayAdapter<String>(getContext(), R.layout.spinner_textview1, arr_subreason);
                     spin_subreason.setAdapter(at4);
                     sub_reason = competiton[0];
-                    fetch_records();
+                    fetch_records(1);
                 } else if (main_reason.equals("Purchased From CoDealer")) {
                     arr_subreason.clear();
                     for (int i = 0; i < codealer.length; i++) {
@@ -200,14 +200,14 @@ public class CloseFollowupFragment extends Fragment implements View.OnClickListe
                     ArrayAdapter<String> at3 = new ArrayAdapter<String>(getContext(), R.layout.spinner_textview1, arr_subreason);
                     spin_subreason.setAdapter(at3);
                     sub_reason = codealer[0];
-                    fetch_records();
+                    fetch_records(2);
                 } else if (main_reason.equals("Purchased from Own Dealership")) {
                     arr_subreason.clear();
                     arr_subreason.add("N.A.");
                     ArrayAdapter<String> at1 = new ArrayAdapter<String>(getContext(), R.layout.spinner_textview1, arr_subreason);
                     spin_subreason.setAdapter(at1);
                     sub_reason = "";
-                    fetch_records();
+                    fetch_records(0);
                 } else {
                     arr_subreason.clear();
                     arr_subreason.add("N.A.");
@@ -361,23 +361,40 @@ public class CloseFollowupFragment extends Fragment implements View.OnClickListe
         }
     }
 
-    public void fetch_records() {
+    public void fetch_records(int flag) {
         try {
             db = new DatabaseHelper(getContext());
+            arr_makelist.clear();
             arr_makelist.add(new Bikemake("", "--select--"));
             List<Bikemake> allrecords = db.getAllBikemakes();
             for (Bikemake record : allrecords) {
-                arr_makelist.add(new Bikemake(record.getId(), record.getMakename()));
+                if (flag == 1) {
+                    if (!(record.getMakename().equalsIgnoreCase("HERO MOTOCORP") || record.getMakename().equalsIgnoreCase("HMSI"))) {
+                        arr_makelist.add(new Bikemake(record.getId(), record.getMakename()));
+                    }
+                }
+                else if (flag == 2) {
+                    if (record.getMakename().equalsIgnoreCase("HERO MOTOCORP") || record.getMakename().equalsIgnoreCase("HMSI")) {
+                        arr_makelist.add(new Bikemake(record.getId(), record.getMakename()));
+                    }
+                }else
+                    arr_makelist.add(new Bikemake(record.getId(), record.getMakename()));
+
             }
             ArrayAdapter<Bikemake> at1 = new ArrayAdapter<Bikemake>(getContext(), R.layout.spinner_textview1, arr_makelist);
             spin_make.setAdapter(at1);
 
-            List<Bike_model> records = db.getAllBikemodels();
-            for (Bike_model record : records) {
-                new Bikemodel(record.getMakeid(), record.getModelname());
-            }
+
         } catch (Exception e) {
             Toast.makeText(getContext(), "Check your Connection !!", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void fetch_make() {
+        db = new DatabaseHelper(getContext());
+        List<Bike_model> records = db.getAllBikemodels();
+        for (Bike_model record : records) {
+            new Bikemodel(record.getMakeid(), record.getModelname());
         }
     }
 }

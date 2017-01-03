@@ -1,27 +1,39 @@
 package com.herocorp.ui.activities.products;
 
+import android.annotation.SuppressLint;
+import android.graphics.Matrix;
+import android.graphics.PointF;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.content.pm.ActivityInfo;
 import android.content.res.Resources;
 import android.graphics.Color;
+
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
+
 import android.text.TextUtils;
 import android.text.method.ScrollingMovementMethod;
+
+import android.util.FloatMath;
+import android.util.Log;
 import android.view.LayoutInflater;
+
+import android.view.MotionEvent;
+import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.herocorp.R;
 import com.herocorp.core.models.ProductColorModel;
@@ -45,13 +57,13 @@ import java.util.ArrayList;
 
 import uk.co.senab.photoview.PhotoViewAttacher;
 
+
 /**
  * Created by rsawh on 27-Dec-16.
  */
 
 
 public class GalleryFragment extends Fragment implements View.OnClickListener {
-
     int productId;
     private LinearLayout colorImageContainer;
     private CustomViewParams customViewParams;
@@ -71,7 +83,6 @@ public class GalleryFragment extends Fragment implements View.OnClickListener {
     private ImageView featureIndividualImage;
     private View rootView;
     private ArrayList<ProductRotationModel> images360;
-    PhotoViewAttacher mAttacher;
 
     public GalleryFragment() {
     }
@@ -164,13 +175,6 @@ public class GalleryFragment extends Fragment implements View.OnClickListener {
             productDetail.setLineSpacing((new Params(getResources().getDisplayMetrics()).getSquareViewSize(40)), 0);
             customViewParams.setTextViewCustomParams(productDetail, new int[]{100, 12, 100, 20}, new int[]{0, 0, 0, 0}, 30, customTypeFace.gillSans, 0);
 
-
-            /*TextView copyRightText1 = (TextView) rootView.findViewById(R.id.copy_right_text1);
-            customViewParams.setTextViewCustomParams(copyRightText1, new int[]{0, 10, 0, 5}, new int[]{0, 0, 0, 0}, 30, customTypeFace.gillSans, 0);
-            TextView copyRightText2 = (TextView) rootView.findViewById(R.id.copy_right_text2);
-            customViewParams.setTextViewCustomParams(copyRightText2, new int[]{0, 2, 0, 10}, new int[]{0, 0, 0, 0}, 30, customTypeFace.gillSans, 0);
-            copyRightText2.setCompoundDrawables(customViewParams.setDrawableParams(getResources().getDrawable(R.drawable.ic_contact), 30, 30), null, null, null);*/
-
             featureIndividualImage = (ImageView) rootView.findViewById(R.id.feature_individual_image);
             customViewParams.setImageViewCustomParams(featureIndividualImage, new int[]{0, 0, 0, 0}, new int[]{0, 0, 0, 0}, 800, 1200);
 
@@ -198,7 +202,7 @@ public class GalleryFragment extends Fragment implements View.OnClickListener {
             close_btnn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    rootView.findViewById(R.id.feature_individual_image_container).setVisibility(View.GONE);
+                    rootView.findViewById(R.id.feature_individual_image_container).setVisibility(View.INVISIBLE);
                 }
             });
 
@@ -348,13 +352,12 @@ public class GalleryFragment extends Fragment implements View.OnClickListener {
                 rootView.findViewById(R.id.feature_individual_image_container).setVisibility(View.GONE);
 
             } */ else if (view.getId() == R.id.bike_image) {
-
                 try {
-                    featureIndividualImage.setImageBitmap(((BitmapDrawable) bikeImage.getDrawable()).getBitmap());
                     rootView.findViewById(R.id.feature_individual_image_container).setVisibility(View.VISIBLE);
-                    mAttacher = new PhotoViewAttacher(featureIndividualImage);
-                    mAttacher.update();
-                    //Toast.makeText(getActivity(), featureList.get(view.getId()).getFeatureImgText(), Toast.LENGTH_SHORT).show();
+                    featureIndividualImage.setImageBitmap(((BitmapDrawable) bikeImage.getDrawable()).getBitmap());
+                 /* mAttacher = new PhotoViewAttacher();
+                    mAttacher.update();*/
+
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -391,8 +394,7 @@ public class GalleryFragment extends Fragment implements View.OnClickListener {
         int id = res.getIdentifier(model.getImageName().replace(".png", ""), "drawable", getActivity().getPackageName());
 
         bike_image360.setImageDrawable(res.getDrawable(id));
-        mAttacher = new PhotoViewAttacher(featureIndividualImage);
-        mAttacher.update();
+
 
         SeekBar seekBar = new SeekBar(getActivity());
         seekBar.setMax(23);
@@ -428,7 +430,7 @@ public class GalleryFragment extends Fragment implements View.OnClickListener {
                 Resources res = getActivity().getApplicationContext().getResources();
                 int id = res.getIdentifier(model.getImageName().replace(".png", ""), "drawable", getActivity().getPackageName());
                 bike_image360.setImageDrawable(res.getDrawable(id));
-                           }
+            }
         });
     }
 }

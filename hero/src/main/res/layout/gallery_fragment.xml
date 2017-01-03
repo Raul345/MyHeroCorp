@@ -231,7 +231,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#ffffff"
-        android:clickable="false"
+        android:clickable="true"
         android:visibility="gone">
 
         <RelativeLayout
@@ -260,7 +260,7 @@
         <ImageView
             android:id="@+id/feature_individual_image"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_centerInParent="true"
             android:src="@drawable/bike" />
 
@@ -275,14 +275,13 @@
 
     </RelativeLayout>
 
-
     <RelativeLayout
         android:id="@+id/layout360"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#ffffff"
-        android:orientation="vertical"
         android:clickable="true"
+        android:orientation="vertical"
         android:visibility="gone">
 
         <RelativeLayout
@@ -323,8 +322,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:gravity="center"
-            android:layout_margin="5dp"></RelativeLayout>
+            android:layout_margin="5dp"
+            android:gravity="center"></RelativeLayout>
 
     </RelativeLayout>
 </RelativeLayout>

@@ -249,6 +249,7 @@
                     android:padding="8dp"
                     android:singleLine="true"
                     android:textColor="#000000"
+                    android:textCursorDrawable="@drawable/cursor"
                     android:textSize="16dp" />
             </LinearLayout>
 
@@ -284,7 +285,9 @@
                     android:padding="8dp"
                     android:singleLine="true"
                     android:textColor="#000000"
-                    android:textSize="16dp" />
+                    android:textSize="16dp"
+                    android:textCursorDrawable="@drawable/cursor"
+                    />
             </LinearLayout>
 
             <LinearLayout
@@ -306,7 +309,8 @@
                     android:textSize="16dp" />
 
                <EditText
-                    android:id="@+id/pincode_edittext"
+                   android:textCursorDrawable="@drawable/cursor"
+                   android:id="@+id/pincode_edittext"
                     android:layout_width="0sp"
                     android:layout_height="match_parent"
                     android:layout_marginBottom="0.5dp"

@@ -53,6 +53,7 @@ public class URLConstants {
     public final static String SYNC_TEST_RIDE = " http://tab.hmcl.biz/dse_app_live/sync_test_ride.php";
     public final static String CHECK_VERSION = " http://tab.hmcl.biz/dse_app_live/check_version.php";
     public final static String FETCH_CONTACT = " http://tab.hmcl.biz/dse_app_live/fetch_contact.php";
+    public final static String FETCH_NEWS="";
 
     /*Static Block*/
     /* Which environment is currently active */

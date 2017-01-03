@@ -89,9 +89,9 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             e.printStackTrace();
         }
         current_date = new SimpleDateFormat("dd-MMM-yy").format(new Date());
-        if (!(sync_date.equalsIgnoreCase(current_date.toString()) && NetConnections.isConnected(getContext())))
+        /*if (!(sync_date.equalsIgnoreCase(current_date.toString()) && NetConnections.isConnected(getContext())))
             sync_data();
-
+*/
         return rootView;
     }
 
@@ -336,7 +336,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
             Log.e("make_sync_close", current_date.toString());
             //   progressBar.setVisibility(View.INVISIBLE);
-            progressDialog.dismiss();
+          //  progressDialog.dismiss();
 
         } catch (JSONException e) {
             e.printStackTrace();

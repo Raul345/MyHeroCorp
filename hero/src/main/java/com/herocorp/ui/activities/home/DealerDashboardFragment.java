@@ -3,8 +3,10 @@ package com.herocorp.ui.activities.home;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,16 +17,39 @@ import android.widget.Toast;
 
 import com.herocorp.R;
 import com.herocorp.core.constants.AppConstants;
+import com.herocorp.core.constants.URLConstants;
+import com.herocorp.infra.utils.NetConnections;
 import com.herocorp.ui.activities.BaseDrawerActivity;
+import com.herocorp.ui.activities.DSEapp.ConnectService.NetworkConnect;
 import com.herocorp.ui.activities.DSEapp.Fragment.Home.HomeFragment;
+import com.herocorp.ui.activities.DSEapp.db.DatabaseHelper;
+import com.herocorp.ui.activities.DSEapp.models.Bike_model;
+import com.herocorp.ui.activities.DSEapp.models.Bikemake;
 import com.herocorp.ui.activities.products.ProductDetailFragment;
 import com.herocorp.ui.utility.CustomTypeFace;
 import com.herocorp.ui.utility.CustomViewParams;
+import com.herocorp.ui.utility.PreferenceUtil;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class DealerDashboardFragment extends Fragment implements View.OnClickListener {
 
     private String TAG = "HeroCorp";
     private SharedPreferences sharedPreferences;
+
+    DatabaseHelper db;
+    String urlParameters;
+    String encryptuser;
+    NetworkConnect networkConnect;
+    String current_date;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -96,6 +121,10 @@ public class DealerDashboardFragment extends Fragment implements View.OnClickLis
         customViewParams.setTextViewCustomParams(copyRightText2, new int[]{0, 2, 0, 10}, new int[]{0, 0, 0, 0}, 30, customTypeFace.gillSans, 0);
         copyRightText2.setCompoundDrawables(customViewParams.setDrawableParams(getResources().getDrawable(R.drawable.ic_contact), 30, 30), null, null, null);
 
+        current_date = new SimpleDateFormat("dd-MMM-yy").format(new Date());
+        if (!(PreferenceUtil.get_Syncdate(getContext()).equalsIgnoreCase(current_date.toString()) && NetConnections.isConnected(getContext())))
+            sync_data();
+
         menu.setOnClickListener(this);
         productsLayout.setOnClickListener(this);
         contactUsLayout.setOnClickListener(this);
@@ -135,5 +164,91 @@ public class DealerDashboardFragment extends Fragment implements View.OnClickLis
         }
     }
 
+
+    public void sync_data() {
+        final JSONObject jsonparams = new JSONObject();
+
+        if (NetConnections.isConnected(getContext())) {
+            final Handler handler = new Handler();
+            Thread thread = new Thread() {
+                @Override
+                public void run() {
+                    try {
+                        //  int i = 0;
+                        while (encryptuser == null) {
+                            try {
+                                jsonparams.put("user_id", PreferenceUtil.get_UserId(getContext()));
+                                Log.e("make_model_request:", jsonparams.toString());
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                            try {
+                                urlParameters = "data=" + URLEncoder.encode(jsonparams.toString(), "UTF-8");
+                                networkConnect = new NetworkConnect(URLConstants.ENCRYPT, urlParameters);
+                                String result = networkConnect.execute();
+                                if (result != null) {
+                                    encryptuser = result.replace("\\/", "/");
+                                    urlParameters = "data=" + URLEncoder.encode(encryptuser, "UTF-8");
+                                    Log.e("make_sync_start", current_date.toString());
+                                    networkConnect = new NetworkConnect(URLConstants.BIKE_MAKE_MODEL, urlParameters);
+                                    jsonparse_makemodel(networkConnect.execute());
+                                    //  }
+                                }
+                                // i++;
+                            } catch (UnsupportedEncodingException e) {
+                                e.printStackTrace();
+                            }
+                            handler.post(this);
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            };
+
+            thread.start();
+        } else
+            Toast.makeText(
+
+                    getContext(),
+
+                    "Check your connection !!", Toast.LENGTH_SHORT).
+
+                    show();
+
+    }
+
+
+    public void jsonparse_makemodel(String result) {
+        try {
+            db = new DatabaseHelper(getContext());
+            db.clearmakemodel_table();
+
+            JSONObject jsono = new JSONObject(result);
+            JSONArray jarray = jsono.getJSONArray("make");
+            Log.e("make_model_response:", result);
+
+            for (int i = 0; i < jarray.length(); i++) {
+                JSONObject object = jarray.getJSONObject(i);
+                db.addbikemake(new Bikemake(object.getString("id"), object.getString("make_name")));
+            }
+
+            JSONArray jarray1 = jsono.getJSONArray("model");
+            for (int i = 0; i < jarray1.length(); i++) {
+                JSONObject object = jarray1.getJSONObject(i);
+                db.addbikemodel(new Bike_model(object.getString("make_id"), object.getString("model_name")));
+            }
+
+            PreferenceUtil.set_MakeSyncdate(getContext(), current_date.toString());
+
+            Log.e("make_sync_close", current_date.toString());
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+            // Toast.makeText(getContext(), "Check your Connection !!", Toast.LENGTH_SHORT);
+        }
+    }
 
 }

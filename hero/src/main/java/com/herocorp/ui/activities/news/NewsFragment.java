@@ -1,27 +1,57 @@
 package com.herocorp.ui.activities.news;
 
 import android.content.pm.ActivityInfo;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.StrictMode;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
+
 
 import com.herocorp.R;
+
+import com.herocorp.infra.utils.NetConnections;
 import com.herocorp.ui.activities.BaseDrawerActivity;
+
+import com.herocorp.ui.activities.DSEapp.ConnectService.NetworkConnect;
+import com.herocorp.ui.activities.news.Model.News;
+import com.herocorp.ui.activities.news.adapter.Newsadapter;
 import com.herocorp.ui.utility.CustomTypeFace;
 import com.herocorp.ui.utility.CustomViewParams;
-import com.herocorp.ui.utility.Params;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.ArrayList;
 
 /**
  * Created by rsawh on 21-Dec-16.
  */
 
-public class NewsFragment extends Fragment {
+public class NewsFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
+    Newsadapter userAdapter;
+    ArrayList<News> userArray = new ArrayList<News>();
+    ListView userList;
+    SwipeRefreshLayout swipe_refresh_news;
+    TextView news_msg;
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -29,7 +59,7 @@ public class NewsFragment extends Fragment {
         View rootView = inflater.inflate(R.layout.news_fragment, container, false);
         getActivity().setRequestedOrientation(
                 ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-        ((BaseDrawerActivity)getActivity()).closeDrawer();
+        ((BaseDrawerActivity) getActivity()).closeDrawer();
         initView(rootView);
 
         return rootView;
@@ -52,14 +82,177 @@ public class NewsFragment extends Fragment {
         Button buttonHeader = (Button) rootView.findViewById(R.id.buttonHeader);
         customViewParams.setButtonCustomParams(buttonHeader, new int[]{0, 10, 0, 10}, new int[]{120, 0, 0, 0}, 90, 400, 40, customTypeFace.gillSansItalic, 0);
 
-        LinearLayout detailLayout = (LinearLayout) rootView.findViewById(R.id.detail_layout);
-        customViewParams.setMarginAndPadding(detailLayout, new int[]{90, 30, 90, 30}, new int[]{40, 0, 0, 40}, detailLayout.getParent());
+        RelativeLayout detailLayout = (RelativeLayout) rootView.findViewById(R.id.detail_layout);
+        customViewParams.setMarginAndPadding(detailLayout, new int[]{0, 0, 0, 0}, new int[]{0, 0, 0, 0}, detailLayout.getParent());
 
-        menu.setOnClickListener(new View.OnClickListener() {
+        userAdapter = new Newsadapter(getContext(), R.layout.news_layout_row, userArray);
+
+        userList = (ListView) rootView.findViewById(R.id.list_news);
+
+        news_msg = (TextView) rootView.findViewById(R.id.news_message);
+        swipe_refresh_news = (SwipeRefreshLayout) rootView.findViewById(R.id.swipe_refresh_news);
+        customViewParams.setMarginAndPadding(swipe_refresh_news, new int[]{80, 20, 80, 20}, new int[]{0, 0, 0, 0}, swipe_refresh_news.getParent());
+
+
+        userAdapter.add(new News("https://www.google.com", "bike 1jdjssjdjshdkjs sfsf ss", "20-11-2016"));
+        userAdapter.add(new News("https://www.google.com", "bike 2jdjssjdjshdkjs sfsf ss", "10-11-2016"));
+        userAdapter.add(new News("https://www.google.com", "bike 5jdjssjdjshdkjs sfsf ss", "30-11-2016"));
+        userAdapter.add(new News("https://www.google.com", "bike 1jdjssjdjshdkjs sfsf ss", "20-11-2016"));
+        userAdapter.add(new News("https://www.google.com", "bike 2jdjssjdjshdkjs sfsf ss", "10-11-2016"));
+        userAdapter.add(new News("https://www.google.com", "bike 5jdjssjdjshdkjs sfsf ss", "30-11-2016"));
+        userAdapter.notifyDataSetChanged();
+
+        updateList();
+
+        userList.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
-            public void onClick(View v) {
-                ((BaseDrawerActivity)getActivity()).toggleDrawer();
+            public void onScrollStateChanged(AbsListView view, int scrollState) {
+
+            }
+
+            @Override
+            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+                if (userList.getChildAt(0) != null) {
+                    swipe_refresh_news.setEnabled(userList.getFirstVisiblePosition() == 0 && userList.getChildAt(0).getTop() == 0);
+                }
             }
         });
+
+        swipe_refresh_news.post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        swipe_refresh_news.setRefreshing(true);
+                                        // send_request();
+                                    }
+                                }
+        );
+
+
+        menu.setOnClickListener(new View.OnClickListener()
+
+                                {
+                                    @Override
+                                    public void onClick(View v) {
+                                        ((BaseDrawerActivity) getActivity()).toggleDrawer();
+                                    }
+                                }
+
+        );
+        swipe_refresh_news.setOnRefreshListener(this);
     }
+
+    private void updateList() {
+        userList.setAdapter(userAdapter);
+       /* if (userAdapter.getCount() > 0)
+            pendingorders_msg.setVisibility(View.INVISIBLE);
+        else
+            pendingorders_msg.setVisibility(View.VISIBLE);
+        swipe_refresh_orders.setRefreshing(false);*/
+    }
+
+    public void onDestroy() {
+        userList.setAdapter(null);
+        super.onDestroy();
+    }
+
+    @Override
+    public void onRefresh() {
+        //  send_request();
+    }
+
+    //version check
+    public class Fetch_news extends AsyncTask<String, Void, String> {
+
+        String response;
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            swipe_refresh_news.setRefreshing(true);
+        }
+
+
+        protected String doInBackground(String... params) {
+            try {
+                if (NetConnections.isConnected(getContext())) {
+
+                    StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
+                            .permitAll().build();
+                    StrictMode.setThreadPolicy(policy);
+                    URL url;
+                    HttpURLConnection connection = null;
+                    try {
+                        //Create connection
+                        url = new URL(params[0]);
+                        connection = (HttpURLConnection) url.openConnection();
+                        connection.setDoOutput(true);
+                        //Get Response
+                        InputStream is = connection.getInputStream();
+                        BufferedReader rd = new BufferedReader(new InputStreamReader(is));
+                        String line;
+                        StringBuffer response = new StringBuffer();
+                        while ((line = rd.readLine()) != null) {
+                            response.append(line);
+                            response.append('\r');
+                        }
+                        rd.close();
+                        return response.toString();
+
+                    } catch (Exception e) {
+
+                        e.printStackTrace();
+                        return null;
+
+                    } finally {
+
+                        if (connection != null) {
+                            connection.disconnect();
+                        }
+                    }
+
+                } else {
+
+                    Toast.makeText(
+
+                            getContext(),
+
+                            "Internal Server Error!!", Toast.LENGTH_SHORT).
+
+                            show();
+                }
+            } catch (
+                    Exception e
+                    )
+
+            {
+                e.printStackTrace();
+                return null;
+
+            } finally
+
+            {
+
+            }
+
+            return response.toString();
+        }
+
+        protected void onPostExecute(String result) {
+            super.onPostExecute(result);
+            try {
+                Log.e("news_response", result);
+                JSONObject jsonObject = new JSONObject(result);
+                swipe_refresh_news.setRefreshing(false);
+
+            } catch (JSONException e) {
+                swipe_refresh_news.setRefreshing(false);
+                e.printStackTrace();
+            } catch (Exception e) {
+                swipe_refresh_news.setRefreshing(false);
+                Toast.makeText(getContext(), "Internal Server Error!!", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+
 }

@@ -81,7 +81,7 @@ public class PreferenceUtil {
 
     public static String get_UserId(Context context) {
         SharedPreferences sharedPref = context.getSharedPreferences("hero", context.MODE_PRIVATE);
-        String restoredText = sharedPref.getString(USER_ID, null);
+        String restoredText = sharedPref.getString(USER_ID, "");
         return restoredText;
     }
 

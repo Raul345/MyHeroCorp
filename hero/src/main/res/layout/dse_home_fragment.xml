@@ -303,7 +303,8 @@
                     android:padding="10dp"
                     android:singleLine="true"
                     android:textSize="18sp"
-                    android:textColor="#000000" />
+                    android:textColor="#000000"
+                    android:textCursorDrawable="@drawable/cursor"/>
 
 
             </LinearLayout>
@@ -344,7 +345,8 @@
                     android:maxLength="16"
                     android:maxLines="1"
                     android:singleLine="true"
-                    android:textColor="#000000" />
+                    android:textColor="#000000"
+                    android:textCursorDrawable="@drawable/cursor"/>
             </LinearLayout>
 
             <LinearLayout
