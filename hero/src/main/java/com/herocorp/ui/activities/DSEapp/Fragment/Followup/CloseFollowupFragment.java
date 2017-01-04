@@ -369,12 +369,12 @@ public class CloseFollowupFragment extends Fragment implements View.OnClickListe
             List<Bikemake> allrecords = db.getAllBikemakes();
             for (Bikemake record : allrecords) {
                 if (flag == 1) {
-                    if (!(record.getMakename().equalsIgnoreCase("HERO MOTOCORP") || record.getMakename().equalsIgnoreCase("HMSI"))) {
+                    if (!(record.getMakename().equalsIgnoreCase("HERO MOTOCORP"))) {
                         arr_makelist.add(new Bikemake(record.getId(), record.getMakename()));
                     }
                 }
                 else if (flag == 2) {
-                    if (record.getMakename().equalsIgnoreCase("HERO MOTOCORP") || record.getMakename().equalsIgnoreCase("HMSI")) {
+                    if (record.getMakename().equalsIgnoreCase("HERO MOTOCORP")) {
                         arr_makelist.add(new Bikemake(record.getId(), record.getMakename()));
                     }
                 }else

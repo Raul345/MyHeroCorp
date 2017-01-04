@@ -390,7 +390,7 @@ public class BaseDrawerActivity extends FragmentActivity implements View.OnClick
             openFragment(new ContactUsFragmrnt(), false);
         } else if (i == R.id.nav_news_layout) {
             toggleDrawer();
-          //  openFragment(new NewsFragment(), false);
+           // openFragment(new NewsFragment(), false);
         } else if (i == R.id.nav_value_layout) {
             try {
                 toggleDrawer();

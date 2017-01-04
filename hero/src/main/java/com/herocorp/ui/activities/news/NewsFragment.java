@@ -20,8 +20,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonDeserializationContext;
+import com.google.gson.JsonDeserializer;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
 import com.herocorp.R;
 
+import com.herocorp.core.constants.URLConstants;
 import com.herocorp.infra.utils.NetConnections;
 import com.herocorp.ui.activities.BaseDrawerActivity;
 
@@ -37,9 +45,14 @@ import org.json.JSONObject;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.Type;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import static com.google.gson.FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES;
 
 /**
  * Created by rsawh on 21-Dec-16.
@@ -94,16 +107,6 @@ public class NewsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         customViewParams.setMarginAndPadding(swipe_refresh_news, new int[]{80, 20, 80, 20}, new int[]{0, 0, 0, 0}, swipe_refresh_news.getParent());
 
 
-        userAdapter.add(new News("https://www.google.com", "bike 1jdjssjdjshdkjs sfsf ss", "20-11-2016"));
-        userAdapter.add(new News("https://www.google.com", "bike 2jdjssjdjshdkjs sfsf ss", "10-11-2016"));
-        userAdapter.add(new News("https://www.google.com", "bike 5jdjssjdjshdkjs sfsf ss", "30-11-2016"));
-        userAdapter.add(new News("https://www.google.com", "bike 1jdjssjdjshdkjs sfsf ss", "20-11-2016"));
-        userAdapter.add(new News("https://www.google.com", "bike 2jdjssjdjshdkjs sfsf ss", "10-11-2016"));
-        userAdapter.add(new News("https://www.google.com", "bike 5jdjssjdjshdkjs sfsf ss", "30-11-2016"));
-        userAdapter.notifyDataSetChanged();
-
-        updateList();
-
         userList.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
@@ -123,6 +126,8 @@ public class NewsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                                     public void run() {
                                         swipe_refresh_news.setRefreshing(true);
                                         // send_request();
+                                        new Fetch_news().execute(URLConstants.FETCH_NEWS);
+
                                     }
                                 }
         );
@@ -240,17 +245,83 @@ public class NewsFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
             try {
-                Log.e("news_response", result);
+               // Log.e("news_response", result);
+
                 JSONObject jsonObject = new JSONObject(result);
+                JSONObject json = jsonObject.getJSONObject("Result");
+               /* GsonBuilder builder = new GsonBuilder();
+                Object o = builder.create().fromJson(json.toString(), Object.class);
+                Log.e("gson", o.toString() + "");*/
+
+                GsonBuilder builder = new GsonBuilder();
+                builder.registerTypeAdapter(NewsList.class, new NewsListDeserializer());
+                Gson gson = builder.create();
+                NewsList list = gson.fromJson(json.toString(), NewsList.class);
+
+                //System.out.println(list.newsdetail);
+                Log.e("gson", list.newsdetail.toString());
+
                 swipe_refresh_news.setRefreshing(false);
+                userAdapter.add(new News("https://www.google.com", "bike 1jdjssjdjshdkjs sfsf ss", "20-11-2016"));
+                userAdapter.add(new News("https://www.google.com", "bike 2jdjssjdjshdkjs sfsf ss", "10-11-2016"));
+                userAdapter.add(new News("https://www.google.com", "bike 5jdjssjdjshdkjs sfsf ss", "30-11-2016"));
+                userAdapter.add(new News("https://www.google.com", "bike 1jdjssjdjshdkjs sfsf ss", "20-11-2016"));
+                userAdapter.add(new News("https://www.google.com", "bike 2jdjssjdjshdkjs sfsf ss", "10-11-2016"));
+                userAdapter.add(new News("https://www.google.com", "bike 5jdjssjdjshdkjs sfsf ss", "30-11-2016"));
+                userAdapter.notifyDataSetChanged();
+
+                updateList();
 
             } catch (JSONException e) {
                 swipe_refresh_news.setRefreshing(false);
                 e.printStackTrace();
             } catch (Exception e) {
                 swipe_refresh_news.setRefreshing(false);
-                Toast.makeText(getContext(), "Internal Server Error!!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Internal Server Error!!" + e, Toast.LENGTH_SHORT).show();
             }
+        }
+    }
+
+
+    private static class NewsList {
+        List<NewsDetail> newsdetail;
+
+        private NewsList(List<NewsDetail> newsdetail) {
+            this.newsdetail = newsdetail;
+        }
+    }
+
+    private static class NewsDetail {
+        String id_news;
+        String heading;
+        String createdby;
+        String createddate;
+        // and so on
+
+
+        @Override
+        public String toString() {
+            return "News{" +
+                    "id_news='" + id_news + '\'' +
+                    ", heading='" + heading + '\'' +
+                    ", createdby='" + createdby + '\'' +
+                    ", createddate='" + createddate + '\'' +
+                    '}';
+        }
+    }
+
+    private static class NewsListDeserializer implements JsonDeserializer<NewsList> {
+        @Override
+        public NewsList deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext context) throws JsonParseException {
+            JsonObject object = jsonElement.getAsJsonObject();
+            List<NewsDetail> newss = new ArrayList<NewsDetail>();
+            for (Map.Entry<String, JsonElement> entry : object.entrySet()) {
+//                System.out.println(entry.getKey() + " " + entry.getValue());
+                // Use default deserialisation for City objects:
+                NewsDetail city = context.deserialize(entry.getValue(), NewsDetail.class);
+                newss.add(city);
+            }
+            return new NewsList(newss);
         }
     }
 

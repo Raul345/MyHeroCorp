@@ -300,7 +300,6 @@ public class EditEnquiryFragment extends Fragment implements View.OnClickListene
                     arr_modellist1 = bikemodel.getModelname(bikemake.getId());
                     ArrayAdapter<String> at2 = new ArrayAdapter<String>(getContext(), R.layout.spinner_textview2, arr_modellist1);
                     spin_existmodel.setAdapter(at2);
-
                 } else {
                     existmake = "";
                     arr_modellist1.clear();
