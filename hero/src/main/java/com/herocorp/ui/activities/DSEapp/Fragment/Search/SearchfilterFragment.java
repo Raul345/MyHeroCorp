@@ -83,7 +83,7 @@ public class SearchfilterFragment extends Fragment implements View.OnClickListen
         ImageView menu = (ImageView) rootView.findViewById(R.id.menu_icon);
 
         ScrollView scrollView = (ScrollView) rootView.findViewById(R.id.scroll_view);
-        customViewParams.setMarginAndPadding(scrollView, new int[]{100, 20, 100, 0}, new int[]{0, 0, 0, 0}, scrollView.getParent());
+        customViewParams.setMarginAndPadding(scrollView, new int[]{100, 50, 100, 60}, new int[]{0, 0, 0, 0}, scrollView.getParent());
 
         customViewParams.setImageViewCustomParams(heroLogo, new int[]{30, 30, 0, 0}, new int[]{0, 0, 0, 0}, 120, 120);
         customViewParams.setImageViewCustomParams(menu, new int[]{0, 30, 30, 0}, new int[]{0, 0, 0, 0}, 100, 100);
@@ -95,7 +95,7 @@ public class SearchfilterFragment extends Fragment implements View.OnClickListen
         customViewParams.setButtonCustomParams(buttonHeader, new int[]{0, 10, 0, 10}, new int[]{90, 0, 0, 0}, 90, 180, 40, customTypeFace.gillSansItalic, 0);
 
         LinearLayout topLayout1 = (LinearLayout) rootView.findViewById(R.id.top_layout1);
-        customViewParams.setMarginAndPadding(topLayout1, new int[]{100, 50, 100, 60}, new int[]{0, 0, 0, 0}, topLayout1.getParent());
+        customViewParams.setMarginAndPadding(topLayout1, new int[]{0, 0, 0, 0}, new int[]{0, 0, 0, 0}, topLayout1.getParent());
 
         exppurchasedate_button = (ImageView) rootView.findViewById(R.id.exppurchasedate_button);
         nextfollowup_button = (ImageView) rootView.findViewById(R.id.nextfollowup_button);

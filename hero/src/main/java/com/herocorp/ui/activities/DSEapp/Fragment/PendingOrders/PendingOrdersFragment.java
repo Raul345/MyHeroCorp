@@ -78,7 +78,6 @@ public class PendingOrdersFragment extends Fragment implements View.OnClickListe
 
         rootView = inflater.inflate(R.layout.dse_pendingorders_fragment, container, false);
         getActivity().overridePendingTransition(R.anim.slide_in_up, R.anim.slide_out_up);
-
         initView(rootView);
 
         return rootView;

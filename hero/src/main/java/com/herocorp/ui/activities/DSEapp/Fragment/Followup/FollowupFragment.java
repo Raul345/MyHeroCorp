@@ -2,6 +2,7 @@ package com.herocorp.ui.activities.DSEapp.Fragment.Followup;
 
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -23,6 +24,8 @@ import com.herocorp.core.constants.URLConstants;
 import com.herocorp.infra.utils.NetConnections;
 import com.herocorp.ui.activities.BaseDrawerActivity;
 import com.herocorp.ui.activities.DSEapp.ConnectService.NetworkConnect1;
+import com.herocorp.ui.activities.DSEapp.DbSyncservice;
+import com.herocorp.ui.activities.DSEapp.Fragment.Alert.AlertDialogFragment;
 import com.herocorp.ui.activities.DSEapp.Utilities.Dateformatter;
 import com.herocorp.ui.activities.DSEapp.db.DatabaseHelper;
 import com.herocorp.ui.activities.DSEapp.models.Next_Followup;
@@ -191,6 +194,16 @@ public class FollowupFragment extends Fragment implements View.OnClickListener {
                         }
                     } else {
                         db.add_next_followup(new Next_Followup(date, reason, follow_date, user, enquiryid, "1"));
+                        Bundle bundle = new Bundle();
+                        bundle.putString("msg", "Followup has been successfully submitted.");
+                        bundle.putInt("flag", 1);
+                        FragmentManager fm = getActivity().getSupportFragmentManager();
+                        AlertDialogFragment dialogFragment = new AlertDialogFragment();
+                        dialogFragment.setArguments(bundle);
+                        dialogFragment.setCancelable(false);
+                        dialogFragment.show(fm, "Sample Fragment");
+                       /* Intent intent = new Intent(getContext(), DbSyncservice.class);
+                        getActivity().startService(intent);*/
                     }
                 }
             } catch (Exception e) {

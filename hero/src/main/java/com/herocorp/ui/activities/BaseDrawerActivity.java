@@ -44,6 +44,9 @@ import android.widget.Toast;
 //import com.google.firebase.iid.FirebaseInstanceId;
 //import com.google.firebase.iid.FirebaseInstanceIdService;
 //import com.google.firebase.messaging.FirebaseMessaging;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.herocorp.R;
 import com.herocorp.core.constants.AppConstants;
 import com.herocorp.core.constants.URLConstants;
@@ -56,13 +59,14 @@ import com.herocorp.infra.netio.AuthenticateUserService;
 import com.herocorp.infra.utils.NetConnections;
 //import com.herocorp.ui.FCMservice.FCMInstanceIdservice;
 import com.herocorp.ui.EMI.EmicalcFragment;
-import com.herocorp.ui.activities.DSEapp.DbSyncservice;
+import com.herocorp.ui.FCMservice.FCMInstanceIdservice;
 import com.herocorp.ui.activities.DSEapp.Fragment.Alert.ContactAlertFragment;
 import com.herocorp.ui.activities.DSEapp.Fragment.Home.HomeFragment;
 import com.herocorp.ui.activities.DSEapp.ConnectService.NetworkConnect;
+import com.herocorp.ui.activities.Notifications.Fragment.NotificationFragment;
 import com.herocorp.ui.activities.contact_us.ContactUsFragmrnt;
 import com.herocorp.ui.activities.home.DealerDashboardFragment;
-import com.herocorp.ui.activities.news.NewsFragment;
+import com.herocorp.ui.activities.news.Fragment.NewsFragment;
 import com.herocorp.ui.activities.products.ProductDetailFragment;
 import com.herocorp.ui.app.App;
 import com.herocorp.ui.utility.CustomTypeFace;
@@ -97,7 +101,6 @@ public class BaseDrawerActivity extends FragmentActivity implements View.OnClick
     Fragment fragment = null;
     private TelephonyManager telephonyManager;
     private SharedPreferences sharedPreferences;
-
     private String deviceImei;
     private String appVersion;
     private String deviceVersion;
@@ -110,8 +113,8 @@ public class BaseDrawerActivity extends FragmentActivity implements View.OnClick
         setContentView(R.layout.activity_base_drawer);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         overridePendingTransition(R.anim.trans_left_in, R.anim.trans_left_out);
-        setRequestedOrientation(
-                ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+       /* setRequestedOrientation(
+                ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);*/
 
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
@@ -136,15 +139,19 @@ public class BaseDrawerActivity extends FragmentActivity implements View.OnClick
                 if (!PreferenceUtil.get_Syncyn(getApplicationContext()))
                     showPhoneStatePermission();
 
-                //FCM service
-                /*FirebaseMessaging.getInstance().subscribeToTopic("news");
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        FCMInstanceIdservice fcm = new FCMInstanceIdservice(deviceImei, userId, appVersion, deviceVersion, "1.0");
-                        fcm.onTokenRefresh();
-                   }
-                });*/
+                if (!isGooglePlayServicesAvailable()) {
+                    finish();
+                } else {
+                    //FCM service
+                    FirebaseMessaging.getInstance().subscribeToTopic("news");
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            FCMInstanceIdservice fcm = new FCMInstanceIdservice(deviceImei, PreferenceUtil.get_UserId(getApplicationContext()), appVersion, deviceVersion, getDevicename(), getApplicationContext());
+                            fcm.onTokenRefresh();
+                        }
+                    });
+                }
             } else if (!(sharedPreferences.getBoolean(AppConstants.IS_USER_LOGGED_IN, false) &&
                     App.shouldAppRun(sharedPreferences.getString(AppConstants.VALIDITY_DATE, "")))) {
                 //  finish();
@@ -223,6 +230,7 @@ public class BaseDrawerActivity extends FragmentActivity implements View.OnClick
         findViewById(R.id.nav_emi_layout).setOnClickListener(this);
         findViewById(R.id.nav_sync_layout).setOnClickListener(this);
         findViewById(R.id.nav_logout_layout).setOnClickListener(this);
+        findViewById(R.id.nav_notify_layout).setOnClickListener(this);
 
         if (null == savedInstanceState) {
             FragmentManager fragmentManager = getSupportFragmentManager();
@@ -390,7 +398,7 @@ public class BaseDrawerActivity extends FragmentActivity implements View.OnClick
             openFragment(new ContactUsFragmrnt(), false);
         } else if (i == R.id.nav_news_layout) {
             toggleDrawer();
-           // openFragment(new NewsFragment(), false);
+            openFragment(new NewsFragment(), false);
         } else if (i == R.id.nav_value_layout) {
             try {
                 toggleDrawer();
@@ -410,10 +418,6 @@ public class BaseDrawerActivity extends FragmentActivity implements View.OnClick
         } else if (i == R.id.nav_faq_layout) {
             try {
                 toggleDrawer();
-               /* fragment = new EmicalcFragment();
-
-                openFragment(fragment, false);*/
-                //   startActivity(new Intent(getApplicationContext(),EmicalcFragment.class));
 
             } catch (Exception e) {
                 Toast.makeText(this, "faq not installed!" + e, Toast.LENGTH_SHORT).show();
@@ -430,6 +434,13 @@ public class BaseDrawerActivity extends FragmentActivity implements View.OnClick
             try {
                 toggleDrawer();
                 logoutalert();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } else if (i == R.id.nav_notify_layout) {
+            try {
+                toggleDrawer();
+                openFragment(new NotificationFragment(), false);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -1467,7 +1478,7 @@ public class BaseDrawerActivity extends FragmentActivity implements View.OnClick
             } catch (JSONException e) {
                 e.printStackTrace();
             } catch (Exception e) {
-                System.out.println(Toast.makeText(getApplicationContext(), "Check your Connection !!", Toast.LENGTH_SHORT));
+                Toast.makeText(getApplicationContext(), "Check your Connection !!", Toast.LENGTH_SHORT);
             }
         }
     }
@@ -1570,7 +1581,7 @@ public class BaseDrawerActivity extends FragmentActivity implements View.OnClick
         //drawerLayout.setDrawerListener(this);
 
         LinearLayout navMenuLayout = (LinearLayout) findViewById(R.id.nav_menu_layout);
-        customViewParams.setHeightAndWidth(navMenuLayout, 0, 650);
+        customViewParams.setHeightAndWidth(navMenuLayout, 0, 700);
 
         RelativeLayout profileContainer = (RelativeLayout) findViewById(R.id.profile_contaioner);
         customViewParams.setHeightAndWidth(profileContainer, 400, 0);
@@ -1603,6 +1614,7 @@ public class BaseDrawerActivity extends FragmentActivity implements View.OnClick
         ImageView navSyncImage = (ImageView) findViewById(R.id.nav_sync_image);
         ImageView navEmiImage = (ImageView) findViewById(R.id.nav_emi_image);
         ImageView navlogoutimage = (ImageView) findViewById(R.id.nav_logout_image);
+        ImageView navnotificationsimage = (ImageView) findViewById(R.id.nav_notify_image);
 
 
         customViewParams.setImageViewCustomParams(navHomeImage, new int[]{30, 0, 20, 0}, new int[]{0, 0, 0, 0}, 40, 40);
@@ -1616,6 +1628,7 @@ public class BaseDrawerActivity extends FragmentActivity implements View.OnClick
         customViewParams.setImageViewCustomParams(navSyncImage, new int[]{30, 0, 20, 0}, new int[]{0, 0, 0, 0}, 40, 40);
         customViewParams.setImageViewCustomParams(navEmiImage, new int[]{30, 0, 20, 0}, new int[]{0, 0, 0, 0}, 40, 40);
         customViewParams.setImageViewCustomParams(navlogoutimage, new int[]{30, 0, 20, 0}, new int[]{0, 0, 0, 0}, 40, 40);
+        customViewParams.setImageViewCustomParams(navnotificationsimage, new int[]{30, 0, 20, 0}, new int[]{0, 0, 0, 0}, 40, 40);
 
 
         TextView navHomeText = (TextView) findViewById(R.id.nav_home_text);
@@ -1629,6 +1642,8 @@ public class BaseDrawerActivity extends FragmentActivity implements View.OnClick
         TextView navSyncText = (TextView) findViewById(R.id.nav_sync_text);
         TextView navEmiText = (TextView) findViewById(R.id.nav_emi_text);
         TextView navLogoutText = (TextView) findViewById(R.id.nav_logout_text);
+        TextView navnotifyText = (TextView) findViewById(R.id.nav_notify_text);
+
 
         customViewParams.setTextViewCustomParams(navHomeText, new int[]{0, 30, 0, 30}, new int[]{0, 0, 0, 0}, 35, customTypeFace.gillSans, 0);
         customViewParams.setTextViewCustomParams(navProductText, new int[]{0, 30, 0, 30}, new int[]{0, 0, 0, 0}, 35, customTypeFace.gillSans, 0);
@@ -1641,6 +1656,8 @@ public class BaseDrawerActivity extends FragmentActivity implements View.OnClick
         customViewParams.setTextViewCustomParams(navSyncText, new int[]{0, 30, 0, 30}, new int[]{0, 0, 0, 0}, 35, customTypeFace.gillSans, 0);
         customViewParams.setTextViewCustomParams(navEmiText, new int[]{0, 30, 0, 30}, new int[]{0, 0, 0, 0}, 35, customTypeFace.gillSans, 0);
         customViewParams.setTextViewCustomParams(navLogoutText, new int[]{0, 30, 0, 30}, new int[]{0, 0, 0, 0}, 35, customTypeFace.gillSans, 0);
+        customViewParams.setTextViewCustomParams(navnotifyText, new int[]{0, 30, 0, 30}, new int[]{0, 0, 0, 0}, 35, customTypeFace.gillSans, 0);
+
         navMenuLayout.setOnClickListener(this);
         closeDrawer.setOnClickListener(this);
     }
@@ -1653,18 +1670,18 @@ public class BaseDrawerActivity extends FragmentActivity implements View.OnClick
         //drawerLayout.setDrawerListener(this);
 
         LinearLayout navMenuLayout = (LinearLayout) findViewById(R.id.nav_menu_layout);
-        customViewParams.setHeightAndWidth(navMenuLayout, 0, 850);
+        customViewParams.setHeightAndWidth(navMenuLayout, 0, 1000);
 
         RelativeLayout profileContainer = (RelativeLayout) findViewById(R.id.profile_contaioner);
-        customViewParams.setHeightAndWidth(profileContainer, 400, 0);
+        customViewParams.setHeightAndWidth(profileContainer, 500, 0);
 
         ImageView imageView = (ImageView) findViewById(R.id.profile_image_container);
         ImageView closeDrawer = (ImageView) findViewById(R.id.drawer_close);
         ImageView logoDrawer = (ImageView) findViewById(R.id.drawer_logo);
 
-        customViewParams.setImageViewCustomParams(imageView, new int[]{0, 0, 0, 20}, new int[]{0, 0, 0, 0}, 150, 150);
+        customViewParams.setImageViewCustomParams(imageView, new int[]{0, 0, 0, 20}, new int[]{0, 0, 0, 0}, 180, 180);
         customViewParams.setImageViewCustomParams(closeDrawer, new int[]{0, 20, 20, 0}, new int[]{0, 0, 0, 0}, 60, 60);
-        customViewParams.setImageViewCustomParams(logoDrawer, new int[]{30, 30, 0, 0}, new int[]{0, 0, 0, 0}, 120, 120);
+        customViewParams.setImageViewCustomParams(logoDrawer, new int[]{30, 30, 0, 0}, new int[]{0, 0, 0, 0}, 160, 160);
 
         TextView nameText = (TextView) findViewById(R.id.name_text);
         customViewParams.setTextViewCustomParams(nameText, new int[]{0, 10, 0, 0}, new int[]{0, 0, 0, 0}, 40, customTypeFace.gillSans, 0);
@@ -1686,6 +1703,7 @@ public class BaseDrawerActivity extends FragmentActivity implements View.OnClick
         ImageView navSyncImage = (ImageView) findViewById(R.id.nav_sync_image);
         ImageView navEmiImage = (ImageView) findViewById(R.id.nav_emi_image);
         ImageView navlogoutimage = (ImageView) findViewById(R.id.nav_logout_image);
+        ImageView navnotificationsimage = (ImageView) findViewById(R.id.nav_notify_image);
 
 
         customViewParams.setImageViewCustomParams(navHomeImage, new int[]{30, 0, 20, 0}, new int[]{0, 0, 0, 0}, 80, 80);
@@ -1699,6 +1717,7 @@ public class BaseDrawerActivity extends FragmentActivity implements View.OnClick
         customViewParams.setImageViewCustomParams(navSyncImage, new int[]{30, 0, 20, 0}, new int[]{0, 0, 0, 0}, 80, 80);
         customViewParams.setImageViewCustomParams(navEmiImage, new int[]{30, 0, 20, 0}, new int[]{0, 0, 0, 0}, 80, 80);
         customViewParams.setImageViewCustomParams(navlogoutimage, new int[]{30, 0, 20, 0}, new int[]{0, 0, 0, 0}, 80, 80);
+        customViewParams.setImageViewCustomParams(navnotificationsimage, new int[]{30, 0, 20, 0}, new int[]{0, 0, 0, 0}, 80, 80);
 
 
         TextView navHomeText = (TextView) findViewById(R.id.nav_home_text);
@@ -1712,6 +1731,8 @@ public class BaseDrawerActivity extends FragmentActivity implements View.OnClick
         TextView navSyncText = (TextView) findViewById(R.id.nav_sync_text);
         TextView navEmiText = (TextView) findViewById(R.id.nav_emi_text);
         TextView navLogoutText = (TextView) findViewById(R.id.nav_logout_text);
+        TextView navnotifyText = (TextView) findViewById(R.id.nav_notify_text);
+
 
         customViewParams.setTextViewCustomParams(navHomeText, new int[]{0, 30, 0, 30}, new int[]{0, 0, 0, 0}, 65, customTypeFace.gillSans, 0);
         customViewParams.setTextViewCustomParams(navProductText, new int[]{0, 30, 0, 30}, new int[]{0, 0, 0, 0}, 65, customTypeFace.gillSans, 0);
@@ -1724,6 +1745,8 @@ public class BaseDrawerActivity extends FragmentActivity implements View.OnClick
         customViewParams.setTextViewCustomParams(navSyncText, new int[]{0, 30, 0, 30}, new int[]{0, 0, 0, 0}, 65, customTypeFace.gillSans, 0);
         customViewParams.setTextViewCustomParams(navEmiText, new int[]{0, 30, 0, 30}, new int[]{0, 0, 0, 0}, 65, customTypeFace.gillSans, 0);
         customViewParams.setTextViewCustomParams(navLogoutText, new int[]{0, 30, 0, 30}, new int[]{0, 0, 0, 0}, 65, customTypeFace.gillSans, 0);
+        customViewParams.setTextViewCustomParams(navnotifyText, new int[]{0, 30, 0, 30}, new int[]{0, 0, 0, 0}, 65, customTypeFace.gillSans, 0);
+
         navMenuLayout.setOnClickListener(this);
         closeDrawer.setOnClickListener(this);
     }
@@ -1733,15 +1756,51 @@ public class BaseDrawerActivity extends FragmentActivity implements View.OnClick
         try {
             if (NetConnections.isConnected(this)) {
                 String current_date = new SimpleDateFormat("dd-MMM-yy").format(new Date());
-                if ((!PreferenceUtil.get_Versiondate(this).equalsIgnoreCase(current_date.toString()))) {
+               /* if ((!PreferenceUtil.get_Versiondate(this).equalsIgnoreCase(current_date.toString()))) {
                     {
                         new check_version().execute(URLConstants.CHECK_VERSION);
                     }
-                }
+                }*/
+                if (!(PreferenceUtil.get_MakeSyncdate(this).equalsIgnoreCase(current_date.toString()) && NetConnections.isConnected(this)))
+                    new check_version().execute(URLConstants.CHECK_VERSION);
+
             }
         } catch (Exception e) {
             e.printStackTrace();
             finish();
+        }
+    }
+
+    private String getDevicename() {
+        String manufacturer = Build.MANUFACTURER;
+        String model = Build.MODEL;
+        if (model.startsWith(manufacturer)) {
+            return capitalize(model);
+        } else {
+            return capitalize(manufacturer) + " " + model;
+        }
+    }
+
+
+    private static String capitalize(String s) {
+        if (s == null || s.length() == 0) {
+            return "";
+        }
+        char first = s.charAt(0);
+        if (Character.isUpperCase(first)) {
+            return s;
+        } else {
+            return Character.toUpperCase(first) + s.substring(1);
+        }
+    }
+
+    private boolean isGooglePlayServicesAvailable() {
+        int status = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
+        if (ConnectionResult.SUCCESS == status) {
+            return true;
+        } else {
+            GooglePlayServicesUtil.getErrorDialog(status, this, 0).show();
+            return false;
         }
     }
 }

@@ -25,6 +25,7 @@ import com.herocorp.ui.activities.DSEapp.Fragment.Home.HomeFragment;
 import com.herocorp.ui.activities.DSEapp.db.DatabaseHelper;
 import com.herocorp.ui.activities.DSEapp.models.Bike_model;
 import com.herocorp.ui.activities.DSEapp.models.Bikemake;
+import com.herocorp.ui.activities.news.Fragment.NewsFragment;
 import com.herocorp.ui.activities.products.ProductDetailFragment;
 import com.herocorp.ui.utility.CustomTypeFace;
 import com.herocorp.ui.utility.CustomViewParams;
@@ -53,17 +54,23 @@ public class DealerDashboardFragment extends Fragment implements View.OnClickLis
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        getActivity().setRequestedOrientation(
+                ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
         View rootView = inflater.inflate(R.layout.dealer_dashboard_fragment, container, false);
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        getActivity().setRequestedOrientation(
-                ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
         initView(rootView);
 
-
         return rootView;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getActivity().setRequestedOrientation(
+                ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
     }
 
     private void initView(View rootView) {
@@ -122,13 +129,14 @@ public class DealerDashboardFragment extends Fragment implements View.OnClickLis
         copyRightText2.setCompoundDrawables(customViewParams.setDrawableParams(getResources().getDrawable(R.drawable.ic_contact), 30, 30), null, null, null);
 
         current_date = new SimpleDateFormat("dd-MMM-yy").format(new Date());
-        if (!(PreferenceUtil.get_Syncdate(getContext()).equalsIgnoreCase(current_date.toString()) && NetConnections.isConnected(getContext())))
+        if (!(PreferenceUtil.get_MakeSyncdate(getContext()).equalsIgnoreCase(current_date.toString()) && NetConnections.isConnected(getContext())))
             sync_data();
 
         menu.setOnClickListener(this);
         productsLayout.setOnClickListener(this);
         contactUsLayout.setOnClickListener(this);
         valueLayout.setOnClickListener(this);
+        newsLayout.setOnClickListener(this);
     }
 
 
@@ -149,7 +157,8 @@ public class DealerDashboardFragment extends Fragment implements View.OnClickLis
 
         } else if (i == R.id.contact_us_layout) {
             try {
-
+                getActivity().setRequestedOrientation(
+                        ActivityInfo.SCREEN_ORIENTATION_USER_PORTRAIT);
                 ((BaseDrawerActivity) getActivity()).openFragment(new HomeFragment(), true);
             } catch (Exception e) {
                 Toast.makeText(getActivity(), "DSE App not installed!", Toast.LENGTH_SHORT).show();
@@ -158,6 +167,12 @@ public class DealerDashboardFragment extends Fragment implements View.OnClickLis
             try {
 
                 //  ((BaseDrawerActivity) getActivity()).openFragment(new VasWarrantyfragment(), true);
+            } catch (Exception e) {
+                Toast.makeText(getActivity(), "VAS  not installed!", Toast.LENGTH_SHORT).show();
+            }
+        } else if (i == R.id.news_layout) {
+            try {
+                ((BaseDrawerActivity) getActivity()).openFragment(new NewsFragment(), true);
             } catch (Exception e) {
                 Toast.makeText(getActivity(), "VAS  not installed!", Toast.LENGTH_SHORT).show();
             }

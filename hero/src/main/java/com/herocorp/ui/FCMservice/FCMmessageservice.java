@@ -1,4 +1,3 @@
-/*
 package com.herocorp.ui.FCMservice;
 
 import android.app.NotificationManager;
@@ -7,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.media.RingtoneManager;
-import android.net.Uri;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
@@ -16,10 +14,8 @@ import com.google.firebase.messaging.RemoteMessage;
 import com.herocorp.R;
 import com.herocorp.ui.activities.BaseDrawerActivity;
 
-*/
-/**
- * Created by rsawh on 09-Oct-16.
- *//*
+// Created by rsawh on 09-Oct-16.
+
 
 public class FCMmessageservice extends FirebaseMessagingService {
     private static final String TAG = "heroFCMService";
@@ -34,26 +30,7 @@ public class FCMmessageservice extends FirebaseMessagingService {
     }
 
     private void createNotification(String messageBody) {
-        try { */
-/* Intent intent = new Intent(this, BaseDrawerActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        PendingIntent resultIntent = PendingIntent.getActivity(this, 0, intent,
-                PendingIntent.FLAG_ONE_SHOT);
-
-        Uri notificationSoundURI = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-        NotificationCompat.Builder mNotificationBuilder = new NotificationCompat.Builder(this)
-                .setSmallIcon(R.drawable.hero_logo)
-                .setContentTitle("Android Tutorial Point FCM Tutorial")
-                .setContentText(messageBody)
-                .setAutoCancel(true)
-                .setSound(notificationSoundURI)
-                .setContentIntent(resultIntent);
-
-        NotificationManager notificationManager =
-                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-
-        notificationManager.notify(0, mNotificationBuilder.build());*//*
-
+        try {
             Intent resultIntent = new Intent(this, BaseDrawerActivity.class);
             //resultIntent.setData(Uri.parse(""));
             resultIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -62,7 +39,7 @@ public class FCMmessageservice extends FirebaseMessagingService {
             String message = messageBody;
             NotificationCompat.Builder noBuilder = new NotificationCompat.Builder(this)
                     .setSmallIcon(R.drawable.hero_logo)
-                    .setContentTitle("NEWS TODAY !!")
+                    .setContentTitle("NEWS FEED !!")
                     .setLargeIcon(BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.hero_logo))
                     .setContentText(message)
                     .setAutoCancel(true)
@@ -72,7 +49,7 @@ public class FCMmessageservice extends FirebaseMessagingService {
             NotificationManager notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
             notificationManager.notify(0, noBuilder.build());
 
-        }catch (Exception e)
-        {}
+        } catch (Exception e) {
+        }
     }
-}*/
+}

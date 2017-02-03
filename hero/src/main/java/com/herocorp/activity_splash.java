@@ -22,9 +22,6 @@ public class activity_splash extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
-        setRequestedOrientation(
-                ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -33,5 +30,5 @@ public class activity_splash extends Activity {
                 finish();
             }
         }, 3000);
-      }
+    }
 }

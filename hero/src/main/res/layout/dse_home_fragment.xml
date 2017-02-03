@@ -93,8 +93,8 @@
 
             <ImageView
                 android:id="@+id/pendingorders"
-                android:layout_width="200dp"
-                android:layout_height="200dp"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
                 android:src="@drawable/pending_order" />
 
             <TextView
@@ -144,8 +144,8 @@
 
             <ImageView
                 android:id="@+id/followup"
-                android:layout_width="200dp"
-                android:layout_height="200dp"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
                 android:src="@drawable/todays_followup" />
 
             <TextView
@@ -198,8 +198,8 @@
 
             <ImageView
                 android:id="@+id/pendingfollowup"
-                android:layout_width="200dp"
-                android:layout_height="200dp"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
                 android:src="@drawable/pending_followup" />
 
             <TextView
@@ -248,8 +248,8 @@
 
             <ImageView
                 android:id="@+id/searchenquiry"
-                android:layout_width="200dp"
-                android:layout_height="200dp"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
                 android:src="@drawable/search_enquiry" />
 
             <TextView
@@ -302,9 +302,9 @@
                     android:maxLines="1"
                     android:padding="10dp"
                     android:singleLine="true"
-                    android:textSize="18sp"
                     android:textColor="#000000"
-                    android:textCursorDrawable="@drawable/cursor"/>
+                    android:textCursorDrawable="@drawable/cursor"
+                    android:textSize="18sp" />
 
 
             </LinearLayout>
@@ -340,13 +340,13 @@
                     android:digits="@string/numbers"
                     android:focusableInTouchMode="true"
                     android:hint="1234****"
-                    android:padding="10dp"
-                    android:textSize="18sp"
                     android:maxLength="16"
                     android:maxLines="1"
+                    android:padding="10dp"
                     android:singleLine="true"
                     android:textColor="#000000"
-                    android:textCursorDrawable="@drawable/cursor"/>
+                    android:textCursorDrawable="@drawable/cursor"
+                    android:textSize="18sp" />
             </LinearLayout>
 
             <LinearLayout

@@ -42,7 +42,6 @@ import com.herocorp.ui.activities.DSEapp.ConnectService.NetworkConnect;
 import com.herocorp.ui.activities.DSEapp.Utilities.SyncFollowup;
 import com.herocorp.ui.activities.DSEapp.adapter.Followupadapter;
 import com.herocorp.ui.activities.DSEapp.db.DatabaseHelper;
-import com.herocorp.ui.activities.DSEapp.interfaces.PageRefreshListener;
 import com.herocorp.ui.activities.DSEapp.models.Followup;
 import com.herocorp.ui.utility.CustomTypeFace;
 import com.herocorp.ui.utility.CustomViewParams;
@@ -97,7 +96,6 @@ public class PendingFollowupFragment extends Fragment implements View.OnClickLis
     String dealer_bu_id;
     String followup_status;
     Fragment f;
-    PageRefreshListener refresh;
     SwipeRefreshLayout swipe_refresh_followup;
     String sync_date = "";
     String current_date;
@@ -289,7 +287,7 @@ public class PendingFollowupFragment extends Fragment implements View.OnClickLis
                                             if ((!PreferenceUtil.get_Syncdate(getContext()).equalsIgnoreCase(current_date.toString()) && NetConnections.isConnected(getContext()))) {
                                                 swipe_refresh_followup.setRefreshing(true);
                                                 new SyncFollowup(getContext()).execute();
-                                               // fetch_records();
+                                                // fetch_records();
                                             }
                                         }
                                     }

@@ -1,39 +1,41 @@
-/*
 package com.herocorp.ui.FCMservice;
 
+import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.FirebaseInstanceIdService;
 import com.herocorp.core.constants.URLConstants;
-import com.herocorp.ui.activities.BaseDrawerActivity;
-import com.herocorp.ui.activities.DSEapp.Fragment.NetworkConnect;
+import com.herocorp.ui.activities.DSEapp.ConnectService.NetworkConnect;
+import com.herocorp.ui.utility.PreferenceUtil;
+
+
+import org.json.JSONException;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
-*/
-/**
- * Created by rsawh on 09-Oct-16.
- *//*
+// Created by rsawh on 09-Oct-16.
 
-*/
-/*public class FCMInstanceIdservice extends FirebaseInstanceIdService {
+
+public class FCMInstanceIdservice extends FirebaseInstanceIdService {
     private String deviceImei, userId, appVersion, androidVersion, deviceInfo, deviceToken;
     private static final String TAG = "HeroFCMIIDService";
 
     NetworkConnect networkConnect;
+    Context context;
 
     public FCMInstanceIdservice() {
     }
 
-    public FCMInstanceIdservice(String deviceImei, String userId, String appVersion, String androidVersion, String deviceInfo) {
+    public FCMInstanceIdservice(String deviceImei, String userId, String appVersion, String androidVersion, String deviceInfo, Context context) {
         this.deviceImei = deviceImei;
         this.userId = userId;
         this.appVersion = appVersion;
         this.androidVersion = androidVersion;
         this.deviceInfo = deviceInfo;
+        this.context = context;
     }
 
     public void onTokenRefresh() {
@@ -41,35 +43,20 @@ import java.net.URLEncoder;
         try {
             deviceToken = FirebaseInstanceId.getInstance().getToken();
             Log.d(TAG, "Refreshed token: " + deviceToken);
-
-          *//*
-*/
-/*  String data = "{\"imeiNo\":\"" + deviceImei + "\",\"userId\":\"" + userId + "\",\"appVersion\":\"" + appVersion + "\",\"androidVersion\":\"" + androidVersion +
-                    "\",\"deviceInfo\":\"" + "ffd77" + "\",\"deviceToken\":\"" + deviceToken + "\"}";
-          *//*
-*/
-/*
-
-            //Log.e(TAG, "data: " + data);
-            sendRegistrationToServer(deviceImei, userId, appVersion, androidVersion, "4445", deviceToken);
+            if (!deviceToken.equals(PreferenceUtil.get_Token(context)))
+                sendRegistrationToServer(deviceImei, userId, appVersion, androidVersion, deviceInfo, deviceToken);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
 
-    public void jsonparse_token(String result) {
+    public void jsonparse_token(String result, String deviceToken) {
         try {
-            // JSONObject jsono = new JSONObject(result);
-            Log.e(TAG, "RESPONSE" + result);
-        }*//*
-*/
-/* catch (JSONException e) {
-            e.printStackTrace();
-        }*//*
-*/
-/* catch (Exception e) {
-            System.out.println(Toast.makeText(getApplicationContext(), "Check your Connection !!", Toast.LENGTH_SHORT));
+            Log.e("token_api_response", result);
+            PreferenceUtil.set_Token(context, deviceToken);
+        } catch (Exception e) {
+            Toast.makeText(getApplicationContext(), "Check your Connection !!", Toast.LENGTH_SHORT);
         }
 
     }
@@ -85,11 +72,9 @@ import java.net.URLEncoder;
             newurlparams += "&deviceToken=" + URLEncoder.encode(deviceToken, "UTF-8");
 
             networkConnect = new NetworkConnect(URLConstants.TOKEN_DATA, newurlparams);
-            jsonparse_token(networkConnect.execute());
+            jsonparse_token(networkConnect.execute(), deviceToken);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-    }*//*
-
+    }
 }
-*/

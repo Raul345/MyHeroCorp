@@ -1,6 +1,7 @@
 package com.herocorp.ui.activities.DSEapp.Fragment.Followup;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -26,6 +27,7 @@ import com.herocorp.infra.utils.NetConnections;
 import com.herocorp.ui.activities.BaseDrawerActivity;
 import com.herocorp.ui.activities.DSEapp.ConnectService.NetworkConnect;
 import com.herocorp.ui.activities.DSEapp.ConnectService.NetworkConnect1;
+import com.herocorp.ui.activities.DSEapp.DbSyncservice;
 import com.herocorp.ui.activities.DSEapp.Fragment.Alert.AlertDialogFragment;
 import com.herocorp.ui.activities.DSEapp.db.DatabaseHelper;
 import com.herocorp.ui.activities.DSEapp.models.Bike_model;
@@ -356,6 +358,8 @@ public class CloseFollowupFragment extends Fragment implements View.OnClickListe
                     dialogFragment.setArguments(bundle);
                     dialogFragment.setCancelable(false);
                     dialogFragment.show(fm, "Sample Fragment");
+                  /*  Intent intent = new Intent(getContext(), DbSyncservice.class);
+                    getActivity().startService(intent);*/
                 }
             }
         }

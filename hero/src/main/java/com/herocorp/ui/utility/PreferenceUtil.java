@@ -21,13 +21,18 @@ public class PreferenceUtil {
     public static final String SYNC_DATE = "sync_date";
     public static final String MAKE_SYNC_DATE = "make_sync_date";
     public static final String VERSION_CHECK = "version_date";
-    public static final String SYNC_YN= "sync_yn";
+    public static final String SYNC_YN = "sync_yn";
+    public static final String FCM_TOKEN = "fcm_token";
 
     private SharedPreferences sharedPref;
 
+    public static SharedPreferences getPref(Context context) {
+
+        return context.getSharedPreferences("hero", context.MODE_PRIVATE);
+    }
 
     public static void set_Userdata(Context context, String user_id, String dealer_code, Boolean login, String version, String version_path, String state_id, String state_name) {
-        SharedPreferences.Editor edit = context.getSharedPreferences("hero", context.MODE_PRIVATE).edit();
+        SharedPreferences.Editor edit = getPref(context).edit();
         edit.putString(USER_ID, user_id);
         edit.putString(DEALER_CODE, dealer_code);
         edit.putBoolean(IS_USER_LOGIN, login);
@@ -39,98 +44,107 @@ public class PreferenceUtil {
     }
 
     public static void set_Syncdate(Context context, String sync_date) {
-        SharedPreferences.Editor edit = context.getSharedPreferences("hero", context.MODE_PRIVATE).edit();
+        SharedPreferences.Editor edit = getPref(context).edit();
         edit.putString(SYNC_DATE, sync_date);
         edit.commit();
     }
 
     public static void set_Syncyn(Context context, Boolean sync_yn) {
-        SharedPreferences.Editor edit = context.getSharedPreferences("hero", context.MODE_PRIVATE).edit();
+        SharedPreferences.Editor edit = getPref(context).edit();
         edit.putBoolean(SYNC_YN, sync_yn);
         edit.commit();
     }
+
     public static void set_Versiondate(Context context, String version_date) {
-        SharedPreferences.Editor edit = context.getSharedPreferences("hero", context.MODE_PRIVATE).edit();
+        SharedPreferences.Editor edit = getPref(context).edit();
         edit.putString(VERSION_CHECK, version_date);
         edit.commit();
     }
 
 
     public static void set_MakeSyncdate(Context context, String sync_date) {
-        SharedPreferences.Editor edit = context.getSharedPreferences("hero", context.MODE_PRIVATE).edit();
+        SharedPreferences.Editor edit = getPref(context).edit();
         edit.putString(MAKE_SYNC_DATE, sync_date);
         edit.commit();
     }
 
-    public static Boolean get_Syncyn(Context context) {
-        SharedPreferences sharedPref = context.getSharedPreferences("hero", context.MODE_PRIVATE);
-        Boolean restoredText = sharedPref.getBoolean(SYNC_YN, false);
+    public static void set_Token(Context context, String token) {
+        SharedPreferences.Editor edit = getPref(context).edit();
+        edit.putString(FCM_TOKEN, token);
+        edit.commit();
+    }
+
+    public static String get_Token(Context context) {
+        String restoredText = "";
+        if (getPref(context).contains(FCM_TOKEN))
+            restoredText = getPref(context).getString(FCM_TOKEN, "");
+
         return restoredText;
     }
+
+
+    public static Boolean get_Syncyn(Context context) {
+        Boolean restoredText = getPref(context).getBoolean(SYNC_YN, false);
+        return restoredText;
+    }
+
     public static Boolean get_IsUserLogin(Context context) {
-        SharedPreferences sharedPref = context.getSharedPreferences("hero", context.MODE_PRIVATE);
-        Boolean restoredText = sharedPref.getBoolean(IS_USER_LOGIN, false);
+        Boolean restoredText = getPref(context).getBoolean(IS_USER_LOGIN, false);
         return restoredText;
     }
 
     public static String get_DealerCode(Context context) {
-        SharedPreferences sharedPref = context.getSharedPreferences("hero", context.MODE_PRIVATE);
-        String restoredText = sharedPref.getString(DEALER_CODE, null);
+        String restoredText = getPref(context).getString(DEALER_CODE, null);
         return restoredText;
     }
 
     public static String get_UserId(Context context) {
-        SharedPreferences sharedPref = context.getSharedPreferences("hero", context.MODE_PRIVATE);
-        String restoredText = sharedPref.getString(USER_ID, "");
+        String restoredText = "";
+        if (getPref(context).contains(USER_ID))
+            restoredText = getPref(context).getString(USER_ID, "");
         return restoredText;
     }
 
     public static String get_Version(Context context) {
-        SharedPreferences sharedPref = context.getSharedPreferences("hero", context.MODE_PRIVATE);
-        String restoredText = sharedPref.getString(VERSION, null);
+        String restoredText = getPref(context).getString(VERSION, null);
         return restoredText;
     }
 
     public static String get_VersionPath(Context context) {
-        SharedPreferences sharedPref = context.getSharedPreferences("hero", context.MODE_PRIVATE);
-        String restoredText = sharedPref.getString(VERSION_PATH, null);
+        String restoredText = getPref(context).getString(VERSION_PATH, null);
         return restoredText;
     }
 
     public static String get_StateId(Context context) {
-        SharedPreferences sharedPref = context.getSharedPreferences("hero", context.MODE_PRIVATE);
-        String restoredText = sharedPref.getString(STATE_ID, null);
+        String restoredText = getPref(context).getString(STATE_ID, null);
         return restoredText;
     }
 
     public static String get_StateName(Context context) {
-        SharedPreferences sharedPref = context.getSharedPreferences("hero", context.MODE_PRIVATE);
-        String restoredText = sharedPref.getString(STATE_NAME, null);
+        String restoredText = getPref(context).getString(STATE_NAME, null);
         return restoredText;
     }
 
     public static String get_Syncdate(Context context) {
-        SharedPreferences sharedPref = context.getSharedPreferences("hero", context.MODE_PRIVATE);
-       /* String restoredText = "";
-        if (sharedPref.contains(SYNC_DATE))*/
-        String restoredText = sharedPref.getString(SYNC_DATE, "");
+
+        String restoredText = getPref(context).getString(SYNC_DATE, "");
         return restoredText;
     }
 
     public static String get_MakeSyncdate(Context context) {
-        SharedPreferences sharedPref = context.getSharedPreferences("hero", context.MODE_PRIVATE);
-        String restoredText = sharedPref.getString(MAKE_SYNC_DATE, "");
+        String restoredText = "";
+        if (getPref(context).contains(MAKE_SYNC_DATE))
+            restoredText = getPref(context).getString(MAKE_SYNC_DATE, "");
         return restoredText;
     }
 
     public static String get_Versiondate(Context context) {
-        SharedPreferences sharedPref = context.getSharedPreferences("hero", context.MODE_PRIVATE);
-        String restoredText = sharedPref.getString(VERSION_CHECK, "");
+        String restoredText = getPref(context).getString(VERSION_CHECK, "");
         return restoredText;
     }
 
     public static void clearPref(Context context) {
-        SharedPreferences.Editor edit = context.getSharedPreferences("hero", context.MODE_PRIVATE).edit();
+        SharedPreferences.Editor edit = getPref(context).edit();
         edit.remove(DEALER_CODE).commit();
         edit.remove(IS_USER_LOGIN).commit();
         edit.remove(VERSION_PATH).commit();
@@ -143,17 +157,16 @@ public class PreferenceUtil {
     }
 
     public static void clear_SyncDate(Context context) {
-        SharedPreferences mypref = context.getSharedPreferences("hero", context.MODE_PRIVATE);
-        SharedPreferences.Editor edit = mypref.edit();
-        if (mypref.contains(SYNC_DATE))
+        SharedPreferences.Editor edit = getPref(context).edit();
+        if (getPref(context).contains(SYNC_DATE))
             edit.remove(SYNC_DATE).commit();
-        if (mypref.contains(MAKE_SYNC_DATE))
+        if (getPref(context).contains(MAKE_SYNC_DATE))
             edit.remove(MAKE_SYNC_DATE).commit();
     }
 
 
     public static void set_Address(Context context, String state, String district, String tehsil, String city) {
-        SharedPreferences.Editor edit = context.getSharedPreferences("hero", context.MODE_PRIVATE).edit();
+        SharedPreferences.Editor edit = getPref(context).edit();
         edit.putString(STATE_NAME, state);
         edit.putString(DISTRICT_NAME, district);
         edit.putString(TEHSIL_NAME, tehsil);
@@ -162,31 +175,29 @@ public class PreferenceUtil {
     }
 
     public static String get_DistrictName(Context context) {
-        SharedPreferences sharedPref = context.getSharedPreferences("hero", context.MODE_PRIVATE);
-        String restoredText = sharedPref.getString(DISTRICT_NAME, "");
+        String restoredText = getPref(context).getString(DISTRICT_NAME, "");
         return restoredText;
     }
 
     public static String get_TehsilName(Context context) {
-        SharedPreferences sharedPref = context.getSharedPreferences("hero", context.MODE_PRIVATE);
-        String restoredText = sharedPref.getString(TEHSIL_NAME, "");
+        String restoredText = getPref(context).getString(TEHSIL_NAME, "");
         return restoredText;
     }
 
     public static String get_CityName(Context context) {
-        SharedPreferences sharedPref = context.getSharedPreferences("hero", context.MODE_PRIVATE);
-        String restoredText = sharedPref.getString(CITY_NAME, "");
+        String restoredText = getPref(context).getString(CITY_NAME, "");
         return restoredText;
     }
 
     public static void clear_Address(Context context) {
-        SharedPreferences mypref = context.getSharedPreferences("hero", context.MODE_PRIVATE);
-        SharedPreferences.Editor edit = mypref.edit();
-        if (mypref.contains(DISTRICT_NAME))
+        SharedPreferences.Editor edit = getPref(context).edit();
+        if (getPref(context).contains(DISTRICT_NAME))
             edit.remove(DISTRICT_NAME).commit();
-        if (mypref.contains(TEHSIL_NAME))
+        if (getPref(context).contains(TEHSIL_NAME))
             edit.remove(TEHSIL_NAME).commit();
-        if (mypref.contains(CITY_NAME))
+        if (getPref(context).contains(CITY_NAME))
             edit.remove(CITY_NAME).commit();
     }
+
+
 }

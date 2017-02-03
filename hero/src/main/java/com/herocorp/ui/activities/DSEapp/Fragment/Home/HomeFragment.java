@@ -65,24 +65,20 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     String encryptuser;
     Bundle bundle = new Bundle();
     int check = 0, flag = 0;
-
     DatabaseHelper db;
     String urlParameters;
-
     TextView pendingorderText, todayfollowupText, pendingfollowupText, searchenquiryText;
-
     String user_id, dealer_code, sync_date = "";
     String current_date;
 
+
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
             savedInstanceState) {
-        rootView = inflater.inflate(R.layout.dse_home_fragment, container, false);
         getActivity().setRequestedOrientation(
-                ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+                ActivityInfo.SCREEN_ORIENTATION_USER_PORTRAIT);
+        rootView = inflater.inflate(R.layout.dse_home_fragment, container, false);
 
         ((BaseDrawerActivity) getActivity()).closeDrawer();
-
-        setRetainInstance(true);
         try {
             initView(rootView);
         } catch (ParseException e) {
@@ -91,7 +87,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         current_date = new SimpleDateFormat("dd-MMM-yy").format(new Date());
         /*if (!(sync_date.equalsIgnoreCase(current_date.toString()) && NetConnections.isConnected(getContext())))
             sync_data();
-*/
+        */
         return rootView;
     }
 
@@ -161,7 +157,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         registration_et = (EditText) rootView.findViewById(R.id.registration_edittext);
 
         fetch_pref();
-           // new Syncmakemodel(getContext()).execute();
 
         menu.setOnClickListener(this);
         pendingorder.setOnClickListener(this);
@@ -336,7 +331,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
             Log.e("make_sync_close", current_date.toString());
             //   progressBar.setVisibility(View.INVISIBLE);
-          //  progressDialog.dismiss();
+            //  progressDialog.dismiss();
 
         } catch (JSONException e) {
             e.printStackTrace();

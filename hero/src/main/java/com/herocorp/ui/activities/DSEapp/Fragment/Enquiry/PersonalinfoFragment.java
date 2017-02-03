@@ -102,7 +102,7 @@ public class PersonalinfoFragment extends Fragment implements View.OnClickListen
         customViewParams.setImageViewCustomParams(menu, new int[]{0, 30, 30, 0}, new int[]{0, 0, 0, 0}, 100, 100);
 
         ScrollView scrollView = (ScrollView) rootView.findViewById(R.id.scroll_view);
-        customViewParams.setMarginAndPadding(scrollView, new int[]{100, 20, 100, 0}, new int[]{0, 0, 0, 0}, scrollView.getParent());
+        customViewParams.setMarginAndPadding(scrollView, new int[]{100, 50, 100, 60}, new int[]{0, 0, 0, 0}, scrollView.getParent());
 
         LinearLayout topLayout = (LinearLayout) rootView.findViewById(R.id.top_layout);
         customViewParams.setMarginAndPadding(topLayout, new int[]{100, 20, 100, 0}, new int[]{0, 0, 0, 0}, topLayout.getParent());
@@ -111,7 +111,7 @@ public class PersonalinfoFragment extends Fragment implements View.OnClickListen
         customViewParams.setButtonCustomParams(buttonHeader, new int[]{0, 10, 0, 10}, new int[]{50, 0, 0, 0}, 90, 180, 40, customTypeFace.gillSansItalic, 0);
 
         LinearLayout topLayout1 = (LinearLayout) rootView.findViewById(R.id.top_layout1);
-        customViewParams.setMarginAndPadding(topLayout1, new int[]{100, 50, 100, 60}, new int[]{0, 0, 0, 0}, topLayout1.getParent());
+        customViewParams.setMarginAndPadding(topLayout1, new int[]{0, 0, 0, 0}, new int[]{0, 0, 0, 0}, topLayout1.getParent());
 
         TextView firstname_tv = (TextView) rootView.findViewById(R.id.firstname_textview);
 

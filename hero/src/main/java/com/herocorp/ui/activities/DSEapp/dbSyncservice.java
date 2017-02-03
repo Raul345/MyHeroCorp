@@ -82,7 +82,7 @@ public class DbSyncservice extends Service {
                             Log.e("close_followup", jsonparams.toString());
                             String newurlparams = "data=" + URLEncoder.encode(jsonparams.toString(), "UTF-8");
 
-                            //  new NetworkConnect1(URLConstants.SYNC_FOLLOW_UP, newurlparams, followup.getDms_enquiryid(),1).execute();
+                            new NetworkConnect1(URLConstants.SYNC_FOLLOW_UP, newurlparams, followup.getDms_enquiryid(),1).execute();
                         }
 
 
@@ -97,8 +97,7 @@ public class DbSyncservice extends Service {
                             String json = jsonparams.toString().replace("\\/", "/");
                             Log.e("followup", json);
                             String newurlparams = "data=" + URLEncoder.encode(json, "UTF-8");
-                            //  new NetworkConnect1(URLConstants.SYNC_FOLLOW_UP, newurlparams, followup.getDms_enquiryid(),2).execute();
-
+                            new NetworkConnect1(URLConstants.SYNC_FOLLOW_UP, newurlparams, followup.getDms_enquiryid(),2).execute();
                         }
                         Log.e(TAG, "Service sync running");
                     }
