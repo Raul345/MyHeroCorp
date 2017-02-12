@@ -60,4 +60,10 @@
     <string name="title_activity_splash">activity_splash</string>
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="btn1_text">&lt; 25</string>
+    <string name="btn2_text">25 - 30</string>
+    <string name="btn3_text">31 - 35</string>
+    <string name="btn4_text">36 - 40</string>
+    <string name="btn5_text">41 - 45</string>
+    <string name="btn6_text">&gt; 45</string>
 </resources>

@@ -41,7 +41,7 @@ public class NetworkConnect {
                         "application/x-www-form-urlencoded");
                 connection.setRequestProperty("Content-Length", "" + Integer.toString(urlParameters.getBytes().length));
                 connection.setRequestProperty("Content-Language", "en-US");
-                connection.setConnectTimeout(5000);
+                connection.setConnectTimeout(8000);
                 connection.setUseCaches(false);
                 connection.setDoInput(true);
                 connection.setDoOutput(true);

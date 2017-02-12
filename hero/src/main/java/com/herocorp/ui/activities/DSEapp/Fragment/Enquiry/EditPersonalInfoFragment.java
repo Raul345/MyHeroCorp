@@ -48,6 +48,7 @@ public class EditPersonalInfoFragment extends Fragment implements View.OnClickLi
     SharedPreferences.Editor edit;
 
 
+
     public static EditPersonalInfoFragment newInstance(int page) {
         Bundle args = new Bundle();
         args.putInt(ARG_PAGE, page);
@@ -204,7 +205,7 @@ public class EditPersonalInfoFragment extends Fragment implements View.OnClickLi
         });*/
 
 
-       age_et.addTextChangedListener(new TextWatcher() {
+        age_et.addTextChangedListener(new TextWatcher() {
 
             public void afterTextChanged(Editable s) {
             }
@@ -218,7 +219,7 @@ public class EditPersonalInfoFragment extends Fragment implements View.OnClickLi
                 edit.putString("age", age_et.getText().toString());
                 edit.commit();
             }
-       });
+        });
 
        /* age_et.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override

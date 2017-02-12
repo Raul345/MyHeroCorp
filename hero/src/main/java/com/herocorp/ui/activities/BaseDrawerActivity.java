@@ -230,7 +230,7 @@ public class BaseDrawerActivity extends FragmentActivity implements View.OnClick
         findViewById(R.id.nav_emi_layout).setOnClickListener(this);
         findViewById(R.id.nav_sync_layout).setOnClickListener(this);
         findViewById(R.id.nav_logout_layout).setOnClickListener(this);
-        findViewById(R.id.nav_notify_layout).setOnClickListener(this);
+   //     findViewById(R.id.nav_notify_layout).setOnClickListener(this);
 
         if (null == savedInstanceState) {
             FragmentManager fragmentManager = getSupportFragmentManager();
@@ -437,14 +437,14 @@ public class BaseDrawerActivity extends FragmentActivity implements View.OnClick
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        } else if (i == R.id.nav_notify_layout) {
+        }/* else if (i == R.id.nav_notify_layout) {
             try {
                 toggleDrawer();
                 openFragment(new NotificationFragment(), false);
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        }
+        }*/
     }
 
     public void openFragment(Fragment fragment, boolean doBackStack) {
@@ -1614,7 +1614,7 @@ public class BaseDrawerActivity extends FragmentActivity implements View.OnClick
         ImageView navSyncImage = (ImageView) findViewById(R.id.nav_sync_image);
         ImageView navEmiImage = (ImageView) findViewById(R.id.nav_emi_image);
         ImageView navlogoutimage = (ImageView) findViewById(R.id.nav_logout_image);
-        ImageView navnotificationsimage = (ImageView) findViewById(R.id.nav_notify_image);
+        //ImageView navnotificationsimage = (ImageView) findViewById(R.id.nav_notify_image);
 
 
         customViewParams.setImageViewCustomParams(navHomeImage, new int[]{30, 0, 20, 0}, new int[]{0, 0, 0, 0}, 40, 40);
@@ -1628,7 +1628,7 @@ public class BaseDrawerActivity extends FragmentActivity implements View.OnClick
         customViewParams.setImageViewCustomParams(navSyncImage, new int[]{30, 0, 20, 0}, new int[]{0, 0, 0, 0}, 40, 40);
         customViewParams.setImageViewCustomParams(navEmiImage, new int[]{30, 0, 20, 0}, new int[]{0, 0, 0, 0}, 40, 40);
         customViewParams.setImageViewCustomParams(navlogoutimage, new int[]{30, 0, 20, 0}, new int[]{0, 0, 0, 0}, 40, 40);
-        customViewParams.setImageViewCustomParams(navnotificationsimage, new int[]{30, 0, 20, 0}, new int[]{0, 0, 0, 0}, 40, 40);
+        //  customViewParams.setImageViewCustomParams(navnotificationsimage, new int[]{30, 0, 20, 0}, new int[]{0, 0, 0, 0}, 40, 40);
 
 
         TextView navHomeText = (TextView) findViewById(R.id.nav_home_text);
@@ -1642,7 +1642,7 @@ public class BaseDrawerActivity extends FragmentActivity implements View.OnClick
         TextView navSyncText = (TextView) findViewById(R.id.nav_sync_text);
         TextView navEmiText = (TextView) findViewById(R.id.nav_emi_text);
         TextView navLogoutText = (TextView) findViewById(R.id.nav_logout_text);
-        TextView navnotifyText = (TextView) findViewById(R.id.nav_notify_text);
+        // TextView navnotifyText = (TextView) findViewById(R.id.nav_notify_text);
 
 
         customViewParams.setTextViewCustomParams(navHomeText, new int[]{0, 30, 0, 30}, new int[]{0, 0, 0, 0}, 35, customTypeFace.gillSans, 0);
@@ -1656,7 +1656,7 @@ public class BaseDrawerActivity extends FragmentActivity implements View.OnClick
         customViewParams.setTextViewCustomParams(navSyncText, new int[]{0, 30, 0, 30}, new int[]{0, 0, 0, 0}, 35, customTypeFace.gillSans, 0);
         customViewParams.setTextViewCustomParams(navEmiText, new int[]{0, 30, 0, 30}, new int[]{0, 0, 0, 0}, 35, customTypeFace.gillSans, 0);
         customViewParams.setTextViewCustomParams(navLogoutText, new int[]{0, 30, 0, 30}, new int[]{0, 0, 0, 0}, 35, customTypeFace.gillSans, 0);
-        customViewParams.setTextViewCustomParams(navnotifyText, new int[]{0, 30, 0, 30}, new int[]{0, 0, 0, 0}, 35, customTypeFace.gillSans, 0);
+        //customViewParams.setTextViewCustomParams(navnotifyText, new int[]{0, 30, 0, 30}, new int[]{0, 0, 0, 0}, 35, customTypeFace.gillSans, 0);
 
         navMenuLayout.setOnClickListener(this);
         closeDrawer.setOnClickListener(this);
@@ -1703,7 +1703,7 @@ public class BaseDrawerActivity extends FragmentActivity implements View.OnClick
         ImageView navSyncImage = (ImageView) findViewById(R.id.nav_sync_image);
         ImageView navEmiImage = (ImageView) findViewById(R.id.nav_emi_image);
         ImageView navlogoutimage = (ImageView) findViewById(R.id.nav_logout_image);
-        ImageView navnotificationsimage = (ImageView) findViewById(R.id.nav_notify_image);
+        // ImageView navnotificationsimage = (ImageView) findViewById(R.id.nav_notify_image);
 
 
         customViewParams.setImageViewCustomParams(navHomeImage, new int[]{30, 0, 20, 0}, new int[]{0, 0, 0, 0}, 80, 80);
@@ -1717,7 +1717,7 @@ public class BaseDrawerActivity extends FragmentActivity implements View.OnClick
         customViewParams.setImageViewCustomParams(navSyncImage, new int[]{30, 0, 20, 0}, new int[]{0, 0, 0, 0}, 80, 80);
         customViewParams.setImageViewCustomParams(navEmiImage, new int[]{30, 0, 20, 0}, new int[]{0, 0, 0, 0}, 80, 80);
         customViewParams.setImageViewCustomParams(navlogoutimage, new int[]{30, 0, 20, 0}, new int[]{0, 0, 0, 0}, 80, 80);
-        customViewParams.setImageViewCustomParams(navnotificationsimage, new int[]{30, 0, 20, 0}, new int[]{0, 0, 0, 0}, 80, 80);
+        // customViewParams.setImageViewCustomParams(navnotificationsimage, new int[]{30, 0, 20, 0}, new int[]{0, 0, 0, 0}, 80, 80);
 
 
         TextView navHomeText = (TextView) findViewById(R.id.nav_home_text);
@@ -1731,7 +1731,7 @@ public class BaseDrawerActivity extends FragmentActivity implements View.OnClick
         TextView navSyncText = (TextView) findViewById(R.id.nav_sync_text);
         TextView navEmiText = (TextView) findViewById(R.id.nav_emi_text);
         TextView navLogoutText = (TextView) findViewById(R.id.nav_logout_text);
-        TextView navnotifyText = (TextView) findViewById(R.id.nav_notify_text);
+        //  TextView navnotifyText = (TextView) findViewById(R.id.nav_notify_text);
 
 
         customViewParams.setTextViewCustomParams(navHomeText, new int[]{0, 30, 0, 30}, new int[]{0, 0, 0, 0}, 65, customTypeFace.gillSans, 0);
@@ -1745,7 +1745,7 @@ public class BaseDrawerActivity extends FragmentActivity implements View.OnClick
         customViewParams.setTextViewCustomParams(navSyncText, new int[]{0, 30, 0, 30}, new int[]{0, 0, 0, 0}, 65, customTypeFace.gillSans, 0);
         customViewParams.setTextViewCustomParams(navEmiText, new int[]{0, 30, 0, 30}, new int[]{0, 0, 0, 0}, 65, customTypeFace.gillSans, 0);
         customViewParams.setTextViewCustomParams(navLogoutText, new int[]{0, 30, 0, 30}, new int[]{0, 0, 0, 0}, 65, customTypeFace.gillSans, 0);
-        customViewParams.setTextViewCustomParams(navnotifyText, new int[]{0, 30, 0, 30}, new int[]{0, 0, 0, 0}, 65, customTypeFace.gillSans, 0);
+        // customViewParams.setTextViewCustomParams(navnotifyText, new int[]{0, 30, 0, 30}, new int[]{0, 0, 0, 0}, 65, customTypeFace.gillSans, 0);
 
         navMenuLayout.setOnClickListener(this);
         closeDrawer.setOnClickListener(this);

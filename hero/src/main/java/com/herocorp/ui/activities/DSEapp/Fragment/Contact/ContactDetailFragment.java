@@ -67,6 +67,10 @@ public class ContactDetailFragment extends Fragment implements View.OnClickListe
     ImageView followup_check;
     String pendingfollowup_check = "0";
     String enq_id = "";
+    String occupation = "--select--";
+    String rural = "--select--";
+    String usage = "--select--";
+    String purchase;
 
     String firstname = "", lastname = "", age = "", state = "", district = "",
             tehsil = "", city = "", contact = "", sex = "", email_addr = "", cust_id = "";
@@ -180,6 +184,8 @@ public class ContactDetailFragment extends Fragment implements View.OnClickListe
                 bundle.putString("mobile", contact);
                 bundle.putString("age", age);
                 bundle.putString("sex", sex);
+                if (email_addr.equals(null))
+                    email_addr = "";
                 bundle.putString("email", email_addr);
                 bundle.putString("state", state);
                 bundle.putString("district", district);
@@ -309,6 +315,7 @@ public class ContactDetailFragment extends Fragment implements View.OnClickListe
             ((BaseDrawerActivity) getActivity()).toggleDrawer();
         } else if (i == R.id.addenquiry_layout) {
             save_preference();
+            PreferenceUtil.set_Mode(getActivity(), "3");
             f = new EditFollowupFragment();
             transaction(f);
         }
@@ -361,6 +368,7 @@ public class ContactDetailFragment extends Fragment implements View.OnClickListe
             cust_id = x_con_seq_no1;
         if (!(x_con_seq_no2 == null))
             cust_id = x_con_seq_no2;
+
         name.setText(firstname + " " + lastname);
         ages.setText(age + " yrs. / " + sex);
         states.setText(state);
@@ -576,6 +584,10 @@ public class ContactDetailFragment extends Fragment implements View.OnClickListe
         edit.putString("pincode", "");
         edit.putString("con_seq_no", enquiry_id);
         edit.putString("key", random_key(7));
+        edit.putString("purchase", purchase);
+        edit.putString("occupation", occupation);
+        edit.putString("area", rural);
+        edit.putString("usage", usage);
         edit.putInt("page_flag", 1);
         edit.commit();
     }

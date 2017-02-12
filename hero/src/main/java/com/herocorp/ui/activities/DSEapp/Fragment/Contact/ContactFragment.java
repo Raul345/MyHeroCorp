@@ -29,6 +29,8 @@ import com.herocorp.core.constants.URLConstants;
 import com.herocorp.infra.utils.NetConnections;
 import com.herocorp.ui.activities.BaseDrawerActivity;
 import com.herocorp.ui.activities.DSEapp.ConnectService.NetworkConnect;
+import com.herocorp.ui.activities.DSEapp.Fragment.Enquiry.EditFollowupFragment;
+import com.herocorp.ui.activities.DSEapp.Fragment.Enquiry.NewPersonalInfoFragment;
 import com.herocorp.ui.activities.DSEapp.Fragment.Enquiry.PersonalinfoFragment;
 import com.herocorp.ui.activities.DSEapp.adapter.EnquiryContactadapter;
 import com.herocorp.ui.activities.DSEapp.adapter.VinContactadapter;
@@ -50,6 +52,7 @@ import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -323,7 +326,7 @@ public class ContactFragment extends Fragment implements View.OnClickListener {
 
                 bundle.putString("x_exchange_required", exchange_reqd);
                 bundle.putString("x_finance_required", finance_reqd);
-                bundle.putString("existing_vehicle",exist_vehicle);
+                bundle.putString("existing_vehicle", exist_vehicle);
                 bundle.putString("followup_comments", comments);
 
 
@@ -366,19 +369,36 @@ public class ContactFragment extends Fragment implements View.OnClickListener {
         int i = view.getId();
         if (i == R.id.menu_icon) {
             ((BaseDrawerActivity) getActivity()).toggleDrawer();
-
         } else if (i == R.id.addenquiry_button) {
             save_data();
+            SharedPreferences mypref = getActivity().getSharedPreferences("herocorp", 0);
+            mypref.edit().clear().commit();
+            SharedPreferences.Editor edit = mypref.edit();
+            edit.putString("mobile", phone_no);
+            edit.putString("key", random_key(7));
+            edit.putInt("page_flag", 2);
+            PreferenceUtil.set_Mode(getActivity(), "1");
+            edit.commit();
+
             Bundle bundle = new Bundle();
             bundle.putString("phoneno", phone_no);
             FragmentManager fm = getActivity().getSupportFragmentManager();
             FragmentTransaction ft = fm.beginTransaction();
-            Fragment f = new PersonalinfoFragment();
+            Fragment f = new EditFollowupFragment();
             f.setArguments(bundle);
-            ft.add(R.id.content_contact, f);
-            ft.addToBackStack("contact");
+            ft.replace(R.id.content_contact, f);
+            //ft.addToBackStack("contact");
             ft.commit();
         }
+    }
+
+    public String random_key(int len) {
+        final String AB = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+        SecureRandom rnd = new SecureRandom();
+        StringBuilder sb = new StringBuilder(len);
+        for (int i = 0; i < len; i++)
+            sb.append(AB.charAt(rnd.nextInt(AB.length())));
+        return sb.toString();
     }
 
     public void fetch_data() {

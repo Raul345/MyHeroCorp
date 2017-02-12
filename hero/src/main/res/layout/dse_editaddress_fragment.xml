@@ -83,7 +83,9 @@
                     android:id="@+id/state_textview"
                     android:layout_width="0sp"
                     android:layout_height="match_parent"
-                    android:layout_margin="0.5dp"
+                    android:layout_marginBottom="0.5dp"
+                    android:layout_marginLeft="0.5dp"
+                    android:layout_marginRight="0.5dp"
                     android:layout_weight="5"
                     android:background="#ffffff"
                     android:gravity="center"
@@ -242,6 +244,7 @@
                     android:layout_width="0sp"
                     android:layout_height="match_parent"
                     android:layout_marginBottom="0.5dp"
+                    android:layout_marginLeft="0.5dp"
                     android:layout_marginTop="0.5dp"
                     android:layout_weight="5"
                     android:background="#ffffff"
@@ -277,6 +280,7 @@
                     android:layout_width="0sp"
                     android:layout_height="match_parent"
                     android:layout_marginBottom="0.5dp"
+                    android:layout_marginLeft="0.5dp"
                     android:layout_marginRight="0.5dp"
                     android:layout_marginTop="0.5dp"
                     android:layout_weight="5"
@@ -285,9 +289,8 @@
                     android:padding="8dp"
                     android:singleLine="true"
                     android:textColor="#000000"
-                    android:textSize="16dp"
                     android:textCursorDrawable="@drawable/cursor"
-                    />
+                    android:textSize="16dp" />
             </LinearLayout>
 
             <LinearLayout
@@ -308,12 +311,12 @@
                     android:textColor="#000000"
                     android:textSize="16dp" />
 
-               <EditText
-                   android:textCursorDrawable="@drawable/cursor"
-                   android:id="@+id/pincode_edittext"
+                <EditText
+                    android:id="@+id/pincode_edittext"
                     android:layout_width="0sp"
                     android:layout_height="match_parent"
                     android:layout_marginBottom="0.5dp"
+                    android:layout_marginLeft="0.5dp"
                     android:layout_marginRight="0.5dp"
                     android:layout_marginTop="0.5dp"
                     android:layout_weight="5"
@@ -323,6 +326,7 @@
                     android:maxLength="6"
                     android:padding="8dp"
                     android:textColor="#000000"
+                    android:textCursorDrawable="@drawable/cursor"
                     android:textSize="16dp" />
             </LinearLayout>
 

@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -25,6 +26,8 @@ import com.herocorp.ui.activities.DSEapp.Fragment.Home.HomeFragment;
 import com.herocorp.ui.activities.DSEapp.db.DatabaseHelper;
 import com.herocorp.ui.activities.DSEapp.models.Bike_model;
 import com.herocorp.ui.activities.DSEapp.models.Bikemake;
+import com.herocorp.ui.activities.DSEapp.models.Pitch;
+import com.herocorp.ui.activities.DSEapp.models.State;
 import com.herocorp.ui.activities.news.Fragment.NewsFragment;
 import com.herocorp.ui.activities.products.ProductDetailFragment;
 import com.herocorp.ui.utility.CustomTypeFace;
@@ -39,6 +42,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 public class DealerDashboardFragment extends Fragment implements View.OnClickListener {
 
@@ -207,7 +211,6 @@ public class DealerDashboardFragment extends Fragment implements View.OnClickLis
                                     Log.e("make_sync_start", current_date.toString());
                                     networkConnect = new NetworkConnect(URLConstants.BIKE_MAKE_MODEL, urlParameters);
                                     jsonparse_makemodel(networkConnect.execute());
-                                    //  }
                                 }
                                 // i++;
                             } catch (UnsupportedEncodingException e) {
@@ -255,7 +258,6 @@ public class DealerDashboardFragment extends Fragment implements View.OnClickLis
             }
 
             PreferenceUtil.set_MakeSyncdate(getContext(), current_date.toString());
-
             Log.e("make_sync_close", current_date.toString());
 
         } catch (JSONException e) {

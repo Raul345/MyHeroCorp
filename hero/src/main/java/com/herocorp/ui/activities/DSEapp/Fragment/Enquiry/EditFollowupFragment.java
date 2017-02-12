@@ -23,6 +23,7 @@ import com.herocorp.ui.activities.DSEapp.Fragment.Alert.AlertDialogFragment;
 import com.herocorp.ui.activities.DSEapp.adapter.Editenquiryadapter;
 import com.herocorp.ui.utility.CustomTypeFace;
 import com.herocorp.ui.utility.CustomViewParams;
+import com.herocorp.ui.utility.PreferenceUtil;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -35,27 +36,18 @@ public class EditFollowupFragment extends Fragment implements View.OnClickListen
     private CustomViewParams customViewParams;
     PagerSlidingTabStrip tabsStrip;
     String user, encryptuser, enquiryid;
-    String first_name;
-    String last_name;
-    String cell_ph_no;
-    String age;
-    String gender;
-    String email_addr;
-    String state;
-    String district;
-    String tehsil;
-    String city;
-    String address1;
-    String address2;
-    String pincode;
-    String expected_date_purchase;
-    String x_exchange_required;
-    String x_finance_required;
-    String existvehicle;
-    String followup_comments;
-    String enquiry_id;
-    String follow_date;
-
+    String first_name = "";
+    String last_name = "";
+    String cell_ph_no = "";
+    String age = "";
+    String gender = "";
+    String email_addr = "";
+    String existvehicle = "";
+    String existmake = "";
+    String purchase = "";
+    String occupation = "";
+    String area = "";
+    String usage = "";
     SharedPreferences mypref;
     int page_flag;
 
@@ -65,7 +57,6 @@ public class EditFollowupFragment extends Fragment implements View.OnClickListen
 
         rootView = inflater.inflate(R.layout.dse_editfollowup_fragment, container, false);
         mypref = getActivity().getSharedPreferences("herocorp", 0);
-
 
         initView(rootView);
 
@@ -92,10 +83,14 @@ public class EditFollowupFragment extends Fragment implements View.OnClickListen
         customViewParams.setMarginAndPadding(topLayout1, new int[]{100, 50, 100, 60}, new int[]{0, 0, 0, 0}, topLayout1.getParent());
 
         final ViewPager viewPager = (ViewPager) rootView.findViewById(R.id.viewpager_editenquiry);
-        fetch_data1();
-        fetch_data2();
+       /* fetch_data1();
+        fetch_data2();*/
         Bundle bundle = new Bundle();
         send_data(bundle);
+        if (PreferenceUtil.get_Mode(getContext()).equals("1") || PreferenceUtil.get_Mode(getContext()).equals("1"))
+            buttonHeader.setText("ADD ENQUIRY");
+        else
+            buttonHeader.setText("EDIT ENQUIRY");
 
         viewPager.setAdapter(new Editenquiryadapter(getChildFragmentManager(), bundle, getContext()));
 
@@ -104,9 +99,9 @@ public class EditFollowupFragment extends Fragment implements View.OnClickListen
         }
 
         if (page_flag == 1)
-            viewPager.setCurrentItem(2);
+            viewPager.setCurrentItem(1);
 
-        viewPager.setOffscreenPageLimit(2);
+        viewPager.setOffscreenPageLimit(1);
 
         // Give the PagerSlidingTabStrip the ViewPager
         tabsStrip = (PagerSlidingTabStrip) rootView.findViewById(R.id.tabs_editenquiry);
@@ -116,82 +111,46 @@ public class EditFollowupFragment extends Fragment implements View.OnClickListen
         tabsStrip.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
                                               @Override
                                               public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                                                  if (position == 1 || position == 2) {
+                                                  if (position == 1) {
                                                       fetch_data1();
-                                                      if (!email_addr.equalsIgnoreCase("") && !emailValidator(email_addr)) {
-                                                          Bundle bundle = new Bundle();
-                                                          bundle.putString("msg", "Invalid Email address !!");
-                                                          bundle.putInt("flag", 0);
-                                                          FragmentManager fm = getActivity().getSupportFragmentManager();
-                                                          AlertDialogFragment dialogFragment = new AlertDialogFragment();
-                                                          dialogFragment.setArguments(bundle);
-                                                          dialogFragment.setCancelable(false);
-                                                          dialogFragment.show(fm, "Sample Fragment");
+                                                      if (first_name.equalsIgnoreCase("")) {
+                                                          alert("FirstName cannot be empty!!");
                                                           viewPager.setCurrentItem(0);
-                                                        //  tabsStrip.setViewPager(viewPager);
+                                                      } else if (last_name.equalsIgnoreCase("")) {
+                                                          alert("LastName cannot be empty!!");
+                                                          viewPager.setCurrentItem(0);
+                                                      } else if (purchase.equalsIgnoreCase("")) {
+                                                          alert("Purchase cannot be empty!!");
+                                                          viewPager.setCurrentItem(0);
+                                                      } else if (!(email_addr.equalsIgnoreCase("")) && !emailValidator(email_addr)) {
+                                                          alert("Invalid Email Address");
+                                                          viewPager.setCurrentItem(0);
+                                                          //  tabsStrip.setViewPager(viewPager);
                                                       } else if (age.equalsIgnoreCase("")) {
-                                                          Bundle bundle = new Bundle();
-                                                          bundle.putString("msg", "Age cannot be empty !!");
-                                                          bundle.putInt("flag", 0);
-                                                          FragmentManager fm = getActivity().getSupportFragmentManager();
-                                                          AlertDialogFragment dialogFragment = new AlertDialogFragment();
-                                                          dialogFragment.setArguments(bundle);
-                                                          dialogFragment.setCancelable(false);
-                                                          dialogFragment.show(fm, "Sample Fragment");
+                                                          alert("Age cannot be empty!!");
                                                           viewPager.setCurrentItem(0);
-                                                         // tabsStrip.setViewPager(viewPager);
+                                                          // tabsStrip.setViewPager(viewPager);
+                                                      } else if (gender.equalsIgnoreCase("")) {
+                                                          alert("Gender cannot be empty!!");
+                                                          viewPager.setCurrentItem(0);
+                                                      } else if (occupation.equalsIgnoreCase("")) {
+                                                          alert("Occupation cannot be empty!!");
+                                                          viewPager.setCurrentItem(0);
+                                                      } else if (area.equalsIgnoreCase("")) {
+                                                          alert("Rural/Urban cannot be empty!!");
+                                                          viewPager.setCurrentItem(0);
+                                                      } else if (usage.equalsIgnoreCase("")) {
+                                                          alert("Usage cannot be empty!!");
+                                                          viewPager.setCurrentItem(0);
+                                                      } else if (existvehicle.equalsIgnoreCase("")) {
+                                                          alert("Existing Vehicle cannot be empty!!");
+                                                          viewPager.setCurrentItem(0);
+                                                      } else if (existvehicle.equalsIgnoreCase("Two wheeler") && existmake.equals("")) {
+                                                          alert("Make cannot be empty!!");
+                                                          viewPager.setCurrentItem(0);
                                                       }
                                                   }
-                                                 /* if (position == 0 || position == 2) {
-                                                      fetch_data2();
-                                                      if (state.equalsIgnoreCase("")) {
-                                                          Bundle bundle = new Bundle();
-                                                          bundle.putString("msg", "Please select the state !!");
-                                                          bundle.putInt("flag", 0);
-                                                          FragmentManager fm = getActivity().getSupportFragmentManager();
-                                                          AlertDialogFragment dialogFragment = new AlertDialogFragment();
-                                                          dialogFragment.setArguments(bundle);
-                                                          dialogFragment.setCancelable(false);
-                                                          dialogFragment.show(fm, "Sample Fragment");
-                                                          viewPager.setCurrentItem(1);
-                                                        //  tabsStrip.setViewPager(viewPager);
-                                                      } else if (district.equalsIgnoreCase("")) {
-                                                          Bundle bundle = new Bundle();
-                                                          bundle.putString("msg", "Please select the district !!");
-                                                          bundle.putInt("flag", 0);
-                                                          FragmentManager fm = getActivity().getSupportFragmentManager();
-                                                          AlertDialogFragment dialogFragment = new AlertDialogFragment();
-                                                          dialogFragment.setArguments(bundle);
-                                                          dialogFragment.setCancelable(false);
-                                                          dialogFragment.show(fm, "Sample Fragment");
-                                                          viewPager.setCurrentItem(1);
-                                                        //  tabsStrip.setViewPager(viewPager);
-                                                      } else if (tehsil.equalsIgnoreCase("")) {
-                                                          Bundle bundle = new Bundle();
-                                                          bundle.putString("msg", "Please select the tehsil !!");
-                                                          bundle.putInt("flag", 0);
-                                                          FragmentManager fm = getActivity().getSupportFragmentManager();
-                                                          AlertDialogFragment dialogFragment = new AlertDialogFragment();
-                                                          dialogFragment.setArguments(bundle);
-                                                          dialogFragment.setCancelable(false);
-                                                          dialogFragment.show(fm, "Sample Fragment");
-                                                          viewPager.setCurrentItem(1);
-                                                         // tabsStrip.setViewPager(viewPager);
-                                                      } else if (city.equalsIgnoreCase("")) {
-                                                          Bundle bundle = new Bundle();
-                                                          bundle.putString("msg", "Please select the village/city !!");
-                                                          bundle.putInt("flag", 0);
-                                                          FragmentManager fm = getActivity().getSupportFragmentManager();
-                                                          AlertDialogFragment dialogFragment = new AlertDialogFragment();
-                                                          dialogFragment.setArguments(bundle);
-                                                          dialogFragment.setCancelable(false);
-                                                          if (!dialogFragment.isVisible())
-                                                              dialogFragment.show(fm, "Sample Fragment");
-                                                          viewPager.setCurrentItem(1);
 
-                                                      }
-                                                  }
-*/
                                               }
 
                                               @Override
@@ -260,7 +219,7 @@ public class EditFollowupFragment extends Fragment implements View.OnClickListen
         bundle.putString("mobile", cell_ph_no);
         bundle.putString("age", age);
         bundle.putString("sex", gender);*/
-        bundle.putString("email", email_addr);
+        //  bundle.putString("email", email_addr);
        /* bundle.putString("state", state);
         bundle.putString("district", district);
         bundle.putString("tehsil", tehsil);
@@ -305,34 +264,35 @@ public class EditFollowupFragment extends Fragment implements View.OnClickListen
         if (mypref.contains("gender")) {
             gender = mypref.getString("gender", "");
         }
-        if (email_addr.equalsIgnoreCase("null"))
-            email_addr = "";
-
+        if (mypref.contains("gender")) {
+            existvehicle = mypref.getString("existvehicle", "");
+        }
+        if (mypref.contains("gender")) {
+            existmake = mypref.getString("existmake", "");
+        }
+        if (mypref.contains("purchase")) {
+            purchase = mypref.getString("purchase", "");
+        }
+        if (mypref.contains("occupation")) {
+            occupation = mypref.getString("occupation", "");
+        }
+        if (mypref.contains("area")) {
+            area = mypref.getString("area", "");
+        }
+        if (mypref.contains("usage")) {
+            usage = mypref.getString("usage", "");
+        }
     }
 
-    public void fetch_data2() {
-
-        if (mypref.contains("state")) {
-            state = mypref.getString("state", "");
-        }
-        if (mypref.contains("district")) {
-            district = mypref.getString("district", "");
-        }
-        if (mypref.contains("tehsil")) {
-            tehsil = mypref.getString("tehsil", "");
-        }
-        if (mypref.contains("city")) {
-            city = mypref.getString("city", "");
-        }
-        if (mypref.contains("address1")) {
-            address1 = mypref.getString("address1", "");
-        }
-        if (mypref.contains("address2")) {
-            address2 = mypref.getString("address2", "");
-        }
-        if (mypref.contains("pincode")) {
-            pincode = mypref.getString("pincode", "");
-        }
-
+    public void alert(String message) {
+        Bundle bundle = new Bundle();
+        bundle.putString("msg", message);
+        bundle.putInt("flag", 0);
+        FragmentManager fm = getActivity().getSupportFragmentManager();
+        AlertDialogFragment dialogFragment = new AlertDialogFragment();
+        dialogFragment.setArguments(bundle);
+        dialogFragment.setCancelable(false);
+        dialogFragment.show(fm, "Sample Fragment");
     }
+
 }

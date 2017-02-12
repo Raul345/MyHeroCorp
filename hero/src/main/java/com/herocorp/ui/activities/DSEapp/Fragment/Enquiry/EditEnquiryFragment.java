@@ -84,7 +84,6 @@ public class EditEnquiryFragment extends Fragment implements View.OnClickListene
     ArrayList<String> arr_modellist1 = new ArrayList<String>();
     ArrayList<Bikemake> arr_makelist = new ArrayList<Bikemake>();
     ArrayList<String> chk_campaignid = new ArrayList<String>();
-
     //String username = "ROBINK11610", dealercode = "11610" ;
     int flag = 0;
 
@@ -92,9 +91,8 @@ public class EditEnquiryFragment extends Fragment implements View.OnClickListene
     String date, follow_date = "", next_follow_date = "", purch_date = "", remark = "", exchange = "N", finance = "N", test = "N", model = "", existvehicle = "", existmake = "", existmodel = "";
     String firstname = "", lastname = "", email = "", mobile = "", age = "", gender = "", state = "", district = "", tehsil = "", village = "", address1 = "", address2 = "", pincode = "";
 
-    String encryptdata, data;
+    String encryptdata;
     int page_flag;
-    NetworkConnect networkConnect;
 
     SharedPreferences mypref;
     String user_id, dealer_code, key = "", enquiry_id = "";

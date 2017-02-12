@@ -20,9 +20,11 @@ public class PreferenceUtil {
     public static final String CITY_NAME = "city_name";
     public static final String SYNC_DATE = "sync_date";
     public static final String MAKE_SYNC_DATE = "make_sync_date";
+    public static final String PITCH_SYNC_DATE = "pitch_sync_date";
     public static final String VERSION_CHECK = "version_date";
     public static final String SYNC_YN = "sync_yn";
     public static final String FCM_TOKEN = "fcm_token";
+    public static final String MODE = "mode";
 
     private SharedPreferences sharedPref;
 
@@ -68,10 +70,30 @@ public class PreferenceUtil {
         edit.commit();
     }
 
+    public static void set_PitchSyncdate(Context context, String sync_date) {
+        SharedPreferences.Editor edit = getPref(context).edit();
+        edit.putString(PITCH_SYNC_DATE, sync_date);
+        edit.commit();
+    }
+
     public static void set_Token(Context context, String token) {
         SharedPreferences.Editor edit = getPref(context).edit();
         edit.putString(FCM_TOKEN, token);
         edit.commit();
+    }
+
+    public static void set_Mode(Context context, String mode) {
+        SharedPreferences.Editor edit = getPref(context).edit();
+        edit.putString(MODE, mode);
+        edit.commit();
+    }
+
+    public static String get_Mode(Context context) {
+        String restoredText = "";
+        if (getPref(context).contains(MODE))
+            restoredText = getPref(context).getString(MODE, "");
+
+        return restoredText;
     }
 
     public static String get_Token(Context context) {
@@ -137,7 +159,12 @@ public class PreferenceUtil {
             restoredText = getPref(context).getString(MAKE_SYNC_DATE, "");
         return restoredText;
     }
-
+    public static String get_PitchSyncdate(Context context) {
+        String restoredText = "";
+        if (getPref(context).contains(PITCH_SYNC_DATE))
+            restoredText = getPref(context).getString(PITCH_SYNC_DATE, "");
+        return restoredText;
+    }
     public static String get_Versiondate(Context context) {
         String restoredText = getPref(context).getString(VERSION_CHECK, "");
         return restoredText;

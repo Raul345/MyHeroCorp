@@ -15,6 +15,7 @@ import com.herocorp.ui.activities.DSEapp.models.Close_followup;
 import com.herocorp.ui.activities.DSEapp.models.Followup;
 import com.herocorp.ui.activities.DSEapp.models.LocalEnquiry;
 import com.herocorp.ui.activities.DSEapp.models.Next_Followup;
+import com.herocorp.ui.activities.DSEapp.models.Pitch;
 import com.herocorp.ui.activities.DSEapp.models.State;
 
 import java.util.ArrayList;
@@ -44,6 +45,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String TABLE_STATE = "state";
     private static final String TABLE_ENQUIRY = "enquiry";
     private static final String TABLE_CONTACTFOLLOWUP = "contact_followup";
+    private static final String TABLE_PITCH = "pitch_logic";
 
 
     public static class Cols_followup {
@@ -70,6 +72,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         public static final String ENQUIRY_ENTRY_DATE = "enquiry_entry_date";
         public static final String DEALER_BU_ID = "dealer_bu_id";
         public static final String FOLLOWUP_STATUS = "followup_status";
+    }
+
+    public static class Cols_Pitch {
+        public static final String ID = "id";
+        public static final String GENDER = "gender";
+        public static final String AGE = "age";
+        public static final String OCCUPATION = "occupation";
+        public static final String EXISTING_OWNERSHIP = "existing_ownership";
+        public static final String USAGE = "intende_usage";
+        public static final String AREA = "urban_rural";
+        public static final String IMG_PATH = "img_path";
     }
 
     public static class Cols_make {
@@ -217,6 +230,18 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             + Cols_contactfollowup.FOLLOWUP_STATUS + " text not null "
             + ");";
 
+    public static final String CREATE_PITCH_LOGIC = "create table "
+            + TABLE_PITCH + "("
+            + Cols_Pitch.ID + " text not null, "
+            + Cols_Pitch.GENDER + " text not null, "
+            + Cols_Pitch.AGE + " text not null, "
+            + Cols_Pitch.OCCUPATION + " text not null, "
+            + Cols_Pitch.EXISTING_OWNERSHIP + " text not null, "
+            + Cols_Pitch.USAGE + " text not null, "
+            + Cols_Pitch.AREA + " text not null, "
+            + Cols_Pitch.IMG_PATH + " text not null "
+            + ");";
+
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
@@ -232,6 +257,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(CREATE_TABLE_NEXT_FOLLOWUP);
         db.execSQL(CREATE_ENQUIRY);
         db.execSQL(CREATE_CONTACT_FOLLOWUP);
+        db.execSQL(CREATE_PITCH_LOGIC);
     }
 
     @Override
@@ -246,6 +272,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_NEXTFOLLOWUP);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_ENQUIRY);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_CONTACTFOLLOWUP);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_PITCH);
         // create new tables
         onCreate(db);
     }
@@ -382,6 +409,23 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
     }
 
+
+    public void add_pitch(Pitch pitch) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(Cols_Pitch.ID, pitch.getId());
+        values.put(Cols_Pitch.GENDER, pitch.getGender());
+        values.put(Cols_Pitch.AGE, pitch.getAge());
+        values.put(Cols_Pitch.OCCUPATION, pitch.getOccupation());
+        values.put(Cols_Pitch.EXISTING_OWNERSHIP, pitch.getOwnership());
+        values.put(Cols_Pitch.AREA, pitch.getArea());
+        values.put(Cols_Pitch.USAGE, pitch.getUsage());
+        values.put(Cols_Pitch.IMG_PATH, pitch.getImg_path());
+        db.insert(TABLE_PITCH, null, values);
+        db.close();
+    }
+
+
     public void add_enquiry(LocalEnquiry enquiry) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
@@ -490,7 +534,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return enquiry;
     }
 
-
     public void closeDB() {
         SQLiteDatabase db = this.getReadableDatabase();
         if (db != null && db.isOpen())
@@ -507,6 +550,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         db.execSQL("DELETE FROM " + TABLE_MAKE);
         db.execSQL("DELETE FROM " + TABLE_MODEL);
+        closeDB();
+    }
+
+    public void clearpitch() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("DELETE FROM " + TABLE_PITCH);
         closeDB();
     }
 
@@ -717,6 +766,34 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
         closeDB();
         return followups;
+    }
+
+    public List<Pitch> getAllPitch() {
+        List<Pitch> logic = new ArrayList<Pitch>();
+        String selectQuery = "SELECT * FROM " + TABLE_PITCH;
+
+        Log.e(LOG, selectQuery);
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c = db.rawQuery(selectQuery, null);
+
+        // looping through all rows and adding to list
+        if (c.moveToFirst()) {
+            do {
+                Pitch t = new Pitch();
+                t.setId(c.getString((c.getColumnIndex(Cols_Pitch.ID))));
+                t.setGender(c.getString((c.getColumnIndex(Cols_Pitch.GENDER))));
+                t.setAge(c.getString((c.getColumnIndex(Cols_Pitch.AGE))));
+                t.setOccupation(c.getString((c.getColumnIndex(Cols_Pitch.OCCUPATION))));
+                t.setOwnership(c.getString((c.getColumnIndex(Cols_Pitch.EXISTING_OWNERSHIP))));
+                t.setUsage(c.getString((c.getColumnIndex(Cols_Pitch.USAGE))));
+                t.setArea(c.getString((c.getColumnIndex(Cols_Pitch.AREA))));
+                t.setImg_path(c.getString((c.getColumnIndex(Cols_Pitch.IMG_PATH))));
+                logic.add(t);
+            } while (c.moveToNext());
+        }
+        closeDB();
+        return logic;
     }
 
     public List<Next_Followup> getNextFollowup() {

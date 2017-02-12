@@ -36,6 +36,7 @@ import com.herocorp.ui.activities.DSEapp.db.DatabaseHelper;
 import com.herocorp.ui.activities.DSEapp.models.Bike_model;
 import com.herocorp.ui.activities.DSEapp.models.Bikemake;
 import com.herocorp.ui.activities.DSEapp.models.Followup;
+import com.herocorp.ui.activities.DSEapp.models.Pitch;
 import com.herocorp.ui.utility.CustomTypeFace;
 import com.herocorp.ui.utility.CustomViewParams;
 import com.herocorp.ui.utility.PreferenceUtil;
@@ -49,6 +50,7 @@ import java.net.URLEncoder;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import static android.content.Context.INPUT_METHOD_SERVICE;
 
@@ -85,9 +87,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             e.printStackTrace();
         }
         current_date = new SimpleDateFormat("dd-MMM-yy").format(new Date());
-        /*if (!(sync_date.equalsIgnoreCase(current_date.toString()) && NetConnections.isConnected(getContext())))
+        if (!(sync_date.equalsIgnoreCase(current_date.toString()) && NetConnections.isConnected(getContext())))
             sync_data();
-        */
         return rootView;
     }
 
@@ -280,9 +281,9 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                             if (result != null) {
                                 encryptuser = result.replace("\\/", "/");
                                 urlParameters = "data=" + URLEncoder.encode(encryptuser, "UTF-8");
-                                Log.e("make_sync_start", current_date.toString());
-                                networkConnect = new NetworkConnect(URLConstants.BIKE_MAKE_MODEL, urlParameters);
-                                jsonparse_makemodel(networkConnect.execute());
+                                Log.e("pitch_sync_start", current_date.toString());
+                                networkConnect = new NetworkConnect(URLConstants.FETCH_PITCH, urlParameters);
+                                jsonparse_pitch(networkConnect.execute());
                                 //  }
                             }
                             i++;
@@ -307,32 +308,22 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     }
 
 
-    public void jsonparse_makemodel(String result) {
+    public void jsonparse_pitch(String result) {
         try {
             db = new DatabaseHelper(getContext());
-            db.clearmakemodel_table();
-
-            JSONObject jsono = new JSONObject(result);
-            JSONArray jarray = jsono.getJSONArray("make");
-            Log.e("response_make_model:", result);
-
+            db.clearpitch();
+            Log.e("response_pitch", result);
+            JSONObject jsonObject = new JSONObject(result);
+            JSONArray jarray = jsonObject.getJSONArray("pitch");
             for (int i = 0; i < jarray.length(); i++) {
-                JSONObject object = jarray.getJSONObject(i);
-                db.addbikemake(new Bikemake(object.getString("id"), object.getString("make_name")));
+                JSONObject jobj = jarray.getJSONObject(i);
+                db.add_pitch(new Pitch(jobj.getString("id"), jobj.getString("gender"), jobj.getString("age"), jobj.getString("occupation"), jobj.getString("existing_ownership"), jobj.getString("intended_usage"),
+                        jobj.getString("urban_rural"), jobj.getString("img_path")));
+
             }
-
-            JSONArray jarray1 = jsono.getJSONArray("model");
-            for (int i = 0; i < jarray1.length(); i++) {
-                JSONObject object = jarray1.getJSONObject(i);
-                db.addbikemodel(new Bike_model(object.getString("make_id"), object.getString("model_name")));
-            }
-
-            PreferenceUtil.set_MakeSyncdate(getContext(), current_date.toString());
-
-            Log.e("make_sync_close", current_date.toString());
-            //   progressBar.setVisibility(View.INVISIBLE);
-            //  progressDialog.dismiss();
-
+            fetch_logics();
+            PreferenceUtil.set_PitchSyncdate(getContext(), current_date.toString());
+            Log.e("pitch_sync_close", current_date.toString());
         } catch (JSONException e) {
             e.printStackTrace();
         } catch (Exception e) {
@@ -341,10 +332,19 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         }
     }
 
+    public void fetch_logics() {
+        db = new DatabaseHelper(getContext());
+        List<Pitch> allrecords = db.getAllPitch();
+        for (Pitch record : allrecords) {
+            Log.e("fetch_logic", record.getId() + record.getGender() + record.getAge() + record.getOccupation() + record.getOwnership() + record.getArea() + record.getUsage() + record.getImg_path());
+        }
+
+    }
+
     public void fetch_pref() {
         user_id = PreferenceUtil.get_UserId(getContext());
         dealer_code = PreferenceUtil.get_DealerCode(getContext());
-        sync_date = PreferenceUtil.get_MakeSyncdate(getContext());
+        sync_date = PreferenceUtil.get_PitchSyncdate(getContext());
     }
 
 }

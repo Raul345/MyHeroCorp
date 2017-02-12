@@ -34,6 +34,7 @@ import com.herocorp.ui.activities.DSEapp.models.Pendingorder;
 import com.herocorp.ui.activities.auth.SignInActivity;
 import com.herocorp.ui.utility.CustomTypeFace;
 import com.herocorp.ui.utility.CustomViewParams;
+import com.herocorp.ui.utility.PreferenceUtil;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -73,6 +74,10 @@ public class FollowupDetailFragment extends Fragment implements View.OnClickList
     String enquiry_id;
     String follow_date;
     String dealerid;
+    String occupation = "--select--";
+    String rural = "--select--";
+    String usage = "--select--";
+    String purchase;
     SharedPreferences mypref;
     SharedPreferences.Editor edit;
     Fragment f;
@@ -207,6 +212,8 @@ public class FollowupDetailFragment extends Fragment implements View.OnClickList
                 button_close.setBackgroundColor(Color.RED);
                 button_followup.setBackgroundColor(Color.RED);
                 button_edit.setBackgroundColor(Color.DKGRAY);
+                PreferenceUtil.set_Mode(getActivity(), "2");
+
                 f = new EditFollowupFragment();
                 f.setArguments(bundle);
                 transaction(f);
@@ -310,6 +317,10 @@ public class FollowupDetailFragment extends Fragment implements View.OnClickList
         edit.putString("enquiry_id", enquiry_id);
         edit.putString("follow_date", follow_date);
         edit.putString("dealerid", dealerid);
+        edit.putString("purchase", purchase);
+        edit.putString("occupation", occupation);
+        edit.putString("area", rural);
+        edit.putString("usage", usage);
         edit.commit();
 
     }
