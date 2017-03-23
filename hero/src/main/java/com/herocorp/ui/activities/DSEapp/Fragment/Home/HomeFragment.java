@@ -1,11 +1,15 @@
 package com.herocorp.ui.activities.DSEapp.Fragment.Home;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
+import android.os.Looper;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -31,11 +35,8 @@ import com.herocorp.ui.activities.DSEapp.ConnectService.NetworkConnect;
 import com.herocorp.ui.activities.DSEapp.Fragment.PendingFollowup.PendingFollowupFragment;
 import com.herocorp.ui.activities.DSEapp.Fragment.PendingOrders.PendingOrdersFragment;
 import com.herocorp.ui.activities.DSEapp.Fragment.TodayFollowup.TodayFollowupFragment;
-import com.herocorp.ui.activities.DSEapp.Utilities.Syncmakemodel;
+import com.herocorp.ui.activities.DSEapp.Pitch.ImageLoader;
 import com.herocorp.ui.activities.DSEapp.db.DatabaseHelper;
-import com.herocorp.ui.activities.DSEapp.models.Bike_model;
-import com.herocorp.ui.activities.DSEapp.models.Bikemake;
-import com.herocorp.ui.activities.DSEapp.models.Followup;
 import com.herocorp.ui.activities.DSEapp.models.Pitch;
 import com.herocorp.ui.utility.CustomTypeFace;
 import com.herocorp.ui.utility.CustomViewParams;
@@ -45,6 +46,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.text.ParseException;
@@ -72,6 +74,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     TextView pendingorderText, todayfollowupText, pendingfollowupText, searchenquiryText;
     String user_id, dealer_code, sync_date = "";
     String current_date;
+    ImageView image1, image2, image3;
 
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
@@ -87,8 +90,12 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             e.printStackTrace();
         }
         current_date = new SimpleDateFormat("dd-MMM-yy").format(new Date());
-        if (!(sync_date.equalsIgnoreCase(current_date.toString()) && NetConnections.isConnected(getContext())))
+        if (!(sync_date.equalsIgnoreCase(current_date.toString())) && NetConnections.isConnected(getContext())) {
+            progressDialog = ProgressDialog.show(getActivity(), null, null);
+            progressDialog.setContentView(R.layout.progresslayout);
+            clear();
             sync_data();
+        }
         return rootView;
     }
 
@@ -155,7 +162,11 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         customViewParams.setMarginAndPadding(textview_container, new int[]{120, 30, 110, 0}, new int[]{0, 0, 0, 0}, textview_container.getParent());
 
         phoneno_et = (EditText) rootView.findViewById(R.id.phoneno_edittext);
+        phoneno_et.setRawInputType(Configuration.KEYBOARD_12KEY);
         registration_et = (EditText) rootView.findViewById(R.id.registration_edittext);
+        image1 = (ImageView) rootView.findViewById(R.id.imageloader1);
+        image2 = (ImageView) rootView.findViewById(R.id.imageloader2);
+        image3 = (ImageView) rootView.findViewById(R.id.imageloader3);
 
         fetch_pref();
 
@@ -180,7 +191,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             pendingfollowupText.setTextColor(Color.GRAY);
             todayfollowupText.setTextColor(Color.GRAY);
             searchenquiryText.setTextColor(Color.GRAY);
-            // progress();
             if (NetConnections.isConnected(getContext())) {
                 transaction(new PendingOrdersFragment());
             } else
@@ -189,7 +199,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         } else if (i == R.id.followup) {
             InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
-            // Toast.makeText(getActivity(), "today followup", Toast.LENGTH_SHORT).show();
             pendingorderText.setTextColor(Color.GRAY);
             pendingfollowupText.setTextColor(Color.GRAY);
             todayfollowupText.setTextColor(Color.WHITE);
@@ -203,7 +212,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         } else if (i == R.id.pendingfollowup) {
             InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
-            //  Toast.makeText(getActivity(), "pendidng followup", Toast.LENGTH_SHORT).show();
             pendingorderText.setTextColor(Color.GRAY);
             pendingfollowupText.setTextColor(Color.WHITE);
             todayfollowupText.setTextColor(Color.GRAY);
@@ -214,7 +222,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         } else if (i == R.id.searchenquiry) {
             InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
-            // Toast.makeText(getActivity(), "search enquiry", Toast.LENGTH_SHORT).show();
             pendingorderText.setTextColor(Color.GRAY);
             pendingfollowupText.setTextColor(Color.GRAY);
             todayfollowupText.setTextColor(Color.GRAY);
@@ -310,18 +317,50 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
     public void jsonparse_pitch(String result) {
         try {
-            db = new DatabaseHelper(getContext());
+            db = new DatabaseHelper(getActivity());
             db.clearpitch();
             Log.e("response_pitch", result);
             JSONObject jsonObject = new JSONObject(result);
-            JSONArray jarray = jsonObject.getJSONArray("pitch");
+            //  final ImageLoader imageLoader = new ImageLoader(getContext());
+            final JSONArray jarray = jsonObject.getJSONArray("pitch");
             for (int i = 0; i < jarray.length(); i++) {
                 JSONObject jobj = jarray.getJSONObject(i);
-                db.add_pitch(new Pitch(jobj.getString("id"), jobj.getString("gender"), jobj.getString("age"), jobj.getString("occupation"), jobj.getString("existing_ownership"), jobj.getString("intended_usage"),
-                        jobj.getString("urban_rural"), jobj.getString("img_path")));
+                String id = jobj.getString("id");
+                String gender = jobj.getString("gender");
+                String age = jobj.getString("age");
+                String occupation = jobj.getString("occupation");
+                String ownership = jobj.getString("existing_ownership");
+                String usage = jobj.getString("intended_usage");
+                String area = jobj.getString("urban_rural");
+                String city = "";
+                if (jobj.has("city"))
+                    city = jobj.getString("city");
+                final String imgpath = jobj.getString("img_path");
 
+                db.add_pitch(new Pitch(id, gender, age, occupation, ownership, usage, area
+                        , city, imgpath));
+
+                getActivity().runOnUiThread(new Runnable() {
+                    public void run() {
+                        try {
+                            ImageLoader imageLoader = new ImageLoader(getContext());
+                            JSONObject j = new JSONObject(imgpath);
+                            String pleasure = j.getString("Pleasure");
+                            String maestro = j.getString("Maestro Edge");
+                            String duet = j.getString("Duet");
+                            Log.e("p_url", pleasure);
+                            Log.e("m_url", maestro);
+                            Log.e("d_url", duet);
+                            imageLoader.DisplayImage(pleasure, image1);
+                            imageLoader.DisplayImage(maestro, image2);
+                            imageLoader.DisplayImage(duet, image3);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
             }
-            fetch_logics();
+            progressDialog.dismiss();
             PreferenceUtil.set_PitchSyncdate(getContext(), current_date.toString());
             Log.e("pitch_sync_close", current_date.toString());
         } catch (JSONException e) {
@@ -347,4 +386,11 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         sync_date = PreferenceUtil.get_PitchSyncdate(getContext());
     }
 
+    public void clear() {
+        File f = new File(Environment.getExternalStorageDirectory() + "/" + "HeroSales");
+        if (f.isDirectory()) {
+            for (File c : f.listFiles())
+                c.delete();
+        }
+    }
 }

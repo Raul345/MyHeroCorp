@@ -79,46 +79,43 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="#ffffff">
-                   <LinearLayout
+
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:orientation="vertical">
-                       <LinearLayout
+
+                        <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:background="#ffffff"
                             android:orientation="vertical">
 
                             <LinearLayout
+                                android:id="@+id/layout_lov"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:background="@android:color/darker_gray"
-                                android:orientation="vertical">
+                                android:background="#EEEEEE">
 
                                 <TextView
-                                    android:layout_width="match_parent"
-                                    android:layout_height="match_parent"
-                                    android:background="#EEEEEE"
-                                    android:paddingLeft="30dp"
-                                    android:paddingTop="10dp"
-                                    android:text="Followup Action"
-                                    android:textColor="#000000"
-                                    android:textSize="18dp" />
+                                    android:id="@+id/tv_lov"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="15dp"
+                                    android:padding="15dp"
+                                    android:text="Not Contacted"
+                                    android:textColor="#cc0000"
+                                    android:textSize="17dp" />
 
-                                <EditText
-                                    android:id="@+id/edittext_followupreason"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="match_parent"
-                                    android:layout_marginBottom="1dp"
-                                    android:background="#EEEEEE"
-                                    android:hint="Click to enter Reason"
-                                    android:paddingBottom="10dp"
-                                    android:paddingLeft="30dp"
-                                    android:textColor="#000000"
-                                    android:textSize="18dp"
-                                    android:textCursorDrawable="@drawable/cursor"/>
-
+                                <CheckBox
+                                    android:id="@+id/chk_lov"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginLeft="40dp"
+                                    android:buttonTint="#000000"
+                                    android:checked="false" />
                             </LinearLayout>
+
 
                             <LinearLayout
                                 android:layout_width="match_parent"
@@ -135,7 +132,7 @@
                                     android:paddingTop="10dp"
                                     android:text="Next Schedule"
                                     android:textColor="#FFFFFF"
-                                    android:textSize="18dp" />
+                                    android:textSize="17dp" />
 
                             </LinearLayout>
                         </LinearLayout>
@@ -154,7 +151,7 @@
                                 android:paddingTop="10dp"
                                 android:text="Date"
                                 android:textColor="#000000"
-                                android:textSize="18dp" />
+                                android:textSize="17dp" />
 
                             <Button
                                 android:id="@+id/button_scheduledate"
@@ -171,7 +168,153 @@
 
                         </LinearLayout>
 
+                        <LinearLayout
+                            android:id="@+id/layout_testdrive"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="#EEEEEE">
 
+                            <TextView
+                                android:id="@+id/tv_testdrive"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="15dp"
+                                android:padding="15dp"
+                                android:text="Test drive/demo at home"
+                                android:textColor="#000000"
+                                android:textSize="17dp" />
+
+                            <CheckBox
+                                android:id="@+id/chk_testdrive"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:buttonTint="#000000"
+                                android:checked="false" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="@android:color/darker_gray"></LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/layout_finance"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="#EEEEEE">
+
+                            <TextView
+                                android:id="@+id/tv_finance"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="15dp"
+                                android:padding="15dp"
+                                android:text="Finance details at home"
+                                android:textColor="#000000"
+                                android:textSize="17dp" />
+
+                            <CheckBox
+                                android:id="@+id/chk_finance"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:buttonTint="#000000"
+                                android:checked="false" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="@android:color/darker_gray"></LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/layout_visit"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="#EEEEEE">
+
+                            <TextView
+                                android:id="@+id/tv_visit"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="15dp"
+                                android:padding="15dp"
+                                android:text="Will visit dealership again"
+                                android:textColor="#000000"
+                                android:textSize="17dp" />
+
+                            <CheckBox
+                                android:id="@+id/chk_visit"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:buttonTint="#000000"
+                                android:checked="false" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="@android:color/darker_gray"></LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/layout_schedulecall"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="#EEEEEE">
+
+                            <TextView
+                                android:id="@+id/tv_schedulecall"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginLeft="15dp"
+                                android:padding="15dp"
+                                android:text="Refer to GM"
+                                android:textColor="#000000"
+                                android:textSize="17dp" />
+
+                            <CheckBox
+                                android:id="@+id/chk_schedulecall"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:buttonTint="#000000"
+                                android:checked="false" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:background="@android:color/darker_gray"></LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@android:color/darker_gray"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:background="#EEEEEE"
+                                android:paddingLeft="30dp"
+                                android:paddingTop="10dp"
+                                android:text="Followup Action"
+                                android:textColor="#000000"
+                                android:textSize="17dp" />
+
+                            <EditText
+                                android:id="@+id/edittext_followupreason"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_marginBottom="1dp"
+                                android:background="#EEEEEE"
+                                android:hint="Click to enter Reason"
+                                android:imeOptions="actionDone"
+                                android:paddingBottom="10dp"
+                                android:paddingLeft="30dp"
+                                android:textColor="#000000"
+                                android:textCursorDrawable="@drawable/cursor"
+                                android:textSize="18dp"
+                                android:maxLength="100"/>
+                        </LinearLayout>
                     </LinearLayout>
                 </ScrollView>
 
@@ -187,18 +330,79 @@
                 android:background="@android:color/transparent"
                 android:focusable="false"
                 android:src="@drawable/cross_icon" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentLeft="true"
+                android:layout_gravity="bottom|end"
+                android:layout_marginTop="30dp"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ScrollView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:layout_marginTop="30dp"
+                    android:fillViewport="true">
+
+                    <LinearLayout
+                        android:id="@+id/layout_pitch"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_above="@+id/layout_addpitch"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:visibility="invisible">
+
+                    </LinearLayout>
+                </ScrollView>
+
+                <RelativeLayout
+                    android:id="@+id/layout_addpitch"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="2dp"
+                    android:visibility="invisible">
+
+                    <ImageView
+                        android:id="@+id/image_addpitch"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:background="@android:color/transparent"
+                        android:clickable="true"
+                        android:src="@drawable/pitch_id" />
+
+                    <TextView
+                        android:id="@+id/tv_pitchid"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:text="1"
+                        android:textColor="#ffffff"
+                        android:textSize="20dp"
+                        android:textStyle="bold" />
+                </RelativeLayout>
+
+            </LinearLayout>
         </RelativeLayout>
 
     </LinearLayout>
+
+
+
 
     <ImageView
         android:id="@+id/imageView_submitfollowup"
         android:layout_width="60dp"
         android:layout_height="60dp"
+        android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_marginBottom="10dp"
         android:layout_marginRight="15dp"
-       android:layout_alignParentBottom="true"
         android:background="@android:color/transparent"
         android:clickable="true"
         android:src="@drawable/edit_icon" />

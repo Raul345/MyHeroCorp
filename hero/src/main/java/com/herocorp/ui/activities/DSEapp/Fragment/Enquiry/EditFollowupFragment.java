@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -35,7 +36,6 @@ public class EditFollowupFragment extends Fragment implements View.OnClickListen
     private View rootView;
     private CustomViewParams customViewParams;
     PagerSlidingTabStrip tabsStrip;
-    String user, encryptuser, enquiryid;
     String first_name = "";
     String last_name = "";
     String cell_ph_no = "";
@@ -50,7 +50,7 @@ public class EditFollowupFragment extends Fragment implements View.OnClickListen
     String usage = "";
     SharedPreferences mypref;
     int page_flag;
-
+    Editenquiryadapter adapter;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
             savedInstanceState) {
@@ -87,19 +87,20 @@ public class EditFollowupFragment extends Fragment implements View.OnClickListen
         fetch_data2();*/
         Bundle bundle = new Bundle();
         send_data(bundle);
-        if (PreferenceUtil.get_Mode(getContext()).equals("1") || PreferenceUtil.get_Mode(getContext()).equals("1"))
+        if (PreferenceUtil.get_Mode(getContext()).equals("1") || PreferenceUtil.get_Mode(getContext()).equals("3"))
             buttonHeader.setText("ADD ENQUIRY");
         else
             buttonHeader.setText("EDIT ENQUIRY");
 
-        viewPager.setAdapter(new Editenquiryadapter(getChildFragmentManager(), bundle, getContext()));
+        adapter = new Editenquiryadapter(getChildFragmentManager(), bundle, getContext());
+        viewPager.setAdapter(adapter);
 
         if (mypref.contains("page_flag")) {
             page_flag = mypref.getInt("page_flag", 0);
         }
 
         if (page_flag == 1)
-            viewPager.setCurrentItem(1);
+            viewPager.setCurrentItem(0);
 
         viewPager.setOffscreenPageLimit(1);
 
@@ -111,6 +112,7 @@ public class EditFollowupFragment extends Fragment implements View.OnClickListen
         tabsStrip.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
                                               @Override
                                               public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
                                                   if (position == 1) {
                                                       fetch_data1();
                                                       if (first_name.equalsIgnoreCase("")) {
@@ -149,12 +151,13 @@ public class EditFollowupFragment extends Fragment implements View.OnClickListen
                                                           alert("Make cannot be empty!!");
                                                           viewPager.setCurrentItem(0);
                                                       }
-                                                  }
 
+                                                  }
                                               }
 
                                               @Override
                                               public void onPageSelected(int position) {
+
 
                                               }
 
@@ -168,7 +171,6 @@ public class EditFollowupFragment extends Fragment implements View.OnClickListen
 
 
         menu.setOnClickListener(this);
-
 
     }
 
@@ -260,6 +262,8 @@ public class EditFollowupFragment extends Fragment implements View.OnClickListen
         }
         if (mypref.contains("email")) {
             email_addr = mypref.getString("email", "");
+            if (email_addr.equals("null"))
+                email_addr = "";
         }
         if (mypref.contains("gender")) {
             gender = mypref.getString("gender", "");

@@ -67,10 +67,11 @@ public class ContactDetailFragment extends Fragment implements View.OnClickListe
     ImageView followup_check;
     String pendingfollowup_check = "0";
     String enq_id = "";
-    String occupation = "--select--";
-    String rural = "--select--";
-    String usage = "--select--";
+    String occupation = "";
+    String rural = "";
+    String usage = "";
     String purchase;
+    String sales_pitch_no = "", priority = "";
 
     String firstname = "", lastname = "", age = "", state = "", district = "",
             tehsil = "", city = "", contact = "", sex = "", email_addr = "", cust_id = "";
@@ -153,8 +154,9 @@ public class ContactDetailFragment extends Fragment implements View.OnClickListe
                 Followup data = userAdapter.getItem(position);
                 Bundle bundle = new Bundle();
                 bundle.putString("user", PreferenceUtil.get_UserId(getContext()));
-                bundle.putString("enquiry_id", data.getEnquiry_id());
+                bundle.putString("enquiryid", data.getEnquiry_id());
                 bundle.putString("pur_date", data.getExpcted_date_purchase());
+                bundle.putString("sales_pitch_no", sales_pitch_no);
                 bundle.putInt("enq_flag", 1);
 
                 switch (index) {
@@ -201,6 +203,12 @@ public class ContactDetailFragment extends Fragment implements View.OnClickListe
                 bundle.putString("followdate", data.getFollow_date());
                 bundle.putString("enquiryid", data.getEnquiry_id());
                 bundle.putString("user", user);
+                bundle.putString("purchase", purchase);
+                bundle.putString("occupation", occupation);
+                bundle.putString("area", rural);
+                bundle.putString("usage", usage);
+                bundle.putString("priority", priority);
+                bundle.putString("sales_pitch_no", sales_pitch_no);
                 bundle.putInt("page_flag", 1);
 
                 f = new FollowupDetailFragment();
@@ -423,6 +431,11 @@ public class ContactDetailFragment extends Fragment implements View.OnClickListe
         dealer_bu_id = bundle.getString("dealer_bu_id");
         user = bundle.getString("user");
         encryptuser = bundle.getString("user_id");
+        sales_pitch_no = bundle.getString("sales_pitch_no");
+        priority = bundle.getString("priority");
+        occupation= bundle.getString("occupation");
+        usage = bundle.getString("usage");
+        Log.e("sales_pitch_no", sales_pitch_no+priority+occupation+usage);
     }
 
     public void fetch_data1() {
@@ -455,11 +468,16 @@ public class ContactDetailFragment extends Fragment implements View.OnClickListe
         ins_policy_co = bundle.getString("ins_policy_co");
         x_hmgl_card_points = bundle.getString("x_hmgl_card_points");
         enquiry_id = bundle.getString("enquiry_id");
+        sales_pitch_no = bundle.getString("sales_pitch_no");
+        priority = bundle.getString("priority");
+        occupation= bundle.getString("occupation");
+        usage = bundle.getString("usage");
+        Log.e("sales_pitch_no", sales_pitch_no+priority+occupation+usage);
 
         DatabaseHelper db = new DatabaseHelper(getContext());
         List<Followup> allrecords = db.getContactFollowup(enquiry_id);
         for (Followup record : allrecords) {
-            userAdapter.add(new Followup(record.getX_model_interested(), record.getEnquiry_entry_date(), record.getExpcted_date_purchase(), record.getFollow_date(), record.getEnquiry_id(), record.getFollowup_status()));
+            userAdapter.add(new Followup(record.getX_model_interested(), record.getEnquiry_entry_date(), record.getExpcted_date_purchase(), record.getFollow_date(), record.getEnquiry_id(), record.getFollowup_status()+","+priority));
             userAdapter.notifyDataSetChanged();
         }
         updateList1();
@@ -573,6 +591,8 @@ public class ContactDetailFragment extends Fragment implements View.OnClickListe
         edit.putString("lastname", lastname);
         edit.putString("mobile", contact);
         edit.putString("age", age);
+        if (email_addr.equals("null"))
+            email_addr = "";
         edit.putString("email", email_addr);
         edit.putString("gender", sex);
         edit.putString("state", state);

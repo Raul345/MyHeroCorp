@@ -143,7 +143,7 @@ public class CloseFollowupFragment extends Fragment implements View.OnClickListe
             Bundle bundle = this.getArguments();
             // encryptuser = bundle.getString("user_id");
             user = bundle.getString("user");
-            enquiryid = bundle.getString("enquiry_id");
+            enquiryid = bundle.getString("enquiryid");
             if (bundle.containsKey("enq_flag"))
                 enq_flag = bundle.getInt("enq_flag");
 
@@ -311,9 +311,9 @@ public class CloseFollowupFragment extends Fragment implements View.OnClickListe
             String remarks = remark.getText().toString();
             ProgressDialog progress = new ProgressDialog(getContext());
 
-
-            if (main_reason.equals("--select--") || sub_reason.equals("--select--") || make.equals("--select--") || model.equals("--select--")) {
-                Toast.makeText(getContext(), "Please fill all the details !!", Toast.LENGTH_SHORT).show();
+            /*|| make.equals("--select--") || model.equals("--select--")*/
+            if (main_reason.equals("--select--") || sub_reason.equals("--select--") ) {
+                Toast.makeText(getContext(), "Reason/SubReason Missing!!", Toast.LENGTH_SHORT).show();
             } else {
                 if (main_reason.equalsIgnoreCase("Dropped the Idea")) {
                     sub_reason = "N.A.";

@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.text.TextUtils;
 import android.util.Log;
 import android.widget.Toast;
@@ -24,7 +25,7 @@ import com.herocorp.ui.activities.DSEapp.Fragment.Enquiry.NewPersonalInfoFragmen
 /**
  * Created by rsawh on 05-Oct-16.
  */
-public class Editenquiryadapter extends FragmentPagerAdapter implements
+public class Editenquiryadapter extends FragmentStatePagerAdapter implements
         PagerSlidingTabStrip.IconTabProvider {
     final int PAGE_COUNT = 2;
     private int icons[] = {R.drawable.icon_personalinfo, R.drawable.icon_address, R.drawable.icon_enquiry};

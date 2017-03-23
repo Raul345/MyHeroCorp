@@ -371,6 +371,34 @@
 
         </LinearLayout>
     </LinearLayout>
+
+    <ImageView
+        android:id="@+id/imageloader1"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:src="@drawable/blank"
+        android:visibility="gone" />
+
+    <ImageView
+        android:id="@+id/imageloader2"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:src="@drawable/blank"
+        android:visibility="gone" />
+
+    <ImageView
+        android:id="@+id/imageloader3"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:src="@drawable/blank"
+        android:visibility="gone" />
+
     <!-- <android.support.design.widget.FloatingActionButton
          xmlns:app="http://schemas.android.com/apk/res-auto"
          android:id="@+id/imageView_submit_home"

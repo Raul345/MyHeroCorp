@@ -53,7 +53,7 @@ public class Followupadapter extends ArrayAdapter<Followup> {
             holder.follow_date = (TextView) row.findViewById(R.id.textview_follow_date);
             holder.enquiry_date = (TextView) row.findViewById(R.id.textview_enquiry_date);
             holder.status = (ImageView) row.findViewById(R.id.img_pendingfollowup_check);
-
+            holder.priority_icon = (ImageView) row.findViewById(R.id.img_priority_icon);
             //    typeface = Typeface.createFromAsset(getContext().getAssets(), "DroidSerif-Regular.ttf");
             //   holder.textname.setTypeface(typeface);
 
@@ -70,6 +70,15 @@ public class Followupadapter extends ArrayAdapter<Followup> {
         holder.expctd_dt_purchase.setText(user.getExpcted_date_purchase());
         holder.follow_date.setText(user.getFollow_date());
         holder.enquiry_date.setText(user.getEnquiry_entry_date());
+        if (user.getPriority().equalsIgnoreCase("Hot"))
+            holder.priority_icon.setImageResource(R.drawable.hot1);
+        if (user.getPriority().equalsIgnoreCase("Warm"))
+            holder.priority_icon.setImageResource(R.drawable.warm);
+        if (user.getPriority().equalsIgnoreCase("Cold"))
+            holder.priority_icon.setImageResource(R.drawable.cold);
+       /* if (user.getPriority().equalsIgnoreCase(""))
+            holder.priority_icon.setImageResource(R.drawable.hot1);*/
+
         if (user.getFollowup_status().equals("0"))
             holder.status.setImageResource(R.drawable.error_icon);
         else
@@ -102,6 +111,7 @@ public class Followupadapter extends ArrayAdapter<Followup> {
         TextView follow_date;
         TextView enquiry_date;
         ImageView status;
+        ImageView priority_icon;
 
     }
 

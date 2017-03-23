@@ -1,5 +1,7 @@
 package com.herocorp.ui.activities.home;
 
+import android.app.ProgressDialog;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
@@ -28,6 +30,7 @@ import com.herocorp.ui.activities.DSEapp.models.Bike_model;
 import com.herocorp.ui.activities.DSEapp.models.Bikemake;
 import com.herocorp.ui.activities.DSEapp.models.Pitch;
 import com.herocorp.ui.activities.DSEapp.models.State;
+import com.herocorp.ui.activities.DSEapp.services.MakeModelSync;
 import com.herocorp.ui.activities.news.Fragment.NewsFragment;
 import com.herocorp.ui.activities.products.ProductDetailFragment;
 import com.herocorp.ui.utility.CustomTypeFace;
@@ -54,15 +57,11 @@ public class DealerDashboardFragment extends Fragment implements View.OnClickLis
     String encryptuser;
     NetworkConnect networkConnect;
     String current_date;
-
+    ProgressDialog progressDialog;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        getActivity().setRequestedOrientation(
-                ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-
         View rootView = inflater.inflate(R.layout.dealer_dashboard_fragment, container, false);
-
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
         initView(rootView);
@@ -133,8 +132,12 @@ public class DealerDashboardFragment extends Fragment implements View.OnClickLis
         copyRightText2.setCompoundDrawables(customViewParams.setDrawableParams(getResources().getDrawable(R.drawable.ic_contact), 30, 30), null, null, null);
 
         current_date = new SimpleDateFormat("dd-MMM-yy").format(new Date());
-        if (!(PreferenceUtil.get_MakeSyncdate(getContext()).equalsIgnoreCase(current_date.toString()) && NetConnections.isConnected(getContext())))
+        if (!(PreferenceUtil.get_MakeSyncdate(getContext()).equalsIgnoreCase(current_date.toString())) && NetConnections.isConnected(getContext())) {
+            /*progressDialog = ProgressDialog.show(getActivity(), null, null);
+            progressDialog.setContentView(R.layout.progresslayout);*/
             sync_data();
+        }
+        //  getActivity().startService(new Intent(getContext(), MakeModelSync.class));
 
         menu.setOnClickListener(this);
         productsLayout.setOnClickListener(this);
@@ -158,7 +161,6 @@ public class DealerDashboardFragment extends Fragment implements View.OnClickLis
             } else {
                 Toast.makeText(getActivity(), "Application is not synced properly, please sync it first.", Toast.LENGTH_SHORT).show();
             }
-
         } else if (i == R.id.contact_us_layout) {
             try {
                 getActivity().setRequestedOrientation(
@@ -169,16 +171,17 @@ public class DealerDashboardFragment extends Fragment implements View.OnClickLis
             }
         } else if (i == R.id.value_layout) {
             try {
-
-                //  ((BaseDrawerActivity) getActivity()).openFragment(new VasWarrantyfragment(), true);
+                Toast.makeText(getActivity(), "VAS  not installed!!", Toast.LENGTH_SHORT).show();
+                // ((BaseDrawerActivity) getActivity()).openFragment(new VasWarrantyfragment(), true);
             } catch (Exception e) {
-                Toast.makeText(getActivity(), "VAS  not installed!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "VAS  not installed!!", Toast.LENGTH_SHORT).show();
             }
         } else if (i == R.id.news_layout) {
             try {
-                ((BaseDrawerActivity) getActivity()).openFragment(new NewsFragment(), true);
+                 Toast.makeText(getActivity(), "News  not installed!!", Toast.LENGTH_SHORT).show();
+             //   ((BaseDrawerActivity) getActivity()).openFragment(new NewsFragment(), true);
             } catch (Exception e) {
-                Toast.makeText(getActivity(), "VAS  not installed!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "News  not installed!!", Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -193,7 +196,6 @@ public class DealerDashboardFragment extends Fragment implements View.OnClickLis
                 @Override
                 public void run() {
                     try {
-                        //  int i = 0;
                         while (encryptuser == null) {
                             try {
                                 jsonparams.put("user_id", PreferenceUtil.get_UserId(getContext()));
@@ -239,7 +241,7 @@ public class DealerDashboardFragment extends Fragment implements View.OnClickLis
 
     public void jsonparse_makemodel(String result) {
         try {
-            db = new DatabaseHelper(getContext());
+            db = new DatabaseHelper(getActivity());
             db.clearmakemodel_table();
 
             JSONObject jsono = new JSONObject(result);
@@ -259,7 +261,7 @@ public class DealerDashboardFragment extends Fragment implements View.OnClickLis
 
             PreferenceUtil.set_MakeSyncdate(getContext(), current_date.toString());
             Log.e("make_sync_close", current_date.toString());
-
+            // progressDialog.dismiss();
         } catch (JSONException e) {
             e.printStackTrace();
         } catch (Exception e) {

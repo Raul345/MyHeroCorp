@@ -481,4 +481,34 @@ public class VinnContact {
 
     public VinnContact() {
     }
+
+    public VinnContact(int clear) {
+        this.fst_name.clear();
+        this.last_name.clear();
+        this.cell_ph_num.clear();
+        this.gender.clear();
+        this.email_addr.clear();
+        this.state.clear();
+        this.district.clear();
+        this.tehsil.clear();
+        this.city.clear();
+        this.x_con_seq_no.clear();
+        this.x_hmgl_card_num.clear();
+        this.last_srvc_dt.clear();
+        this.next_srvc_due_dt.clear();
+        this.ins_policy_num.clear();
+        this.x_ins_exp_dt.clear();
+        this.model_cd.clear();
+        this.serial_num.clear();
+        this.primary_dealer_name.clear();
+        this.attrib_42.clear();
+        this.prod_attrib02_CD.clear();
+        this.desc_text.clear();
+        this.first_sale_dt.clear();
+        this.ins_policy_co.clear();
+        this.x_hmgl_card_points.clear();
+        this.age.clear();
+        this.addr.clear();
+        this.addr_line_2.clear();
+    }
 }

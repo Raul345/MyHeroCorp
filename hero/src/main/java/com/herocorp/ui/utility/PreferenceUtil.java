@@ -2,6 +2,7 @@ package com.herocorp.ui.utility;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 /**
  * Created by rsawh on 02-Dec-16.
@@ -18,6 +19,7 @@ public class PreferenceUtil {
     public static final String DISTRICT_NAME = "district_name";
     public static final String TEHSIL_NAME = "tehsil_name";
     public static final String CITY_NAME = "city_name";
+    public static final String PITCH_CITY = "pitch_city";
     public static final String SYNC_DATE = "sync_date";
     public static final String MAKE_SYNC_DATE = "make_sync_date";
     public static final String PITCH_SYNC_DATE = "pitch_sync_date";
@@ -25,6 +27,9 @@ public class PreferenceUtil {
     public static final String SYNC_YN = "sync_yn";
     public static final String FCM_TOKEN = "fcm_token";
     public static final String MODE = "mode";
+    public static final String UPDATE="update";
+    public static final String flag_UPDATE="flagupdate";
+
 
     private SharedPreferences sharedPref;
 
@@ -33,7 +38,7 @@ public class PreferenceUtil {
         return context.getSharedPreferences("hero", context.MODE_PRIVATE);
     }
 
-    public static void set_Userdata(Context context, String user_id, String dealer_code, Boolean login, String version, String version_path, String state_id, String state_name) {
+    public static void set_Userdata(Context context, String user_id, String dealer_code, Boolean login, String version, String version_path, String state_id, String state_name, String city_name) {
         SharedPreferences.Editor edit = getPref(context).edit();
         edit.putString(USER_ID, user_id);
         edit.putString(DEALER_CODE, dealer_code);
@@ -42,6 +47,8 @@ public class PreferenceUtil {
         edit.putString(VERSION_PATH, version_path);
         edit.putString(STATE_ID, state_id);
         edit.putString(STATE_NAME, state_name);
+        edit.putString(PITCH_CITY, city_name);
+        Log.e("citypref", city_name);
         edit.commit();
     }
 
@@ -56,7 +63,11 @@ public class PreferenceUtil {
         edit.putBoolean(SYNC_YN, sync_yn);
         edit.commit();
     }
-
+    public static void setFlag_UPDATE(Context context, Boolean flag) {
+        SharedPreferences.Editor edit = getPref(context).edit();
+        edit.putBoolean(flag_UPDATE, flag);
+        edit.commit();
+    }
     public static void set_Versiondate(Context context, String version_date) {
         SharedPreferences.Editor edit = getPref(context).edit();
         edit.putString(VERSION_CHECK, version_date);
@@ -104,6 +115,10 @@ public class PreferenceUtil {
         return restoredText;
     }
 
+    public static Boolean getflag_UPDATE(Context context) {
+        Boolean restoredText = getPref(context).getBoolean(flag_UPDATE, false);
+        return restoredText;
+    }
 
     public static Boolean get_Syncyn(Context context) {
         Boolean restoredText = getPref(context).getBoolean(SYNC_YN, false);
@@ -159,12 +174,14 @@ public class PreferenceUtil {
             restoredText = getPref(context).getString(MAKE_SYNC_DATE, "");
         return restoredText;
     }
+
     public static String get_PitchSyncdate(Context context) {
         String restoredText = "";
         if (getPref(context).contains(PITCH_SYNC_DATE))
             restoredText = getPref(context).getString(PITCH_SYNC_DATE, "");
         return restoredText;
     }
+
     public static String get_Versiondate(Context context) {
         String restoredText = getPref(context).getString(VERSION_CHECK, "");
         return restoredText;
@@ -189,6 +206,8 @@ public class PreferenceUtil {
             edit.remove(SYNC_DATE).commit();
         if (getPref(context).contains(MAKE_SYNC_DATE))
             edit.remove(MAKE_SYNC_DATE).commit();
+        if (getPref(context).contains(PITCH_SYNC_DATE))
+            edit.remove(PITCH_SYNC_DATE).commit();
     }
 
 
@@ -215,16 +234,28 @@ public class PreferenceUtil {
         String restoredText = getPref(context).getString(CITY_NAME, "");
         return restoredText;
     }
+    public static String get_PitchCity(Context context) {
+        String restoredText = getPref(context).getString(PITCH_CITY, "");
+        return restoredText;
+    }
 
+    public static void setUpdate(Context context, String update) {
+        SharedPreferences.Editor edit = getPref(context).edit();
+        edit.putString(UPDATE, update);
+        edit.commit();
+    }
+
+    public static String getUpdate(Context context) {
+        String restoredText = getPref(context).getString(UPDATE, "n");
+        return restoredText;
+    }
     public static void clear_Address(Context context) {
         SharedPreferences.Editor edit = getPref(context).edit();
         if (getPref(context).contains(DISTRICT_NAME))
             edit.remove(DISTRICT_NAME).commit();
         if (getPref(context).contains(TEHSIL_NAME))
             edit.remove(TEHSIL_NAME).commit();
-        if (getPref(context).contains(CITY_NAME))
-            edit.remove(CITY_NAME).commit();
+       /* if (getPref(context).contains(CITY_NAME))
+            edit.remove(CITY_NAME).commit();*/
     }
-
-
 }

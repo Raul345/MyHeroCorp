@@ -43,8 +43,8 @@ public class FCMInstanceIdservice extends FirebaseInstanceIdService {
         try {
             deviceToken = FirebaseInstanceId.getInstance().getToken();
             Log.d(TAG, "Refreshed token: " + deviceToken);
-            if (!deviceToken.equals(PreferenceUtil.get_Token(context)))
-                sendRegistrationToServer(deviceImei, userId, appVersion, androidVersion, deviceInfo, deviceToken);
+           /* if (!deviceToken.equals(PreferenceUtil.get_Token(context)))
+                sendRegistrationToServer(deviceImei, userId, appVersion, androidVersion, deviceInfo, deviceToken);*/
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -12,6 +12,7 @@ public class Pitch {
     String ownership;
     String usage;
     String area;
+    String city;
     String img_path;
 
     public String getId() {
@@ -66,6 +67,14 @@ public class Pitch {
         return area;
     }
 
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
     public void setArea(String area) {
         this.area = area;
     }
@@ -78,7 +87,7 @@ public class Pitch {
         this.img_path = img_path;
     }
 
-    public Pitch(String id, String gender, String age, String occupation, String ownership, String usage, String area, String img_path) {
+    public Pitch(String id, String gender, String age, String occupation, String ownership, String usage, String area, String city, String img_path) {
         this.id = id;
         this.gender = gender;
         this.age = age;
@@ -86,6 +95,7 @@ public class Pitch {
         this.ownership = ownership;
         this.usage = usage;
         this.area = area;
+        this.city = city;
         this.img_path = img_path;
     }
 

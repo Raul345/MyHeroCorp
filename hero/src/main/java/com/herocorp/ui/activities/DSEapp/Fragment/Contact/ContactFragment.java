@@ -77,7 +77,7 @@ public class ContactFragment extends Fragment implements View.OnClickListener {
 
     String fst_name1, last_name1, cell_ph_num1, age1, gender1, email_addr1, state1, district1, tehsil1, city1, x_con_seq_no_1, x_model_interested,
             expctd_dt_purchase, x_exchange_required, x_finance_required, existing_vehicle, followup_comments, enquiry_id,
-            x_test_ride_req, enquiry_entry_date, addr1, addr_line_2_1, make_cd, model_cd1, dealer_bu_id, follow_date;
+            x_test_ride_req, enquiry_entry_date, addr1, addr_line_2_1, make_cd, model_cd1, dealer_bu_id, follow_date, sales_pitch_no, priority, occupation, usage;
     String fst_name2, last_name2, cell_ph_num2, age2, gender2, email_addr2, state2, district2, tehsil2, city2, addr2, addr_line_2_2,
             x_con_seq_no_2, x_hmgl_card_num, last_srvc_dt, next_srvc_due_dt, ins_policy_num, x_ins_exp_dt, model_cd2, serial_num,
             primary_dealer_name, attrib_42, prod_attrib02_CD, desc_text, first_sale_dt, ins_policy_co, x_hmgl_card_points;
@@ -85,9 +85,6 @@ public class ContactFragment extends Fragment implements View.OnClickListener {
 
     String phone_no, reg_no, dealer_code, user_id;
     String encryptdata;
-
-
-    NetworkConnect networkConnect;
 
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle
             savedInstanceState) {
@@ -142,7 +139,6 @@ public class ContactFragment extends Fragment implements View.OnClickListener {
         addenquiry_button = (Button) rootView.findViewById(R.id.addenquiry_button);
         customViewParams.setMarginAndPadding(addenquiry_button, new int[]{0, 0, 0, 0}, new int[]{40, 0, 40, 0}, addenquiry_button.getParent());
 
-        fetch_pref();
         fetch_data();
 
         enquirycontacts.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -204,7 +200,11 @@ public class ContactFragment extends Fragment implements View.OnClickListener {
                 bundle.putString("existing_vehicle", data.getExisting_vehicle());
                 bundle.putString("followup_comments", data.getFollowup_comments());
                 bundle.putString("enquiry_id", data.getEnquiry_id());
-                bundle.putString(" x_test_ride_req", data.getX_test_ride_req());
+                bundle.putString("x_test_ride_req", data.getX_test_ride_req());
+                bundle.putString("sales_pitch_no", data.getSales_pitch_no());
+                bundle.putString("priority", data.getPriority());
+                bundle.putString("occupation", data.getOccupation());
+                bundle.putString("usage", data.getUsage());
 
                 bundle.putString("addr1", data.getAddr());
                 bundle.putString("addr_line_2_1", data.getAddr_line_2());
@@ -301,8 +301,15 @@ public class ContactFragment extends Fragment implements View.OnClickListener {
                         , data.getState(), data.getDistrict());
                 String comments = enq.getFollowup_comments(data.getFst_name(), data.getLast_name(), data.getCell_ph_num()
                         , data.getState(), data.getDistrict());
+                String sales_pitch = enq.getPitch(data.getFst_name(), data.getLast_name(), data.getCell_ph_num()
+                        , data.getState(), data.getDistrict());
+                String prior = enq.getPrior(data.getFst_name(), data.getLast_name(), data.getCell_ph_num()
+                        , data.getState(), data.getDistrict());
 
-
+                String occup = enq.getOccup(data.getFst_name(), data.getLast_name(), data.getCell_ph_num()
+                        , data.getState(), data.getDistrict());
+                String use = enq.getUse(data.getFst_name(), data.getLast_name(), data.getCell_ph_num()
+                        , data.getState(), data.getDistrict());
 
               /*  for (int i = 0; i < vinarray.size(); i++) {
                     Toast.makeText(getContext(), model + vinarray.get(i).toString() + variantarray.get(i).toString() +
@@ -328,6 +335,11 @@ public class ContactFragment extends Fragment implements View.OnClickListener {
                 bundle.putString("x_finance_required", finance_reqd);
                 bundle.putString("existing_vehicle", exist_vehicle);
                 bundle.putString("followup_comments", comments);
+                bundle.putString("sales_pitch_no", sales_pitch);
+                bundle.putString("priority", prior);
+                bundle.putString("occupation", occup);
+                bundle.putString("usage", use);
+
 
 
               /*bundle.putString("x_model_interested", model);
@@ -407,8 +419,8 @@ public class ContactFragment extends Fragment implements View.OnClickListener {
         reg_no = bundle.getString("reg_no");
         try {
             JSONObject jsonparams = new JSONObject();
-            jsonparams.put("user_id", user_id);
-            jsonparams.put("dealer_code", dealer_code);
+            jsonparams.put("user_id",PreferenceUtil.get_UserId(getContext()));
+            jsonparams.put("dealer_code",PreferenceUtil.get_DealerCode(getContext()));
             jsonparams.put("phn_no", phone_no);
             jsonparams.put("reg_no", reg_no);
             Log.e("submit_data:", jsonparams.toString());
@@ -658,12 +670,7 @@ public class ContactFragment extends Fragment implements View.OnClickListener {
         bundle.putString("user", user_id);
     }
 
-    public void fetch_pref() {
-        user_id = PreferenceUtil.get_UserId(getContext());
-        dealer_code = PreferenceUtil.get_DealerCode(getContext());
-    }
-
-    public void save_data() {
+      public void save_data() {
         SharedPreferences sharedPreferences = getActivity().getSharedPreferences("hero", 0);
         SharedPreferences.Editor edit = sharedPreferences.edit();
         edit.putString("contact_no", phone_no);
@@ -718,8 +725,11 @@ public class ContactFragment extends Fragment implements View.OnClickListener {
             try {
                 DatabaseHelper db = new DatabaseHelper(getContext());
                 db.clearcontactfollowup_table();
+                new VinnContact(0);
+                new EnquiryContact(0);
                 Log.e("contact_response", result);
                 JSONObject jsono = new JSONObject(result);
+
                 if (jsono.has("enquiry")) {
                     JSONArray jarray = jsono.getJSONArray("enquiry");
                     for (int i = 0; i < jarray.length(); i++) {
@@ -750,8 +760,15 @@ public class ContactFragment extends Fragment implements View.OnClickListener {
                         model_cd1 = object.getString("MODEL_CD");
                         dealer_bu_id = object.getString("DEALER_BU_ID");
                         follow_date = object.getString("FOLLOW_DATE");
+                        if (object.has("sales_pitch_no"))
+                            sales_pitch_no = object.getString("sales_pitch_no");
+                        if (object.has("PRIORITY"))
+                            priority = object.getString("PRIORITY");
+                        if (object.has("OCCUPATION"))
+                            occupation = object.getString("OCCUPATION");
+                        if (object.has("USAGE"))
+                            usage = object.getString("USAGE");
                         try {
-
                             db.addcontactfollowup(new Followup(object.getString("X_MODEL_INTERESTED"), object.getString("ENQUIRY_ENTRY_DATE"),
                                     object.getString("EXPCTD_DT_PURCHASE"), object.getString("FOLLOW_DATE"), object.getString("ENQUIRY_ID"), object.getString("FOLLOWUP_COMMENTS"), "0"));
                         } catch (Exception e) {
@@ -759,7 +776,7 @@ public class ContactFragment extends Fragment implements View.OnClickListener {
                         }
                         enquiryContactadapter.add(new EnquiryContact(fst_name1, last_name1, cell_ph_num1, age1, gender1, email_addr1, state1, district1, tehsil1, city1, x_con_seq_no_1, x_model_interested,
                                 expctd_dt_purchase, x_exchange_required, x_finance_required, existing_vehicle, followup_comments, enquiry_id,
-                                x_test_ride_req, enquiry_entry_date, addr1, addr_line_2_1, make_cd, model_cd1, dealer_bu_id, follow_date));
+                                x_test_ride_req, enquiry_entry_date, addr1, addr_line_2_1, make_cd, model_cd1, dealer_bu_id, follow_date, sales_pitch_no, priority, occupation, usage));
 
                         enquiryContactadapter.notifyDataSetChanged();
                     }

@@ -77,7 +77,7 @@ public class ContactAlertFragment extends DialogFragment {
             button_ok.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    PreferenceUtil.set_Versiondate(getContext(),new SimpleDateFormat("dd-MMM-yy").format(new Date()));
+                    PreferenceUtil.set_Versiondate(getContext(), new SimpleDateFormat("dd-MMM-yy").format(new Date()));
                     Intent resultIntent = new Intent(Intent.ACTION_VIEW);
                     resultIntent.setData(Uri.parse(path));
                     startActivity(resultIntent);
@@ -87,8 +87,13 @@ public class ContactAlertFragment extends DialogFragment {
             button_cancel.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    PreferenceUtil.set_Versiondate(getContext(),new SimpleDateFormat("dd-MMM-yy").format(new Date()));
-                    dismiss();
+                    if (PreferenceUtil.getUpdate(getContext()).equals("n")) {
+                        PreferenceUtil.set_Versiondate(getContext(), new SimpleDateFormat("dd-MMM-yy").format(new Date()));
+                        dismiss();
+                    } else if (PreferenceUtil.getUpdate(getContext()).equals("y")) {
+                        getActivity().finish();
+                    } else
+                        dismiss();
                 }
             });
         } else if (flag == 2) {
@@ -97,7 +102,7 @@ public class ContactAlertFragment extends DialogFragment {
                 public void onClick(View v) {
                     Bundle bundle = new Bundle();
                     question_add(bundle);
-                    bundle.putInt("page_flag",0);
+                    bundle.putInt("page_flag", 0);
                     FragmentManager fm = getActivity().getSupportFragmentManager();
                     FragmentTransaction ft = fm.beginTransaction();
                     Fragment f = new TestRideFeedbackFragment();
@@ -141,7 +146,7 @@ public class ContactAlertFragment extends DialogFragment {
                 public void onClick(View v) {
                     Bundle bundle = new Bundle();
                     question_add(bundle);
-                    bundle.putInt("page_flag",1);
+                    bundle.putInt("page_flag", 1);
                     FragmentManager fm = getActivity().getSupportFragmentManager();
                     FragmentTransaction ft = fm.beginTransaction();
                     Fragment f = new TestRideFeedbackFragment();

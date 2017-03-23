@@ -53,6 +53,7 @@ public class ContactFollowupadapter extends ArrayAdapter<Followup> {
             holder.follow_date = (TextView) row.findViewById(R.id.textview_follow_date);
             holder.enquiry_date = (TextView) row.findViewById(R.id.textview_enquiry_date);
             holder.status = (ImageView) row.findViewById(R.id.img_contactfollowup_check);
+            holder.priority_icon = (ImageView) row.findViewById(R.id.img_priority_icon);
 
             row.setTag(holder);
         } else {
@@ -70,6 +71,12 @@ public class ContactFollowupadapter extends ArrayAdapter<Followup> {
         else
             holder.status.setImageResource(R.drawable.tick1_image);
 
+        if (user.getPriority().equalsIgnoreCase("Hot"))
+            holder.priority_icon.setImageResource(R.drawable.hot1);
+        if (user.getPriority().equalsIgnoreCase("Warm"))
+            holder.priority_icon.setImageResource(R.drawable.warm);
+        if (user.getPriority().equalsIgnoreCase("Cold"))
+            holder.priority_icon.setImageResource(R.drawable.cold);
         return row;
 
     }
@@ -80,7 +87,7 @@ public class ContactFollowupadapter extends ArrayAdapter<Followup> {
         TextView follow_date;
         TextView enquiry_date;
         ImageView status;
-
+        ImageView priority_icon;
     }
 
 

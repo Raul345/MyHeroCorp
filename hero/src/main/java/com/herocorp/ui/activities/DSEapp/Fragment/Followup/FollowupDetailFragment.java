@@ -74,10 +74,13 @@ public class FollowupDetailFragment extends Fragment implements View.OnClickList
     String enquiry_id;
     String follow_date;
     String dealerid;
-    String occupation = "--select--";
-    String rural = "--select--";
-    String usage = "--select--";
-    String purchase;
+    String occupation;
+    String area;
+    String usage;
+    String two_wheeler_type;
+    String sales_pitch_no = "";
+
+
     SharedPreferences mypref;
     SharedPreferences.Editor edit;
     Fragment f;
@@ -152,7 +155,14 @@ public class FollowupDetailFragment extends Fragment implements View.OnClickList
         exchange_reqd.setText(x_exchange_required);
         finance_reqd.setText(x_finance_required);
         exist_vehicle.setText(existvehicle);
-        follow_comments.setText(followup_comments);
+
+        String comment;
+        if (!follow_comments.equals("")) {
+            comment = followup_comments.replace("~", "\n");
+            follow_comments.setText(comment);
+        } else
+            follow_comments.setText(followup_comments);
+
         nextfollow_date.setText(follow_date);
         menu.setOnClickListener(this);
         button_edit.setOnClickListener(this);
@@ -187,6 +197,7 @@ public class FollowupDetailFragment extends Fragment implements View.OnClickList
         bundle.putString("comment", followup_comments);
         bundle.putString("followdate", follow_date);
         bundle.putString("enquiryid", enquiry_id);
+        bundle.putString("sales_pitch_no", sales_pitch_no);
         if (page_flag == 1)
             bundle.putInt("enq_flag", page_flag);
 
@@ -280,6 +291,11 @@ public class FollowupDetailFragment extends Fragment implements View.OnClickList
         encryptuser = bundle.getString("user_id");
         enquiryid = bundle.getString("enquiryid");
         dealerid = bundle.getString("dealerid");
+        two_wheeler_type = bundle.getString("twowheelertype");
+        area = bundle.getString("area");
+        occupation = bundle.getString("occupation");
+        usage = bundle.getString("usage");
+        sales_pitch_no = bundle.getString("sales_pitch_no");
 
         if (bundle.containsKey("page_flag"))
             page_flag = bundle.getInt("page_flag");
@@ -317,12 +333,11 @@ public class FollowupDetailFragment extends Fragment implements View.OnClickList
         edit.putString("enquiry_id", enquiry_id);
         edit.putString("follow_date", follow_date);
         edit.putString("dealerid", dealerid);
-        edit.putString("purchase", purchase);
+        edit.putString("purchase", two_wheeler_type);
         edit.putString("occupation", occupation);
-        edit.putString("area", rural);
+        edit.putString("area", area);
         edit.putString("usage", usage);
         edit.commit();
-
     }
 
     public class testride_feedback extends AsyncTask<Void, Void, String> {

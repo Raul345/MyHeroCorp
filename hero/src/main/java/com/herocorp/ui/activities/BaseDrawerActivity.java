@@ -113,12 +113,8 @@ public class BaseDrawerActivity extends FragmentActivity implements View.OnClick
         setContentView(R.layout.activity_base_drawer);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         overridePendingTransition(R.anim.trans_left_in, R.anim.trans_left_out);
-       /* setRequestedOrientation(
-                ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);*/
-
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-
         if (getResources().getConfiguration().orientation == getResources().getConfiguration().ORIENTATION_LANDSCAPE) {
             initview1();
         } else
@@ -134,13 +130,11 @@ public class BaseDrawerActivity extends FragmentActivity implements View.OnClick
             deviceImei = telephonyManager.getDeviceId();
 
             // fetch_data();
-
             if (NetConnections.isConnected(this)) {
                 if (!PreferenceUtil.get_Syncyn(getApplicationContext()))
                     showPhoneStatePermission();
-
                 if (!isGooglePlayServicesAvailable()) {
-                    finish();
+                    //finish();
                 } else {
                     //FCM service
                     FirebaseMessaging.getInstance().subscribeToTopic("news");
@@ -151,6 +145,7 @@ public class BaseDrawerActivity extends FragmentActivity implements View.OnClick
                             fcm.onTokenRefresh();
                         }
                     });
+
                 }
             } else if (!(sharedPreferences.getBoolean(AppConstants.IS_USER_LOGGED_IN, false) &&
                     App.shouldAppRun(sharedPreferences.getString(AppConstants.VALIDITY_DATE, "")))) {
@@ -230,14 +225,13 @@ public class BaseDrawerActivity extends FragmentActivity implements View.OnClick
         findViewById(R.id.nav_emi_layout).setOnClickListener(this);
         findViewById(R.id.nav_sync_layout).setOnClickListener(this);
         findViewById(R.id.nav_logout_layout).setOnClickListener(this);
-   //     findViewById(R.id.nav_notify_layout).setOnClickListener(this);
+        //     findViewById(R.id.nav_notify_layout).setOnClickListener(this);
 
         if (null == savedInstanceState) {
             FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager.beginTransaction().replace(R.id.frame_container, new DealerDashboardFragment()).commit();
-            request();
-            //set you initial fragment object
         }
+        request();
     }
 
    /* @Override
@@ -328,7 +322,6 @@ public class BaseDrawerActivity extends FragmentActivity implements View.OnClick
             } else {
                 requestPermissions(new String[]{Manifest.permission.READ_PHONE_STATE}, REQUEST_PERMISSION_READ_PHONE_STATE);
             }
-
         } else {
             showExternalStoragePermission();
             //   authenticateUser(telephonyManager.getDeviceId(), appVersion, deviceVersion);
@@ -398,7 +391,7 @@ public class BaseDrawerActivity extends FragmentActivity implements View.OnClick
             openFragment(new ContactUsFragmrnt(), false);
         } else if (i == R.id.nav_news_layout) {
             toggleDrawer();
-            openFragment(new NewsFragment(), false);
+           /* openFragment(new NewsFragment(), false);*/
         } else if (i == R.id.nav_value_layout) {
             try {
                 toggleDrawer();
@@ -1468,6 +1461,11 @@ public class BaseDrawerActivity extends FragmentActivity implements View.OnClick
                 result = result.replace("\\/", "/");
                 JSONObject jsono = new JSONObject(result);
                 String newversion = jsono.getString("version");
+                String mandatory = "n";
+                if (jsono.has("mandatory"))
+                    mandatory = jsono.getString("mandatory");
+                PreferenceUtil.setUpdate(getApplicationContext(), mandatory);
+
                 String new_version = newversion.replace(".", "");
                 String path = jsono.getString("path");
                 appVersion = appVersion.replace(".", "");
@@ -1482,7 +1480,6 @@ public class BaseDrawerActivity extends FragmentActivity implements View.OnClick
             }
         }
     }
-
 
     public void update_alert(String version, String path) {
         Bundle bundle = new Bundle();
@@ -1761,8 +1758,8 @@ public class BaseDrawerActivity extends FragmentActivity implements View.OnClick
                         new check_version().execute(URLConstants.CHECK_VERSION);
                     }
                 }*/
-                if (!(PreferenceUtil.get_MakeSyncdate(this).equalsIgnoreCase(current_date.toString()) && NetConnections.isConnected(this)))
-                    new check_version().execute(URLConstants.CHECK_VERSION);
+                //  if (!(PreferenceUtil.get_MakeSyncdate(this).equalsIgnoreCase(current_date.toString()) && NetConnections.isConnected(this)))
+                new check_version().execute(URLConstants.CHECK_VERSION);
 
             }
         } catch (Exception e) {
@@ -1780,7 +1777,6 @@ public class BaseDrawerActivity extends FragmentActivity implements View.OnClick
             return capitalize(manufacturer) + " " + model;
         }
     }
-
 
     private static String capitalize(String s) {
         if (s == null || s.length() == 0) {
@@ -1803,6 +1799,8 @@ public class BaseDrawerActivity extends FragmentActivity implements View.OnClick
             return false;
         }
     }
+
+
 }
 
 

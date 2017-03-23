@@ -10,6 +10,7 @@ import android.content.pm.ActivityInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -47,7 +48,6 @@ public class SignInActivity extends Activity implements View.OnClickListener {
     private EditText dealerCode;
     private SharedPreferences sharedPreferences, sharedPref;
     DatabaseHelper db;
-
     /*   private String[] imeis = {"356604060544425",
                "861375036084113",
                "861375036084105",
@@ -59,11 +59,11 @@ public class SignInActivity extends Activity implements View.OnClickListener {
                "351971070447146",
                "351971070473217"
        };*/
-    private String respDesc = "", respCode = "", state_id = "", dealer_code = "", version = "", path = "", state_name = "", result = "", failure_msg = "";
+    private String respDesc = "", respCode = "", state_id = "", dealer_code = "", version = "", path = "", state_name = "", city_name = "", result = "", failure_msg = "";
     private String appVersion;
-    private String deviceImei = "911441757449230";
-    // private String deviceImei = "351971070473217";
-    //  private String deviceImei;
+    //private String deviceImei = "911441757449230";
+    private String deviceImei = "911562050022240";
+  //  private String deviceImei;
     private String userCode, uuid = "0";
     private String encryptuser;
 
@@ -74,7 +74,6 @@ public class SignInActivity extends Activity implements View.OnClickListener {
         setRequestedOrientation(
                 ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         overridePendingTransition(R.anim.trans_left_in, R.anim.trans_left_out);
-
 
        /* if (PreferenceUtil.get_IsUserLogin(getApplicationContext()))
             openHomeScreen();*/
@@ -179,7 +178,6 @@ public class SignInActivity extends Activity implements View.OnClickListener {
             } else {
                 requestPermissions(new String[]{Manifest.permission.READ_PHONE_STATE}, REQUEST_PERMISSION_READ_PHONE_STATE);
             }
-
         } else {
 
             TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
@@ -194,9 +192,9 @@ public class SignInActivity extends Activity implements View.OnClickListener {
             try {
                 info = manager.getPackageInfo(getPackageName(), 0);
                 appVersion = info.versionName;
-                //  deviceImei = telephonyManager.getDeviceId();
+               //
+                // deviceImei = telephonyManager.getDeviceId();
                 userCode = dealerCode.getText().toString().toUpperCase();
-
                 if (userCode.equals("")) {
                     Toast.makeText(getApplicationContext(), "Please enter dealer Code!!", Toast.LENGTH_LONG).show();
                 } else {
@@ -206,10 +204,7 @@ public class SignInActivity extends Activity implements View.OnClickListener {
                         jsonparams.put("version", appVersion);
                         jsonparams.put("imei", deviceImei);
                         jsonparams.put("uuid", uuid);
-
                         Log.e("sigin:", jsonparams.toString());
-
-
                         new Login(jsonparams.toString(), URLConstants.LOGIN).execute();
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -291,6 +286,8 @@ public class SignInActivity extends Activity implements View.OnClickListener {
                         state_name = jsono.getString("state_name");
                     version = jsono.getString("version");
                     path = jsono.getString("path");
+                    if (jsono.has("city_name"))
+                        city_name = jsono.getString("city_name");
 
                     JSONArray jarray = jsono.getJSONArray("state");
                     for (int i = 0; i < jarray.length(); i++) {
@@ -302,9 +299,12 @@ public class SignInActivity extends Activity implements View.OnClickListener {
                 } else {
                     failure_msg = jsono.getString("failure_msg");
                     Toast.makeText(getApplicationContext(), failure_msg, Toast.LENGTH_SHORT).show();
+                   /* save_data();
+                    openHomeScreen();*/
                 }
             } catch (Exception e) {
                 progressDialog.dismiss();
+                e.printStackTrace();
                 Toast.makeText(getApplicationContext(), "Check your Connection !! ", Toast.LENGTH_SHORT).show();
             }
         }
@@ -314,7 +314,8 @@ public class SignInActivity extends Activity implements View.OnClickListener {
         if (!userCode.equalsIgnoreCase(PreferenceUtil.get_UserId(getApplicationContext()))) {
             PreferenceUtil.clear_SyncDate(getApplicationContext());
         }
-        PreferenceUtil.set_Userdata(getApplicationContext(), userCode, dealer_code, true, version, path, state_id, state_name);
         PreferenceUtil.clear_Address(getApplicationContext());
+        PreferenceUtil.setFlag_UPDATE(getApplicationContext(), true);
+        PreferenceUtil.set_Userdata(getApplicationContext(), userCode, dealer_code, true, version, path, state_id, state_name, city_name);
     }
 }

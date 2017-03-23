@@ -18,7 +18,8 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_weight="2"
-            android:gravity="center">
+            android:gravity="center"
+            >
 
             <CheckBox
                 android:id="@+id/campaign_chkbox"
@@ -29,7 +30,8 @@
                 android:background="#ffffff"
                 android:buttonTint="#000000"
                 android:padding="10dp"
-                android:textSize="17dp" />
+                android:textSize="17dp"
+                android:clickable="false"/>
         </LinearLayout>
 
 

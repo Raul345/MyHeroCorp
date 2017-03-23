@@ -51,6 +51,11 @@ public class SyncFollowup extends AsyncTask<Void, Void, String> {
     String follow_date;
     String enquiry_entry_date;
     String dealer_bu_id;
+    String priority;
+    String two_wheeler_type;
+    String rural_urban;
+    String occupation;
+    String usage;
 
     private SharedPreferences sharedPreferences;
 
@@ -68,7 +73,7 @@ public class SyncFollowup extends AsyncTask<Void, Void, String> {
         try {
             final JSONObject jsonparams = new JSONObject();
             jsonparams.put("user_id", PreferenceUtil.get_UserId(context));
-            //jsonparams.put("user_id", "DSE10866");
+            jsonparams.put("user_id", "DSE10866");
             Log.e("followup_sync_start:", new SimpleDateFormat("dd-MMM-yy").format(new Date()).toString());
             String newurlparams = "data=" + URLEncoder.encode(jsonparams.toString(), "UTF-8");
             networkConnect = new NetworkConnect(URLConstants.ENCRYPT, newurlparams);
@@ -121,8 +126,27 @@ public class SyncFollowup extends AsyncTask<Void, Void, String> {
                         follow_date = object.getString("FOLLOW_DATE");
                         enquiry_entry_date = object.getString("ENQUIRY_ENTRY_DATE");
                         dealer_bu_id = object.getString("DEALER_BU_ID");
+                        if (object.has("PRIORITY")) {
+                            priority = object.getString("PRIORITY");
+                        }
+                        if (object.has("TWO_WHEELER_TYPE")) {
+                            two_wheeler_type = object.getString("TWO_WHEELER_TYPE");
+                        }
+                        if (object.has("RURAL_URBAN")) {
+                            rural_urban = object.getString("RURAL_URBAN");
+                        }
+                        if (object.has("OCCUPATION")) {
+                            occupation = object.getString("OCCUPATION");
+                        }
+                        if (object.has("USAGE")) {
+                            usage = object.getString("USAGE");
+                        }
                         db.addfollowup(new Followup(first_name, last_name, cell_ph_no, age, gender, email_addr, state, district, tehsil, city, x_con_seq_no, x_model_interested,
                                 expected_date_purchase, x_exchange_required, x_finance_required, exist_vehicle, followup_comments, enquiry_id, follow_date, enquiry_entry_date, dealer_bu_id, "0"));
+                    /*    db.addNewfollowup(new Followup(first_name, last_name, cell_ph_no, age, gender, email_addr, state, district, tehsil, city, x_con_seq_no, x_model_interested,
+                                expected_date_purchase, x_exchange_required, x_finance_required, exist_vehicle, followup_comments, enquiry_id, follow_date, enquiry_entry_date, dealer_bu_id, priority, two_wheeler_type, rural_urban, occupation, usage,"0"));
+*/
+
                     }
                 }
                 PreferenceUtil.set_Syncdate(context, new SimpleDateFormat("dd-MMM-yy").format(new Date()).toString());

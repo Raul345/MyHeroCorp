@@ -74,7 +74,7 @@ public class AddenquiryFragment extends Fragment implements View.OnClickListener
     private View rootView;
     private CustomViewParams customViewParams;
     Spinner model_spinner, exist_vehicle_spinner, spin_existmake, spin_existmodel;
-    ;
+
     CheckBox exchange_chkbox, finance_chkbox, test_chkbox;
     Button nextfollowdate_btn, purchdate_btn;
     EditText remarks_et;
@@ -541,7 +541,7 @@ public class AddenquiryFragment extends Fragment implements View.OnClickListener
                 edit.commit();
                 String json = jsonparams.toString().replace("\\/", "/");
                 Log.e("add_enquiry", json);
-                send_request(URLConstants.ADD_ENQUIRY, json, 1);
+               send_request(URLConstants.ADD_ENQUIRY, json, 1);
             }
 
         } catch (

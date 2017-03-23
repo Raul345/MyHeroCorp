@@ -73,7 +73,6 @@ public class ImageDownloader {
                 }
 
                 downloadList.add(URLConstants.GET_PRODUCT_IMAGE + "#" + model.getProductIcon());
-
             }
         }
 

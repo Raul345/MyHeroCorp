@@ -72,6 +72,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         public static final String ENQUIRY_ENTRY_DATE = "enquiry_entry_date";
         public static final String DEALER_BU_ID = "dealer_bu_id";
         public static final String FOLLOWUP_STATUS = "followup_status";
+        public static final String PRIORITY = "priority";
+        public static final String RURAL_URBAN = "rural_urban";
+        public static final String OCCUPATION = "occupation";
+        public static final String USAGE = "usage";
+        public static final String TWO_WHEELER_TYPE = "two_wheeler_type";
+        public static final String SALES_PITCH_NO = "sales_pitch_no";
     }
 
     public static class Cols_Pitch {
@@ -80,8 +86,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         public static final String AGE = "age";
         public static final String OCCUPATION = "occupation";
         public static final String EXISTING_OWNERSHIP = "existing_ownership";
-        public static final String USAGE = "intende_usage";
+        public static final String USAGE = "intended_usage";
         public static final String AREA = "urban_rural";
+        public static final String CITY = "city";
         public static final String IMG_PATH = "img_path";
     }
 
@@ -122,6 +129,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         public static final String FOLLOW_DATE = "followdate";
         public static final String USER_ID = "user_id";
         public static final String DMS_ENQUIRYID = "dms_enquiryid";
+        public static final String FOLLOWUP_DONE= "followup_done";
         public static final String SYNC_STATUS = "sync_status";
     }
 
@@ -141,6 +149,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         public static final String FOLLOWUP_STATUS = "followup_status";
     }
 
+    // Todo table create statement
     // Todo table create statement
     private static final String CREATE_TABLE_FOLLOWUP = "create table if not exists "
             + TABLE_FOLLOWUP + "("
@@ -165,6 +174,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             + Cols_followup.FOLLOW_DATE + " text not null, "
             + Cols_followup.ENQUIRY_ENTRY_DATE + " text not null, "
             + Cols_followup.DEALER_BU_ID + " text not null, "
+            + Cols_followup.PRIORITY + " text not null, "
+            + Cols_followup.TWO_WHEELER_TYPE + " text not null, "
+            + Cols_followup.RURAL_URBAN + " text not null, "
+            + Cols_followup.OCCUPATION + " text not null, "
+            + Cols_followup.USAGE + " text not null, "
+            + Cols_followup.SALES_PITCH_NO + " text not null, "
             + Cols_followup.FOLLOWUP_STATUS
             + ");";
 
@@ -239,6 +254,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             + Cols_Pitch.EXISTING_OWNERSHIP + " text not null, "
             + Cols_Pitch.USAGE + " text not null, "
             + Cols_Pitch.AREA + " text not null, "
+            + Cols_Pitch.CITY + " text not null, "
             + Cols_Pitch.IMG_PATH + " text not null "
             + ");";
 
@@ -420,6 +436,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(Cols_Pitch.EXISTING_OWNERSHIP, pitch.getOwnership());
         values.put(Cols_Pitch.AREA, pitch.getArea());
         values.put(Cols_Pitch.USAGE, pitch.getUsage());
+        values.put(Cols_Pitch.CITY, pitch.getCity());
         values.put(Cols_Pitch.IMG_PATH, pitch.getImg_path());
         db.insert(TABLE_PITCH, null, values);
         db.close();
@@ -533,6 +550,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         closeDB();
         return enquiry;
     }
+
 
     public void closeDB() {
         SQLiteDatabase db = this.getReadableDatabase();
@@ -788,6 +806,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 t.setOwnership(c.getString((c.getColumnIndex(Cols_Pitch.EXISTING_OWNERSHIP))));
                 t.setUsage(c.getString((c.getColumnIndex(Cols_Pitch.USAGE))));
                 t.setArea(c.getString((c.getColumnIndex(Cols_Pitch.AREA))));
+                t.setCity(c.getString((c.getColumnIndex(Cols_Pitch.CITY))));
                 t.setImg_path(c.getString((c.getColumnIndex(Cols_Pitch.IMG_PATH))));
                 logic.add(t);
             } while (c.moveToNext());
@@ -795,6 +814,36 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         closeDB();
         return logic;
     }
+
+    public List<Pitch> getPitchRow(String id) {
+        List<Pitch> logic = new ArrayList<Pitch>();
+        String selectQuery = "SELECT * FROM " + TABLE_PITCH + " where " + Cols_Pitch.ID + " = " + id;
+
+        Log.e(LOG, selectQuery);
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c = db.rawQuery(selectQuery, null);
+
+        // looping through all rows and adding to list
+        if (c.moveToFirst()) {
+            do {
+                Pitch t = new Pitch();
+                t.setId(c.getString((c.getColumnIndex(Cols_Pitch.ID))));
+                t.setGender(c.getString((c.getColumnIndex(Cols_Pitch.GENDER))));
+                t.setAge(c.getString((c.getColumnIndex(Cols_Pitch.AGE))));
+                t.setOccupation(c.getString((c.getColumnIndex(Cols_Pitch.OCCUPATION))));
+                t.setOwnership(c.getString((c.getColumnIndex(Cols_Pitch.EXISTING_OWNERSHIP))));
+                t.setUsage(c.getString((c.getColumnIndex(Cols_Pitch.USAGE))));
+                t.setArea(c.getString((c.getColumnIndex(Cols_Pitch.AREA))));
+                t.setCity(c.getString((c.getColumnIndex(Cols_Pitch.CITY))));
+                t.setImg_path(c.getString((c.getColumnIndex(Cols_Pitch.IMG_PATH))));
+                logic.add(t);
+            } while (c.moveToNext());
+        }
+        closeDB();
+        return logic;
+    }
+
 
     public List<Next_Followup> getNextFollowup() {
         List<Next_Followup> followups = new ArrayList<Next_Followup>();
@@ -834,4 +883,132 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 new String[]{String.valueOf(enquiryid)});
         db.close();
     }
+
+
+    //with additional parameters
+    public void addNewfollowup(Followup followup) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(Cols_followup.FST_NAME, followup.getFirst_name());
+        values.put(Cols_followup.LAST_NAME, followup.getLast_name());
+        values.put(Cols_followup.CELL_PH_NUM, followup.getCell_ph_no());
+        values.put(Cols_followup.AGE, followup.getAge());
+        values.put(Cols_followup.GENDER, followup.getGender());
+        values.put(Cols_followup.EMAIL_ADDR, followup.getEmail_addr());
+        values.put(Cols_followup.STATE, followup.getState());
+        values.put(Cols_followup.DISTRICT, followup.getDistrict());
+        values.put(Cols_followup.TEHSIL, followup.getTehsil());
+        values.put(Cols_followup.CITY, followup.getCity());
+        values.put(Cols_followup.X_CON_SEQ_NUM, followup.getX_con_seq_no());
+        values.put(Cols_followup.X_MODEL_INTERESTED, followup.getX_model_interested());
+        values.put(Cols_followup.EXPCTD_DT_PURCHASE, followup.getExpcted_date_purchase());
+        values.put(Cols_followup.X_EXCHANGE_REQUIRED, followup.getX_exchange_required());
+        values.put(Cols_followup.X_FINANCE_REQUIRED, followup.getX_finance_required());
+        values.put(Cols_followup.EXISTING_VEHICLE, followup.getExist_vehicle());
+        values.put(Cols_followup.FOLLOWUP_COMMENTS, followup.getFollowup_comments());
+        values.put(Cols_followup.ENQUIRY_ID, followup.getEnquiry_id());
+        values.put(Cols_followup.FOLLOW_DATE, followup.getFollow_date());
+        values.put(Cols_followup.ENQUIRY_ENTRY_DATE, followup.getEnquiry_entry_date());
+        values.put(Cols_followup.DEALER_BU_ID, followup.getDealer_bu_id());
+        values.put(Cols_followup.FOLLOWUP_STATUS, followup.getFollowup_status());
+        values.put(Cols_followup.PRIORITY, followup.getPriority());
+        values.put(Cols_followup.TWO_WHEELER_TYPE, followup.getTwo_wheeler_type());
+        values.put(Cols_followup.RURAL_URBAN, followup.getRural_urban());
+        values.put(Cols_followup.OCCUPATION, followup.getOccupation());
+        values.put(Cols_followup.USAGE, followup.getUsage());
+        values.put(Cols_followup.SALES_PITCH_NO, followup.getSales_pitch_no());
+        // Inserting Row
+        db.insert(TABLE_FOLLOWUP, null, values);
+        db.close();
+    }
+
+    public List<Followup> getNewAllFollowups() {
+        List<Followup> followups = new ArrayList<Followup>();
+        String selectQuery = "SELECT * FROM " + TABLE_FOLLOWUP;
+
+        Log.e(LOG, selectQuery);
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c = db.rawQuery(selectQuery, null);
+
+        // looping through all rows and adding to list
+        if (c.moveToFirst()) {
+            do {
+                Followup t = new Followup();
+                t.setFirst_name(c.getString((c.getColumnIndex(Cols_followup.FST_NAME))));
+                t.setLast_name(c.getString((c.getColumnIndex(Cols_followup.LAST_NAME))));
+                t.setCell_ph_no(c.getString((c.getColumnIndex(Cols_followup.CELL_PH_NUM))));
+                t.setAge(c.getString((c.getColumnIndex(Cols_followup.AGE))));
+
+                t.setGender(c.getString((c.getColumnIndex(Cols_followup.GENDER))));
+                t.setEmail_addr(c.getString((c.getColumnIndex(Cols_followup.EMAIL_ADDR))));
+                t.setState(c.getString((c.getColumnIndex(Cols_followup.STATE))));
+                t.setDistrict(c.getString((c.getColumnIndex(Cols_followup.DISTRICT))));
+
+                t.setTehsil(c.getString((c.getColumnIndex(Cols_followup.TEHSIL))));
+                t.setCity(c.getString((c.getColumnIndex(Cols_followup.CITY))));
+                t.setX_con_seq_no(c.getString((c.getColumnIndex(Cols_followup.X_CON_SEQ_NUM))));
+                t.setX_model_interested(c.getString((c.getColumnIndex(Cols_followup.X_MODEL_INTERESTED))));
+
+                t.setExpcted_date_purchase(c.getString((c.getColumnIndex(Cols_followup.EXPCTD_DT_PURCHASE))));
+                t.setX_exchange_required(c.getString((c.getColumnIndex(Cols_followup.X_EXCHANGE_REQUIRED))));
+                t.setX_finance_required(c.getString((c.getColumnIndex(Cols_followup.X_FINANCE_REQUIRED))));
+                t.setExist_vehicle(c.getString((c.getColumnIndex(Cols_followup.EXISTING_VEHICLE))));
+
+                t.setFollowup_comments(c.getString((c.getColumnIndex(Cols_followup.FOLLOWUP_COMMENTS))));
+                t.setEnquiry_id(c.getString((c.getColumnIndex(Cols_followup.ENQUIRY_ID))));
+                t.setFollow_date(c.getString((c.getColumnIndex(Cols_followup.FOLLOW_DATE))));
+                t.setEnquiry_entry_date(c.getString((c.getColumnIndex(Cols_followup.ENQUIRY_ENTRY_DATE))));
+                t.setDealer_bu_id(c.getString((c.getColumnIndex(Cols_followup.DEALER_BU_ID))));
+                t.setFollowup_status(c.getString((c.getColumnIndex(Cols_followup.FOLLOWUP_STATUS))));
+
+                t.setPriority(c.getString((c.getColumnIndex(Cols_followup.PRIORITY))));
+                t.setTwo_wheeler_type(c.getString((c.getColumnIndex(Cols_followup.TWO_WHEELER_TYPE))));
+                t.setRural_urban(c.getString((c.getColumnIndex(Cols_followup.RURAL_URBAN))));
+                t.setOccupation(c.getString((c.getColumnIndex(Cols_followup.OCCUPATION))));
+                t.setUsage(c.getString((c.getColumnIndex(Cols_followup.USAGE))));
+                t.setSales_pitch_no((c.getString((c.getColumnIndex(Cols_followup.SALES_PITCH_NO)))));
+
+                followups.add(t);
+            } while (c.moveToNext());
+        }
+        closeDB();
+        return followups;
+    }
+
+    public void addnew_next_followup(Next_Followup followup) {
+        List<Next_Followup> all_records = getNextFollowup();
+        int flag = 0;
+        for (Next_Followup record : all_records) {
+            if (record.getDms_enquiryid().equalsIgnoreCase(followup.getDms_enquiryid()))
+                flag = 1;
+        }
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        if (flag == 0) {
+            values.put(Cols_nextfollowup.DATE, followup.getDate());
+            values.put(Cols_nextfollowup.REMARKS, followup.getRemarks());
+            values.put(Cols_nextfollowup.FOLLOW_DATE, followup.getFollowdate());
+            values.put(Cols_nextfollowup.USER_ID, followup.getUser_id());
+            values.put(Cols_nextfollowup.DMS_ENQUIRYID, followup.getDms_enquiryid());
+            values.put(Cols_nextfollowup.SYNC_STATUS, followup.getSync_status());
+            values.put(Cols_nextfollowup.FOLLOWUP_DONE, followup.getFollowup_done());
+            // Inserting Row
+            db.insert(TABLE_CLOSEFOLLOWUP, null, values);
+        } else {
+            values.put(Cols_nextfollowup.DATE, followup.getDate());
+            values.put(Cols_nextfollowup.REMARKS, followup.getRemarks());
+            values.put(Cols_nextfollowup.FOLLOW_DATE, followup.getFollowdate());
+            values.put(Cols_nextfollowup.USER_ID, followup.getUser_id());
+            values.put(Cols_nextfollowup.FOLLOWUP_DONE, followup.getFollowup_done());
+                       values.put(Cols_nextfollowup.SYNC_STATUS, followup.getSync_status());
+            // Inserting Row
+            db.update(TABLE_NEXTFOLLOWUP, values, Cols_nextfollowup.DMS_ENQUIRYID + " = ?",
+                    new String[]{String.valueOf(followup.getDms_enquiryid())});
+        }
+        db.close();
+
+    }
+
 }

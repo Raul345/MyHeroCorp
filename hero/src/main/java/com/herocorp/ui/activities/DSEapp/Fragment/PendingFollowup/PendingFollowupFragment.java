@@ -39,7 +39,6 @@ import com.herocorp.ui.activities.DSEapp.Fragment.Followup.CloseFollowupFragment
 import com.herocorp.ui.activities.DSEapp.Fragment.Followup.FollowupDetailFragment;
 import com.herocorp.ui.activities.DSEapp.Fragment.Followup.FollowupFragment;
 import com.herocorp.ui.activities.DSEapp.ConnectService.NetworkConnect;
-import com.herocorp.ui.activities.DSEapp.Utilities.SyncFollowup;
 import com.herocorp.ui.activities.DSEapp.adapter.Followupadapter;
 import com.herocorp.ui.activities.DSEapp.db.DatabaseHelper;
 import com.herocorp.ui.activities.DSEapp.models.Followup;
@@ -95,6 +94,12 @@ public class PendingFollowupFragment extends Fragment implements View.OnClickLis
     String enquiry_entry_date;
     String dealer_bu_id;
     String followup_status;
+    String priority;
+    String two_wheeler_type;
+    String rural_urban;
+    String occupation;
+    String usage;
+    String sales_pitch_no;
     Fragment f;
     SwipeRefreshLayout swipe_refresh_followup;
     String sync_date = "";
@@ -153,11 +158,7 @@ public class PendingFollowupFragment extends Fragment implements View.OnClickLis
             public boolean onMenuItemClick(int position, SwipeMenu menu, int index) {
 
                 Followup data = userAdapter.getItem(position);
-                Bundle bundle = new Bundle();
-                bundle.putString("user_id", encryptuser);
-                bundle.putString("user", PreferenceUtil.get_UserId(getContext()));
-                bundle.putString("enquiry_id", data.getEnquiry_id());
-                bundle.putString("pur_date", data.getExpcted_date_purchase());
+                Bundle bundle = send_bundle(data);
                 switch (index) {
                     case 0:
                         // open
@@ -182,28 +183,7 @@ public class PendingFollowupFragment extends Fragment implements View.OnClickLis
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Followup data = userAdapter.getItem(position);
-                Bundle bundle = new Bundle();
-                bundle.putString("fname", data.getFirst_name());
-                bundle.putString("lname", data.getLast_name());
-                bundle.putString("mobile", data.getCell_ph_no());
-                bundle.putString("age", data.getAge());
-                bundle.putString("sex", data.getGender());
-                bundle.putString("email", data.getEmail_addr());
-                bundle.putString("state", data.getState());
-                bundle.putString("district", data.getDistrict());
-                bundle.putString("tehsil", data.getTehsil());
-                bundle.putString("city", data.getCity());
-                bundle.putString("model", data.getX_model_interested());
-                bundle.putString("id", data.getX_con_seq_no());
-                bundle.putString("pur_date", data.getExpcted_date_purchase());
-                bundle.putString("exchange", data.getX_exchange_required());
-                bundle.putString("finance", data.getX_finance_required());
-                bundle.putString("vtype", data.getExist_vehicle());
-                bundle.putString("comment", data.getFollowup_comments());
-                bundle.putString("followdate", data.getFollow_date());
-                bundle.putString("enquiryid", data.getEnquiry_id());
-                bundle.putString("user", PreferenceUtil.get_UserId(getContext()));
-
+                Bundle bundle = send_bundle(data);
                 f = new FollowupDetailFragment();
                 f.setArguments(bundle);
                 transaction(f);
@@ -284,9 +264,9 @@ public class PendingFollowupFragment extends Fragment implements View.OnClickLis
                                             swipe_refresh_followup.setRefreshing(true);
                                             current_date = new SimpleDateFormat("dd-MMM-yy").format(new Date());
                                             fetch_records();
-                                            if ((!PreferenceUtil.get_Syncdate(getContext()).equalsIgnoreCase(current_date.toString()) && NetConnections.isConnected(getContext()))) {
+                                            if (!PreferenceUtil.get_Syncdate(getContext()).equalsIgnoreCase(current_date.toString()) && NetConnections.isConnected(getContext())) {
                                                 swipe_refresh_followup.setRefreshing(true);
-                                                new SyncFollowup(getContext()).execute();
+                                                new SyncFollowup1(getContext()).execute();
                                                 // fetch_records();
                                             }
                                         }
@@ -309,8 +289,13 @@ public class PendingFollowupFragment extends Fragment implements View.OnClickLis
     public void fetch_records() {
         try {
             db = new DatabaseHelper(getContext());
-            List<Followup> allrecords = db.getAllFollowups();
+            // List<Followup> allrecords = db.getAllFollowups();
+            List<Followup> allrecords = db.getNewAllFollowups();
             userAdapter.clear();
+            ArrayList<Followup> listhot = new ArrayList<Followup>();
+            ArrayList<Followup> listwarm = new ArrayList<Followup>();
+            ArrayList<Followup> listcold = new ArrayList<Followup>();
+
             for (Followup record : allrecords) {
                 first_name = record.getFirst_name();
                 last_name = record.getLast_name();
@@ -334,17 +319,66 @@ public class PendingFollowupFragment extends Fragment implements View.OnClickLis
                 enquiry_entry_date = record.getEnquiry_entry_date();
                 dealer_bu_id = record.getDealer_bu_id();
                 followup_status = record.getFollowup_status();
-                userAdapter.add(new Followup(first_name, last_name, cell_ph_no, age, gender, email_addr, state, district, tehsil, city, x_con_seq_no, x_model_interested,
-                        expected_date_purchase, x_exchange_required, x_finance_required, exist_vehicle, followup_comments, enquiry_id, follow_date, enquiry_entry_date, dealer_bu_id, followup_status));
-                userAdapter.notifyDataSetChanged();
-            }
-            updateList();
+                priority = record.getPriority();
+                two_wheeler_type = record.getTwo_wheeler_type();
+                rural_urban = record.getRural_urban();
+                occupation = record.getOccupation();
+                usage = record.getUsage();
+                priority = record.getPriority();
+                two_wheeler_type = record.getTwo_wheeler_type();
+                rural_urban = record.getRural_urban();
+                occupation = record.getOccupation();
+                usage = record.getUsage();
+                sales_pitch_no = record.getSales_pitch_no();
+                if (priority.equalsIgnoreCase("Hot"))
+                    listhot.add(new Followup(first_name, last_name, cell_ph_no, age, gender, email_addr, state, district, tehsil, city, x_con_seq_no, x_model_interested,
+                            expected_date_purchase, x_exchange_required, x_finance_required, exist_vehicle, followup_comments, enquiry_id, follow_date, enquiry_entry_date, dealer_bu_id, priority, two_wheeler_type, rural_urban, occupation, usage, sales_pitch_no, followup_status));
+                else if (priority.equalsIgnoreCase("Warm"))
+                    listwarm.add(new Followup(first_name, last_name, cell_ph_no, age, gender, email_addr, state, district, tehsil, city, x_con_seq_no, x_model_interested,
+                            expected_date_purchase, x_exchange_required, x_finance_required, exist_vehicle, followup_comments, enquiry_id, follow_date, enquiry_entry_date, dealer_bu_id, priority, two_wheeler_type, rural_urban, occupation, usage, sales_pitch_no, followup_status));
+                else if (priority.equalsIgnoreCase("Cold"))
+                    listcold.add(new Followup(first_name, last_name, cell_ph_no, age, gender, email_addr, state, district, tehsil, city, x_con_seq_no, x_model_interested,
+                            expected_date_purchase, x_exchange_required, x_finance_required, exist_vehicle, followup_comments, enquiry_id, follow_date, enquiry_entry_date, dealer_bu_id, priority, two_wheeler_type, rural_urban, occupation, usage, sales_pitch_no, followup_status));
+                else
+                    userAdapter.add(new Followup(first_name, last_name, cell_ph_no, age, gender, email_addr, state, district, tehsil, city, x_con_seq_no, x_model_interested,
+                            expected_date_purchase, x_exchange_required, x_finance_required, exist_vehicle, followup_comments, enquiry_id, follow_date, enquiry_entry_date, dealer_bu_id, priority, two_wheeler_type, rural_urban, occupation, usage, sales_pitch_no, followup_status));
 
+               /* userAdapter.add(new Followup(first_name, last_name, cell_ph_no, age, gender, email_addr, state, district, tehsil, city, x_con_seq_no, x_model_interested,
+                        expected_date_purchase, x_exchange_required, x_finance_required, exist_vehicle, followup_comments, enquiry_id, follow_date, enquiry_entry_date, dealer_bu_id, followup_status));
+              */
+            }
+
+            //for hot
+            if (listhot.size() > 0) {
+                for (int i = 0; i < listhot.size(); i++) {
+                    userAdapter.add(new Followup(listhot.get(i).getFirst_name(), listhot.get(i).getLast_name(), listhot.get(i).getCell_ph_no(), listhot.get(i).getAge(), listhot.get(i).getGender(), listhot.get(i).getEmail_addr(), listhot.get(i).getState(), listhot.get(i).getDistrict(), listhot.get(i).getTehsil(), listhot.get(i).getCity(), listhot.get(i).getX_con_seq_no(), listhot.get(i).getX_model_interested(),
+                            listhot.get(i).getExpcted_date_purchase(), listhot.get(i).getX_exchange_required(), listhot.get(i).getX_finance_required(), listhot.get(i).getExist_vehicle(), listhot.get(i).getFollowup_comments(), listhot.get(i).getEnquiry_id(), listhot.get(i).getFollow_date(), listhot.get(i).getEnquiry_entry_date(), listhot.get(i).getDealer_bu_id(), listhot.get(i).getPriority(), listhot.get(i).getTwo_wheeler_type(), listhot.get(i).getRural_urban(), listhot.get(i).getOccupation(), listhot.get(i).getUsage(), listhot.get(i).getSales_pitch_no(), listhot.get(i).getFollowup_status()));
+
+                }
+            }
+            //for warm
+            if (listwarm.size() > 0) {
+                for (int i = 0; i < listwarm.size(); i++) {
+                    userAdapter.add(new Followup(listwarm.get(i).getFirst_name(), listwarm.get(i).getLast_name(), listwarm.get(i).getCell_ph_no(), listwarm.get(i).getAge(), listwarm.get(i).getGender(), listwarm.get(i).getEmail_addr(), listwarm.get(i).getState(), listwarm.get(i).getDistrict(), listwarm.get(i).getTehsil(), listwarm.get(i).getCity(), listwarm.get(i).getX_con_seq_no(), listwarm.get(i).getX_model_interested(),
+                            listwarm.get(i).getExpcted_date_purchase(), listwarm.get(i).getX_exchange_required(), listwarm.get(i).getX_finance_required(), listwarm.get(i).getExist_vehicle(), listwarm.get(i).getFollowup_comments(), listwarm.get(i).getEnquiry_id(), listwarm.get(i).getFollow_date(), listwarm.get(i).getEnquiry_entry_date(), listwarm.get(i).getDealer_bu_id(), listwarm.get(i).getPriority(), listwarm.get(i).getTwo_wheeler_type(), listwarm.get(i).getRural_urban(), listwarm.get(i).getOccupation(), listwarm.get(i).getUsage(), listwarm.get(i).getSales_pitch_no(), listwarm.get(i).getFollowup_status()));
+
+                }
+            }
+
+            //for cold
+            if (listcold.size() > 0) {
+                for (int i = 0; i < listcold.size(); i++) {
+                    userAdapter.add(new Followup(listcold.get(i).getFirst_name(), listcold.get(i).getLast_name(), listcold.get(i).getCell_ph_no(), listcold.get(i).getAge(), listcold.get(i).getGender(), listcold.get(i).getEmail_addr(), listcold.get(i).getState(), listcold.get(i).getDistrict(), listcold.get(i).getTehsil(), listcold.get(i).getCity(), listcold.get(i).getX_con_seq_no(), listcold.get(i).getX_model_interested(),
+                            listcold.get(i).getExpcted_date_purchase(), listcold.get(i).getX_exchange_required(), listcold.get(i).getX_finance_required(), listcold.get(i).getExist_vehicle(), listcold.get(i).getFollowup_comments(), listcold.get(i).getEnquiry_id(), listcold.get(i).getFollow_date(), listcold.get(i).getEnquiry_entry_date(), listcold.get(i).getDealer_bu_id(), listcold.get(i).getPriority(), listcold.get(i).getTwo_wheeler_type(), listcold.get(i).getRural_urban(), listcold.get(i).getOccupation(), listcold.get(i).getUsage(), listcold.get(i).getSales_pitch_no(), listcold.get(i).getFollowup_status()));
+
+                }
+            }
+            userAdapter.notifyDataSetChanged();
+            updateList();
         } catch (Exception e) {
             swipe_refresh_followup.setRefreshing(false);
             e.printStackTrace();
             Toast.makeText(getContext(), "Server Error !!", Toast.LENGTH_SHORT).show();
-
         }
     }
 
@@ -361,6 +395,10 @@ public class PendingFollowupFragment extends Fragment implements View.OnClickLis
         fetch_records();
     }
 
+  /*  @Override
+    public void onBackStackChanged() {
+        onRefresh();
+    }*/
 
     public class SyncFollowup extends AsyncTask<Void, Void, String> {
         DatabaseHelper db;
@@ -474,5 +512,176 @@ public class PendingFollowupFragment extends Fragment implements View.OnClickLis
                 //Toast.makeText(context, "Check your Connection !!", Toast.LENGTH_SHORT);
             }
         }
+    }
+
+    public class SyncFollowup1 extends AsyncTask<Void, Void, String> {
+        DatabaseHelper db;
+        NetworkConnect networkConnect;
+        String result;
+        Context context;
+        String first_name;
+        String last_name;
+        String cell_ph_no;
+        String age;
+        String gender;
+        String email_addr;
+        String state;
+        String district;
+        String tehsil;
+        String city;
+        String x_con_seq_no;
+        String x_model_interested;
+        String expected_date_purchase;
+        String x_exchange_required;
+        String x_finance_required;
+        String exist_vehicle;
+        String followup_comments;
+        String enquiry_id;
+        String follow_date;
+        String enquiry_entry_date;
+        String dealer_bu_id;
+        String priority = "";
+        String two_wheeler_type = "";
+        String rural_urban = "";
+        String occupation = "";
+        String usage = "";
+        String sales_pitch_no = "";
+
+        private SharedPreferences sharedPreferences;
+
+
+        public SyncFollowup1(Context context) {
+            this.context = context;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        protected String doInBackground(Void... params) {
+            try {
+                final JSONObject jsonparams = new JSONObject();
+                jsonparams.put("user_id", PreferenceUtil.get_UserId(context));
+                //jsonparams.put("user_id", "ROBIN1234");
+                Log.e("followup_sync_start:", new SimpleDateFormat("dd-MMM-yy").format(new Date()).toString());
+                String newurlparams = "data=" + URLEncoder.encode(jsonparams.toString(), "UTF-8");
+                networkConnect = new NetworkConnect(URLConstants.ENCRYPT, newurlparams);
+                String data = networkConnect.execute();
+                String urldata = "data=" + URLEncoder.encode(data, "UTF-8");
+                networkConnect = new NetworkConnect(URLConstants.PENDING_FOLLOWUP, urldata);
+                result = networkConnect.execute();
+                return result;
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+                return null;
+            } catch (Exception e) {
+                e.printStackTrace();
+                return null;
+            }
+        }
+
+        protected void onPostExecute(String s) {
+            try {
+                super.onPostExecute(s);
+                Log.e("response_followup:", result);
+                db = new DatabaseHelper(context);
+                db.clearfollowup_table();
+                JSONObject jsono = null;
+                JSONArray jarray = null;
+                try {
+                    jsono = new JSONObject(result);
+                    if (jsono.has("follow_up")) {
+                        jarray = jsono.getJSONArray("follow_up");
+                        for (int i = 0; i < jarray.length(); i++) {
+                            JSONObject object = jarray.getJSONObject(i);
+                            first_name = object.getString("FST_NAME");
+                            last_name = object.getString("LAST_NAME");
+                            cell_ph_no = object.getString("CELL_PH_NUM");
+                            age = object.getString("AGE");
+                            gender = object.getString("GENDER");
+                            email_addr = object.getString("EMAIL_ADDR");
+                            state = object.getString("STATE");
+                            district = object.getString("DISTRICT");
+                            tehsil = object.getString("TEHSIL");
+                            city = object.getString("CITY");
+                            x_con_seq_no = object.getString("X_CON_SEQ_NUM");
+                            x_model_interested = object.getString("X_MODEL_INTERESTED");
+                            expected_date_purchase = object.getString("EXPCTD_DT_PURCHASE");
+                            x_exchange_required = object.getString("X_EXCHANGE_REQUIRED");
+                            x_finance_required = object.getString("X_FINANCE_REQUIRED");
+                            exist_vehicle = object.getString("EXISTING_VEHICLE");
+                            followup_comments = object.getString("FOLLOWUP_COMMENTS");
+                            enquiry_id = object.getString("ENQUIRY_ID");
+                            follow_date = object.getString("FOLLOW_DATE");
+                            enquiry_entry_date = object.getString("ENQUIRY_ENTRY_DATE");
+                            dealer_bu_id = object.getString("DEALER_BU_ID");
+                            if (object.has("PRIORITY")) {
+                                priority = object.getString("PRIORITY");
+                            }
+                            if (object.has("TWO_WHEELER_TYPE")) {
+                                two_wheeler_type = object.getString("TWO_WHEELER_TYPE");
+                            }
+                            if (object.has("RURAL_URBAN")) {
+                                rural_urban = object.getString("RURAL_URBAN");
+                            }
+                            if (object.has("OCCUPATION")) {
+                                occupation = object.getString("OCCUPATION");
+                            }
+                            if (object.has("USAGES")) {
+                                usage = object.getString("USAGES");
+                            }
+                            if (object.has("sales_pitch_no"))
+                                sales_pitch_no = object.getString("sales_pitch_no");
+                         /*   db.addfollowup(new Followup(first_name, last_name, cell_ph_no, age, gender, email_addr, state, district, tehsil, city, x_con_seq_no, x_model_interested,
+                                    expected_date_purchase, x_exchange_required, x_finance_required, exist_vehicle, followup_comments, enquiry_id, follow_date, enquiry_entry_date, dealer_bu_id, "0"));
+*/
+                            db.addNewfollowup(new Followup(first_name, last_name, cell_ph_no, age, gender, email_addr, state, district, tehsil, city, x_con_seq_no, x_model_interested,
+                                    expected_date_purchase, x_exchange_required, x_finance_required, exist_vehicle, followup_comments, enquiry_id, follow_date, enquiry_entry_date, dealer_bu_id, priority, two_wheeler_type, rural_urban, occupation, usage, sales_pitch_no, "0"));
+
+                        }
+                    }
+                    PreferenceUtil.set_Syncdate(context, new SimpleDateFormat("dd-MMM-yy").format(new Date()).toString());
+                    Log.e("followup_sync_end:", new SimpleDateFormat("dd-MMM-yy").format(new Date()).toString());
+                    onRefresh();
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                //Toast.makeText(context, "Check your Connection !!", Toast.LENGTH_SHORT);
+            }
+        }
+    }
+
+    public Bundle send_bundle(Followup data) {
+        Bundle bundle = new Bundle();
+        bundle.putString("fname", data.getFirst_name());
+        bundle.putString("lname", data.getLast_name());
+        bundle.putString("mobile", data.getCell_ph_no());
+        bundle.putString("age", data.getAge());
+        bundle.putString("sex", data.getGender());
+        bundle.putString("email", data.getEmail_addr());
+        bundle.putString("state", data.getState());
+        bundle.putString("district", data.getDistrict());
+        bundle.putString("tehsil", data.getTehsil());
+        bundle.putString("city", data.getCity());
+        bundle.putString("model", data.getX_model_interested());
+        bundle.putString("id", data.getX_con_seq_no());
+        bundle.putString("pur_date", data.getExpcted_date_purchase());
+        bundle.putString("exchange", data.getX_exchange_required());
+        bundle.putString("finance", data.getX_finance_required());
+        bundle.putString("vtype", data.getExist_vehicle());
+        bundle.putString("comment", data.getFollowup_comments());
+        bundle.putString("followdate", data.getFollow_date());
+        bundle.putString("enquiryid", data.getEnquiry_id());
+        bundle.putString("user", PreferenceUtil.get_UserId(getContext()));
+        bundle.putString("twowheelertype", data.getTwo_wheeler_type());
+        bundle.putString("area", data.getRural_urban());
+        bundle.putString("occupation", data.getOccupation());
+        bundle.putString("usage", data.getUsage());
+        bundle.putString("sales_pitch_no",data.getSales_pitch_no());
+        return bundle;
     }
 }

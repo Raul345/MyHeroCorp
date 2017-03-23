@@ -32,6 +32,10 @@ public class EnquiryContact {
     String model_cd;
     String dealer_bu_id;
     String follow_date;
+    String sales_pitch_no;
+    String priority;
+    String occupation;
+    String usage;
 
     static ArrayList fst_names = new ArrayList();
     static ArrayList last_names = new ArrayList();
@@ -47,6 +51,10 @@ public class EnquiryContact {
     public static ArrayList enquirydates = new ArrayList();
     public static ArrayList followupdates = new ArrayList();
     public static ArrayList purchasedates = new ArrayList();
+    public static ArrayList salespitch = new ArrayList();
+    public static ArrayList priorities = new ArrayList();
+    public static ArrayList occupations = new ArrayList();
+    public static ArrayList usages = new ArrayList();
 
     static ArrayList exchanges_reqd = new ArrayList();
     static ArrayList finances_reqd = new ArrayList();
@@ -149,6 +157,30 @@ public class EnquiryContact {
         return x_model_interested;
     }
 
+    public void setPriority(String priority) {
+        this.priority = priority;
+    }
+
+    public String getPriority() {
+        return priority;
+    }
+
+    public void setOccupation(String occupation) {
+        this.occupation = occupation;
+    }
+
+    public String getOccupation() {
+        return occupation;
+    }
+
+    public void setUsage(String usage) {
+        this.usage = usage;
+    }
+
+    public String getUsage() {
+        return usage;
+    }
+
     public void setExpctd_dt_purchase(String expctd_dt_purchase) {
         this.expctd_dt_purchase = expctd_dt_purchase;
         this.purchasedates.add(expctd_dt_purchase);
@@ -198,6 +230,14 @@ public class EnquiryContact {
 
     public String getEnquiry_id() {
         return enquiry_id;
+    }
+
+    public void setSales_pitch_no(String sales_pitch_no) {
+        this.sales_pitch_no = sales_pitch_no;
+    }
+
+    public String getSales_pitch_no() {
+        return sales_pitch_no;
     }
 
     public void setX_test_ride_req(String x_test_ride_req) {
@@ -368,6 +408,49 @@ public class EnquiryContact {
         return followupdate;
     }
 
+    public String getPitch(String firstname, String lastname, String mobile, String state, String district) {
+        String pitch = "";
+        for (int i = 0; i < salespitch.size(); i++) {
+            if (fst_names.get(i).equals(firstname) && last_names.get(i).equals(lastname) && cell_ph_nums.get(i).equals(mobile) && states.get(i).equals(state)
+                    && districts.get(i).equals(district)) {
+                pitch = salespitch.get(i).toString();
+            }
+        }
+        return pitch;
+    }
+
+    public String getPrior(String firstname, String lastname, String mobile, String state, String district) {
+        String priorty = "";
+        for (int i = 0; i < priorities.size(); i++) {
+            if (fst_names.get(i).equals(firstname) && last_names.get(i).equals(lastname) && cell_ph_nums.get(i).equals(mobile) && states.get(i).equals(state)
+                    && districts.get(i).equals(district)) {
+                priorty = priorities.get(i).toString();
+            }
+        }
+        return priorty;
+    }
+
+    public String getOccup(String firstname, String lastname, String mobile, String state, String district) {
+        String occupation = "";
+        for (int i = 0; i < occupations.size(); i++) {
+            if (fst_names.get(i).equals(firstname) && last_names.get(i).equals(lastname) && cell_ph_nums.get(i).equals(mobile) && states.get(i).equals(state)
+                    && districts.get(i).equals(district)) {
+                occupation = occupations.get(i).toString();
+            }
+        }
+        return occupation;
+    }
+
+    public String getUse(String firstname, String lastname, String mobile, String state, String district) {
+        String usage = "";
+        for (int i = 0; i < usages.size(); i++) {
+            if (fst_names.get(i).equals(firstname) && last_names.get(i).equals(lastname) && cell_ph_nums.get(i).equals(mobile) && states.get(i).equals(state)
+                    && districts.get(i).equals(district)) {
+                usage = usages.get(i).toString();
+            }
+        }
+        return usage;
+    }
 
     public EnquiryContact(String fst_name,
                           String last_name,
@@ -444,6 +527,116 @@ public class EnquiryContact {
     }
 
     public EnquiryContact() {
+    }
+
+    public EnquiryContact(String fst_name,
+                          String last_name,
+                          String cell_ph_num,
+                          String age,
+                          String gender,
+                          String email_addr,
+                          String state,
+                          String district,
+                          String tehsil,
+                          String city,
+                          String x_con_seq_no,
+                          String x_model_interested,
+                          String expctd_dt_purchase,
+                          String x_exchange_required,
+                          String x_finance_required,
+                          String existing_vehicle,
+                          String followup_comments,
+                          String enquiry_id,
+                          String x_test_ride_req,
+                          String enquiry_entry_date,
+                          String addr,
+                          String addr_line_2,
+                          String make_cd,
+                          String model_cd,
+                          String dealer_bu_id,
+                          String follow_date,
+                          String sales_pitch_no,
+                          String priority,
+                          String occupation,
+                          String usage) {
+
+        this.fst_name = fst_name;
+        this.last_name = last_name;
+        this.cell_ph_num = cell_ph_num;
+        this.age = age;
+        this.gender = gender;
+        this.email_addr = email_addr;
+        this.state = state;
+        this.district = district;
+        this.tehsil = tehsil;
+        this.city = city;
+        this.x_con_seq_no = x_con_seq_no;
+        this.x_model_interested = x_model_interested;
+        this.expctd_dt_purchase = expctd_dt_purchase;
+        this.x_exchange_required = x_exchange_required;
+        this.x_finance_required = x_finance_required;
+        this.existing_vehicle = existing_vehicle;
+        this.followup_comments = followup_comments;
+        this.enquiry_id = enquiry_id;
+        this.x_test_ride_req = x_test_ride_req;
+        this.enquiry_entry_date = enquiry_entry_date;
+        this.addr = addr;
+        this.addr_line_2 = addr_line_2;
+        this.make_cd = make_cd;
+        this.model_cd = model_cd;
+        this.dealer_bu_id = dealer_bu_id;
+        this.follow_date = follow_date;
+        this.sales_pitch_no = sales_pitch_no;
+        this.priority = priority;
+        this.occupation = occupation;
+        this.usage = usage;
+
+        this.fst_names.add(fst_name);
+        this.last_names.add(last_name);
+        this.cell_ph_nums.add(cell_ph_num);
+        this.genders.add(gender);
+        this.email_addrs.add(email_addr);
+        this.states.add(state);
+        this.districts.add(district);
+        this.enquiryids.add(enquiry_id);
+        this.models.add(x_model_interested);
+        this.enquirydates.add(enquiry_entry_date);
+        this.purchasedates.add(expctd_dt_purchase);
+        this.followupdates.add(follow_date);
+        this.salespitch.add(sales_pitch_no);
+        this.priorities.add(priority);
+        this.occupations.add(occupation);
+        this.usages.add(usage);
+
+        this.exchanges_reqd.add(x_exchange_required);
+        this.finances_reqd.add(x_finance_required);
+        this.comments.add(followup_comments);
+        this.exist_vehicles.add(existing_vehicle);
+
+    }
+
+    public EnquiryContact(int clear) {
+        this.fst_names.clear();
+        this.last_names.clear();
+        this.cell_ph_nums.clear();
+        this.genders.clear();
+        this.email_addrs.clear();
+        this.states.clear();
+        this.districts.clear();
+        this.enquiryids.clear();
+        this.models.clear();
+        this.enquirydates.clear();;
+        this.purchasedates.clear();;
+        this.followupdates.clear();;
+        this.salespitch.clear();;
+        this.priorities.clear();;
+        this.occupations.clear();;
+        this.usages.clear();;
+
+        this.exchanges_reqd.clear();;
+        this.finances_reqd.clear();;
+        this.comments.clear();;
+        this.exist_vehicles.clear();;
     }
 }
 

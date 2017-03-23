@@ -11,6 +11,7 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import com.herocorp.ui.activities.auth.SignInActivity;
+import com.herocorp.ui.utility.PreferenceUtil;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -22,6 +23,7 @@ public class activity_splash extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
+        PreferenceUtil.setFlag_UPDATE(this, true);
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -30,5 +32,6 @@ public class activity_splash extends Activity {
                 finish();
             }
         }, 3000);
+
     }
 }
