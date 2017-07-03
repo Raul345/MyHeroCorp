@@ -80,6 +80,7 @@ public class ProductElectricalRepo extends BaseRepository<ProductElectricalModel
 
         for (ProductElectricalModel electricalModel : entityList) {
 
+
             if (objects.contains(electricalModel.getProductID())) {
                 //Already Contains, Update it
                 operations.add(

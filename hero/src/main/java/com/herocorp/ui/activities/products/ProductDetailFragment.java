@@ -56,6 +56,7 @@ public class ProductDetailFragment extends Fragment implements View.OnClickListe
     //Data Model
     private ArrayList<ProductCategoryModel> categoryList;
     private ArrayList<ProductModel> productList;
+    boolean flag = false;
 
 
     @Override
@@ -169,44 +170,57 @@ public class ProductDetailFragment extends Fragment implements View.OnClickListe
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
     private void setSelectCategoryButtons() {
-
         try {
 
             for (int i = 0; i < categoryList.size(); i++) {
-
-                TextView roundTextView = new TextView(getActivity());
-                roundTextView.setId(categoryList.get(i).getCategoryID());
-                roundTextView.setBackground(getResources().getDrawable(i == 0 ? R.drawable.red_dot_icon : R.drawable.black_dot_icon));
-                dotLayout.addView(roundTextView);
-                customViewParams.setHeightAndWidth(roundTextView, 65, 65);
-                roundTextView.setOnClickListener(this);
-
-                if (i == 0)
-                    selectedDotId = roundTextView.getId();
-
-                if (i < categoryList.size() - 1) {
-                    TextView lineTextView = new TextView(getActivity());
-                    lineTextView.setBackgroundColor(Color.parseColor("#ffffff"));
-                    dotLayout.addView(lineTextView);
-                    customViewParams.setHeightAndWidth(lineTextView, 3, 160);
-                }
-
-                TextView categoryText = new TextView(getActivity());
-                categoryText.setGravity(Gravity.CENTER);
-                categoryText.setTextColor(Color.WHITE);
-                String text = categoryList.get(i).getCategoryName();
-                categoryText.setText(text);
-                textLayout.addView(categoryText);
-                customViewParams.setTextViewCustomParams(categoryText, new int[]{30, 5, 30, 5}, new int[]{0, 0, 0, 0}, 30, customTypeFace.gillSans, 0);
-
+                if (categoryList.get(i).getCategoryName().equalsIgnoreCase("competitors"))
+                    flag = true;
             }
 
-            productList = productRepo.getRecords(
-                    null,
-                    ProductTable.Cols.CATEGORY_ID + "=? AND " + ProductTable.Cols.CATEGORY_ID + "<>?",
-                    new String[]{String.valueOf(categoryList.get(0).getCategoryID()), String.valueOf(7)}, null);
+            for (int i = 0; i < categoryList.size(); i++) {
+                if (!categoryList.get(i).getCategoryName().equalsIgnoreCase("competitors")) {
+                    TextView roundTextView = new TextView(getActivity());
+                    roundTextView.setId(categoryList.get(i).getCategoryID());
+                    roundTextView.setBackground(getResources().getDrawable(i == 0 ? R.drawable.red_dot_icon : R.drawable.black_dot_icon));
+                    dotLayout.addView(roundTextView);
+                    customViewParams.setHeightAndWidth(roundTextView, 65, 65);
+                    roundTextView.setOnClickListener(this);
+                    if (i == 0)
+                        selectedDotId = roundTextView.getId();
 
-            setProductList();
+                    if (!flag) {
+                        if (i < categoryList.size() - 1) {
+                            TextView lineTextView = new TextView(getActivity());
+                            lineTextView.setBackgroundColor(Color.parseColor("#ffffff"));
+                            dotLayout.addView(lineTextView);
+                            customViewParams.setHeightAndWidth(lineTextView, 3, 160);
+                        }
+                    } else {
+                        if (i < categoryList.size() - 2) {
+                            TextView lineTextView = new TextView(getActivity());
+                            lineTextView.setBackgroundColor(Color.parseColor("#ffffff"));
+                            dotLayout.addView(lineTextView);
+                            customViewParams.setHeightAndWidth(lineTextView, 3, 160);
+                        }
+                    }
+
+                    TextView categoryText = new TextView(getActivity());
+                    categoryText.setGravity(Gravity.CENTER);
+                    categoryText.setTextColor(Color.WHITE);
+                    String text = categoryList.get(i).getCategoryName();
+                    categoryText.setText(text);
+                    textLayout.addView(categoryText);
+                    customViewParams.setTextViewCustomParams(categoryText, new int[]{30, 5, 30, 5}, new int[]{0, 0, 0, 0}, 30, customTypeFace.gillSans, 0);
+
+                }
+
+                productList = productRepo.getRecords(
+                        null,
+                        ProductTable.Cols.CATEGORY_ID + "=? AND " + ProductTable.Cols.CATEGORY_ID + "<>?",
+                        new String[]{String.valueOf(categoryList.get(0).getCategoryID()), String.valueOf(7)}, null);
+
+                setProductList();
+            }
 
         } catch (Exception e) {
 
@@ -269,10 +283,10 @@ public class ProductDetailFragment extends Fragment implements View.OnClickListe
 
             ((BaseDrawerActivity) getActivity()).productId = selectButtonId;
           /*  ((BaseDrawerActivity) getActivity()).openFragment(new GalleryFragment(), true);*/
-            FragmentManager fm=getActivity().getSupportFragmentManager();
+            FragmentManager fm = getActivity().getSupportFragmentManager();
             Fragment f = new GalleryFragment();
-            FragmentTransaction ft= fm.beginTransaction();
-            ft.add(R.id.content_productdetail,f);
+            FragmentTransaction ft = fm.beginTransaction();
+            ft.add(R.id.content_productdetail, f);
             ft.addToBackStack("gallery");
             ft.commit();
 

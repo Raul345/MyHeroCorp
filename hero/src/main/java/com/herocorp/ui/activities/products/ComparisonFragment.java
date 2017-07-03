@@ -19,8 +19,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.herocorp.R;
+import com.herocorp.core.models.ProductCompareModel;
 import com.herocorp.core.models.ProductModel;
+import com.herocorp.core.models.ProductRotationModel;
+import com.herocorp.infra.db.repositories.product.ProductCompareRepo;
 import com.herocorp.infra.db.repositories.product.ProductRepo;
+import com.herocorp.infra.db.repositories.product.ProductRotationRepo;
 import com.herocorp.infra.db.tables.schemas.ProductTable;
 import com.herocorp.infra.utils.ImageHandler;
 import com.herocorp.ui.activities.BaseDrawerActivity;
@@ -55,11 +59,11 @@ public class ComparisonFragment extends Fragment implements View.OnClickListener
         try {
             productRepo = new ProductRepo(getActivity());
             productList = productRepo.getRecords(null, null, null, null);
+            ((BaseDrawerActivity) getActivity()).compare_images = new ProductCompareRepo(getActivity()).getAllCompareImages(productId);
             extractProductNameList();
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         initView(rootView);
         return rootView;
     }
@@ -114,6 +118,9 @@ public class ComparisonFragment extends Fragment implements View.OnClickListener
         Button featurecompare = (Button) rootView.findViewById(R.id.comparefeature_button);
         customViewParams.setButtonCustomParams(featurecompare, new int[]{20, 0, 20, 15}, new int[]{5, 5, 5, 5}, 50, 370, 30, customTypeFace.gillSansLight, 0);
 
+        if (((BaseDrawerActivity) getActivity()).compare_images.size() > 0) {
+            featurecompare.setVisibility(View.VISIBLE);
+        }
         Button touchToCompareButton = (Button) rootView.findViewById(R.id.continue_button);
         customViewParams.setButtonCustomParams(touchToCompareButton, new int[]{20, 0, 20, 15}, new int[]{5, 5, 5, 5}, 50, 370, 30, customTypeFace.gillSansLight, 0);
 
@@ -285,9 +292,14 @@ public class ComparisonFragment extends Fragment implements View.OnClickListener
             } else
                 Toast.makeText(getActivity(), "Please select a product to compare", Toast.LENGTH_SHORT).show();
 
-        }else if (view.getId() == R.id.comparefeature_button) {
-
-            if (((BaseDrawerActivity) getActivity()).otherProductId != -1)
+        } else if (view.getId() == R.id.comparefeature_button) {
+            FragmentManager fm = getActivity().getSupportFragmentManager();
+            Fragment f = new FeatureCompareFragment();
+            FragmentTransaction ft = fm.beginTransaction();
+            ft.addToBackStack(null);
+            ft.add(R.id.content_compare, f);
+            ft.commit();
+           /* if (((BaseDrawerActivity) getActivity()).otherProductId != -1)
             //((BaseDrawerActivity) getActivity()).openFragment(new ComparisonDetailFragment(), true);
             {
                 FragmentManager fm = getActivity().getSupportFragmentManager();
@@ -298,7 +310,7 @@ public class ComparisonFragment extends Fragment implements View.OnClickListener
                 ft.commit();
             } else
                 Toast.makeText(getActivity(), "Please select a product to compare", Toast.LENGTH_SHORT).show();
-
+*/
         }
     }
 

@@ -40,7 +40,7 @@ public class ProductRotationTable extends TableHelper {
                             + Cols.PRODUCT_ID + " INTEGER not null, "
                             + Cols.IMAGE_NAME + " text not null, "
                             + Cols.CREATED_DATE + " text, "
-                            +"UNIQUE ("+Cols.PRODUCT_ID+", "+Cols.IMAGE_NAME+")"
+                            + "UNIQUE (" + Cols.PRODUCT_ID + ", " + Cols.IMAGE_NAME + ")"
                             + ");";
                             /*
                             create table if not exists rotate_table (

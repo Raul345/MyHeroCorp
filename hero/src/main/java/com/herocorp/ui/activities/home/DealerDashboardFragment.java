@@ -1,7 +1,6 @@
 package com.herocorp.ui.activities.home;
 
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
@@ -12,7 +11,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -28,9 +26,7 @@ import com.herocorp.ui.activities.DSEapp.Fragment.Home.HomeFragment;
 import com.herocorp.ui.activities.DSEapp.db.DatabaseHelper;
 import com.herocorp.ui.activities.DSEapp.models.Bike_model;
 import com.herocorp.ui.activities.DSEapp.models.Bikemake;
-import com.herocorp.ui.activities.DSEapp.models.Pitch;
-import com.herocorp.ui.activities.DSEapp.models.State;
-import com.herocorp.ui.activities.DSEapp.services.MakeModelSync;
+import com.herocorp.ui.activities.VAS.VasHomeFragment;
 import com.herocorp.ui.activities.news.Fragment.NewsFragment;
 import com.herocorp.ui.activities.products.ProductDetailFragment;
 import com.herocorp.ui.utility.CustomTypeFace;
@@ -45,7 +41,6 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 
 public class DealerDashboardFragment extends Fragment implements View.OnClickListener {
 
@@ -58,11 +53,14 @@ public class DealerDashboardFragment extends Fragment implements View.OnClickLis
     NetworkConnect networkConnect;
     String current_date;
     ProgressDialog progressDialog;
+    LinearLayout productsLayout, valueLayout, newsLayout, contactUsLayout;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.dealer_dashboard_fragment, container, false);
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        getActivity().setRequestedOrientation(
+                ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
 
         initView(rootView);
 
@@ -72,8 +70,7 @@ public class DealerDashboardFragment extends Fragment implements View.OnClickLis
     @Override
     public void onResume() {
         super.onResume();
-        getActivity().setRequestedOrientation(
-                ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+
     }
 
     private void initView(View rootView) {
@@ -90,10 +87,10 @@ public class DealerDashboardFragment extends Fragment implements View.OnClickLis
         LinearLayout containerLayout = (LinearLayout) rootView.findViewById(R.id.buttons_container);
         customViewParams.setMarginAndPadding(containerLayout, new int[]{10, 10, 10, 10}, new int[]{0, 0, 0, 0}, containerLayout.getParent());
 
-        LinearLayout productsLayout = (LinearLayout) rootView.findViewById(R.id.products_layout);
-        LinearLayout valueLayout = (LinearLayout) rootView.findViewById(R.id.value_layout);
-        LinearLayout newsLayout = (LinearLayout) rootView.findViewById(R.id.news_layout);
-        LinearLayout contactUsLayout = (LinearLayout) rootView.findViewById(R.id.contact_us_layout);
+        productsLayout = (LinearLayout) rootView.findViewById(R.id.products_layout);
+        valueLayout = (LinearLayout) rootView.findViewById(R.id.value_layout);
+        newsLayout = (LinearLayout) rootView.findViewById(R.id.news_layout);
+        contactUsLayout = (LinearLayout) rootView.findViewById(R.id.contact_us_layout);
 
         customViewParams.setMarginAndPadding(productsLayout, new int[]{20, 15, 20, 15}, new int[]{35, 0, 35, 0}, productsLayout.getParent());
         customViewParams.setMarginAndPadding(valueLayout, new int[]{20, 15, 20, 15}, new int[]{35, 0, 35, 0}, valueLayout.getParent());
@@ -157,6 +154,7 @@ public class DealerDashboardFragment extends Fragment implements View.OnClickLis
 
         } else if (i == R.id.products_layout) {
             if (sharedPreferences.getBoolean(AppConstants.IS_SYNC_COMPLETED, false)) {
+                icon_set(0);
                 ((BaseDrawerActivity) getActivity()).openFragment(new ProductDetailFragment(), true);
             } else {
                 Toast.makeText(getActivity(), "Application is not synced properly, please sync it first.", Toast.LENGTH_SHORT).show();
@@ -164,22 +162,26 @@ public class DealerDashboardFragment extends Fragment implements View.OnClickLis
         } else if (i == R.id.contact_us_layout) {
             try {
                 getActivity().setRequestedOrientation(
-                        ActivityInfo.SCREEN_ORIENTATION_USER_PORTRAIT);
+                        ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+                icon_set(3);
                 ((BaseDrawerActivity) getActivity()).openFragment(new HomeFragment(), true);
             } catch (Exception e) {
                 Toast.makeText(getActivity(), "DSE App not installed!", Toast.LENGTH_SHORT).show();
             }
         } else if (i == R.id.value_layout) {
             try {
-                Toast.makeText(getActivity(), "VAS  not installed!!", Toast.LENGTH_SHORT).show();
-                // ((BaseDrawerActivity) getActivity()).openFragment(new VasWarrantyfragment(), true);
+                icon_set(1);
+                ((BaseDrawerActivity) getActivity()).openFragment(new VasHomeFragment(), true);
             } catch (Exception e) {
                 Toast.makeText(getActivity(), "VAS  not installed!!", Toast.LENGTH_SHORT).show();
             }
         } else if (i == R.id.news_layout) {
             try {
-                 Toast.makeText(getActivity(), "News  not installed!!", Toast.LENGTH_SHORT).show();
-             //   ((BaseDrawerActivity) getActivity()).openFragment(new NewsFragment(), true);
+                if (NetConnections.isConnected(getContext())) {
+                    icon_set(2);
+                    ((BaseDrawerActivity) getActivity()).openFragment(new NewsFragment(), true);
+                } else
+                    Toast.makeText(getContext(), "No Internet Connection !!", Toast.LENGTH_SHORT).show();
             } catch (Exception e) {
                 Toast.makeText(getActivity(), "News  not installed!!", Toast.LENGTH_SHORT).show();
             }
@@ -267,6 +269,31 @@ public class DealerDashboardFragment extends Fragment implements View.OnClickLis
         } catch (Exception e) {
             e.printStackTrace();
             // Toast.makeText(getContext(), "Check your Connection !!", Toast.LENGTH_SHORT);
+        }
+    }
+
+
+    public void icon_set(int flag) {
+        if (flag == 0) {
+            productsLayout.setBackground(getResources().getDrawable(R.drawable.white_hollow_icon));
+            valueLayout.setBackground(getResources().getDrawable(R.drawable.grey_hollow_icon));
+            newsLayout.setBackground(getResources().getDrawable(R.drawable.grey_hollow_icon));
+            contactUsLayout.setBackground(getResources().getDrawable(R.drawable.grey_hollow_icon));
+        } else if (flag == 1) {
+            productsLayout.setBackground(getResources().getDrawable(R.drawable.grey_hollow_icon));
+            valueLayout.setBackground(getResources().getDrawable(R.drawable.white_hollow_icon));
+            newsLayout.setBackground(getResources().getDrawable(R.drawable.grey_hollow_icon));
+            contactUsLayout.setBackground(getResources().getDrawable(R.drawable.grey_hollow_icon));
+        } else if (flag == 2) {
+            productsLayout.setBackground(getResources().getDrawable(R.drawable.grey_hollow_icon));
+            valueLayout.setBackground(getResources().getDrawable(R.drawable.grey_hollow_icon));
+            newsLayout.setBackground(getResources().getDrawable(R.drawable.white_hollow_icon));
+            contactUsLayout.setBackground(getResources().getDrawable(R.drawable.grey_hollow_icon));
+        } else if (flag == 3) {
+            productsLayout.setBackground(getResources().getDrawable(R.drawable.grey_hollow_icon));
+            valueLayout.setBackground(getResources().getDrawable(R.drawable.grey_hollow_icon));
+            newsLayout.setBackground(getResources().getDrawable(R.drawable.grey_hollow_icon));
+            contactUsLayout.setBackground(getResources().getDrawable(R.drawable.white_hollow_icon));
         }
     }
 

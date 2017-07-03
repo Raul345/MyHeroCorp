@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/content_news"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/contactus_bg">
+
+    <ImageView
+        android:id="@+id/app_logo"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:src="@drawable/hero_logo" />
+
+    <ImageView
+        android:id="@+id/menu_icon"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:src="@drawable/ic_menu_white" />
+
+    <LinearLayout
+        android:id="@+id/top_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/app_logo"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/buttonHeader"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/pllgm_button_bg"
+            android:gravity="center_vertical"
+            android:text="@string/reportbug_text" />
+
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#ffffff" />
+
+    </LinearLayout>
+
+    <ScrollView
+        android:id="@+id/scrollview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/top_layout"
+        android:background="#ffffff"
+        android:fillViewport="true"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="5dp">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#bdbdbd"
+                android:padding="1dp">
+
+                <EditText
+                    android:id="@+id/et_report"
+                    android:layout_width="match_parent"
+                    android:layout_height="150dp"
+                    android:background="#ffffff"
+                    android:gravity="start"
+                    android:hint="Enter your Text here"
+                    android:padding="5dp"
+                    android:textCursorDrawable="@drawable/cursor"
+                    android:textColor="#000000" />
+            </RelativeLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:text="This information will help us improve your experience"
+                android:textColor="@android:color/background_dark" />
+
+            <TextView
+                android:id="@+id/tv_device"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:textColor="@android:color/background_dark" />
+
+            <TextView
+                android:id="@+id/tv_appversion"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:textColor="@android:color/background_dark" />
+
+            <TextView
+                android:id="@+id/tv_androidversion"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:textColor="@android:color/background_dark" />
+
+
+        </LinearLayout>
+    </ScrollView>
+
+    <ImageView
+        android:id="@+id/iv_submitreport"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="10dp"
+        android:layout_marginRight="15dp"
+        android:background="@android:color/transparent"
+        android:clickable="true"
+        android:src="@drawable/edit_icon" />
+</RelativeLayout>

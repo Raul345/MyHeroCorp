@@ -9,8 +9,19 @@ public class URLConstants {
     /*Base URL*/
     private final static String BASE_URL_LIVE = "http://tab.hmcl.biz/heroDealerApp/";
     private final static String BASE_URL_DEV = "http://abym.in/clientProof/hero_motors/";
+
+    //Base URL dse version 2
+    //  private final static String BASE_DSEURL_LIVE = "http://tab.hmcl.biz/dse_app_live_v2/";
+
+    //Base URL dse version 3
+    private final static String BASE_DSEURL_LIVE = "http://tab.hmcl.biz/dse_app_live_v3/";
+    private final static String BASE_DSEURL_DEV = "http://tab.hmcl.biz/dse_app_UAT/";
+
+
     private final static String BASE_URL_QA = BASE_URL_LIVE;
+    private final static String BASE_URL_LIVE_WEBSERVICE = "http://tab.hmcl.biz/heroDealerApp_UAT/webservices/Index";
     public static String BASE_URL;
+    public static String BASE_DSE_URL = BASE_DSEURL_LIVE;
 
     // produce=URLs
     public final static String GET_CATEGORY_LIST = "categoriesList";
@@ -21,66 +32,40 @@ public class URLConstants {
     public final static String GET_PRODUCT_COLOR_IMAGE = "upload/colorsIcon/";
     public final static String AUTHENTICATE_USER = "userAuthentication";
 
-    public final static String TOKEN_DATA = "http://abym.in/clientProof/hero_motors/userAuthentication";
     public final static String ENCRYPT1 = "http://abym.in/clientProof/hero_motors/encrypt";
     public final static String ENCRYPT = "http://tab.hmcl.biz/heroDealerApp/encrypt";
 
-    //DSE TEST URLS
-  /*  public final static String LOGIN = "http://tab.hmcl.biz/dse_app_UAT/login.php";
-    public final static String PENDING_ORDER = "http://tab.hmcl.biz/dse_app_UAT/fetch_order_data.php";
-    public final static String PENDING_FOLLOWUP = "http://tab.hmcl.biz/dse_app_UAT/get_follow_up.php";
-    public final static String BIKE_MAKE_MODEL = "http://tab.hmcl.biz/dse_app_UAT/bike_make_model.php";
-    public final static String SYNC_FOLLOW_UP = "http://tab.hmcl.biz/dse_app_UAT/sync_follow_up.php";
-    public final static String GET_DISTRICT = "http://tab.hmcl.biz/dse_app_UAT/get_district.php";
-    public final static String GET_DISTRICT_DATA = "http://tab.hmcl.biz/dse_app_UAT/get_district_data.php";
-    public final static String GET_CAMPAIGN_DATA = "http://tab.hmcl.biz/dse_app_UAT/fetch_campaign_data.php";
-    public final static String ADD_ENQUIRY = "http://tab.hmcl.biz/dse_app_UAT/syncRecords.php";
-    public final static String FETCH_TEST_RIDE = "http://tab.hmcl.biz/dse_app_UAT/fetch_test_ride.php";
-    public final static String SYNC_TEST_RIDE = "http://tab.hmcl.biz/dse_app_UAT/sync_test_ride.php";
-    public final static String CHECK_VERSION = "http://tab.hmcl.biz/dse_app_UAT/check_version.php";
-    public final static String FETCH_CONTACT = "http://tab.hmcl.biz/dse_app_UAT/fetch_contact.php";
-    public final static String FETCH_PITCH = "http://tab.hmcl.biz/dse_app_UAT/sales_pitch.php";
-    public final static String FETCH_NEWS = "http://abym.in/clientProof/hero_motors/webservices/Index/newsListings";*/
 
     //DSE LIVE URLS version 2
 
-  /*  public final static String LOGIN = "http://tab.hmcl.biz/dse_app_live_v2/login.php";
-    public final static String PENDING_ORDER = "http://tab.hmcl.biz/dse_app_live_v2/fetch_order_data.php";
-    public final static String PENDING_FOLLOWUP = "http://tab.hmcl.biz/dse_app_live_v2/get_follow_up.php";
-    public final static String BIKE_MAKE_MODEL = "http://tab.hmcl.biz/dse_app_live_v2/bike_make_model.php";
-    public final static String SYNC_FOLLOW_UP = "http://tab.hmcl.biz/dse_app_live_v2/sync_follow_up.php";
-    public final static String GET_DISTRICT = "http://tab.hmcl.biz/dse_app_live_v2/get_district.php";
-    public final static String GET_DISTRICT_DATA = "http://tab.hmcl.biz/dse_app_live_v2/get_district_data.php";
-    public final static String GET_CAMPAIGN_DATA = "http://tab.hmcl.biz/dse_app_live_v2/fetch_campaign_data.php";
-    public final static String ADD_ENQUIRY = "http://tab.hmcl.biz/dse_app_live_v2/syncRecords.php";
-    public final static String FETCH_TEST_RIDE = "http://tab.hmcl.biz/dse_app_live_v2/fetch_test_ride.php";
-    public final static String SYNC_TEST_RIDE = "http://tab.hmcl.biz/dse_app_live_v2/sync_test_ride.php";
-    public final static String CHECK_VERSION = "http://tab.hmcl.biz/dse_app_live_v2/check_version.php";
-    public final static String FETCH_CONTACT = "http://tab.hmcl.biz/dse_app_live_v2/fetch_contact.php";
-    public final static String FETCH_PITCH = "http://tab.hmcl.biz/dse_app_live_v2/sales_pitch.php";
-    public final static String FETCH_NEWS = "http://abym.in/clientProof/hero_motors/webservices/Index/newsListings";*/
+    public final static String LOGIN = BASE_DSE_URL + "login.php";
+    public final static String PENDING_ORDER = BASE_DSE_URL + "fetch_order_data.php";
+    public final static String PENDING_FOLLOWUP = BASE_DSE_URL + "get_follow_up.php";
+    public final static String BIKE_MAKE_MODEL = BASE_DSE_URL + "bike_make_model.php";
+    public final static String SYNC_FOLLOW_UP = BASE_DSE_URL + "sync_follow_up.php";
+    public final static String GET_DISTRICT = BASE_DSE_URL + "get_district.php";
+    public final static String GET_DISTRICT_DATA = BASE_DSE_URL + "get_district_data.php";
+    public final static String GET_CAMPAIGN_DATA = BASE_DSE_URL + "fetch_campaign_data.php";
+    public final static String ADD_ENQUIRY = BASE_DSE_URL + "syncRecords.php";
+    public final static String FETCH_TEST_RIDE = BASE_DSE_URL + "fetch_test_ride.php";
+    public final static String SYNC_TEST_RIDE = BASE_DSE_URL + "sync_test_ride.php";
+    public final static String CHECK_VERSION = BASE_DSE_URL + "check_version.php";
+    public final static String FETCH_CONTACT = BASE_DSE_URL + "fetch_contact.php";
+    public final static String FETCH_PITCH = BASE_DSE_URL + "sales_pitch.php";
 
 
-    //DSE LIVE URLS version 3
-
-    public final static String LOGIN = "http://tab.hmcl.biz/dse_app_live_v3/login.php";
-    public final static String PENDING_ORDER = "http://tab.hmcl.biz/dse_app_live_v3/fetch_order_data.php";
-    public final static String PENDING_FOLLOWUP = "http://tab.hmcl.biz/dse_app_live_v3/get_follow_up.php";
-    public final static String BIKE_MAKE_MODEL = "http://tab.hmcl.biz/dse_app_live_v3/bike_make_model.php";
-    public final static String SYNC_FOLLOW_UP = "http://tab.hmcl.biz/dse_app_live_v3/sync_follow_up.php";
-    public final static String GET_DISTRICT = "http://tab.hmcl.biz/dse_app_live_v3/get_district.php";
-    public final static String GET_DISTRICT_DATA = "http://tab.hmcl.biz/dse_app_live_v3/get_district_data.php";
-    public final static String GET_CAMPAIGN_DATA = "http://tab.hmcl.biz/dse_app_live_v3/fetch_campaign_data.php";
-    public final static String ADD_ENQUIRY = "http://tab.hmcl.biz/dse_app_live_v3/syncRecords.php";
-    public final static String FETCH_TEST_RIDE = "http://tab.hmcl.biz/dse_app_live_v3/fetch_test_ride.php";
-    public final static String SYNC_TEST_RIDE = "http://tab.hmcl.biz/dse_app_live_v3/sync_test_ride.php";
-    public final static String CHECK_VERSION = "http://tab.hmcl.biz/dse_app_live_v3/check_version.php";
-    public final static String FETCH_CONTACT = "http://tab.hmcl.biz/dse_app_live_v3/fetch_contact.php";
-    public final static String FETCH_PITCH = "http://tab.hmcl.biz/dse_app_live_v3/sales_pitch.php";
     public final static String FETCH_NEWS = "http://abym.in/clientProof/hero_motors/webservices/Index/newsListings";
+    public final static String TOKEN_DATA = "http://abym.in/clientProof/hero_motors/userAuthentication";
+    public final static String FETCH_VAS = "http://abym.in/clientProof/hero_motors/webservices/Index/valueAddedServices";
+
+    // public final static String TOKEN_DATA = BASE_URL_LIVE_WEBSERVICE + "/userAuthentication";
+    // public final static String FETCH_NEWS = BASE_URL_LIVE_WEBSERVICE + "/newsListings";
+    //public final static String FETCH_VAS = BASE_URL_LIVE_WEBSERVICE + "/valueAddedServices";
+    public final static String FETCH_FAQ = BASE_URL_LIVE_WEBSERVICE + "/getFaqs";
+
 
     /*Static Block*/
-    /* Which environment is currently active */
+    /* Which Products environment is currently active */
     static {
         if (AppConstants.isLive) {
             URLConstants.BASE_URL = URLConstants.BASE_URL_LIVE;
@@ -91,4 +76,15 @@ public class URLConstants {
         }
     }
 
+    /*Static Block*/
+    /* Which DSE environment is currently active */
+    static {
+        if (AppConstants.isDSELive) {
+            URLConstants.BASE_DSE_URL = URLConstants.BASE_DSEURL_LIVE;
+        } else if (AppConstants.isDSEDebug) {
+            URLConstants.BASE_DSE_URL = URLConstants.BASE_DSEURL_DEV;
+        } else {
+            URLConstants.BASE_DSE_URL = URLConstants.BASE_DSEURL_LIVE;
+        }
+    }
 }

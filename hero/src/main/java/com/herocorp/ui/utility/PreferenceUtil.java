@@ -27,9 +27,9 @@ public class PreferenceUtil {
     public static final String SYNC_YN = "sync_yn";
     public static final String FCM_TOKEN = "fcm_token";
     public static final String MODE = "mode";
-    public static final String UPDATE="update";
-    public static final String flag_UPDATE="flagupdate";
-
+    public static final String UPDATE = "update";
+    public static final String flag_UPDATE = "flagupdate";
+    public static final String FLAG_AUTH = "token_update";
 
     private SharedPreferences sharedPref;
 
@@ -63,11 +63,19 @@ public class PreferenceUtil {
         edit.putBoolean(SYNC_YN, sync_yn);
         edit.commit();
     }
+
     public static void setFlag_UPDATE(Context context, Boolean flag) {
         SharedPreferences.Editor edit = getPref(context).edit();
         edit.putBoolean(flag_UPDATE, flag);
         edit.commit();
     }
+
+    public static void setFlagAuth(Context context, Boolean flag) {
+        SharedPreferences.Editor edit = getPref(context).edit();
+        edit.putBoolean(FLAG_AUTH, flag);
+        edit.commit();
+    }
+
     public static void set_Versiondate(Context context, String version_date) {
         SharedPreferences.Editor edit = getPref(context).edit();
         edit.putString(VERSION_CHECK, version_date);
@@ -99,6 +107,7 @@ public class PreferenceUtil {
         edit.commit();
     }
 
+
     public static String get_Mode(Context context) {
         String restoredText = "";
         if (getPref(context).contains(MODE))
@@ -117,6 +126,11 @@ public class PreferenceUtil {
 
     public static Boolean getflag_UPDATE(Context context) {
         Boolean restoredText = getPref(context).getBoolean(flag_UPDATE, false);
+        return restoredText;
+    }
+
+    public static Boolean getFlagAuth(Context context) {
+        Boolean restoredText = getPref(context).getBoolean(FLAG_AUTH, false);
         return restoredText;
     }
 
@@ -234,6 +248,7 @@ public class PreferenceUtil {
         String restoredText = getPref(context).getString(CITY_NAME, "");
         return restoredText;
     }
+
     public static String get_PitchCity(Context context) {
         String restoredText = getPref(context).getString(PITCH_CITY, "");
         return restoredText;
@@ -249,6 +264,7 @@ public class PreferenceUtil {
         String restoredText = getPref(context).getString(UPDATE, "n");
         return restoredText;
     }
+
     public static void clear_Address(Context context) {
         SharedPreferences.Editor edit = getPref(context).edit();
         if (getPref(context).contains(DISTRICT_NAME))
@@ -257,5 +273,11 @@ public class PreferenceUtil {
             edit.remove(TEHSIL_NAME).commit();
        /* if (getPref(context).contains(CITY_NAME))
             edit.remove(CITY_NAME).commit();*/
+    }
+
+    public static void clear_Syncyn(Context context) {
+        SharedPreferences.Editor edit = getPref(context).edit();
+        if (getPref(context).contains(SYNC_YN))
+            edit.remove(SYNC_YN).commit();
     }
 }

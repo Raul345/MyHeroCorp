@@ -63,8 +63,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     private View rootView;
     private CustomViewParams customViewParams;
     EditText phoneno_et, registration_et;
-    ProgressDialog progressDialog;
-    ProgressBar progressBar;
+    ProgressDialog progressDialog, progressBar;
+    ;
     NetworkConnect networkConnect;
     String encryptuser;
     Bundle bundle = new Bundle();
@@ -93,7 +93,19 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         if (!(sync_date.equalsIgnoreCase(current_date.toString())) && NetConnections.isConnected(getContext())) {
             progressDialog = ProgressDialog.show(getActivity(), null, null);
             progressDialog.setContentView(R.layout.progresslayout);
-            clear();
+           /* progressBar = new ProgressDialog(getActivity());
+            progressBar.setCancelable(false);
+            progressBar.setMessage("Data is Syncing");
+            progressBar.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+            progressBar.setProgress(Math.round(0));
+            progressBar.setMax(100);
+            progressBar.show();*/
+
+            try {
+                clear();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             sync_data();
         }
         return rootView;
@@ -151,7 +163,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         ImageView pendingfollowup = (ImageView) rootView.findViewById(R.id.pendingfollowup);
         ImageView searchenquiry = (ImageView) rootView.findViewById(R.id.searchenquiry);
         ImageView submit = (ImageView) rootView.findViewById(R.id.imageView_submit_home);
-        progressBar = (ProgressBar) rootView.findViewById(R.id.progress);
 
         customViewParams.setImageViewCustomParams(pendingorder, new int[]{7, 7, 7, 7}, new int[]{0, 0, 0, 0}, 180, 180);
         customViewParams.setImageViewCustomParams(todayfollowup, new int[]{7, 7, 7, 12}, new int[]{0, 0, 0, 0}, 180, 180);
@@ -164,6 +175,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         phoneno_et = (EditText) rootView.findViewById(R.id.phoneno_edittext);
         phoneno_et.setRawInputType(Configuration.KEYBOARD_12KEY);
         registration_et = (EditText) rootView.findViewById(R.id.registration_edittext);
+        registration_et.setRawInputType(Configuration.KEYBOARD_12KEY);
         image1 = (ImageView) rootView.findViewById(R.id.imageloader1);
         image2 = (ImageView) rootView.findViewById(R.id.imageloader2);
         image3 = (ImageView) rootView.findViewById(R.id.imageloader3);
@@ -323,6 +335,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             JSONObject jsonObject = new JSONObject(result);
             //  final ImageLoader imageLoader = new ImageLoader(getContext());
             final JSONArray jarray = jsonObject.getJSONArray("pitch");
+            //  progressBar.setProgress(30);
             for (int i = 0; i < jarray.length(); i++) {
                 JSONObject jobj = jarray.getJSONObject(i);
                 String id = jobj.getString("id");
@@ -359,10 +372,13 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                         }
                     }
                 });
+                // progressBar.setProgress(70);
             }
-            progressDialog.dismiss();
+            // progressBar.setProgress(100);
             PreferenceUtil.set_PitchSyncdate(getContext(), current_date.toString());
             Log.e("pitch_sync_close", current_date.toString());
+            progressDialog.dismiss();
+
         } catch (JSONException e) {
             e.printStackTrace();
         } catch (Exception e) {

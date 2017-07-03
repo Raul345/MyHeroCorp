@@ -15,6 +15,7 @@ import com.herocorp.infra.db.tables.schemas.UserTable;
 import com.herocorp.infra.db.tables.schemas.ValueAddedServicesTable;
 import com.herocorp.infra.db.tables.schemas.products.ProductBreakTable;
 import com.herocorp.infra.db.tables.schemas.products.ProductColorModelTable;
+import com.herocorp.infra.db.tables.schemas.products.ProductCompareTable;
 import com.herocorp.infra.db.tables.schemas.products.ProductDimensionTable;
 import com.herocorp.infra.db.tables.schemas.products.ProductElectricalTable;
 import com.herocorp.infra.db.tables.schemas.products.ProductEngineTable;
@@ -62,7 +63,7 @@ public class ContentDescriptor {
         matcher.addURI(AUTHORITY, ProductDimensionTable.PATH, ProductDimensionTable.PATH_TOKEN);
         matcher.addURI(AUTHORITY, ProductGalleryTable.PATH, ProductGalleryTable.PATH_TOKEN);
         matcher.addURI(AUTHORITY, ProductRotationTable.PATH, ProductRotationTable.PATH_TOKEN);
-
+        matcher.addURI(AUTHORITY, ProductCompareTable.PATH, ProductCompareTable.PATH_TOKEN);
         return matcher;
     }
 }

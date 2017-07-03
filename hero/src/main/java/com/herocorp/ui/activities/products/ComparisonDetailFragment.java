@@ -201,7 +201,6 @@ public class ComparisonDetailFragment extends Fragment implements View.OnClickLi
     private void setSelectedOrUnSelected(int selectedLayoutId, boolean doSelect) {
 
         if (selectedLayoutId == R.id.engine_layout) {
-
             if (doSelect) {
                 engineLayout.setBackgroundColor(Color.WHITE);
                 engineText.setTextColor(getResources().getColor(R.color.color_red));

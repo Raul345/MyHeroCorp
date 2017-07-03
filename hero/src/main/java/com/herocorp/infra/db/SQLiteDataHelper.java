@@ -18,6 +18,7 @@ import com.herocorp.infra.db.tables.schemas.UserTable;
 import com.herocorp.infra.db.tables.schemas.ValueAddedServicesTable;
 import com.herocorp.infra.db.tables.schemas.products.ProductBreakTable;
 import com.herocorp.infra.db.tables.schemas.products.ProductColorModelTable;
+import com.herocorp.infra.db.tables.schemas.products.ProductCompareTable;
 import com.herocorp.infra.db.tables.schemas.products.ProductDimensionTable;
 import com.herocorp.infra.db.tables.schemas.products.ProductElectricalTable;
 import com.herocorp.infra.db.tables.schemas.products.ProductEngineTable;
@@ -50,17 +51,18 @@ public class SQLiteDataHelper {
     /**
      * Get Singleton instance of DataBasePersistanceManager
      * This method performs initialization for {SQLiteDatabase}
+     *
      * @param ctx
      * @return
      */
     public static synchronized SQLiteDataHelper getInstance(Context ctx) {
 
-        if (ref == null){
+        if (ref == null) {
             ref = new SQLiteDataHelper();
         }
 
-        if(sqlDb == null)
-            sqlDb = ref.new DatabaseHelper(ctx,getTablesList()).getWritableDatabase();
+        if (sqlDb == null)
+            sqlDb = ref.new DatabaseHelper(ctx, getTablesList()).getWritableDatabase();
 
         return ref;
     }
@@ -74,17 +76,18 @@ public class SQLiteDataHelper {
 
     /**
      * Get SQLite Database instance
+     *
      * @return
      */
-    public SQLiteDatabase getDatabase(){
+    public SQLiteDatabase getDatabase() {
         return sqlDb;
     }
 
     /**
      * SQLite Helper class for creating, updating the database
      * {@link SQLiteOpenHelper}
-     * @author admin
      *
+     * @author admin
      */
     private class DatabaseHelper extends SQLiteOpenHelper {
 
@@ -108,7 +111,7 @@ public class SQLiteDataHelper {
          */
         @Override
         public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-            Log.w(TAG + " onUpdate ", db.toString()+ ": Old Version - "+ String.valueOf(oldVersion)+ ": New Version - "+String.valueOf(newVersion));
+            Log.w(TAG + " onUpdate ", db.toString() + ": Old Version - " + String.valueOf(oldVersion) + ": New Version - " + String.valueOf(newVersion));
             for (TableHelper table : tables)
                 table.onUpgrade(db, oldVersion, newVersion);
         }
@@ -118,7 +121,7 @@ public class SQLiteDataHelper {
          */
         @Override
         public synchronized void close() {
-            if(null != sqlDb)
+            if (null != sqlDb)
                 sqlDb.close();
             super.close();
         }
@@ -127,16 +130,16 @@ public class SQLiteDataHelper {
     /**
      * Construct ArrayList which
      * consists all the table schema's class
+     *
      * @return
      */
-    private static ArrayList<TableHelper> getTablesList(){
+    private static ArrayList<TableHelper> getTablesList() {
 
         ArrayList<TableHelper> tables = new ArrayList<>(0);
 
         //Add Master Tables
         tables.add(new UserTable());
         tables.add(new UserDetailTable());
-
         tables.add(new ProductCategoryTable());
         tables.add(new ProductTable());
         tables.add(new ProductDetailTable());
@@ -159,6 +162,7 @@ public class SQLiteDataHelper {
         tables.add(new FAQTable());
         tables.add(new ReportIssueTable());
         tables.add(new ProductRotationTable());
+        tables.add(new ProductCompareTable());
 
         return tables;
     }

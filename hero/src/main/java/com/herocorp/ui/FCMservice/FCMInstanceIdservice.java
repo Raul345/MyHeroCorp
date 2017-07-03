@@ -1,17 +1,22 @@
 package com.herocorp.ui.FCMservice;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.FirebaseInstanceIdService;
 import com.herocorp.core.constants.URLConstants;
+import com.herocorp.ui.activities.BaseDrawerActivity;
 import com.herocorp.ui.activities.DSEapp.ConnectService.NetworkConnect;
 import com.herocorp.ui.utility.PreferenceUtil;
 
 
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -43,8 +48,8 @@ public class FCMInstanceIdservice extends FirebaseInstanceIdService {
         try {
             deviceToken = FirebaseInstanceId.getInstance().getToken();
             Log.d(TAG, "Refreshed token: " + deviceToken);
-           /* if (!deviceToken.equals(PreferenceUtil.get_Token(context)))
-                sendRegistrationToServer(deviceImei, userId, appVersion, androidVersion, deviceInfo, deviceToken);*/
+            //if (!deviceToken.equals(PreferenceUtil.get_Token(context)))
+            sendRegistrationToServer(deviceImei, userId, appVersion, androidVersion, deviceInfo, deviceToken);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -52,12 +57,10 @@ public class FCMInstanceIdservice extends FirebaseInstanceIdService {
 
 
     public void jsonparse_token(String result, String deviceToken) {
-        try {
-            Log.e("token_api_response", result);
-            PreferenceUtil.set_Token(context, deviceToken);
-        } catch (Exception e) {
-            Toast.makeText(getApplicationContext(), "Check your Connection !!", Toast.LENGTH_SHORT);
-        }
+
+        Log.e("token_api_response", result);
+        PreferenceUtil.set_Token(context, deviceToken);
+        PreferenceUtil.setFlag_UPDATE(context, false);
 
     }
 
@@ -70,6 +73,8 @@ public class FCMInstanceIdservice extends FirebaseInstanceIdService {
             newurlparams += "&androidVersion=" + URLEncoder.encode(androidVersion, "UTF-8");
             newurlparams += "&deviceInfo=" + URLEncoder.encode(deviceInfo, "UTF-8");
             newurlparams += "&deviceToken=" + URLEncoder.encode(deviceToken, "UTF-8");
+
+            Log.e("token_update", newurlparams);
 
             networkConnect = new NetworkConnect(URLConstants.TOKEN_DATA, newurlparams);
             jsonparse_token(networkConnect.execute(), deviceToken);

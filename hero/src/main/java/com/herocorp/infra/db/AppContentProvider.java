@@ -20,6 +20,7 @@ import com.herocorp.infra.db.tables.schemas.UserTable;
 import com.herocorp.infra.db.tables.schemas.ValueAddedServicesTable;
 import com.herocorp.infra.db.tables.schemas.products.ProductBreakTable;
 import com.herocorp.infra.db.tables.schemas.products.ProductColorModelTable;
+import com.herocorp.infra.db.tables.schemas.products.ProductCompareTable;
 import com.herocorp.infra.db.tables.schemas.products.ProductDimensionTable;
 import com.herocorp.infra.db.tables.schemas.products.ProductElectricalTable;
 import com.herocorp.infra.db.tables.schemas.products.ProductEngineTable;
@@ -217,6 +218,9 @@ public class AppContentProvider extends ContentProvider {
             }
             case ProductRotationTable.PATH_TOKEN: {
                 return ProductRotationTable.TABLE_NAME;
+            }
+            case ProductCompareTable.PATH_TOKEN: {
+                return ProductCompareTable.TABLE_NAME;
             }
 
             default:

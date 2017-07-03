@@ -66,10 +66,8 @@ public class ProductIOService extends BaseNetIO {
 
                                 try {
                                     if (response != null) {
-
                                         if (response.getBoolean("Success")) {
                                             ArrayList<ProductCategoryModel> modelArrayList = new ArrayList<>(0);
-
                                             //Parse the JSON
                                             JSONArray responseDataString = response.getJSONArray("Result");
                                             for (int i = 0; i < responseDataString.length(); i++) {
@@ -211,6 +209,7 @@ public class ProductIOService extends BaseNetIO {
 
                                                 productDetailAggregate.setProductID(productID);
 
+
                                                 productDetailAggregate.setTyreModel(AppJsonParser.getInstance()
                                                         .getObjectFromString(object.getJSONObject("tyres").toString(),
                                                                 ProductTyreModel.class));
@@ -226,20 +225,6 @@ public class ProductIOService extends BaseNetIO {
                                                                 ProductBreakModel.class));
                                                 productDetailAggregate.getBreakModel().setProductID(productID);
 
-                                                //Set Product main_slider_img model which is color model
-                                                JSONArray jsonArrayColor = object.getJSONArray("main_slider_img");
-                                                ArrayList<ProductColorModel> colorModelList = new ArrayList<>(0);
-
-                                                for (int i = 0; i < jsonArrayColor.length(); i++) {
-
-                                                    ProductColorModel colorModel = AppJsonParser.getInstance()
-                                                            .getObjectFromString(jsonArrayColor.get(i).toString(),
-                                                                    ProductColorModel.class);
-
-                                                    colorModel.setProductID(productID);
-                                                    colorModelList.add(colorModel);
-                                                }
-                                                productDetailAggregate.setColorModel(colorModelList);
 
                                                 productDetailAggregate.setDimensionModel(AppJsonParser.getInstance()
                                                         .getObjectFromString(object.getJSONObject("dimension").toString(),
@@ -261,35 +246,58 @@ public class ProductIOService extends BaseNetIO {
                                                                 ProductSuspensionModel.class));
                                                 productDetailAggregate.getSuspensionModel().setProductID(productID);
 
-                                                //For Product Feature Images
-                                                JSONArray jsonArrayFeature = object.getJSONArray("feature_img");
-                                                ArrayList<ProductFeatureModel> featureModelList = new ArrayList<>(0);
+                                                ArrayList<ProductColorModel> colorModelList = new ArrayList<>(0);
+                                                //Set Product main_slider_img model which is color model
+                                                if (object.has("main_slider_img")) {
+                                                    JSONArray jsonArrayColor = object.getJSONArray("main_slider_img");
 
-                                                for (int i = 0; i < jsonArrayFeature.length(); i++) {
+                                                    for (int i = 0; i < jsonArrayColor.length(); i++) {
 
-                                                    ProductFeatureModel featureModel = AppJsonParser.getInstance()
-                                                            .getObjectFromString(jsonArrayFeature.get(i).toString(),
-                                                                    ProductFeatureModel.class);
+                                                        ProductColorModel colorModel = AppJsonParser.getInstance()
+                                                                .getObjectFromString(jsonArrayColor.get(i).toString(),
+                                                                        ProductColorModel.class);
 
-                                                    featureModel.setProductID(productID);
-                                                    featureModelList.add(featureModel);
+                                                        colorModel.setProductID(productID);
+                                                        colorModelList.add(colorModel);
+                                                    }
 
                                                 }
+                                                productDetailAggregate.setColorModel(colorModelList);
 
+
+                                                ArrayList<ProductFeatureModel> featureModelList = new ArrayList<>(0);
+
+                                                if (object.has("feature_img")) {
+                                                    //For Product Feature Images
+                                                    JSONArray jsonArrayFeature = object.getJSONArray("feature_img");
+
+                                                    for (int i = 0; i < jsonArrayFeature.length(); i++) {
+
+                                                        ProductFeatureModel featureModel = AppJsonParser.getInstance()
+                                                                .getObjectFromString(jsonArrayFeature.get(i).toString(),
+                                                                        ProductFeatureModel.class);
+
+                                                        featureModel.setProductID(productID);
+                                                        featureModelList.add(featureModel);
+
+                                                    }
+
+                                                }
                                                 productDetailAggregate.setFeatureModel(featureModelList);
 
-                                                //Parse Product Gallery Img
-                                                JSONArray jsonArrayGallery = object.getJSONArray("gallery_img");
                                                 ArrayList<ProductGalleryModel> GalleryModelList = new ArrayList<>(0);
+                                                if (object.has("gallery_img")) {
+                                                    //Parse Product Gallery Img
+                                                    JSONArray jsonArrayGallery = object.getJSONArray("gallery_img");
+                                                    for (int i = 0; i < jsonArrayGallery.length(); i++) {
 
-                                                for (int i = 0; i < jsonArrayGallery.length(); i++) {
+                                                        ProductGalleryModel galleryModel = AppJsonParser.getInstance()
+                                                                .getObjectFromString(jsonArrayGallery.get(i).toString(),
+                                                                        ProductGalleryModel.class);
 
-                                                    ProductGalleryModel galleryModel = AppJsonParser.getInstance()
-                                                            .getObjectFromString(jsonArrayGallery.get(i).toString(),
-                                                                    ProductGalleryModel.class);
-
-                                                    galleryModel.setProductID(productID);
-                                                    GalleryModelList.add(galleryModel);
+                                                        galleryModel.setProductID(productID);
+                                                        GalleryModelList.add(galleryModel);
+                                                    }
                                                 }
                                                 productDetailAggregate.setGalleryModelList(GalleryModelList);
 
@@ -329,7 +337,7 @@ public class ProductIOService extends BaseNetIO {
     }
 
     public static void fetchImage(final String tag, String url, final String fileName,
-                                  final SyncServiceCallBack syncServiceCallBack){
+                                  final SyncServiceCallBack syncServiceCallBack) {
 
         ImageRequest imgRequest = new ImageRequest(
                 url,

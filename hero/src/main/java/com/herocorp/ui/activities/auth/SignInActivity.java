@@ -43,10 +43,8 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
 public class SignInActivity extends Activity implements View.OnClickListener {
-
     private static final int REQUEST_PERMISSION_READ_PHONE_STATE = 1;
     private EditText dealerCode;
-    private SharedPreferences sharedPreferences, sharedPref;
     DatabaseHelper db;
     /*   private String[] imeis = {"356604060544425",
                "861375036084113",
@@ -61,9 +59,10 @@ public class SignInActivity extends Activity implements View.OnClickListener {
        };*/
     private String respDesc = "", respCode = "", state_id = "", dealer_code = "", version = "", path = "", state_name = "", city_name = "", result = "", failure_msg = "";
     private String appVersion;
-    //private String deviceImei = "911441757449230";
-    private String deviceImei = "911562050022240";
-  //  private String deviceImei;
+    //private String deviceImei = "911441757449230";//Test
+    // private String deviceImei = "911562050022240";//ALOK11831
+    //private String deviceImei = "359940061620922";//RAJ10220
+    private String deviceImei;
     private String userCode, uuid = "0";
     private String encryptuser;
 
@@ -75,23 +74,11 @@ public class SignInActivity extends Activity implements View.OnClickListener {
                 ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         overridePendingTransition(R.anim.trans_left_in, R.anim.trans_left_out);
 
-       /* if (PreferenceUtil.get_IsUserLogin(getApplicationContext()))
-            openHomeScreen();*/
 
-        // sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-
-        /*if (sharedPreferences.getBoolean(AppConstants.IS_USER_LOGGED_IN, false)) {
-            openHomeScreen();
-        }
-*/
-
-        //  sharedPref = getSharedPreferences("hero", 0);
-       /* if (sharedPref.contains("username")) {
-            openHomeScreen();
-        }*/
         if (PreferenceUtil.get_IsUserLogin(getApplicationContext()))
             openHomeScreen();
-        initView();
+        else
+            initView();
     }
 
     private void initView() {
@@ -170,54 +157,44 @@ public class SignInActivity extends Activity implements View.OnClickListener {
     }*/
 
     public void showPhoneStatePermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
 
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
-
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_PHONE_STATE)) {
-                requestPermissions(new String[]{Manifest.permission.READ_PHONE_STATE}, REQUEST_PERMISSION_READ_PHONE_STATE);
-            } else {
-                requestPermissions(new String[]{Manifest.permission.READ_PHONE_STATE}, REQUEST_PERMISSION_READ_PHONE_STATE);
+                if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_PHONE_STATE)) {
+                    requestPermissions(new String[]{Manifest.permission.READ_PHONE_STATE}, REQUEST_PERMISSION_READ_PHONE_STATE);
+                } else {
+                    requestPermissions(new String[]{Manifest.permission.READ_PHONE_STATE}, REQUEST_PERMISSION_READ_PHONE_STATE);
+                }
             }
         } else {
 
-            TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-           /* if (Arrays.asList(imeis).contains(dealerCode.getText().toString()) &&
-                    telephonyManager.getDeviceId().contentEquals(dealerCode.getText().toString())) {
-                sharedPreferences.edit().putBoolean(AppConstants.IS_USER_LOGGED_IN, true).commit();
-                openHomeScreen();
+            check_user();
+        }
+    }
 
-            }*/
-            PackageManager manager = getPackageManager();
-            PackageInfo info = null;
-            try {
-                info = manager.getPackageInfo(getPackageName(), 0);
-                appVersion = info.versionName;
-               //
-                // deviceImei = telephonyManager.getDeviceId();
-                userCode = dealerCode.getText().toString().toUpperCase();
-                if (userCode.equals("")) {
-                    Toast.makeText(getApplicationContext(), "Please enter dealer Code!!", Toast.LENGTH_LONG).show();
-                } else {
-                    try {
-                        JSONObject jsonparams = new JSONObject();
-                        jsonparams.put("username", userCode);
-                        jsonparams.put("version", appVersion);
-                        jsonparams.put("imei", deviceImei);
-                        jsonparams.put("uuid", uuid);
-                        Log.e("sigin:", jsonparams.toString());
-                        new Login(jsonparams.toString(), URLConstants.LOGIN).execute();
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-            } catch (PackageManager.NameNotFoundException e) {
-                e.printStackTrace();
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[],
+                                           int[] grantResults) {
+        switch (requestCode) {
+
+            case REQUEST_PERMISSION_READ_PHONE_STATE: {
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
+                    check_user();
+                break;
             }
+
         }
     }
 
     private void openHomeScreen() {
         Intent intent = new Intent(this, BaseDrawerActivity.class);
+
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            if (extras.containsKey("tag")) {
+                intent.putExtra("tag", extras.getString("tag"));
+            }
+        }
         startActivity(intent);
         finish();
     }
@@ -315,7 +292,41 @@ public class SignInActivity extends Activity implements View.OnClickListener {
             PreferenceUtil.clear_SyncDate(getApplicationContext());
         }
         PreferenceUtil.clear_Address(getApplicationContext());
-        PreferenceUtil.setFlag_UPDATE(getApplicationContext(), true);
         PreferenceUtil.set_Userdata(getApplicationContext(), userCode, dealer_code, true, version, path, state_id, state_name, city_name);
+    }
+
+    public void check_user() {
+        TelephonyManager telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
+           /* if (Arrays.asList(imeis).contains(dealerCode.getText().toString()) &&
+                    telephonyManager.getDeviceId().contentEquals(dealerCode.getText().toString())) {
+                sharedPreferences.edit().putBoolean(AppConstants.IS_USER_LOGGED_IN, true).commit();
+                openHomeScreen();
+
+            }*/
+        PackageManager manager = getPackageManager();
+        PackageInfo info = null;
+        try {
+            info = manager.getPackageInfo(getPackageName(), 0);
+            appVersion = info.versionName;
+            deviceImei = telephonyManager.getDeviceId();
+            userCode = dealerCode.getText().toString().toUpperCase();
+            if (userCode.equals("")) {
+                Toast.makeText(getApplicationContext(), "Please enter dealer Code!!", Toast.LENGTH_LONG).show();
+            } else {
+                try {
+                    JSONObject jsonparams = new JSONObject();
+                    jsonparams.put("username", userCode);
+                    jsonparams.put("version", appVersion);
+                    jsonparams.put("imei", deviceImei);
+                    jsonparams.put("uuid", uuid);
+                    Log.e("sigin:", jsonparams.toString());
+                    new Login(jsonparams.toString(), URLConstants.LOGIN).execute();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 }

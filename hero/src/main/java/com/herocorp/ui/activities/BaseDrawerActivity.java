@@ -8,15 +8,12 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.ActivityInfo;
-import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.database.SQLException;
 import android.graphics.BitmapFactory;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.StrictMode;
@@ -29,7 +26,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
-import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
@@ -53,7 +49,9 @@ import com.herocorp.core.constants.URLConstants;
 import com.herocorp.core.interfaces.SyncServiceCallBack;
 import com.herocorp.core.interfaces.iNetworkResponseCallback;
 import com.herocorp.core.models.AuthenticateUserModel;
+import com.herocorp.core.models.ProductCompareModel;
 import com.herocorp.infra.db.SQLiteDataHelper;
+import com.herocorp.infra.db.tables.schemas.products.ProductCompareTable;
 import com.herocorp.infra.db.tables.schemas.products.ProductRotationTable;
 import com.herocorp.infra.netio.AuthenticateUserService;
 import com.herocorp.infra.utils.NetConnections;
@@ -62,8 +60,8 @@ import com.herocorp.ui.EMI.EmicalcFragment;
 import com.herocorp.ui.FCMservice.FCMInstanceIdservice;
 import com.herocorp.ui.activities.DSEapp.Fragment.Alert.ContactAlertFragment;
 import com.herocorp.ui.activities.DSEapp.Fragment.Home.HomeFragment;
-import com.herocorp.ui.activities.DSEapp.ConnectService.NetworkConnect;
-import com.herocorp.ui.activities.Notifications.Fragment.NotificationFragment;
+import com.herocorp.ui.activities.FAQ.FaqFragment;
+import com.herocorp.ui.activities.VAS.VasHomeFragment;
 import com.herocorp.ui.activities.contact_us.ContactUsFragmrnt;
 import com.herocorp.ui.activities.home.DealerDashboardFragment;
 import com.herocorp.ui.activities.news.Fragment.NewsFragment;
@@ -71,6 +69,7 @@ import com.herocorp.ui.activities.products.ProductDetailFragment;
 import com.herocorp.ui.app.App;
 import com.herocorp.ui.utility.CustomTypeFace;
 import com.herocorp.ui.utility.CustomViewParams;
+import com.herocorp.ui.utility.DeviceUtil;
 import com.herocorp.ui.utility.PreferenceUtil;
 
 import org.json.JSONException;
@@ -85,9 +84,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.channels.FileChannel;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 
 public class BaseDrawerActivity extends FragmentActivity implements View.OnClickListener {
     private static final int drawerGravity = Gravity.LEFT;
@@ -98,14 +95,12 @@ public class BaseDrawerActivity extends FragmentActivity implements View.OnClick
 
     public int productId = -1;
     public int otherProductId = -1;
+    public ArrayList<ProductCompareModel> compare_images = new ArrayList<ProductCompareModel>();
     Fragment fragment = null;
-    private TelephonyManager telephonyManager;
     private SharedPreferences sharedPreferences;
     private String deviceImei;
     private String appVersion;
     private String deviceVersion;
-    private String refreshedToken;
-    NetworkConnect networkConnect;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -122,30 +117,15 @@ public class BaseDrawerActivity extends FragmentActivity implements View.OnClick
 
         initView(savedInstanceState);
         try {
-            telephonyManager = (TelephonyManager) getSystemService(Context.TELEPHONY_SERVICE);
-            PackageManager manager = getPackageManager();
-            PackageInfo info = manager.getPackageInfo(getPackageName(), 0);
-            appVersion = info.versionName;
-            deviceVersion = Build.VERSION.CODENAME;
-            deviceImei = telephonyManager.getDeviceId();
+            appVersion = DeviceUtil.AppVersion(this);
+            deviceVersion = DeviceUtil.DeviceVersion();
+            deviceImei = DeviceUtil.DeviceImei(this);
 
-            // fetch_data();
             if (NetConnections.isConnected(this)) {
                 if (!PreferenceUtil.get_Syncyn(getApplicationContext()))
                     showPhoneStatePermission();
                 if (!isGooglePlayServicesAvailable()) {
                     //finish();
-                } else {
-                    //FCM service
-                    FirebaseMessaging.getInstance().subscribeToTopic("news");
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            FCMInstanceIdservice fcm = new FCMInstanceIdservice(deviceImei, PreferenceUtil.get_UserId(getApplicationContext()), appVersion, deviceVersion, getDevicename(), getApplicationContext());
-                            fcm.onTokenRefresh();
-                        }
-                    });
-
                 }
             } else if (!(sharedPreferences.getBoolean(AppConstants.IS_USER_LOGGED_IN, false) &&
                     App.shouldAppRun(sharedPreferences.getString(AppConstants.VALIDITY_DATE, "")))) {
@@ -154,8 +134,13 @@ public class BaseDrawerActivity extends FragmentActivity implements View.OnClick
 
 
             //for 360 data
-            if (!(sharedPreferences.getBoolean(AppConstants.IS_360_RECORD_INSERTED, false)))
+            if (!(sharedPreferences.getBoolean(AppConstants.IS_360_RECORD_INSERTED, false))) {
                 insertRotationDataInDB();
+            }
+            //for COMPARE data
+            if (!(sharedPreferences.getBoolean(AppConstants.IS_COMPARE_RECORD_INSERTED, false))) {
+                insertCompareData();
+            }
 
            /* boolean bool = sharedPreferences.getBoolean(AppConstants.IS_360_RECORD_INSERTED, false);
             if (bool) {
@@ -226,12 +211,24 @@ public class BaseDrawerActivity extends FragmentActivity implements View.OnClick
         findViewById(R.id.nav_sync_layout).setOnClickListener(this);
         findViewById(R.id.nav_logout_layout).setOnClickListener(this);
         //     findViewById(R.id.nav_notify_layout).setOnClickListener(this);
-
         if (null == savedInstanceState) {
             FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager.beginTransaction().replace(R.id.frame_container, new DealerDashboardFragment()).commit();
+            if (PreferenceUtil.getFlagAuth(this))
+                request();
         }
-        request();
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            if (extras.containsKey("tag")) {
+                if (extras.getString("tag").equalsIgnoreCase("news")) {
+                    getIntent().removeExtra("tag");
+                    openFragment(new NewsFragment(), true);
+                    if (PreferenceUtil.getFlagAuth(this))
+                        request();
+                }
+            }
+        }
+
     }
 
    /* @Override
@@ -391,15 +388,16 @@ public class BaseDrawerActivity extends FragmentActivity implements View.OnClick
             openFragment(new ContactUsFragmrnt(), false);
         } else if (i == R.id.nav_news_layout) {
             toggleDrawer();
-           /* openFragment(new NewsFragment(), false);*/
+            if (NetConnections.isConnected(this))
+                openFragment(new NewsFragment(), false);
+            else
+                Toast.makeText(this, "No Internet Connection !!", Toast.LENGTH_LONG).show();
+
         } else if (i == R.id.nav_value_layout) {
             try {
                 toggleDrawer();
-               /* Intent intent = new Intent(getApplicationContext(), DbSyncservice.class);
-                startService(intent);*/
-                //Toast.makeText(this, "VAS App not installed!", Toast.LENGTH_SHORT).show();
-               /* fragment = new VasWarrantyfragment();
-                openFragment(fragment, true);*/
+                fragment = new VasHomeFragment();
+                openFragment(fragment, true);
 //                Intent intent = getPackageManager().getLaunchIntentForPackage("com.herocorp.ui.activities.DSEapp.Fragment.Home.HomeFragment;");
 //                startActivity(intent);
 
@@ -411,9 +409,14 @@ public class BaseDrawerActivity extends FragmentActivity implements View.OnClick
         } else if (i == R.id.nav_faq_layout) {
             try {
                 toggleDrawer();
+                if (NetConnections.isConnected(this))
+                    openFragment(new FaqFragment(), false);
+                else
+                    Toast.makeText(this, "No Internet Connection !!", Toast.LENGTH_LONG).show();
+
 
             } catch (Exception e) {
-                Toast.makeText(this, "faq not installed!" + e, Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "FAQ's not installed!" + e, Toast.LENGTH_SHORT).show();
             }
         } else if (i == R.id.nav_emi_layout) {
             try {
@@ -1353,6 +1356,312 @@ public class BaseDrawerActivity extends FragmentActivity implements View.OnClick
         }
     }
 
+    public void insertCompareData() {
+        final String INSERT_TABLE1 = "INSERT INTO " +
+                ProductCompareTable.TABLE_NAME + " (" +
+                ProductCompareTable.Cols.PRODUCT_ID + ", " +
+                ProductCompareTable.Cols.IMAGE_NAME + ", " +
+                ProductCompareTable.Cols.CREATED_DATE + ")" +
+                " VALUES "
+                + "(7,'passion_pro_1.png','2016-09-06 19:56:51'),"
+                + "(7,'passion_pro_2.png','2016-09-06 19:56:51'),"
+                + "(7,'passion_pro_3.png','2016-09-06 19:56:51')";
+
+        final String INSERT_TABLE2 = "INSERT INTO " +
+                ProductCompareTable.TABLE_NAME + " (" +
+                ProductCompareTable.Cols.PRODUCT_ID + ", " +
+                ProductCompareTable.Cols.IMAGE_NAME + ", " +
+                ProductCompareTable.Cols.CREATED_DATE + ")" +
+                " VALUES "
+                + "(8,'super_splendor_1.png','2016-09-06 20:04:14'),"
+                + "(8,'super_splendor_2.png','2016-09-06 20:04:14'),"
+                + "(8,'super_splendor_3.png','2016-09-06 20:04:14')";
+
+
+        final String INSERT_TABLE3 = "INSERT INTO " +
+                ProductCompareTable.TABLE_NAME + " (" +
+                ProductCompareTable.Cols.PRODUCT_ID + ", " +
+                ProductCompareTable.Cols.IMAGE_NAME + ", " +
+                ProductCompareTable.Cols.CREATED_DATE + ")" +
+                " VALUES "
+                + "(12,'karizma_zmr_1.png','2016-09-06 20:05:32'),"
+                + "(12,'karizma_zmr_2.png','2016-09-06 20:05:32'),"
+                + "(12,'karizma_zmr_3.png','2016-09-06 20:05:32')";
+
+
+        final String INSERT_TABLE4 = "INSERT INTO " +
+                ProductCompareTable.TABLE_NAME + " (" +
+                ProductCompareTable.Cols.PRODUCT_ID + ", " +
+                ProductCompareTable.Cols.IMAGE_NAME + ", " +
+                ProductCompareTable.Cols.CREATED_DATE + ")" +
+                " VALUES "
+                + "(19,'karizma_r_1.png','2016-09-06 20:07:16')";
+
+
+/*
+        final String INSERT_TABLE6 = "INSERT INTO " +
+                ProductCompareTable.TABLE_NAME + " (" +
+                ProductCompareTable.Cols.PRODUCT_ID + ", " +
+                ProductCompareTable.Cols.IMAGE_NAME + ", " +
+                ProductCompareTable.Cols.CREATED_DATE + ")" +
+                " VALUES "
+                + "(20,'spl_pro_classic_wasv_360_s01.png','2016-09-06 20:08:50'),"
+                + "(20,'spl_pro_classic_wasv_360_s02.png','2016-09-06 20:08:50'),"
+                + "(20,'spl_pro_classic_wasv_360_s03.png','2016-09-06 20:08:50')";*/
+
+
+        final String INSERT_TABLE7 = "INSERT INTO " +
+                ProductCompareTable.TABLE_NAME + " (" +
+                ProductCompareTable.Cols.PRODUCT_ID + ", " +
+                ProductCompareTable.Cols.IMAGE_NAME + ", " +
+                ProductCompareTable.Cols.CREATED_DATE + ")" +
+                " VALUES "
+                + "(21,'xtreme_sports_1.png','2016-09-06 20:10:18'),"
+                + "(21,'xtreme_sports_2.png','2016-09-06 20:10:18'),"
+                + "(21,'xtreme_sports_3.png','2016-09-06 20:10:18')";
+
+
+        final String INSERT_TABLE8 = "INSERT INTO " +
+                ProductCompareTable.TABLE_NAME + " (" +
+                ProductCompareTable.Cols.PRODUCT_ID + ", " +
+                ProductCompareTable.Cols.IMAGE_NAME + ", " +
+                ProductCompareTable.Cols.CREATED_DATE + ")" +
+                " VALUES "
+                + "(22,'xtreme_1.png','2016-09-06 20:11:50'),"
+                + "(22,'xtreme_2.png','2016-09-06 20:11:50'),"
+                + "(22,'xtreme_3.png','2016-09-06 20:11:50')";
+
+
+        final String INSERT_TABLE9 = "INSERT INTO " +
+                ProductCompareTable.TABLE_NAME + " (" +
+                ProductCompareTable.Cols.PRODUCT_ID + ", " +
+                ProductCompareTable.Cols.IMAGE_NAME + ", " +
+                ProductCompareTable.Cols.CREATED_DATE + ")" +
+                " VALUES "
+                + "(23,'hunk_1.png','2016-09-06 20:13:05'),"
+                + "(23,'hunk_2.png','2016-09-06 20:13:05'),"
+                + "(23,'hunk_3.png','2016-09-06 20:13:05')";
+
+
+    /*    final String INSERT_TABLE10 = "INSERT INTO " +
+                ProductCompareTable.TABLE_NAME + " (" +
+                ProductCompareTable.Cols.PRODUCT_ID + ", " +
+                ProductCompareTable.Cols.IMAGE_NAME + ", " +
+                ProductCompareTable.Cols.CREATED_DATE + ")" +
+                " VALUES "
+                + "(24,'hf_deluxe_new_360d_s01.png','2016-09-06 20:15:18'),"
+                + "(24,'hf_deluxe_new_360d_s02.png','2016-09-06 20:15:18'),"
+                + "(24,'hf_deluxe_new_360d_s03.png','2016-09-06 20:15:18')";
+*/
+/*
+        final String INSERT_TABLE11 = "INSERT INTO " +
+                ProductCompareTable.TABLE_NAME + " (" +
+                ProductCompareTable.Cols.PRODUCT_ID + ", " +
+                ProductCompareTable.Cols.IMAGE_NAME + ", " +
+                ProductCompareTable.Cols.CREATED_DATE + ")" +
+                " VALUES "
+                + "(25,'hf_deluxe_eco_360d_s01.png','2016-09-06 20:15:59'),"
+                + "(25,'hf_deluxe_eco_360d_s02.png','2016-09-06 20:15:59')";*/
+
+        final String INSERT_TABLE12 = "INSERT INTO " +
+                ProductCompareTable.TABLE_NAME + " (" +
+                ProductCompareTable.Cols.PRODUCT_ID + ", " +
+                ProductCompareTable.Cols.IMAGE_NAME + ", " +
+                ProductCompareTable.Cols.CREATED_DATE + ")" +
+                " VALUES "
+                + "(26,'achiever_1.png','2016-09-06 20:16:30'),"
+                + "(26,'achiever_i3s_1.png','2016-09-06 20:16:30'),"
+                + "(26,'achiever_i3s_2.png','2016-09-06 20:16:30'),"
+                + "(26,'achiever_i3s_3.png','2016-09-06 20:16:30')";
+
+
+        final String INSERT_TABLE13 = "INSERT INTO " +
+                ProductCompareTable.TABLE_NAME + " (" +
+                ProductCompareTable.Cols.PRODUCT_ID + ", " +
+                ProductCompareTable.Cols.IMAGE_NAME + ", " +
+                ProductCompareTable.Cols.CREATED_DATE + ")" +
+                " VALUES "
+                + "(27,'splendor_plus_1.png','2016-09-06 20:31:30'),"
+                + "(27,'splendor_plus_2.png','2016-09-06 20:31:30'),"
+                + "(27,'splendor_plus_3.png','2016-09-06 20:31:30')";
+
+        final String INSERT_TABLE14 = "INSERT INTO " +
+                ProductCompareTable.TABLE_NAME + " (" +
+                ProductCompareTable.Cols.PRODUCT_ID + ", " +
+                ProductCompareTable.Cols.IMAGE_NAME + ", " +
+                ProductCompareTable.Cols.CREATED_DATE + ")" +
+                " VALUES "
+                + "(28,'ignitor_1.png','2016-09-06 20:18:18'),"
+                + "(28,'ignitor_2.png','2016-09-06 20:18:18')";
+
+
+        final String INSERT_TABLE15 = "INSERT INTO " +
+                ProductCompareTable.TABLE_NAME + " (" +
+                ProductCompareTable.Cols.PRODUCT_ID + ", " +
+                ProductCompareTable.Cols.IMAGE_NAME + ", " +
+                ProductCompareTable.Cols.CREATED_DATE + ")" +
+                " VALUES "
+                + "(29,'glamour_fi_1.png','2016-09-06 20:19:24'),"
+                + "(29,'glamour_fi_2.png','2016-09-06 20:19:25'),"
+                + "(29,'glamour_fi_3.png','2016-09-06 20:19:25'),"
+                + "(29,'glamour_fi_4.png','2016-09-06 20:19:25')";
+        ;
+
+
+   /*     final String INSERT_TABLE16 = "INSERT INTO " +
+                ProductCompareTable.TABLE_NAME + " (" +
+                ProductCompareTable.Cols.PRODUCT_ID + ", " +
+                ProductCompareTable.Cols.IMAGE_NAME + ", " +
+                ProductCompareTable.Cols.CREATED_DATE + ")" +
+                " VALUES "
+                + "(30,'passion_pro_tr_360_d_s01.png','2016-09-06 20:20:14'),"
+                + "(30,'passion_pro_tr_360_d_s02.png','2016-09-06 20:20:14')";
+               */
+
+        final String INSERT_TABLE17 = "INSERT INTO " +
+                ProductCompareTable.TABLE_NAME + " (" +
+                ProductCompareTable.Cols.PRODUCT_ID + ", " +
+                ProductCompareTable.Cols.IMAGE_NAME + ", " +
+                ProductCompareTable.Cols.CREATED_DATE + ")" +
+                " VALUES "
+                + "(31,'splendor_ismart_1.png','2016-09-06 20:21:37'),"
+                + "(31,'splendor_ismart_2.png','2016-09-06 20:21:37'),"
+                + "(31,'splendor_ismart_3.png','2016-09-06 20:21:37')";
+
+     /*   final String INSERT_TABLE18 = "INSERT INTO " +
+                ProductCompareTable.TABLE_NAME + " (" +
+                ProductCompareTable.Cols.PRODUCT_ID + ", " +
+                ProductCompareTable.Cols.IMAGE_NAME + ", " +
+                ProductCompareTable.Cols.CREATED_DATE + ")" +
+                " VALUES "
+                + "(32,'splendor_pro_j1_wasv_360d_s01.png','2016-09-06 20:09:54'),"
+                + "(32,'splendor_pro_j1_wasv_360d_s02.png','2016-09-06 20:09:54')";
+         */
+
+        final String INSERT_TABLE19 = "INSERT INTO " +
+                ProductCompareTable.TABLE_NAME + " (" +
+                ProductCompareTable.Cols.PRODUCT_ID + ", " +
+                ProductCompareTable.Cols.IMAGE_NAME + ", " +
+                ProductCompareTable.Cols.CREATED_DATE + ")" +
+                " VALUES "
+                + "(33,'hf_dawn_15_1.png','2016-09-06 20:12:05'),"
+                + "(33,'hf_dawn_15_2.png','2016-09-06 20:12:05')";
+
+        final String INSERT_TABLE20 = "INSERT INTO " +
+                ProductCompareTable.TABLE_NAME + " (" +
+                ProductCompareTable.Cols.PRODUCT_ID + ", " +
+                ProductCompareTable.Cols.IMAGE_NAME + ", " +
+                ProductCompareTable.Cols.CREATED_DATE + ")" +
+                " VALUES "
+                + "(34,'duet_1.png','2016-09-06 20:12:54'),"
+                + "(34,'duet_2.png','2016-09-06 20:12:54'),"
+                + "(34,'duet_3.png','2016-09-06 20:12:54'),"
+                + "(34,'duet_4.png','2016-09-06 20:12:54')";
+
+
+        final String INSERT_TABLE21 = "INSERT INTO " +
+                ProductCompareTable.TABLE_NAME + " (" +
+                ProductCompareTable.Cols.PRODUCT_ID + ", " +
+                ProductCompareTable.Cols.IMAGE_NAME + ", " +
+                ProductCompareTable.Cols.CREATED_DATE + ")" +
+                " VALUES "
+                + "(35,'maestroedge_1.png','2016-09-06 20:13:59'),"
+                + "(35,'maestroedge_2.png','2016-09-06 20:13:59'),"
+                + "(35,'maestroedge_3.png','2016-09-06 20:13:59'),"
+                + "(35,'maestroedge_4.png','2016-09-06 20:13:59'),"
+                + "(35,'maestroedge_5.png','2016-09-06 20:13:59'),"
+                + "(35,'maestroedge_6.png','2016-09-06 20:13:59'),"
+                + "(35,'maestroedge_7.png','2016-09-06 20:13:59'),"
+                + "(35,'maestroedge_8.png','2016-09-06 20:13:59')";
+
+        final String INSERT_TABLE22 = "INSERT INTO " +
+                ProductCompareTable.TABLE_NAME + " (" +
+                ProductCompareTable.Cols.PRODUCT_ID + ", " +
+                ProductCompareTable.Cols.IMAGE_NAME + ", " +
+                ProductCompareTable.Cols.CREATED_DATE + ")" +
+                " VALUES "
+                + "(36,'maestro_1.png','2016-09-06 20:15:13'),"
+                + "(36,'maestro_2.png','2016-09-06 20:15:13'),"
+                + "(36,'maestro_3.png','2016-09-06 20:15:13'),"
+                + "(36,'maestro_4.png','2016-09-06 20:15:13'),"
+                + "(36,'maestro_5.png','2016-09-06 20:15:13'),"
+                + "(36,'maestro_6.png','2016-09-06 20:15:13')";
+
+
+        final String INSERT_TABLE23 = "INSERT INTO " +
+                ProductCompareTable.TABLE_NAME + " (" +
+                ProductCompareTable.Cols.PRODUCT_ID + ", " +
+                ProductCompareTable.Cols.IMAGE_NAME + ", " +
+                ProductCompareTable.Cols.CREATED_DATE + ")" +
+                " VALUES "
+                + "(37,'pleasure_1.png','2016-09-06 20:15:50'),"
+                + "(37,'pleasure_2.png','2016-09-06 20:15:50'),"
+                + "(37,'pleasure_3.png','2016-09-06 20:15:50')";
+
+
+        final String INSERT_TABLE24 = "INSERT INTO " +
+                ProductCompareTable.TABLE_NAME + " (" +
+                ProductCompareTable.Cols.PRODUCT_ID + ", " +
+                ProductCompareTable.Cols.IMAGE_NAME + ", " +
+                ProductCompareTable.Cols.CREATED_DATE + ")" +
+                " VALUES "
+                + "(38,'passion_xpro_1.png','2016-09-06 20:17:24'),"
+                + "(38,'passion_xpro_2.png','2016-09-06 20:17:24')";
+
+
+        final String INSERT_TABLE25 = "INSERT INTO " +
+                ProductCompareTable.TABLE_NAME + " (" +
+                ProductCompareTable.Cols.PRODUCT_ID + ", " +
+                ProductCompareTable.Cols.IMAGE_NAME + ", " +
+                ProductCompareTable.Cols.CREATED_DATE + ")" +
+                " VALUES "
+                + "(39,'glamour_15_1.png','2016-09-06 20:19:15'),"
+                + "(39,'glamour_15_2.png','2016-09-06 20:19:15'),"
+                + "(39,'glamour_15_3.png','2016-09-06 20:19:15'),"
+                + "(39,'glamour_15_4.png','2016-09-06 20:19:15')";
+
+
+        final String INSERT_TABLE26 = "INSERT INTO " +
+                ProductCompareTable.TABLE_NAME + " (" +
+                ProductCompareTable.Cols.PRODUCT_ID + ", " +
+                ProductCompareTable.Cols.IMAGE_NAME + ", " +
+                ProductCompareTable.Cols.CREATED_DATE + ")" +
+                " VALUES "
+                + "(54,'splendor_ismart110_1.png','2016-09-06 20:21:01')";
+
+        try {
+            SQLiteDataHelper.getInstance(this).getDatabase().execSQL(INSERT_TABLE1);
+            SQLiteDataHelper.getInstance(this).getDatabase().execSQL(INSERT_TABLE2);
+            SQLiteDataHelper.getInstance(this).getDatabase().execSQL(INSERT_TABLE3);
+            SQLiteDataHelper.getInstance(this).getDatabase().execSQL(INSERT_TABLE4);
+            //SQLiteDataHelper.getInstance(this).getDatabase().execSQL(INSERT_TABLE5);
+            //SQLiteDataHelper.getInstance(this).getDatabase().execSQL(INSERT_TABLE6);
+            SQLiteDataHelper.getInstance(this).getDatabase().execSQL(INSERT_TABLE7);
+            SQLiteDataHelper.getInstance(this).getDatabase().execSQL(INSERT_TABLE8);
+            SQLiteDataHelper.getInstance(this).getDatabase().execSQL(INSERT_TABLE9);
+            //SQLiteDataHelper.getInstance(this).getDatabase().execSQL(INSERT_TABLE10);
+            //SQLiteDataHelper.getInstance(this).getDatabase().execSQL(INSERT_TABLE11);
+            SQLiteDataHelper.getInstance(this).getDatabase().execSQL(INSERT_TABLE12);
+            SQLiteDataHelper.getInstance(this).getDatabase().execSQL(INSERT_TABLE13);
+            SQLiteDataHelper.getInstance(this).getDatabase().execSQL(INSERT_TABLE14);
+            SQLiteDataHelper.getInstance(this).getDatabase().execSQL(INSERT_TABLE15);
+            // SQLiteDataHelper.getInstance(this).getDatabase().execSQL(INSERT_TABLE16);
+            SQLiteDataHelper.getInstance(this).getDatabase().execSQL(INSERT_TABLE17);
+            //SQLiteDataHelper.getInstance(this).getDatabase().execSQL(INSERT_TABLE18);
+            SQLiteDataHelper.getInstance(this).getDatabase().execSQL(INSERT_TABLE19);
+            SQLiteDataHelper.getInstance(this).getDatabase().execSQL(INSERT_TABLE20);
+            SQLiteDataHelper.getInstance(this).getDatabase().execSQL(INSERT_TABLE21);
+            SQLiteDataHelper.getInstance(this).getDatabase().execSQL(INSERT_TABLE22);
+            SQLiteDataHelper.getInstance(this).getDatabase().execSQL(INSERT_TABLE23);
+            SQLiteDataHelper.getInstance(this).getDatabase().execSQL(INSERT_TABLE24);
+            SQLiteDataHelper.getInstance(this).getDatabase().execSQL(INSERT_TABLE25);
+            SQLiteDataHelper.getInstance(this).getDatabase().execSQL(INSERT_TABLE26);
+            sharedPreferences.edit().putBoolean(AppConstants.IS_COMPARE_RECORD_INSERTED, true).commit();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
     //update version_notification
     public void push_notification(String version, String path) {
         Intent resultIntent = new Intent(Intent.ACTION_VIEW);
@@ -1401,6 +1710,7 @@ public class BaseDrawerActivity extends FragmentActivity implements View.OnClick
                         url = new URL(params[0]);
                         connection = (HttpURLConnection) url.openConnection();
                         connection.setDoOutput(true);
+                        connection.setConnectTimeout(6000);
                         //Get Response
                         InputStream is = connection.getInputStream();
                         BufferedReader rd = new BufferedReader(new InputStreamReader(is));
@@ -1454,6 +1764,7 @@ public class BaseDrawerActivity extends FragmentActivity implements View.OnClick
 
         protected void onPostExecute(String result) {
             super.onPostExecute(result);
+            PreferenceUtil.setFlagAuth(BaseDrawerActivity.this, false);
             try {
                 Log.e("version_response", result);
                 result = result.replace("[", "");
@@ -1472,6 +1783,17 @@ public class BaseDrawerActivity extends FragmentActivity implements View.OnClick
                 if (Integer.parseInt(appVersion) < Integer.parseInt(new_version)) {
                     push_notification(newversion, path);
                     update_alert(newversion, path);
+                }
+                if (PreferenceUtil.getflag_UPDATE(getApplicationContext())) {
+                    //FCM service
+                    FirebaseMessaging.getInstance().subscribeToTopic("news");
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            FCMInstanceIdservice fcm = new FCMInstanceIdservice(DeviceUtil.DeviceImei(getApplicationContext()), PreferenceUtil.get_UserId(getApplicationContext()), DeviceUtil.AppVersion(getApplicationContext()), DeviceUtil.MobileOs(), DeviceUtil.DeviceName(), getApplicationContext());
+                            fcm.onTokenRefresh();
+                        }
+                    });
                 }
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -1494,7 +1816,6 @@ public class BaseDrawerActivity extends FragmentActivity implements View.OnClick
         dialogFragment.setCancelable(false);
         dialogFragment.show(fm, "Sample Fragment");
     }
-
 
     public void fetch_data() {
         String newversion, app_version, path;
@@ -1752,15 +2073,7 @@ public class BaseDrawerActivity extends FragmentActivity implements View.OnClick
     public void request() {
         try {
             if (NetConnections.isConnected(this)) {
-                String current_date = new SimpleDateFormat("dd-MMM-yy").format(new Date());
-               /* if ((!PreferenceUtil.get_Versiondate(this).equalsIgnoreCase(current_date.toString()))) {
-                    {
-                        new check_version().execute(URLConstants.CHECK_VERSION);
-                    }
-                }*/
-                //  if (!(PreferenceUtil.get_MakeSyncdate(this).equalsIgnoreCase(current_date.toString()) && NetConnections.isConnected(this)))
                 new check_version().execute(URLConstants.CHECK_VERSION);
-
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -1768,27 +2081,6 @@ public class BaseDrawerActivity extends FragmentActivity implements View.OnClick
         }
     }
 
-    private String getDevicename() {
-        String manufacturer = Build.MANUFACTURER;
-        String model = Build.MODEL;
-        if (model.startsWith(manufacturer)) {
-            return capitalize(model);
-        } else {
-            return capitalize(manufacturer) + " " + model;
-        }
-    }
-
-    private static String capitalize(String s) {
-        if (s == null || s.length() == 0) {
-            return "";
-        }
-        char first = s.charAt(0);
-        if (Character.isUpperCase(first)) {
-            return s;
-        } else {
-            return Character.toUpperCase(first) + s.substring(1);
-        }
-    }
 
     private boolean isGooglePlayServicesAvailable() {
         int status = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
@@ -1798,6 +2090,12 @@ public class BaseDrawerActivity extends FragmentActivity implements View.OnClick
             GooglePlayServicesUtil.getErrorDialog(status, this, 0).show();
             return false;
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+
     }
 
 

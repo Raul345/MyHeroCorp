@@ -15,6 +15,9 @@
     <string name="compare_text">COMPARE</string>
     <string name="contactus_text">CONTACT US</string>
     <string name="news_text">NEWS</string>
+    <string name="vas_text">VALUE ADDED SERVICES</string>
+    <string name="faq_text">FAQ</string>
+    <string name="reportbug_text">REPORT BUG</string>
     <string name="notify_text">NOTIFICATIONS</string>
     <string name="specification_text">SPECIFICATIONS</string>
     <string name="feature_text">FEATURES</string>

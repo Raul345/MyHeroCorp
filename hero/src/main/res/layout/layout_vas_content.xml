@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+  >
+
+    <LinearLayout
+        android:id="@+id/layout_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#ffffff">
+
+        <TextView
+            android:id="@+id/tv_header"
+            android:layout_width="0sp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.9"
+            android:drawableLeft="@drawable/ic_arrow"
+            android:gravity="center_vertical"
+            android:padding="7dp"
+            android:text="nskdnckdcjscnscn"
+            android:textColor="#000000"
+            android:textSize="14dp"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:id="@+id/iv_expand"
+            android:layout_width="0sp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.1"
+            android:background="@drawable/square_bg_red"
+            android:src="@drawable/ic_expand" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_data"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#e0e0e0"
+        android:padding="5dp"
+        android:textColor="#000000"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/tv_details"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#e0e0e0"
+        android:gravity="end"
+        android:paddingBottom="5dp"
+        android:paddingRight="30dp"
+        android:paddingTop="5dp"
+        android:text=">> Details"
+        android:textSize="16dp"
+        android:textColor="@color/colorPrimary"
+        android:textStyle="bold"
+        android:visibility="gone" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#e0e0e0"
+        android:textColor="#BDBDBD" />
+</LinearLayout>
