@@ -7,7 +7,7 @@ package com.herocorp.core.constants;
 public class URLConstants {
 
     /*Base URL*/
-    private final static String BASE_URL_LIVE = "http://tab.hmcl.biz/heroDealerApp/";
+    private final static String BASE_URL_LIVE = "http://tab.hmcl.biz/heroDealerApp_UAT/";
     private final static String BASE_URL_DEV = "http://abym.in/clientProof/hero_motors/";
 
     //Base URL dse version 2
@@ -21,7 +21,7 @@ public class URLConstants {
     private final static String BASE_URL_QA = BASE_URL_LIVE;
     private final static String BASE_URL_LIVE_WEBSERVICE = "http://tab.hmcl.biz/heroDealerApp_UAT/webservices/Index";
     public static String BASE_URL;
-    public static String BASE_DSE_URL = BASE_DSEURL_LIVE;
+    public static String BASE_DSE_URL = BASE_DSEURL_DEV;
 
     // produce=URLs
     public final static String GET_CATEGORY_LIST = "categoriesList";
@@ -54,13 +54,13 @@ public class URLConstants {
     public final static String FETCH_PITCH = BASE_DSE_URL + "sales_pitch.php";
 
 
-    public final static String FETCH_NEWS = "http://abym.in/clientProof/hero_motors/webservices/Index/newsListings";
+  /*  public final static String FETCH_NEWS = "http://abym.in/clientProof/hero_motors/webservices/Index/newsListings";
     public final static String TOKEN_DATA = "http://abym.in/clientProof/hero_motors/userAuthentication";
     public final static String FETCH_VAS = "http://abym.in/clientProof/hero_motors/webservices/Index/valueAddedServices";
-
-    // public final static String TOKEN_DATA = BASE_URL_LIVE_WEBSERVICE + "/userAuthentication";
-    // public final static String FETCH_NEWS = BASE_URL_LIVE_WEBSERVICE + "/newsListings";
-    //public final static String FETCH_VAS = BASE_URL_LIVE_WEBSERVICE + "/valueAddedServices";
+*/
+    public final static String TOKEN_DATA = BASE_URL_LIVE_WEBSERVICE + "/userAuthentication";
+    public final static String FETCH_NEWS = BASE_URL_LIVE_WEBSERVICE + "/newsListings";
+    public final static String FETCH_VAS = BASE_URL_LIVE_WEBSERVICE + "/valueAddedServices";
     public final static String FETCH_FAQ = BASE_URL_LIVE_WEBSERVICE + "/getFaqs";
 
 
@@ -78,7 +78,7 @@ public class URLConstants {
 
     /*Static Block*/
     /* Which DSE environment is currently active */
-    static {
+   /* static {
         if (AppConstants.isDSELive) {
             URLConstants.BASE_DSE_URL = URLConstants.BASE_DSEURL_LIVE;
         } else if (AppConstants.isDSEDebug) {
@@ -86,5 +86,5 @@ public class URLConstants {
         } else {
             URLConstants.BASE_DSE_URL = URLConstants.BASE_DSEURL_LIVE;
         }
-    }
+    }*/
 }
