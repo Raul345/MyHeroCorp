@@ -12,6 +12,7 @@ import android.content.pm.PackageManager;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.telephony.TelephonyManager;
@@ -59,7 +60,7 @@ public class SignInActivity extends Activity implements View.OnClickListener {
        };*/
     private String respDesc = "", respCode = "", state_id = "", dealer_code = "", version = "", path = "", state_name = "", city_name = "", result = "", failure_msg = "";
     private String appVersion;
-    //private String deviceImei = "911441757449230";//Test
+    // private String deviceImei = "911441757449230";//Test
     // private String deviceImei = "911562050022240";//ALOK11831
     //private String deviceImei = "359940061620922";//RAJ10220
     private String deviceImei;
@@ -172,6 +173,7 @@ public class SignInActivity extends Activity implements View.OnClickListener {
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[],
                                            int[] grantResults) {
@@ -180,6 +182,10 @@ public class SignInActivity extends Activity implements View.OnClickListener {
             case REQUEST_PERMISSION_READ_PHONE_STATE: {
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED)
                     check_user();
+                else {
+                    requestPermissions(new String[]{Manifest.permission.READ_PHONE_STATE}, REQUEST_PERMISSION_READ_PHONE_STATE);
+
+                }
                 break;
             }
 

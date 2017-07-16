@@ -18,12 +18,14 @@ import com.herocorp.core.interfaces.iNetworkResponseCallback;
 import com.herocorp.core.models.ProductBreakModel;
 import com.herocorp.core.models.ProductCategoryModel;
 import com.herocorp.core.models.ProductColorModel;
+import com.herocorp.core.models.ProductCompareModel;
 import com.herocorp.core.models.ProductDimensionModel;
 import com.herocorp.core.models.ProductElectricalModel;
 import com.herocorp.core.models.ProductEngineModel;
 import com.herocorp.core.models.ProductFeatureModel;
 import com.herocorp.core.models.ProductGalleryModel;
 import com.herocorp.core.models.ProductModel;
+import com.herocorp.core.models.ProductSuperFeatureModel;
 import com.herocorp.core.models.ProductSuspensionModel;
 import com.herocorp.core.models.ProductTransmissionModel;
 import com.herocorp.core.models.ProductTyreModel;
@@ -285,6 +287,30 @@ public class ProductIOService extends BaseNetIO {
                                                 }
                                                 productDetailAggregate.setFeatureModel(featureModelList);
 
+
+                                                //super features
+                                                ArrayList<ProductSuperFeatureModel> superfeatureModelList = new ArrayList<>(0);
+
+                                                if (object.has("super_feature_img")) {
+                                                    //For Product Feature Images
+                                                    JSONArray jsonArrayFeature = object.getJSONArray("super_feature_img");
+
+                                                    for (int i = 0; i < jsonArrayFeature.length(); i++) {
+
+                                                        ProductSuperFeatureModel featureModel = AppJsonParser.getInstance()
+                                                                .getObjectFromString(jsonArrayFeature.get(i).toString(),
+                                                                        ProductSuperFeatureModel.class);
+
+                                                        featureModel.setProductID(productID);
+                                                        superfeatureModelList.add(featureModel);
+
+                                                    }
+
+                                                }
+                                                productDetailAggregate.setSuperfeatureModelList(superfeatureModelList);
+
+
+
                                                 ArrayList<ProductGalleryModel> GalleryModelList = new ArrayList<>(0);
                                                 if (object.has("gallery_img")) {
                                                     //Parse Product Gallery Img
@@ -362,6 +388,65 @@ public class ProductIOService extends BaseNetIO {
 
 
         App.getInstance().addToRequestQueue(imgRequest, tag);
+
+    }
+
+
+    public static void getCompareDetails(final String tag,
+                                         final iNetworkResponseCallback<ProductCompareModel> callback) throws Exception {
+
+        JsonObjectRequest jsonObjReq =
+                new JsonObjectRequest(
+                        Request.Method.POST,
+                        URLConstants.BASE_URL + URLConstants.GET_PRODUCT_COMPARE_DATA,
+                        new Response.Listener<JSONObject>() {
+
+                            @Override
+                            public void onResponse(JSONObject response) {
+
+                                try {
+                                    if (response != null) {
+                                        if (response.getBoolean("Success")) {
+                                            ArrayList<ProductCompareModel> modelArrayList = new ArrayList<>(0);
+                                            //Parse the JSON
+                                            JSONArray responseDataString = response.getJSONArray("Result");
+                                            for (int i = 0; i < responseDataString.length(); i++) {
+                                                modelArrayList.add(AppJsonParser.getInstance()
+                                                        .getObjectFromString(responseDataString.get(i).toString(),
+                                                                ProductCompareModel.class));
+                                            }
+                                            callback.onSuccess(modelArrayList);
+
+                                            return;
+                                        }
+
+                                        callback.onFailure(response.getString("Message"), true);
+
+                                    }
+                                } catch (Exception e) {
+                                    Log.e(tag, "Failed ", e);
+                                    callback.onFailure("Failed", true);
+                                }
+
+                            }
+                        },
+                        new Response.ErrorListener() {
+
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                callback.onFailure(errorMessage(error), true);
+                            }
+                        }
+                ) {
+                    @Override
+                    public Map<String, String> getHeaders() throws AuthFailureError {
+                        return getAccessHeaders();
+                    }
+                };
+
+        setTimeOut(jsonObjReq);
+        // Adding request to request queue
+        App.getInstance().addToRequestQueue(jsonObjReq, tag);
 
     }
 

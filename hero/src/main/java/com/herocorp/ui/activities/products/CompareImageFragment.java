@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.herocorp.R;
+import com.herocorp.infra.utils.ImageHandler;
 
 
 /**
@@ -27,15 +28,19 @@ public class CompareImageFragment extends Fragment {
             savedInstanceState) {
 
         rootView = inflater.inflate(R.layout.layout_compare_image, container, false);
-        compare_image=(ImageView)rootView.findViewById(R.id.compareimage);
+        compare_image = (ImageView) rootView.findViewById(R.id.compareimage);
         getActivity().setRequestedOrientation(
                 ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-        Bundle bundle=this.getArguments();
-        Resources res = getActivity().getApplicationContext().getResources();
-        Log.e("id",bundle.getInt("id")+"");
-        Bitmap bitmap = ((BitmapDrawable) res.getDrawable(bundle.getInt("id"))).getBitmap();
+        Bundle bundle = this.getArguments();
+        Log.e("img_name", bundle.getString("img_name"));
+        //  Resources res = getActivity().getApplicationContext().getResources();
+        //   Bitmap bitmap = ((BitmapDrawable) res.getDrawable(bundle.getInt("id"))).getBitmap();
 
-        compare_image.setImageBitmap(bitmap);
+        try {
+            compare_image.setImageBitmap(ImageHandler.getInstance(getActivity()).loadImageFromStorage(bundle.getString("img_name")));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         compare_image.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -43,6 +48,6 @@ public class CompareImageFragment extends Fragment {
                 getActivity().onBackPressed();
             }
         });
-       return rootView;
+        return rootView;
     }
 }

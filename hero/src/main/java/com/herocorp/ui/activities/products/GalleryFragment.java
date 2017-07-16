@@ -40,13 +40,16 @@ import com.herocorp.core.models.ProductColorModel;
 import com.herocorp.core.models.ProductGalleryModel;
 import com.herocorp.core.models.ProductModel;
 import com.herocorp.core.models.ProductRotationModel;
+import com.herocorp.core.models.ProductSuperFeatureModel;
 import com.herocorp.infra.db.repositories.product.ProductColorModelRepo;
 import com.herocorp.infra.db.repositories.product.ProductGalleryRepo;
 import com.herocorp.infra.db.repositories.product.ProductRepo;
 import com.herocorp.infra.db.repositories.product.ProductRotationRepo;
+import com.herocorp.infra.db.repositories.product.ProductSuperFeatureRepo;
 import com.herocorp.infra.db.tables.schemas.ProductTable;
 import com.herocorp.infra.db.tables.schemas.products.ProductColorModelTable;
 import com.herocorp.infra.db.tables.schemas.products.ProductGalleryTable;
+import com.herocorp.infra.db.tables.schemas.products.ProductSuperFeatureTable;
 import com.herocorp.infra.utils.ImageHandler;
 import com.herocorp.ui.activities.BaseDrawerActivity;
 import com.herocorp.ui.utility.CustomTypeFace;
@@ -80,6 +83,7 @@ public class GalleryFragment extends Fragment implements View.OnClickListener {
     private ArrayList<ProductColorModel> colorList;
     private ArrayList<ProductModel> productList;
     private ArrayList<ProductGalleryModel> galleryList;
+    private ArrayList<ProductSuperFeatureModel> superFeatureList;
     private ImageView featureIndividualImage;
     private View rootView;
     private ArrayList<ProductRotationModel> images360;
@@ -99,12 +103,13 @@ public class GalleryFragment extends Fragment implements View.OnClickListener {
         ProductColorModelRepo colorRepo = new ProductColorModelRepo(getActivity());
         ProductRepo productRepo = new ProductRepo(getActivity());
         ProductGalleryRepo galleryRepo = new ProductGalleryRepo(getActivity());
-
+        ProductSuperFeatureRepo superFeatureRepo = new ProductSuperFeatureRepo(getActivity());
         try {
             images360 = new ProductRotationRepo(getActivity()).getAllRotationImages(productId);
             productList = productRepo.getRecords(null, ProductTable.Cols.PRODUCT_ID + "=?", new String[]{String.valueOf(productId)}, null);
             colorList = colorRepo.getRecords(null, ProductColorModelTable.Cols.PRODUCT_ID + "=?", new String[]{String.valueOf(productId)}, null);
             galleryList = galleryRepo.getRecords(null, ProductGalleryTable.Cols.PRODUCT_ID + "=?", new String[]{String.valueOf(productId)}, null);
+            superFeatureList = superFeatureRepo.getRecords(null, ProductSuperFeatureTable.Cols.PRODUCT_ID + "=?", new String[]{String.valueOf(productId)}, null);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -206,6 +211,12 @@ public class GalleryFragment extends Fragment implements View.OnClickListener {
                 }
             });
 
+
+            if (superFeatureList.size() > 0)
+                picturesText.setVisibility(View.VISIBLE);
+            else
+                picturesText.setVisibility(View.GONE);
+
             menu.setOnClickListener(this);
             galleryButton.setOnClickListener(this);
             featuresButton.setOnClickListener(this);
@@ -301,17 +312,18 @@ public class GalleryFragment extends Fragment implements View.OnClickListener {
                 colorNameText.setText(getColorName(colorList.get(0).getImgColorIcon()));
 
             } else if (view.getId() == R.id.picture_text) {
-
                 colorText.setTextColor(Color.WHITE);
                 picturesText.setTextColor(getResources().getColor(R.color.color_red));
                 threeSixtyText.setTextColor(Color.WHITE);
                 arrowLeft.setVisibility(View.VISIBLE);
                 arrowRight.setVisibility(View.VISIBLE);
-                colorNameText.setVisibility(View.VISIBLE);
+                colorNameText.setVisibility(View.GONE);
                 colorImageContainer.setVisibility(View.INVISIBLE);
                 bikeImage.setClickable(true);
-                bikeImage.setImageBitmap(ImageHandler.getInstance(getActivity()).loadImageFromStorage(galleryList.get(0).getGalleryImg()));
-                colorNameText.setText(getColorName(galleryList.get(0).getGalleryImgText()));
+                bikeImage.setImageBitmap(ImageHandler.getInstance(getActivity()).loadImageFromStorage(superFeatureList.get(0).getFeatureImg()));
+
+                //  bikeImage.setImageBitmap(ImageHandler.getInstance(getActivity()).loadImageFromStorage(galleryList.get(0).getGalleryImg()));
+                // colorNameText.setText(getColorName(galleryList.get(0).getGalleryImgText()));
                 currentIndex = 0;
 
             } else if (view.getId() == R.id.three_sixty_text) {
@@ -335,16 +347,16 @@ public class GalleryFragment extends Fragment implements View.OnClickListener {
             } else if (view.getId() == R.id.left_arrow) {
                 if (currentIndex > 0) {
                     currentIndex -= 1;
-                    bikeImage.setImageBitmap(ImageHandler.getInstance(getActivity()).loadImageFromStorage(galleryList.get(currentIndex).getGalleryImg()));
-                    colorNameText.setText(getColorName(galleryList.get(currentIndex).getGalleryImgText()));
+                   /* bikeImage.setImageBitmap(ImageHandler.getInstance(getActivity()).loadImageFromStorage(galleryList.get(currentIndex).getGalleryImg()));
+                    colorNameText.setText(getColorName(galleryList.get(currentIndex).getGalleryImgText()));*/
+                    bikeImage.setImageBitmap(ImageHandler.getInstance(getActivity()).loadImageFromStorage(superFeatureList.get(currentIndex).getFeatureImg()));
                 }
-
             } else if (view.getId() == R.id.right_arrow) {
-
-                if (currentIndex < galleryList.size()) {
-                    currentIndex += 1;
-                    bikeImage.setImageBitmap(ImageHandler.getInstance(getActivity()).loadImageFromStorage(galleryList.get(currentIndex).getGalleryImg()));
-                    colorNameText.setText(getColorName(galleryList.get(currentIndex).getGalleryImgText()));
+                if (currentIndex < superFeatureList.size() - 1) {
+                    currentIndex++;
+                    bikeImage.setImageBitmap(ImageHandler.getInstance(getActivity()).loadImageFromStorage(superFeatureList.get(currentIndex).getFeatureImg()));
+       /*             bikeImage.setImageBitmap(ImageHandler.getInstance(getActivity()).loadImageFromStorage(galleryList.get(currentIndex).getGalleryImg()));
+                    colorNameText.setText(getColorName(galleryList.get(currentIndex).getGalleryImgText()));*/
                 }
 
             }/* else if (view.getId() == R.id.feature_individual_image_container) {
@@ -355,9 +367,6 @@ public class GalleryFragment extends Fragment implements View.OnClickListener {
                 try {
                     rootView.findViewById(R.id.feature_individual_image_container).setVisibility(View.VISIBLE);
                     featureIndividualImage.setImageBitmap(((BitmapDrawable) bikeImage.getDrawable()).getBitmap());
-                 /* mAttacher = new PhotoViewAttacher();
-                    mAttacher.update();*/
-
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

@@ -25,6 +25,7 @@ import com.herocorp.infra.db.tables.schemas.products.ProductEngineTable;
 import com.herocorp.infra.db.tables.schemas.products.ProductFeatureTable;
 import com.herocorp.infra.db.tables.schemas.products.ProductGalleryTable;
 import com.herocorp.infra.db.tables.schemas.products.ProductRotationTable;
+import com.herocorp.infra.db.tables.schemas.products.ProductSuperFeatureTable;
 import com.herocorp.infra.db.tables.schemas.products.ProductSuspensionTable;
 import com.herocorp.infra.db.tables.schemas.products.ProductTransmissionTable;
 import com.herocorp.infra.db.tables.schemas.products.ProductTyreTable;
@@ -151,6 +152,7 @@ public class SQLiteDataHelper {
         tables.add(new ProductElectricalTable());
         tables.add(new ProductEngineTable());
         tables.add(new ProductFeatureTable());
+        tables.add(new ProductSuperFeatureTable());
         tables.add(new ProductSuspensionTable());
         tables.add(new ProductTransmissionTable());
         tables.add(new ProductTyreTable());

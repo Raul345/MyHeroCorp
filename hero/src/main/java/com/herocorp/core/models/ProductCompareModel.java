@@ -1,30 +1,31 @@
 package com.herocorp.core.models;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 /**
  * Created by rsawh on 23-Jun-17.
  */
 
 public class ProductCompareModel extends BaseEntity {
 
-    private int id;
+    @JsonProperty("productId")
     private int productId;
-    private String imageName;
-    private String date;
 
-    public ProductCompareModel(int id, int productId, String imageName, String date) {
-        this.id = id;
+    @JsonProperty("productFeatureImages")
+    private String productFeatureImages;
+
+    @JsonProperty("createDate")
+    private String createDate;
+
+    public ProductCompareModel() {
+    }
+
+    public ProductCompareModel(int productId, String productFeatureImages, String createDate) {
         this.productId = productId;
-        this.imageName = imageName;
-        this.date = date;
+        this.productFeatureImages = productFeatureImages;
+        this.createDate = createDate;
     }
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public int getProductId() {
         return productId;
@@ -34,30 +35,34 @@ public class ProductCompareModel extends BaseEntity {
         this.productId = productId;
     }
 
-    public String getImageName() {
-        if(imageName == null) {
+    public String getProductFeatureImages() {
+        if (productFeatureImages == null) {
             return "";
         }
-        return imageName;
+        return productFeatureImages;
     }
 
-    public void setImageName(String imageName) {
-        this.imageName = imageName;
+    public void setProductFeatureImages(String productFeatureImages) {
+        this.productFeatureImages = productFeatureImages;
     }
 
-    public String getDate() {
-        if(date == null) {
+    public String getCreateDate() {
+        if (createDate == null) {
             return "";
         }
-        return date;
+        return createDate;
     }
 
-    public void setDate(String date) {
-        if(date == null) {
+    public void setCreateDate(String createDate) {
+        this.createDate = createDate;
+    }
+
+  /*  public void setDate(String date) {
+        if (date == null) {
             Long tsLong = System.currentTimeMillis() / 1000;
-            this.date = tsLong.toString();
-        } else  {
-            date = date;
+            this.c = tsLong.toString();
+        } else {
+            this.createDate = date;
         }
-    }
+    }*/
 }

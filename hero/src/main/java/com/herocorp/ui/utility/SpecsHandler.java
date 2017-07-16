@@ -22,7 +22,6 @@ import com.herocorp.infra.db.repositories.product.ProductSuspensionRepo;
 import com.herocorp.infra.db.repositories.product.ProductTransmissionRepo;
 import com.herocorp.infra.db.repositories.product.ProductTyreRepo;
 import com.herocorp.infra.db.tables.schemas.products.ProductEngineTable;
-import com.herocorp.infra.db.tables.schemas.products.ProductFeatureTable;
 import com.herocorp.infra.db.tables.schemas.products.ProductTransmissionTable;
 
 import java.util.ArrayList;
@@ -310,7 +309,7 @@ public class SpecsHandler {
             dimensionsModel = dimensionsList.get(0);
 
             if (otherProductId != -1) {
-                ArrayList<ProductDimensionModel> dimensionsListOther = dimensionRepo.getRecords(null, ProductTransmissionTable.Cols.PRODUCT_ID + "=?", new String[]{String.valueOf(productId)}, null);
+                ArrayList<ProductDimensionModel> dimensionsListOther = dimensionRepo.getRecords(null, ProductTransmissionTable.Cols.PRODUCT_ID + "=?", new String[]{String.valueOf(otherProductId)}, null);
                 dimensionsModelOther = dimensionsListOther.get(0);
             }
         } catch (Exception e) {

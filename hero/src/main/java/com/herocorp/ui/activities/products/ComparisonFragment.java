@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -60,6 +61,7 @@ public class ComparisonFragment extends Fragment implements View.OnClickListener
             productRepo = new ProductRepo(getActivity());
             productList = productRepo.getRecords(null, null, null, null);
             ((BaseDrawerActivity) getActivity()).compare_images = new ProductCompareRepo(getActivity()).getAllCompareImages(productId);
+            Log.e("comparesize", ((BaseDrawerActivity) getActivity()).compare_images .size()+"");
             extractProductNameList();
         } catch (Exception e) {
             e.printStackTrace();
@@ -117,6 +119,7 @@ public class ComparisonFragment extends Fragment implements View.OnClickListener
 
         Button featurecompare = (Button) rootView.findViewById(R.id.comparefeature_button);
         customViewParams.setButtonCustomParams(featurecompare, new int[]{20, 0, 20, 15}, new int[]{5, 5, 5, 5}, 50, 370, 30, customTypeFace.gillSansLight, 0);
+
 
         if (((BaseDrawerActivity) getActivity()).compare_images.size() > 0) {
             featurecompare.setVisibility(View.VISIBLE);

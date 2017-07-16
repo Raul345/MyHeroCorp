@@ -139,7 +139,8 @@ public class VasHomeFragment extends Fragment implements View.OnClickListener {
             case R.id.report_layout:
                 if (NetConnections.isConnected(getContext())) {
                     Bundle bundle = new Bundle();
-                    bundle.putString("url", "https://172.20.5.25/codesk");
+                  //  bundle.putString("url", "https://172.20.5.25/codesk");
+                    bundle.putString("url", "http://ithelpdesk.heromotocorp.biz");
                     Fragment f = new NewsWebViewLayout();
                     f.setArguments(bundle);
                     FragmentManager fm = ((FragmentActivity) getContext()).getSupportFragmentManager();

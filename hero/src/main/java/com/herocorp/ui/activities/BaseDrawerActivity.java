@@ -92,12 +92,11 @@ public class BaseDrawerActivity extends FragmentActivity implements View.OnClick
     private static final int REQUEST_PERMISSION_WRITE_EXTERNAL_STORAGE = 2;
     private final String TAG = BaseDrawerActivity.class.getSimpleName();
     private static DrawerLayout drawerLayout;
-
     public int productId = -1;
     public int otherProductId = -1;
-    public ArrayList<ProductCompareModel> compare_images = new ArrayList<ProductCompareModel>();
     Fragment fragment = null;
     private SharedPreferences sharedPreferences;
+    public ArrayList<ProductCompareModel> compare_images=new ArrayList<ProductCompareModel>();
     private String deviceImei;
     private String appVersion;
     private String deviceVersion;
@@ -138,9 +137,9 @@ public class BaseDrawerActivity extends FragmentActivity implements View.OnClick
                 insertRotationDataInDB();
             }
             //for COMPARE data
-            if (!(sharedPreferences.getBoolean(AppConstants.IS_COMPARE_RECORD_INSERTED, false))) {
+         /*   if (!(sharedPreferences.getBoolean(AppConstants.IS_COMPARE_RECORD_INSERTED, false))) {
                 insertCompareData();
-            }
+            }*/
 
            /* boolean bool = sharedPreferences.getBoolean(AppConstants.IS_360_RECORD_INSERTED, false);
             if (bool) {
@@ -274,13 +273,7 @@ public class BaseDrawerActivity extends FragmentActivity implements View.OnClick
     public void showExternalStoragePermission() {
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-                requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_PERMISSION_WRITE_EXTERNAL_STORAGE);
-            } else {
-                requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_PERMISSION_WRITE_EXTERNAL_STORAGE);
-            }
-
+            requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_PERMISSION_WRITE_EXTERNAL_STORAGE);
         } else {
             if (!sharedPreferences.getBoolean(AppConstants.IS_SYNC_COMPLETED, false)) {
                 // startSync();
@@ -313,12 +306,7 @@ public class BaseDrawerActivity extends FragmentActivity implements View.OnClick
     public void showPhoneStatePermission() throws Exception {
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
-
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.READ_PHONE_STATE)) {
-                requestPermissions(new String[]{Manifest.permission.READ_PHONE_STATE}, REQUEST_PERMISSION_READ_PHONE_STATE);
-            } else {
-                requestPermissions(new String[]{Manifest.permission.READ_PHONE_STATE}, REQUEST_PERMISSION_READ_PHONE_STATE);
-            }
+            requestPermissions(new String[]{Manifest.permission.READ_PHONE_STATE}, REQUEST_PERMISSION_READ_PHONE_STATE);
         } else {
             showExternalStoragePermission();
             //   authenticateUser(telephonyManager.getDeviceId(), appVersion, deviceVersion);
@@ -2098,7 +2086,42 @@ public class BaseDrawerActivity extends FragmentActivity implements View.OnClick
 
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_PERMISSION_READ_PHONE_STATE:
+                showExternalStoragePermission();
+                break;
+         /*   case REQUEST_PERMISSION_WRITE_EXTERNAL_STORAGE:
+                if (!sharedPreferences.getBoolean(AppConstants.IS_SYNC_COMPLETED, false)) {
+                    // startSync();
+                    new AlertDialog.Builder(this)
+                            .setTitle("Do you want to start sync?")
+                            .setMessage("Sync will take a while, and cannot be canceled once started.\nPress yes to continue.")
+                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
 
+                           *//* sharedPreferences.edit().putBoolean(AppConstants.IS_SYNC_COMPLETED, false).commit();
+
+                            fragment = new DealerDashboardFragment();
+                            openFragment(fragment, false);*//*
+
+                                    startSync();
+                                }
+                            })
+                            .setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+                                public void onClick(DialogInterface dialog, int which) {
+                                    PreferenceUtil.set_Syncyn(getApplicationContext(), true);
+                                    dialog.dismiss();
+                                }
+                            })
+                            .setIcon(android.R.drawable.ic_dialog_alert)
+                            .show();
+                }
+
+                break;*/
+        }
+    }
 }
 
 

@@ -17,7 +17,6 @@ public class URLConstants {
     private final static String BASE_DSEURL_LIVE = "http://tab.hmcl.biz/dse_app_live_v3/";
     private final static String BASE_DSEURL_DEV = "http://tab.hmcl.biz/dse_app_UAT/";
 
-
     private final static String BASE_URL_QA = BASE_URL_LIVE;
     private final static String BASE_URL_LIVE_WEBSERVICE = "http://tab.hmcl.biz/heroDealerApp_UAT/webservices/Index";
     public static String BASE_URL;
@@ -27,17 +26,19 @@ public class URLConstants {
     public final static String GET_CATEGORY_LIST = "categoriesList";
     public final static String GET_CATEGORY_PRODUCTS_LIST = "categoryProductsListing";
     public final static String GET_PRODUCT_DETAILS = "productDetails";
+    public final static String GET_PRODUCT_COMPARE_DATA = "productFeatureImagesList";
 
     public final static String GET_PRODUCT_IMAGE = "upload/ProductsImage/";
+    public final static String GET_COMPAREPRODUCT_IMAGE = "upload/ProductCompareImages/";
     public final static String GET_PRODUCT_COLOR_IMAGE = "upload/colorsIcon/";
     public final static String AUTHENTICATE_USER = "userAuthentication";
 
     public final static String ENCRYPT1 = "http://abym.in/clientProof/hero_motors/encrypt";
     public final static String ENCRYPT = "http://tab.hmcl.biz/heroDealerApp/encrypt";
 
-
     //DSE LIVE URLS version 2
 
+    // public final static String LOGIN = BASE_DSEURL_LIVE + "login.php";
     public final static String LOGIN = BASE_DSE_URL + "login.php";
     public final static String PENDING_ORDER = BASE_DSE_URL + "fetch_order_data.php";
     public final static String PENDING_FOLLOWUP = BASE_DSE_URL + "get_follow_up.php";
@@ -54,10 +55,10 @@ public class URLConstants {
     public final static String FETCH_PITCH = BASE_DSE_URL + "sales_pitch.php";
 
 
-  /*  public final static String FETCH_NEWS = "http://abym.in/clientProof/hero_motors/webservices/Index/newsListings";
-    public final static String TOKEN_DATA = "http://abym.in/clientProof/hero_motors/userAuthentication";
-    public final static String FETCH_VAS = "http://abym.in/clientProof/hero_motors/webservices/Index/valueAddedServices";
-*/
+    /*  public final static String FETCH_NEWS = "http://abym.in/clientProof/hero_motors/webservices/Index/newsListings";
+      public final static String TOKEN_DATA = "http://abym.in/clientProof/hero_motors/userAuthentication";
+      public final static String FETCH_VAS = "http://abym.in/clientProof/hero_motors/webservices/Index/valueAddedServices";
+  */
     public final static String TOKEN_DATA = BASE_URL_LIVE_WEBSERVICE + "/userAuthentication";
     public final static String FETCH_NEWS = BASE_URL_LIVE_WEBSERVICE + "/newsListings";
     public final static String FETCH_VAS = BASE_URL_LIVE_WEBSERVICE + "/valueAddedServices";
@@ -75,7 +76,6 @@ public class URLConstants {
             URLConstants.BASE_URL = URLConstants.BASE_URL_QA;
         }
     }
-
     /*Static Block*/
     /* Which DSE environment is currently active */
    /* static {

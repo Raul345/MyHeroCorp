@@ -22,6 +22,7 @@ import com.herocorp.infra.db.tables.schemas.products.ProductEngineTable;
 import com.herocorp.infra.db.tables.schemas.products.ProductFeatureTable;
 import com.herocorp.infra.db.tables.schemas.products.ProductGalleryTable;
 import com.herocorp.infra.db.tables.schemas.products.ProductRotationTable;
+import com.herocorp.infra.db.tables.schemas.products.ProductSuperFeatureTable;
 import com.herocorp.infra.db.tables.schemas.products.ProductSuspensionTable;
 import com.herocorp.infra.db.tables.schemas.products.ProductTransmissionTable;
 import com.herocorp.infra.db.tables.schemas.products.ProductTyreTable;
@@ -54,6 +55,7 @@ public class ContentDescriptor {
         //PRODUCT SUB TABLES
         matcher.addURI(AUTHORITY, ProductColorModelTable.PATH, ProductColorModelTable.PATH_TOKEN);
         matcher.addURI(AUTHORITY, ProductFeatureTable.PATH, ProductFeatureTable.PATH_TOKEN);
+        matcher.addURI(AUTHORITY, ProductSuperFeatureTable.PATH, ProductSuperFeatureTable.PATH_TOKEN);
         matcher.addURI(AUTHORITY, ProductEngineTable.PATH, ProductEngineTable.PATH_TOKEN);
         matcher.addURI(AUTHORITY, ProductTransmissionTable.PATH, ProductTransmissionTable.PATH_TOKEN);
         matcher.addURI(AUTHORITY, ProductSuspensionTable.PATH, ProductSuspensionTable.PATH_TOKEN);

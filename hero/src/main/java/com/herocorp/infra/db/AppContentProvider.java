@@ -27,6 +27,7 @@ import com.herocorp.infra.db.tables.schemas.products.ProductEngineTable;
 import com.herocorp.infra.db.tables.schemas.products.ProductFeatureTable;
 import com.herocorp.infra.db.tables.schemas.products.ProductGalleryTable;
 import com.herocorp.infra.db.tables.schemas.products.ProductRotationTable;
+import com.herocorp.infra.db.tables.schemas.products.ProductSuperFeatureTable;
 import com.herocorp.infra.db.tables.schemas.products.ProductSuspensionTable;
 import com.herocorp.infra.db.tables.schemas.products.ProductTransmissionTable;
 import com.herocorp.infra.db.tables.schemas.products.ProductTyreTable;
@@ -191,6 +192,9 @@ public class AppContentProvider extends ContentProvider {
             }
             case ProductFeatureTable.PATH_TOKEN: {
                 return ProductFeatureTable.TABLE_NAME;
+            }
+            case ProductSuperFeatureTable.PATH_TOKEN: {
+                return ProductSuperFeatureTable.TABLE_NAME;
             }
             case ProductEngineTable.PATH_TOKEN: {
                 return ProductEngineTable.TABLE_NAME;

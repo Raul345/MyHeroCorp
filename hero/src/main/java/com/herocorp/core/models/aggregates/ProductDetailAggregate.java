@@ -8,6 +8,7 @@ import com.herocorp.core.models.ProductElectricalModel;
 import com.herocorp.core.models.ProductEngineModel;
 import com.herocorp.core.models.ProductFeatureModel;
 import com.herocorp.core.models.ProductGalleryModel;
+import com.herocorp.core.models.ProductSuperFeatureModel;
 import com.herocorp.core.models.ProductSuspensionModel;
 import com.herocorp.core.models.ProductTransmissionModel;
 import com.herocorp.core.models.ProductTyreModel;
@@ -32,6 +33,7 @@ public class ProductDetailAggregate extends BaseEntity {
     private ProductSuspensionModel suspensionModel;
     private ArrayList<ProductFeatureModel> featureModelList;
     private ArrayList<ProductGalleryModel> galleryModelList;
+    private ArrayList<ProductSuperFeatureModel> superfeatureModelList;
 
     public ProductDetailAggregate(){};
 
@@ -113,6 +115,14 @@ public class ProductDetailAggregate extends BaseEntity {
 
     public void setFeatureModel(ArrayList<ProductFeatureModel> featureModelList) {
         this.featureModelList = featureModelList;
+    }
+
+    public ArrayList<ProductSuperFeatureModel> getSuperfeatureModelList() {
+        return superfeatureModelList;
+    }
+
+    public void setSuperfeatureModelList(ArrayList<ProductSuperFeatureModel> superfeatureModelList) {
+        this.superfeatureModelList = superfeatureModelList;
     }
 
     public ArrayList<ProductGalleryModel> getGalleryModelList() {

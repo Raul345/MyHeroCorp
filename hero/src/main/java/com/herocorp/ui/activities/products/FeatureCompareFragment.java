@@ -77,7 +77,7 @@ public class FeatureCompareFragment extends Fragment implements View.OnClickList
 
         menu.setOnClickListener(this);
         for (int i = 0; i < compare_images.size(); i++) {
-            Log.e("iamge", compare_images.get(i).getImageName());
+            Log.e("iamge", compare_images.get(i).getProductFeatureImages());
         }
         setImagesInScrollView();
         rootView.findViewById(R.id.feature_individual_image_container).setOnClickListener(this);
@@ -107,12 +107,14 @@ public class FeatureCompareFragment extends Fragment implements View.OnClickList
 
         for (int i = 0; i < compare_images.size(); i++) {
             try {
-
-                Resources res = getActivity().getApplicationContext().getResources();
-                final int id = res.getIdentifier(compare_images.get(i).getImageName().replace(".png", ""), "drawable", getActivity().getPackageName());
+                final String imageName = compare_images.get(i).getProductFeatureImages();
+                // Resources res = getActivity().getApplicationContext().getResources();
+                //    final int id = res.getIdentifier(compare_images.get(i).getProductFeatureImages().replace(".png", ""), "drawable", getActivity().getPackageName());
                 individualImage = new ImageView(getActivity());
                 individualImage.setId(i);
-                individualImage.setImageDrawable(res.getDrawable(id));
+                // individualImage.setImageDrawable(res.getDrawable(id));
+                individualImage.setImageBitmap(ImageHandler.getInstance(getActivity()).loadImageFromStorage(imageName));
+
                /* Bitmap bitmap = ((BitmapDrawable) res.getDrawable(id)).getBitmap();
                 individualImage.setImageBitmap(bitmap);*/
                 individualImage.setScaleType(ImageView.ScaleType.FIT_XY);
@@ -124,7 +126,7 @@ public class FeatureCompareFragment extends Fragment implements View.OnClickList
                     public void onClick(View v) {
                         try {
                             Bundle bundle = new Bundle();
-                            bundle.putInt("id", id);
+                            bundle.putString("img_name", imageName);
                             FragmentManager fm = getActivity().getSupportFragmentManager();
                             Fragment f = new CompareImageFragment();
                             f.setArguments(bundle);

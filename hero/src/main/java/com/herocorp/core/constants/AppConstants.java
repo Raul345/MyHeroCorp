@@ -8,8 +8,8 @@ public class AppConstants {
 
     //App Environment
     //Dev : isDebug = true && isLive = false, QA : isDebug = false && isLive = false, Live : isLive = true
-    public static final Boolean isDebug = false;
-    public static final Boolean isLive = true;
+    public static final Boolean isDebug = true;
+    public static final Boolean isLive = false;
     public static final Boolean isDSEDebug = false;
     public static final Boolean isDSELive = true;
     public static final String VALIDITY_DATE = "validityDate";

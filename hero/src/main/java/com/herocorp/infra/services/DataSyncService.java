@@ -10,17 +10,20 @@ import com.herocorp.core.interfaces.SyncServiceCallBack;
 import com.herocorp.core.interfaces.iNetworkResponseCallback;
 import com.herocorp.core.models.ProductBreakModel;
 import com.herocorp.core.models.ProductCategoryModel;
+import com.herocorp.core.models.ProductCompareModel;
 import com.herocorp.core.models.ProductModel;
 import com.herocorp.core.models.aggregates.ProductDetailAggregate;
 import com.herocorp.infra.db.repositories.product.ProductBreakRepo;
 import com.herocorp.infra.db.repositories.product.ProductCategoryRepo;
 import com.herocorp.infra.db.repositories.product.ProductColorModelRepo;
+import com.herocorp.infra.db.repositories.product.ProductCompareRepo;
 import com.herocorp.infra.db.repositories.product.ProductDimensionRepo;
 import com.herocorp.infra.db.repositories.product.ProductElectricalRepo;
 import com.herocorp.infra.db.repositories.product.ProductEngineRepo;
 import com.herocorp.infra.db.repositories.product.ProductFeatureRepo;
 import com.herocorp.infra.db.repositories.product.ProductGalleryRepo;
 import com.herocorp.infra.db.repositories.product.ProductRepo;
+import com.herocorp.infra.db.repositories.product.ProductSuperFeatureRepo;
 import com.herocorp.infra.db.repositories.product.ProductSuspensionRepo;
 import com.herocorp.infra.db.repositories.product.ProductTransmissionRepo;
 import com.herocorp.infra.db.repositories.product.ProductTyreRepo;
@@ -45,7 +48,7 @@ public class DataSyncService extends Service {
     static boolean isRunning = false;
 
     private enum syncProductType {
-        CATEGORY, PRODUCT, DETAIL, IMAGE, NONE
+        CATEGORY, PRODUCT, DETAIL, COMPARE, IMAGE, NONE
     }
 
     private ProductCategoryRepo productCategoryRepo;
@@ -58,10 +61,11 @@ public class DataSyncService extends Service {
     private ProductDimensionRepo dimensionRepo;
     private ProductColorModelRepo colorModelRepo;
     private ProductFeatureRepo featureRepo;
+    private ProductSuperFeatureRepo superfeatureRepo;
     private ProductTransmissionRepo transmissionRepo;
     private ProductTyreRepo tyreRepo;
     private ProductGalleryRepo galleryRepo;
-
+    private ProductCompareRepo compareRepo;
     private static ImageDownloader imageDownloader;
 
     @Nullable
@@ -102,9 +106,12 @@ public class DataSyncService extends Service {
         dimensionRepo = new ProductDimensionRepo(getApplicationContext());
         colorModelRepo = new ProductColorModelRepo(getApplicationContext());
         featureRepo = new ProductFeatureRepo(getApplicationContext());
+        superfeatureRepo = new ProductSuperFeatureRepo(getApplicationContext());
         transmissionRepo = new ProductTransmissionRepo(getApplicationContext());
         tyreRepo = new ProductTyreRepo(getApplicationContext());
         galleryRepo = new ProductGalleryRepo(getApplicationContext());
+        compareRepo = new ProductCompareRepo(getApplicationContext());
+
 
         imageDownloader = new ImageDownloader(getApplicationContext(), new CallBack());
 
@@ -135,10 +142,15 @@ public class DataSyncService extends Service {
                 case DETAIL:
                     syncProductDetails(0, productRepo.getRecords(null, null, null, null));
                     return;
-
+                case COMPARE:
+                    syncCompareDetails();
+                    return;
                 case IMAGE:
                     imageDownloader.start();
+
                     break;
+
+
             }
 
             isRunning = false;
@@ -184,6 +196,7 @@ public class DataSyncService extends Service {
         });
 
     }
+
 
     private void syncProduct(final int index, final ArrayList<ProductCategoryModel> modelArrayList) throws Exception {
 
@@ -248,6 +261,8 @@ public class DataSyncService extends Service {
                     transmissionRepo.applyBatch(transmissionRepo.constructOperation(new ArrayList<>(Arrays.asList(data.getTransmissionModel()))));
                     tyreRepo.applyBatch(tyreRepo.constructOperation(new ArrayList<>(Arrays.asList(data.getTyreModel()))));
                     galleryRepo.applyBatch(galleryRepo.constructOperation(data.getGalleryModelList()));
+                    superfeatureRepo.applyBatch(superfeatureRepo.constructOperation(data.getSuperfeatureModelList()));
+
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -256,15 +271,47 @@ public class DataSyncService extends Service {
                 if (i < modelArrayList.size()) {
 
                     try {
-                        App.setProgress(15.0f/modelArrayList.size());
+                        App.setProgress(15.0f / modelArrayList.size());
                         syncProductDetails(i, modelArrayList);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
 
                 } else {
-                    startSyncProcess(syncProductType.IMAGE);
+                    startSyncProcess(syncProductType.COMPARE);
+                   /* startSyncProcess(syncProductType.IMAGE);*/
                 }
+
+            }
+
+            @Override
+            public void onFailure(String message, Boolean showToast) {
+                startSyncProcess(syncProductType.COMPARE);
+            }
+        });
+    }
+
+
+    private void syncCompareDetails() throws Exception {
+
+        ProductIOService.getCompareDetails(TAG, new iNetworkResponseCallback<ProductCompareModel>() {
+            @Override
+            public void onSuccess(ArrayList<ProductCompareModel> data) {
+
+                try {
+                    //Insert / Update CompareData
+                    compareRepo.applyBatch(compareRepo.constructOperation(data));
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                // App.setProgress(7);
+                startSyncProcess(syncProductType.IMAGE);
+              /*  startSyncProcess(syncProductType.COMPARE);*/
+            }
+
+            @Override
+            public void onSuccess(ProductCompareModel data) {
 
             }
 
@@ -274,6 +321,7 @@ public class DataSyncService extends Service {
             }
         });
     }
+
 
     private void notifyCallBack(boolean success) {
 
@@ -290,7 +338,7 @@ public class DataSyncService extends Service {
 
     }
 
-    class CallBack implements SyncServiceCallBack{
+    class CallBack implements SyncServiceCallBack {
 
         @Override
         public void completed() {

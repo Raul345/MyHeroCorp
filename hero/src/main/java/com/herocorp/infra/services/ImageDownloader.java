@@ -6,13 +6,17 @@ import android.util.Log;
 import com.herocorp.core.constants.URLConstants;
 import com.herocorp.core.interfaces.SyncServiceCallBack;
 import com.herocorp.core.models.ProductColorModel;
+import com.herocorp.core.models.ProductCompareModel;
 import com.herocorp.core.models.ProductFeatureModel;
 import com.herocorp.core.models.ProductGalleryModel;
 import com.herocorp.core.models.ProductModel;
+import com.herocorp.core.models.ProductSuperFeatureModel;
 import com.herocorp.infra.db.repositories.product.ProductColorModelRepo;
+import com.herocorp.infra.db.repositories.product.ProductCompareRepo;
 import com.herocorp.infra.db.repositories.product.ProductFeatureRepo;
 import com.herocorp.infra.db.repositories.product.ProductGalleryRepo;
 import com.herocorp.infra.db.repositories.product.ProductRepo;
+import com.herocorp.infra.db.repositories.product.ProductSuperFeatureRepo;
 import com.herocorp.infra.db.tables.schemas.ProductTable;
 import com.herocorp.infra.netio.ProductIOService;
 import com.herocorp.infra.utils.ImageHandler;
@@ -33,7 +37,9 @@ public class ImageDownloader {
     private ProductRepo productRepo;
     private ProductColorModelRepo colorModelRepo;
     private ProductFeatureRepo featureRepo;
+    private ProductSuperFeatureRepo superfeatureRepo;
     private ProductGalleryRepo galleryRepo;
+    private ProductCompareRepo compareRepo;
 
     private ArrayList<String> downloadList = new ArrayList<>(0);
     private boolean isCompleted = false;
@@ -50,7 +56,9 @@ public class ImageDownloader {
         productRepo = new ProductRepo(ctxWeakReference.get());
         colorModelRepo = new ProductColorModelRepo(ctxWeakReference.get());
         featureRepo = new ProductFeatureRepo(ctxWeakReference.get());
+        superfeatureRepo = new ProductSuperFeatureRepo(ctxWeakReference.get());
         galleryRepo = new ProductGalleryRepo(ctxWeakReference.get());
+        compareRepo=new ProductCompareRepo(ctxWeakReference.get());
 
     }
 
@@ -92,6 +100,20 @@ public class ImageDownloader {
             }
         }
 
+        //Start Super Feature Image
+        ArrayList<ProductSuperFeatureModel> superfeatureModels = superfeatureRepo.getRecords(null,
+                null, null, null);
+        if (productModels != null) {
+            for (ProductSuperFeatureModel featureModel : superfeatureModels) {
+
+                //Check if image is already being downloaded
+                if (ImageHandler.getInstance(ctxWeakReference.get()).isFileExists(featureModel.getFeatureImg())) {
+                    continue;
+                }
+                downloadList.add(URLConstants.GET_PRODUCT_IMAGE + "#" + featureModel.getFeatureImg());
+            }
+        }
+
         //Start Product Color Image
         ArrayList<ProductColorModel> colorModels = colorModelRepo.getRecords(null,
                 null, null, null);
@@ -121,6 +143,22 @@ public class ImageDownloader {
                 }
 
                 downloadList.add(URLConstants.GET_PRODUCT_IMAGE + "#" + galleryModel.getGalleryImg());
+
+            }
+        }
+
+        //Start Products Compare Img
+        ArrayList<ProductCompareModel> compareModels =compareRepo.getRecords(null,
+                null,null,null);
+        if (compareModels != null) {
+            for (ProductCompareModel compareModel : compareModels) {
+
+                //Check if image is already being downloaded
+                if (ImageHandler.getInstance(ctxWeakReference.get()).isFileExists(compareModel.getProductFeatureImages())) {
+                    continue;
+                }
+
+                downloadList.add(URLConstants.GET_COMPAREPRODUCT_IMAGE + "#" + compareModel.getProductFeatureImages());
 
             }
         }

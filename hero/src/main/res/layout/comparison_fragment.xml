@@ -3,8 +3,8 @@
     android:id="@+id/content_compare"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:clickable="true"
-    android:background="@drawable/feature_bg">
+    android:background="@drawable/feature_bg"
+    android:clickable="true">
 
     <ImageView
         android:id="@+id/app_logo"
@@ -77,6 +77,47 @@
                 android:text="default bike" />
         </LinearLayout>
 
+
+        <TextView
+            android:id="@+id/separator1"
+            android:layout_width="2dp"
+            android:layout_height="match_parent"
+            android:background="#ffffff" />
+
+        <LinearLayout
+            android:id="@+id/continue_button_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="bottom"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/comparefeature_button"
+                android:layout_width="wrap_content"
+                android:layout_height="0sp"
+                android:layout_gravity="center"
+                android:layout_weight="0.1"
+                android:background="@color/color_red"
+                android:text="@string/feature_compare"
+                android:visibility="gone" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0sp"
+                android:layout_weight="0.4"></LinearLayout>
+
+            <Button
+                android:id="@+id/continue_button"
+                android:layout_width="wrap_content"
+                android:layout_height="0sp"
+                android:layout_gravity="center"
+                android:layout_weight="0.1"
+                android:background="@color/color_red"
+                android:text="@string/touch_to_compare" />
+
+        </LinearLayout>
+
         <TextView
             android:id="@+id/separator"
             android:layout_width="2dp"
@@ -105,43 +146,6 @@
                 android:background="@drawable/square_bg" />
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/separator1"
-            android:layout_width="2dp"
-            android:layout_height="match_parent"
-            android:background="#ffffff" />
-
-        <LinearLayout
-            android:id="@+id/continue_button_layout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="bottom"
-            android:orientation="vertical">
-
-            <Button
-                android:id="@+id/comparefeature_button"
-                android:layout_width="wrap_content"
-                android:layout_height="0sp"
-                android:layout_weight="0.1"
-                android:background="@color/color_red"
-                android:text="@string/feature_compare"
-                android:visibility="gone"/>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="0sp"
-                android:layout_weight="0.4"></LinearLayout>
-
-            <Button
-                android:id="@+id/continue_button"
-                android:layout_width="wrap_content"
-                android:layout_height="0sp"
-                android:layout_weight="0.1"
-                android:background="@color/color_red"
-                android:text="@string/touch_to_compare" />
-
-        </LinearLayout>
     </LinearLayout>
 
     <LinearLayout
